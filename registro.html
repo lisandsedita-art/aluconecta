@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrarme - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .boton {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>AluConecta</h1>
+    <p>Conectando profesionales con nuevos clientes.</p>
+  </header>
+
+  <main class="contenedor">
+
+    <h2>Registrá tus servicios</h2>
+
+    <p>
+      Completá tus datos para formar parte de AluConecta
+      y mostrar tus servicios a personas que necesitan un profesional.
+    </p>
+
+    <form>
+
+      <div class="campo">
+        <label for="nombre">Nombre o empresa</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez / Aluminio JP">
+      </div>
+
+      <div class="campo">
+        <label for="localidad">Localidad</label>
+        <input type="text" id="localidad" name="localidad" placeholder="Ej: Rosario">
+      </div>
+
+      <div class="campo">
+        <label for="rubro">Rubro</label>
+        <select id="rubro" name="rubro">
+          <option value="">Seleccioná un rubro</option>
+          <option>Aluminio</option>
+          <option>Construcción</option>
+          <option>Reparaciones</option>
+          <option>Servicios</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="servicios">¿Qué servicios ofrecés?</label>
+        <textarea id="servicios" name="servicios" placeholder="Contanos qué trabajos realizás"></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="telefono">WhatsApp o teléfono</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 341 1234567">
+      </div>
+
+      <div class="campo">
+        <label for="descripcion">Presentación</label>
+        <textarea id="descripcion" name="descripcion" placeholder="Contanos brevemente sobre tu experiencia"></textarea>
+      </div>
+
+      <button type="submit" class="boton">
+        Crear mi perfil
+      </button>
+
+    </form>
+
+    <a href="índice.html" class="volver">
+      ← Volver a AluConecta
+    </a>
+
+  </main>
+
+  <footer>
+    <p>© 2026 AluConecta</p>
+    <p>Conectando personas, trabajos y oportunidades.</p>
+  </footer>
+
+</body>
+</html>
