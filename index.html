@@ -3,79 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AluConecta | Profesionales y clientes</title>
+<title>AluConecta | Conectamos personas y profesionales</title>
 
 <style>
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fa;
-    color: #17202a;
+  font-family: Arial, sans-serif;
+  background: #f4f7fa;
+  color: #17202a;
 }
 
 header {
-    background: #123b5d;
-    color: white;
-    padding: 18px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: #123b5d;
+  color: white;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-    font-size: 26px;
-    font-weight: bold;
+  font-size: 26px;
+  font-weight: bold;
 }
 
 .logo span {
-    color: #55c7e8;
+  color: #55c7e8;
 }
 
 .menu {
-    font-size: 25px;
+  font-size: 25px;
 }
 
 .hero {
-    background: linear-gradient(135deg, #123b5d, #1976a8);
-    color: white;
-    padding: 45px 22px;
-    text-align: center;
+  background: linear-gradient(135deg, #123b5d, #1976a8);
+  color: white;
+  padding: 50px 22px;
+  text-align: center;
 }
 
 .hero h1 {
-    font-size: 34px;
-    margin-bottom: 15px;
+  font-size: 34px;
+  margin-bottom: 15px;
 }
 
 .hero p {
-    font-size: 18px;
-    line-height: 1.5;
-    margin-bottom: 25px;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 25px;
 }
 
 .boton {
-    display: inline-block;
-    background: #f5a623;
-    color: #17202a;
-    padding: 14px 24px;
-    border-radius: 10px;
-    font-weight: bold;
-    text-decoration: none;
-    border: none;
-    font-size: 16px;
-}
-
-.contenedor {
-    max-width: 900px;
-    margin: auto;
-    padding: 30px 20px;
+  display: inline-block;
+  background: #f5a623;
+  color: #17202a;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 16px;
+    .contenedor {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 20px;
 }
 
 .titulo {
-    text
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.titulo h2 {
+  font-size: 26px;
+  color: #123b5d;
+}
+
+.titulo p {
+  margin-top: 8px;
+  color: #66727d;
+}
+
+.busqueda {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+  margin-bottom: 30px;
+}
+
+.busqueda input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccd5dc;
+  border-radius: 9px;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.categorias {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.categoria {
+  background: #eef5f9;
+  padding: 18px 10px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+  color: #123b5d;
+}
+
+.como {
+  background: white;
+  padding: 30px 20px;
+  margin-top: 10px;
+}
+
+.pasos {
+  display: grid;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.paso {
+  border-left: 5px solid #f5a623;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.paso h3 {
+  margin-bottom: 6px;
+  color: #123b5d;
+}
+}</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Alu<span>Conecta</span></div>
+  <div class="menu">☰</div>
+</header>
+
+<section class="hero">
+  <h1>Conectamos clientes con profesionales</h1>
+
+  <p>
+    Encontrá profesionales de aluminio, construcción
+    y servicios relacionados.
+  </p>
+
+  <a href="#buscar" class="boton">
+    🔎 Buscar un profesional
+  </a>
+</section>
+
+<section class="contenedor" id="buscar">
+
+  <div class="titulo">
+    <h2>¿Qué estás buscando?</h2>
+    <p>Elegí una categoría o buscá lo que necesitás.</p>
+  </div>
+
+  <div class="busqueda">
+
+    <input
+      type="text"
+      placeholder="Ej: ventanas de aluminio, albañil, reparación..."
+    >
+
+    <div class="categorias">
+
+      <div class="categoria">🏠 Aluminio</div>
+
+      <div class="categoria">🏗️ Construcción</div>
+
+      <div class="categoria">🔧 Reparaciones</div>
+
+      <div class="categoria">🛠️ Servicios</div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="como">
+
+  <div class="titulo">
+    <h2>¿Cómo funciona AluConecta?</h2>
+    <p>Simple, rápido y pensado para conectar personas.</p>
+  </div>
+
+  <div class="pasos">
+
+    <div class="paso">
+      <h3>1. Buscá</h3>
+      <p>Encontrá el profesional que necesitás.</p>
+    </div>
+
+    <div class="paso">
+      <h3>2. Compará</h3>
+      <p>Conocé sus servicios y experiencia.</p>
+    </div>
+
+    <div class="paso">
+      <h3>3. Contactá</h3>
+      <p>Comunicate directamente con el profesional.</p>
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+  <p>© 2026 AluConecta</p>
+  <p>Conectando personas, trabajos y oportunidades.</p>
+</footer>
+
+</body><section class="registro">
+  <h2>¿Querés formar parte de AluConecta?</h2>
+  <p>Si sos profesional, publicá tus servicios y conectá con nuevos clientes.</p>
+
+  <a href="#" class="boton">Quiero registrarme</a>
+</section>
+
+<footer>
+  <p>© 2026 AluConecta</p>
+  <p>Conectando personas, trabajos y oportunidades.</p>
+</footer>
+
+</body>
+</html>
+</html>
