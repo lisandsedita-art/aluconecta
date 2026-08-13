@@ -188,7 +188,22 @@
 
 
 <script>
+var parametros = new URLSearchParams(window.location.search);
 
+var categoria = parametros.get("categoria");
+
+if (categoria === "electricidad") {
+
+  document.getElementById("titulo").innerHTML =
+    "⚡ Electricidad";
+
+  document.getElementById("subtitulo").innerHTML =
+    "Encontrá electricistas para tu proyecto.";
+
+  document.getElementById("necesidad").placeholder =
+    "Ej.: instalación, reparación, tablero...";
+
+}
 function buscar() {
 
   var necesidad =
