@@ -146,12 +146,22 @@
 
     <section class="resultados">
 
-      <h2>Carpinteros de aluminio</h2>
+<section class="resultados">
 
-      <div class="mensaje">
+  <h2>Carpinteros de aluminio</h2>
 
-  <h3>Profesional destacado</h3>
+  <div id="resultadosBusqueda" class="mensaje">
 
+    <h3>Buscá un profesional</h3>
+
+    <p>
+      Indicá qué necesitás y tu localidad para encontrar
+      carpinteros de aluminio.
+    </p>
+
+  </div>
+
+</section>
   <p>
     Carpintero de aluminio
   </p>
@@ -197,11 +207,28 @@ function buscarProfesional() {
 
   const texto = document.querySelector('.buscador input').value.trim();
   const localidad = document.querySelector('.buscador select').value;
-  const resultados = document.querySelector('.resultados');
+  const resultados = document.getElementById('resultadosBusqueda');
 
   if (texto === "" && localidad === "Seleccioná una localidad") {
     resultados.innerHTML = `
-      <h2>Carpinteros de aluminio</h2>
+  <h3>Profesional encontrado</h3>
+
+  <p>
+    <strong>Carpintero de aluminio</strong>
+  </p>
+
+  <p>
+    📍 ${localidad === "Seleccioná una localidad" ? "Rosario, Santa Fe" : localidad}
+  </p>
+
+  <p>
+    Ventanas · Puertas · Cerramientos · Fabricación e instalación
+  </p>
+
+  <a href="perfil.html" class="boton">
+    Ver perfil
+  </a>
+`;
       <div class="mensaje">
         <h3>Contanos qué estás buscando</h3>
         <p>
