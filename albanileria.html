@@ -172,5 +172,34 @@
     <p>© 2026 AluConecta</p>
     <p>Conectando personas, trabajos y oportunidades.</p>
   </footer>
+<script>
+function buscarProfesional() {
 
-  <
+  var texto = document.getElementById("necesidad").value;
+  var localidad = document.getElementById("localidad").value;
+  var resultados = document.getElementById("resultadosBusqueda");
+
+  if (texto === "" && localidad === "Seleccioná una localidad") {
+
+    resultados.innerHTML =
+      "<h3>Contanos qué estás buscando</h3>" +
+      "<p>Escribí el trabajo que necesitás o seleccioná una localidad.</p>";
+
+    return;
+  }
+
+  if (localidad === "Seleccioná una localidad") {
+    localidad = "Rosario, Santa Fe";
+  }
+
+  resultados.innerHTML =
+    "<h3>Profesional encontrado</h3>" +
+    "<p><strong>Profesional de albañilería</strong></p>" +
+    "<p>📍 " + localidad + "</p>" +
+    "<p>Obra nueva · Reformas · Revoques · Pisos · Reparaciones</p>" +
+    '<a href="perfil.html" class="boton">Ver perfil</a>';
+}
+</script>
+  
+</body>
+</html>
