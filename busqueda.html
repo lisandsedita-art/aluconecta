@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Búsqueda - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .busqueda,
+    .mensaje {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    .boton {
+      display: inline-block;
+      padding: 13px 22px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <h1 id="titulo">
+    Buscar profesionales
+  </h1>
+
+  <p id="subtitulo">
+    Encontrá el profesional que necesitás.
+  </p>
+
+</header>
+
+
+<main class="contenedor">
+
+  <section class="busqueda">
+
+    <h2>¿Qué necesitás?</h2>
+
+    <input
+      id="necesidad"
+      type="text"
+      placeholder="Ej.: reparación, instalación, trabajo..."
+    >
+
+    <select id="localidad">
+
+      <option value="">
+        Seleccioná una localidad
+      </option>
+
+      <option value="Rosario">
+        Rosario
+      </option>
+
+      <option value="Funes">
+        Funes
+      </option>
+
+      <option value="Roldán">
+        Roldán
+      </option>
+
+      <option value="Villa Gobernador Gálvez">
+        Villa Gobernador Gálvez
+      </option>
+
+    </select>
+
+    <button
+      class="boton"
+      onclick="buscar()">
+      Buscar
+    </button>
+
+  </section>
+
+
+  <section>
+
+    <h2>Resultados</h2>
+
+    <div
+      id="resultados"
+      class="mensaje">
+
+      <h3>Buscá un profesional</h3>
+
+      <p>
+        Escribí qué necesitás y seleccioná
+        tu localidad.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <a
+    href="índice.html"
+    class="volver">
+
+    ← Volver a AluConecta
+
+  </a>
+
+</main>
+
+
+<footer>
+
+  <p>© 2026 AluConecta</p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+<script>
+
+function buscar() {
+
+  var necesidad =
+    document.getElementById("necesidad").value;
+
+  var localidad =
+    document.getElementById("localidad").value;
+
+  var resultados =
+    document.getElementById("resultados");
+
+
+  if (necesidad === "" && localidad === "") {
+
+    resultados.innerHTML =
+      "<h3>Completá la búsqueda</h3>" +
+      "<p>Indicá qué necesitás o seleccioná una localidad.</p>";
+
+    return;
+
+  }
+
+
+  if (localidad === "") {
+
+    localidad = "Rosario";
+
+  }
+
+
+  resultados.innerHTML =
+
+    "<h3>Resultados disponibles</h3>" +
+
+    "<p>" +
+    "<strong>Profesionales de AluConecta</strong>" +
+    "</p>" +
+
+    "<p>📍 " +
+    localidad +
+    "</p>" +
+
+    "<p>" +
+    "Estamos preparando profesionales para esta búsqueda." +
+    "</p>";
+
+}
+
+</script>
+
+
+</body>
+</html>
