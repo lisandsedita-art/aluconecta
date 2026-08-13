@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carpintería de aluminio - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .busqueda {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+    }
+
+    .busqueda h2 {
+      margin-top: 0;
+    }
+
+    .buscador {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .buscador input,
+    .buscador select {
+      flex: 1;
+      min-width: 220px;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    .boton {
+      padding: 13px 22px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .resultados h2 {
+      margin-bottom: 15px;
+    }
+
+    .mensaje {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .mensaje p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px 0 10px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Carpintería de aluminio</h1>
+    <p>Encontrá profesionales para tu proyecto.</p>
+  </header>
+
+  <main class="contenedor">
+
+    <section class="busqueda">
+      <h2>¿Qué necesitás?</h2>
+
+      <div class="buscador">
+        <input
+          type="text"
+          placeholder="Ej.: ventana, puerta, cerramiento..."
+        >
+
+        <select>
+          <option>Seleccioná una localidad</option>
+          <option>Rosario</option>
+          <option>Funes</option>
+          <option>Roldán</option>
+          <option>Villa Gobernador Gálvez</option>
+          <option>Otra localidad</option>
+        </select>
+
+        <button class="boton">
+          Buscar
+        </button>
+      </div>
+    </section>
+
+    <section class="resultados">
+
+      <h2>Carpinteros de aluminio</h2>
+
+      <div class="mensaje">
+        <h3>Próximamente encontrarás profesionales aquí</h3>
+
+        <p>
+          AluConecta está creando una red de carpinteros de aluminio
+          para conectar clientes con profesionales de su zona.
+        </p>
+
+        <p>
+          ¿Sos carpintero de aluminio?
+          <strong>Registrá tus servicios y formá parte de AluConecta.</strong>
+        </p>
+      </div>
+
+    </section>
+
+    <a href="aberturas.html" class="volver">
+      ← Volver a Aberturas
+    </a>
+
+  </main>
+
+  <footer>
+    <p>© 2026 AluConecta</p>
+    <p>Conectando personas, trabajos y oportunidades.</p>
+  </footer>
+
+</body>
+</html>
