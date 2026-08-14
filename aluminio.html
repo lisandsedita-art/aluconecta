@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Carpintería de aluminio - AluConecta</title>
 
   <style>
@@ -28,22 +29,19 @@
       margin: 0 0 10px;
     }
 
-    header p {
-      margin: 0;
-    }
-
     .contenedor {
       max-width: 900px;
       margin: 30px auto;
       padding: 20px;
     }
 
-    .busqueda {
+    .busqueda,
+    .mensaje {
       background: white;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .busqueda h2 {
@@ -67,6 +65,7 @@
     }
 
     .boton {
+      display: inline-block;
       padding: 13px 22px;
       border: none;
       border-radius: 7px;
@@ -75,6 +74,7 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .resultados h2 {
@@ -82,11 +82,7 @@
     }
 
     .mensaje {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .mensaje p {
@@ -121,133 +117,177 @@
   <main class="contenedor">
 
     <section class="busqueda">
+
       <h2>¿Qué necesitás?</h2>
 
       <div class="buscador">
+
         <input
-  type="text"
-  id="necesidad"
-  placeholder="Ej.: 4 ventanas con DVH, puerta balcón, cerramiento..."
->
+          type="text"
+          id="necesidad"
+          placeholder="Ej.: 4 ventanas con DVH, puerta balcón, cerramiento..."
+        >
 
         <select id="localidad">
-          <option>Seleccioná una localidad</option>
-          <option>Rosario</option>
-          <option>Funes</option>
-          <option>Roldán</option>
-          <option>Villa Gobernador Gálvez</option>
-          <option>Otra localidad</option>
+
+          <option value="">
+            Seleccioná una localidad
+          </option>
+
+          <option value="Rosario">
+            Rosario
+          </option>
+
+          <option value="Funes">
+            Funes
+          </option>
+
+          <option value="Roldán">
+            Roldán
+          </option>
+
+          <option value="Villa Gobernador Gálvez">
+            Villa Gobernador Gálvez
+          </option>
+
+          <option value="Otra localidad">
+            Otra localidad
+          </option>
+
         </select>
 
-      <button class="boton" onclick="buscarProfesional()">
-  Buscar
-</button>
-      </div>
-    </section>
+        <button
+          type="button"
+          class="boton"
+          onclick="buscarProfesional()">
+          Buscar
+        </button>
 
-  
-
-<section class="resultados">
-
-  <h2>Carpinteros de aluminio</h2>
-
-  <div id="resultadosBusqueda" class="mensaje">
-
-    <h3>Buscá un profesional</h3>
-
-    <p>
-      Indicá qué necesitás y tu localidad para encontrar
-      carpinteros de aluminio.
-    </p>
-
-  </div>
-
-</section>
- 
-
-      </div>
-        <p>
-          AluConecta está creando una red de carpinteros de aluminio
-          para conectar clientes con profesionales de su zona.
-        </p>
-
-        <p>
-          ¿Sos carpintero de aluminio?
-          <strong>Registrá tus servicios y formá parte de AluConecta.</strong>
-        </p>
       </div>
 
     </section>
 
-    <a href="aberturas.html" class="volver">
+
+    <section class="resultados">
+
+      <h2>Carpinteros de aluminio</h2>
+
+      <div id="resultadosBusqueda" class="mensaje">
+
+        <h3>Buscá un profesional</h3>
+
+        <p>
+          Indicá qué necesitás y tu localidad para encontrar
+          carpinteros de aluminio.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="mensaje">
+
+      <p>
+        AluConecta está creando una red de carpinteros de aluminio
+        para conectar clientes con profesionales de su zona.
+      </p>
+
+      <p>
+        ¿Sos carpintero de aluminio?
+        <strong>Registrá tus servicios y formá parte de AluConecta.</strong>
+      </p>
+
+    </section>
+
+
+    <a
+      href="aberturas.html"
+      class="volver">
       ← Volver a Aberturas
     </a>
 
   </main>
 
+
   <footer>
+
     <p>© 2026 AluConecta</p>
-    <p>Conectando personas, trabajos y oportunidades.</p>
+
+    <p>
+      Conectando personas, trabajos y oportunidades.
+    </p>
+
   </footer>
 
-<script>
 
-function buscarProfesional() {
+  <script>
 
-  const texto =
-    document.getElementById("necesidad").value.trim();
+    function buscarProfesional() {
 
-  const localidad =
-    document.getElementById("localidad").value;
+      const texto =
+        document.getElementById("necesidad").value.trim();
 
-  const resultados =
-    document.getElementById("resultadosBusqueda");
+      const localidad =
+        document.getElementById("localidad").value;
 
-
-  if (texto === "" && localidad === "Seleccioná una localidad") {
-
-    resultados.innerHTML = `
-      <h3>Contanos qué estás buscando</h3>
-
-      <p>
-        Escribí qué necesitás o seleccioná una localidad
-        para comenzar la búsqueda.
-      </p>
-    `;
-
-    return;
-  }
+      const resultados =
+        document.getElementById("resultadosBusqueda");
 
 
-  resultados.innerHTML = `
+      if (texto === "" && localidad === "") {
 
-    <h3>Profesional encontrado</h3>
+        resultados.innerHTML = `
+          <h3>Contanos qué estás buscando</h3>
 
-    <p>
-      <strong>Carpintería de aluminio</strong>
-    </p>
+          <p>
+            Escribí qué necesitás y seleccioná una localidad
+            para comenzar la búsqueda.
+          </p>
+        `;
 
-    <p>
-      📍 ${
-        localidad === "Seleccioná una localidad"
-        ? "Rosario, Santa Fe"
-        : localidad
+        return;
       }
-    </p>
 
-    <p>
-      Ventanas · Puertas · Cerramientos ·
-      Fabricación e instalación
-    </p>
 
-    <a href="perfil.html" class="boton">
-      Ver perfil
-    </a>
+      const lugar =
+        localidad === ""
+        ? "Rosario, Santa Fe"
+        : localidad;
 
-  `;
 
-}
+      resultados.innerHTML = `
 
-</script>
+        <h3>Profesional encontrado</h3>
+
+        <p>
+          <strong>Carpintería de aluminio</strong>
+        </p>
+
+        <p>
+          📍 ${lugar}
+        </p>
+
+        <p>
+          ${texto || "Servicios de carpintería de aluminio"}
+        </p>
+
+        <p>
+          Ventanas · Puertas · Cerramientos ·
+          Fabricación e instalación
+        </p>
+
+        <a
+          href="perfil.html"
+          class="boton">
+          Ver perfil
+        </a>
+
+      `;
+
+    }
+
+  </script>
+
 </body>
 </html>
