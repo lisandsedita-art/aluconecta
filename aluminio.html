@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>Carpintería de aluminio - AluConecta</title>
+
 
   <style>
 
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -19,6 +26,7 @@
       color: #222;
     }
 
+
     header {
       background: #1f2937;
       color: white;
@@ -26,19 +34,23 @@
       padding: 35px 20px;
     }
 
+
     header h1 {
       margin: 0 0 10px;
     }
 
+
     header p {
       margin: 0;
     }
+
 
     .contenedor {
       max-width: 900px;
       margin: 30px auto;
       padding: 20px;
     }
+
 
     .busqueda {
       background: white;
@@ -48,15 +60,18 @@
       margin-bottom: 30px;
     }
 
+
     .busqueda h2 {
       margin-top: 0;
     }
+
 
     .buscador {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
 
     .buscador input,
     .buscador select {
@@ -67,6 +82,7 @@
       border-radius: 7px;
       font-size: 16px;
     }
+
 
     .boton {
       display: inline-block;
@@ -81,13 +97,16 @@
       text-decoration: none;
     }
 
+
     .boton:hover {
       opacity: 0.9;
     }
 
+
     .resultados h2 {
       margin-bottom: 15px;
     }
+
 
     .mensaje {
       background: white;
@@ -98,6 +117,7 @@
       margin-bottom: 20px;
     }
 
+
     .profesional {
       background: white;
       padding: 25px;
@@ -106,13 +126,16 @@
       margin-bottom: 20px;
     }
 
+
     .profesional h3 {
       margin-top: 0;
     }
 
+
     .profesional p {
       line-height: 1.6;
     }
+
 
     .etiqueta {
       display: inline-block;
@@ -123,6 +146,7 @@
       font-size: 14px;
     }
 
+
     .volver {
       display: block;
       text-align: center;
@@ -132,6 +156,7 @@
       font-weight: bold;
     }
 
+
     footer {
       text-align: center;
       padding: 25px;
@@ -139,7 +164,9 @@
     }
 
   </style>
+
 </head>
+
 
 <body>
 
@@ -169,7 +196,9 @@
         ¿Qué necesitás?
       </h2>
 
+
       <div class="buscador">
+
 
         <input
           type="text"
@@ -216,6 +245,7 @@
 
         </button>
 
+
       </div>
 
     </section>
@@ -260,11 +290,14 @@
         profesionales de su zona.
       </p>
 
+
       <p>
         ¿Sos carpintero de aluminio?
+
         <strong>
           Registrá tus servicios y formá parte de AluConecta.
         </strong>
+
       </p>
 
     </section>
@@ -298,9 +331,8 @@
 
 
 
-  <!-- BUSCADOR -->
-
   <script>
+
 
     function buscarProfesional() {
 
@@ -309,7 +341,8 @@
         document
           .getElementById("necesidad")
           .value
-          .trim();
+          .trim()
+          .toLowerCase();
 
 
       const localidad =
@@ -324,7 +357,12 @@
 
 
 
-      /* VALIDACIÓN */
+      /*
+
+        VALIDACIÓN
+
+      */
+
 
       if (texto === "" && localidad === "") {
 
@@ -347,7 +385,12 @@
 
 
 
-      /* LOCALIDAD */
+      /*
+
+        LOCALIDAD MOSTRADA
+
+      */
+
 
       const lugar =
         localidad === ""
@@ -356,18 +399,137 @@
 
 
 
-      /* RESULTADOS */
-
-      resultados.innerHTML = `
-
+      let html = `
 
         <h3>
           Profesionales encontrados
         </h3>
 
+      `;
 
 
-        <!-- PROFESIONAL 1 -->
+
+      /*
+
+        PROFESIONAL REGISTRADO
+
+      */
+
+
+      const profesionalGuardado =
+        localStorage.getItem(
+          "profesionalAluConecta"
+        );
+
+
+
+      if (profesionalGuardado) {
+
+
+        const profesional =
+          JSON.parse(profesionalGuardado);
+
+
+
+        const localidadBuscada =
+          localidad === "" ||
+          profesional.localidad
+            .toLowerCase()
+            .includes(
+              localidad.toLowerCase()
+            );
+
+
+
+        const textoCompleto = (
+
+          profesional.nombre +
+          " " +
+          profesional.rubro +
+          " " +
+          profesional.servicios +
+          " " +
+          profesional.descripcion
+
+        ).toLowerCase();
+
+
+
+        const servicioCoincide =
+          texto === "" ||
+          textoCompleto.includes(texto);
+
+
+
+        if (
+          localidadBuscada &&
+          servicioCoincide
+        ) {
+
+
+          html += `
+
+            <div class="profesional">
+
+              <h3>
+                🪟 ${profesional.nombre}
+              </h3>
+
+
+              <p>
+                📍 ${profesional.localidad}
+              </p>
+
+
+              <p>
+                ⭐ ${profesional.rubro}
+              </p>
+
+
+              <p>
+                ${profesional.descripcion}
+              </p>
+
+
+              <span class="etiqueta">
+                ${profesional.rubro}
+              </span>
+
+
+              <span class="etiqueta">
+                ${profesional.servicios}
+              </span>
+
+
+              <br><br>
+
+
+              <a
+                href="perfil.html"
+                class="boton">
+
+                Ver perfil
+
+              </a>
+
+            </div>
+
+          `;
+
+        }
+
+      }
+
+
+
+      /*
+
+        PROFESIONAL DE DEMOSTRACIÓN 1
+
+      */
+
+
+      html += `
 
         <div class="profesional">
 
@@ -375,36 +537,45 @@
             🪟 Especialista en DVH
           </h3>
 
+
           <p>
             📍 ${lugar}
           </p>
 
+
           <p>
             ⭐ Fabricación e instalación
           </p>
+
 
           <p>
             Especialista en ventanas y puertas
             con DVH.
           </p>
 
+
           <span class="etiqueta">
             Ventanas
           </span>
+
 
           <span class="etiqueta">
             DVH
           </span>
 
+
           <span class="etiqueta">
             Puertas
           </span>
+
 
           <span class="etiqueta">
             Instalación
           </span>
 
+
           <br><br>
+
 
           <a
             href="perfil-aluminio-1.html"
@@ -416,9 +587,18 @@
 
         </div>
 
+      `;
 
 
-        <!-- PROFESIONAL 2 -->
+
+      /*
+
+        PROFESIONAL DE DEMOSTRACIÓN 2
+
+      */
+
+
+      html += `
 
         <div class="profesional">
 
@@ -426,32 +606,40 @@
             📐 Aberturas a medida
           </h3>
 
+
           <p>
             📍 ${lugar}
           </p>
 
+
           <p>
             ⭐ Especialista en proyectos personalizados
           </p>
+
 
           <p>
             Aberturas especiales, grandes paños
             y soluciones a medida.
           </p>
 
+
           <span class="etiqueta">
             Aberturas a medida
           </span>
+
 
           <span class="etiqueta">
             Grandes paños
           </span>
 
+
           <span class="etiqueta">
             Puertas balcón
           </span>
 
+
           <br><br>
+
 
           <a
             href="perfil-aluminio-2.html"
@@ -463,9 +651,18 @@
 
         </div>
 
+      `;
 
 
-        <!-- PROFESIONAL 3 -->
+
+      /*
+
+        PROFESIONAL DE DEMOSTRACIÓN 3
+
+      */
+
+
+      html += `
 
         <div class="profesional">
 
@@ -473,36 +670,45 @@
             🏠 Cerramientos y obras
           </h3>
 
+
           <p>
             📍 ${lugar}
           </p>
 
+
           <p>
             ⭐ Fabricación e instalación
           </p>
+
 
           <p>
             Cerramientos, aberturas para obra
             y soluciones para viviendas.
           </p>
 
+
           <span class="etiqueta">
             Cerramientos
           </span>
+
 
           <span class="etiqueta">
             Obras
           </span>
 
+
           <span class="etiqueta">
             Ventanas
           </span>
+
 
           <span class="etiqueta">
             Instalación
           </span>
 
+
           <br><br>
+
 
           <a
             href="perfil-aluminio-3.html"
@@ -514,13 +720,27 @@
 
         </div>
 
-
       `;
 
+
+
+      /*
+
+        MOSTRAR RESULTADOS
+
+      */
+
+
+      resultados.innerHTML = html;
+
+
+
     }
+
 
   </script>
 
 
 </body>
+
 </html>
