@@ -238,52 +238,84 @@
       if (texto === "" && localidad === "") {
 
         resultados.innerHTML = `
-          <h3>Contanos qué estás buscando</h3>
 
-          <p>
-            Escribí qué necesitás y seleccioná una localidad
-            para comenzar la búsqueda.
-          </p>
-        `;
+  <h3>Profesionales encontrados</h3>
 
-        return;
-      }
+  <div class="mensaje">
+
+    <h3>🪟 Carpintería de aluminio</h3>
+
+    <p>
+      📍 ${lugar}
+    </p>
+
+    <p>
+      ⭐ Perfil profesional · Fabricación e instalación
+    </p>
+
+    <p>
+      Ventanas · Puertas · Cerramientos · DVH
+    </p>
+
+    <a
+      href="perfil.html"
+      class="boton">
+      Ver perfil
+    </a>
+
+  </div>
 
 
-      const lugar =
-        localidad === ""
-        ? "Rosario, Santa Fe"
-        : localidad;
+  <div class="mensaje">
+
+    <h3>🪟 Carpintería de aluminio</h3>
+
+    <p>
+      📍 ${lugar}
+    </p>
+
+    <p>
+      ⭐ Especialista en aberturas a medida
+    </p>
+
+    <p>
+      Ventanas · Puertas balcón · Grandes paños
+    </p>
+
+    <a
+      href="perfil.html"
+      class="boton">
+      Ver perfil
+    </a>
+
+  </div>
 
 
-      resultados.innerHTML = `
+  <div class="mensaje">
 
-        <h3>Profesional encontrado</h3>
+    <h3>🪟 Carpintería de aluminio</h3>
 
-        <p>
-          <strong>Carpintería de aluminio</strong>
-        </p>
+    <p>
+      📍 ${lugar}
+    </p>
 
-        <p>
-          📍 ${lugar}
-        </p>
+    <p>
+      ⭐ Fabricación e instalación
+    </p>
 
-        <p>
-          ${texto || "Servicios de carpintería de aluminio"}
-        </p>
+    <p>
+      Cerramientos · DVH · Aberturas para obra
+    </p>
 
-        <p>
-          Ventanas · Puertas · Cerramientos ·
-          Fabricación e instalación
-        </p>
+    <a
+      href="perfil.html"
+      class="boton">
+      Ver perfil
+    </a>
 
-        <a
-          href="perfil.html"
-          class="boton">
-          Ver perfil
-        </a>
+  </div>
 
-      `;
+`;
 
     }
 
