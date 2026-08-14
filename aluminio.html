@@ -98,11 +98,6 @@
       margin-bottom: 20px;
     }
 
-    .mensaje p {
-      color: #666;
-      line-height: 1.6;
-    }
-
     .profesional {
       background: white;
       padding: 25px;
@@ -117,6 +112,15 @@
 
     .profesional p {
       line-height: 1.6;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      background: #eef2ff;
+      padding: 6px 10px;
+      border-radius: 20px;
+      margin: 3px;
+      font-size: 14px;
     }
 
     .volver {
@@ -139,15 +143,19 @@
 
 <body>
 
+
   <header>
 
-    <h1>Carpintería de aluminio</h1>
+    <h1>
+      Carpintería de aluminio
+    </h1>
 
     <p>
       Encontrá profesionales para tu proyecto.
     </p>
 
   </header>
+
 
 
   <main class="contenedor">
@@ -157,7 +165,9 @@
 
     <section class="busqueda">
 
-      <h2>¿Qué necesitás?</h2>
+      <h2>
+        ¿Qué necesitás?
+      </h2>
 
       <div class="buscador">
 
@@ -240,7 +250,7 @@
 
 
 
-    <!-- INFORMACIÓN DE ALU CONECTA -->
+    <!-- INFORMACIÓN -->
 
     <section class="mensaje">
 
@@ -288,7 +298,7 @@
 
 
 
-  <!-- FUNCIONES DEL BUSCADOR -->
+  <!-- BUSCADOR -->
 
   <script>
 
@@ -337,7 +347,7 @@
 
 
 
-      /* LOCALIDAD MOSTRADA */
+      /* LOCALIDAD */
 
       const lugar =
         localidad === ""
@@ -350,16 +360,19 @@
 
       resultados.innerHTML = `
 
+
         <h3>
           Profesionales encontrados
         </h3>
 
 
 
+        <!-- PROFESIONAL 1 -->
+
         <div class="profesional">
 
           <h3>
-            🪟 Carpintería de aluminio
+            🪟 Especialista en DVH
           </h3>
 
           <p>
@@ -371,11 +384,30 @@
           </p>
 
           <p>
-            Ventanas · Puertas · Cerramientos · DVH
+            Especialista en ventanas y puertas
+            con DVH.
           </p>
 
+          <span class="etiqueta">
+            Ventanas
+          </span>
+
+          <span class="etiqueta">
+            DVH
+          </span>
+
+          <span class="etiqueta">
+            Puertas
+          </span>
+
+          <span class="etiqueta">
+            Instalación
+          </span>
+
+          <br><br>
+
           <a
-            href="perfil.html"
+            href="perfil-aluminio-1.html"
             class="boton">
 
             Ver perfil
@@ -386,10 +418,12 @@
 
 
 
+        <!-- PROFESIONAL 2 -->
+
         <div class="profesional">
 
           <h3>
-            🪟 Carpintería de aluminio
+            📐 Aberturas a medida
           </h3>
 
           <p>
@@ -397,15 +431,30 @@
           </p>
 
           <p>
-            ⭐ Especialista en aberturas a medida
+            ⭐ Especialista en proyectos personalizados
           </p>
 
           <p>
-            Ventanas · Puertas balcón · Grandes paños
+            Aberturas especiales, grandes paños
+            y soluciones a medida.
           </p>
 
+          <span class="etiqueta">
+            Aberturas a medida
+          </span>
+
+          <span class="etiqueta">
+            Grandes paños
+          </span>
+
+          <span class="etiqueta">
+            Puertas balcón
+          </span>
+
+          <br><br>
+
           <a
-            href="perfil.html"
+            href="perfil-aluminio-2.html"
             class="boton">
 
             Ver perfil
@@ -416,10 +465,12 @@
 
 
 
+        <!-- PROFESIONAL 3 -->
+
         <div class="profesional">
 
           <h3>
-            🪟 Carpintería de aluminio
+            🏠 Cerramientos y obras
           </h3>
 
           <p>
@@ -431,11 +482,30 @@
           </p>
 
           <p>
-            Cerramientos · DVH · Aberturas para obra
+            Cerramientos, aberturas para obra
+            y soluciones para viviendas.
           </p>
 
+          <span class="etiqueta">
+            Cerramientos
+          </span>
+
+          <span class="etiqueta">
+            Obras
+          </span>
+
+          <span class="etiqueta">
+            Ventanas
+          </span>
+
+          <span class="etiqueta">
+            Instalación
+          </span>
+
+          <br><br>
+
           <a
-            href="perfil.html"
+            href="perfil-aluminio-3.html"
             class="boton">
 
             Ver perfil
