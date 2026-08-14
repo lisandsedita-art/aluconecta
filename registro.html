@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
   <title>Registrarme - AluConecta</title>
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -17,6 +26,7 @@
       color: #222;
     }
 
+
     header {
       background: #1f2937;
       color: white;
@@ -24,37 +34,49 @@
       padding: 30px 20px;
     }
 
+
     header h1 {
       margin: 0 0 10px;
     }
+
 
     header p {
       margin: 0;
     }
 
+
     .contenedor {
       max-width: 650px;
       margin: 30px auto;
       padding: 25px;
+    }
+
+
+    .tarjeta {
       background: white;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
+
 
     h2 {
       text-align: center;
       margin-top: 0;
     }
 
+
     .campo {
       margin-bottom: 18px;
     }
+
 
     label {
       display: block;
       margin-bottom: 7px;
       font-weight: bold;
     }
+
 
     input,
     select,
@@ -64,12 +86,15 @@
       border: 1px solid #ccc;
       border-radius: 7px;
       font-size: 16px;
+      font-family: Arial, sans-serif;
     }
+
 
     textarea {
       min-height: 100px;
       resize: vertical;
     }
+
 
     .boton {
       width: 100%;
@@ -83,93 +108,412 @@
       cursor: pointer;
     }
 
+
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+
+    .mensaje {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #eef2ff;
+      text-align: center;
+    }
+
+
+    .mensaje h3 {
+      margin-top: 0;
+    }
+
+
+    .perfil-creado {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+
     .volver {
       display: block;
       text-align: center;
       margin-top: 20px;
       color: #2563eb;
       text-decoration: none;
+      font-weight: bold;
     }
+
 
     footer {
       text-align: center;
       padding: 25px;
       color: #666;
     }
+
   </style>
+
 </head>
+
 
 <body>
 
+
   <header>
-    <h1>AluConecta</h1>
-    <p>Conectando profesionales con nuevos clientes.</p>
+
+    <h1>
+      AluConecta
+    </h1>
+
+    <p>
+      Conectando profesionales con nuevos clientes.
+    </p>
+
   </header>
+
+
 
   <main class="contenedor">
 
-    <h2>Registrá tus servicios</h2>
 
-    <p>
-      Completá tus datos para formar parte de AluConecta
-      y mostrar tus servicios a personas que necesitan un profesional.
-    </p>
+    <section class="tarjeta">
 
-    <form>
+      <h2>
+        Registrá tus servicios
+      </h2>
 
-      <div class="campo">
-        <label for="nombre">Nombre o empresa</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez / Aluminio JP">
+
+      <p>
+        Completá tus datos para formar parte de
+        AluConecta y mostrar tus servicios a personas
+        que necesitan un profesional.
+      </p>
+
+
+
+      <form
+        id="formularioRegistro">
+
+
+        <div class="campo">
+
+          <label for="nombre">
+            Nombre o empresa
+          </label>
+
+          <input
+            type="text"
+            id="nombre"
+            placeholder="Ej: Juan Pérez / Aluminio JP"
+            required>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="localidad">
+            Localidad
+          </label>
+
+          <input
+            type="text"
+            id="localidad"
+            placeholder="Ej: Rosario"
+            required>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="rubro">
+            Rubro
+          </label>
+
+          <select
+            id="rubro"
+            required>
+
+            <option value="">
+              Seleccioná un rubro
+            </option>
+
+            <option value="Aluminio">
+              Aluminio
+            </option>
+
+            <option value="Construcción">
+              Construcción
+            </option>
+
+            <option value="Reparaciones">
+              Reparaciones
+            </option>
+
+            <option value="Servicios">
+              Servicios
+            </option>
+
+            <option value="Otro">
+              Otro
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="servicios">
+            ¿Qué servicios ofrecés?
+          </label>
+
+          <textarea
+            id="servicios"
+            placeholder="Contanos qué trabajos realizás"
+            required></textarea>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="telefono">
+            WhatsApp o teléfono
+          </label>
+
+          <input
+            type="tel"
+            id="telefono"
+            placeholder="Ej: 341 1234567"
+            required>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="descripcion">
+            Presentación
+          </label>
+
+          <textarea
+            id="descripcion"
+            placeholder="Contanos brevemente sobre tu experiencia"
+            required></textarea>
+
+        </div>
+
+
+
+        <button
+          type="submit"
+          class="boton">
+
+          Crear mi perfil
+
+        </button>
+
+
+      </form>
+
+
+
+      <div
+        id="mensaje"
+        class="mensaje">
+
       </div>
 
-      <div class="campo">
-        <label for="localidad">Localidad</label>
-        <input type="text" id="localidad" name="localidad" placeholder="Ej: Rosario">
-      </div>
 
-      <div class="campo">
-        <label for="rubro">Rubro</label>
-        <select id="rubro" name="rubro">
-          <option value="">Seleccioná un rubro</option>
-          <option>Aluminio</option>
-          <option>Construcción</option>
-          <option>Reparaciones</option>
-          <option>Servicios</option>
-          <option>Otro</option>
-        </select>
-      </div>
+    </section>
 
-      <div class="campo">
-        <label for="servicios">¿Qué servicios ofrecés?</label>
-        <textarea id="servicios" name="servicios" placeholder="Contanos qué trabajos realizás"></textarea>
-      </div>
 
-      <div class="campo">
-        <label for="telefono">WhatsApp o teléfono</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 341 1234567">
-      </div>
 
-      <div class="campo">
-        <label for="descripcion">Presentación</label>
-        <textarea id="descripcion" name="descripcion" placeholder="Contanos brevemente sobre tu experiencia"></textarea>
-      </div>
+    <a
+      href="index.html"
+      class="volver">
 
-      <button type="submit" class="boton">
-        Crear mi perfil
-      </button>
-
-    <<form action="https://formsubmit.co/" method="POST">
-
-    <a href="índice.html" class="volver">
       ← Volver a AluConecta
+
     </a>
+
 
   </main>
 
+
+
   <footer>
-    <p>© 2026 AluConecta</p>
-    <p>Conectando personas, trabajos y oportunidades.</p>
+
+    <p>
+      © 2026 AluConecta
+    </p>
+
+    <p>
+      Conectando personas, trabajos y oportunidades.
+    </p>
+
   </footer>
 
+
+
+  <script>
+
+    document
+      .getElementById("formularioRegistro")
+      .addEventListener("submit", function(event) {
+
+
+        event.preventDefault();
+
+
+        const nombre =
+          document
+            .getElementById("nombre")
+            .value
+            .trim();
+
+
+        const localidad =
+          document
+            .getElementById("localidad")
+            .value
+            .trim();
+
+
+        const rubro =
+          document
+            .getElementById("rubro")
+            .value;
+
+
+        const servicios =
+          document
+            .getElementById("servicios")
+            .value
+            .trim();
+
+
+        const telefono =
+          document
+            .getElementById("telefono")
+            .value
+            .trim();
+
+
+        const descripcion =
+          document
+            .getElementById("descripcion")
+            .value
+            .trim();
+
+
+
+        const profesional = {
+
+          nombre: nombre,
+
+          localidad: localidad,
+
+          rubro: rubro,
+
+          servicios: servicios,
+
+          telefono: telefono,
+
+          descripcion: descripcion
+
+        };
+
+
+
+        localStorage.setItem(
+          "profesionalAluConecta",
+          JSON.stringify(profesional)
+        );
+
+
+
+        const mensaje =
+          document.getElementById("mensaje");
+
+
+
+        mensaje.style.display = "block";
+
+
+        mensaje.innerHTML = `
+
+          <h3>
+            ¡Perfil creado correctamente!
+          </h3>
+
+          <p>
+            Tu información quedó guardada
+            para esta prueba.
+          </p>
+
+
+          <div class="perfil-creado">
+
+            <p>
+              <strong>
+                ${nombre}
+              </strong>
+            </p>
+
+            <p>
+              📍 ${localidad}
+            </p>
+
+            <p>
+              🏷️ ${rubro}
+            </p>
+
+            <p>
+              🔧 ${servicios}
+            </p>
+
+            <p>
+              📱 ${telefono}
+            </p>
+
+            <p>
+              ${descripcion}
+            </p>
+
+          </div>
+
+
+          <p>
+            El próximo paso será conectar este perfil
+            con el buscador de AluConecta.
+          </p>
+
+        `;
+
+
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
+
+
+      });
+
+  </script>
+
+
 </body>
+
 </html>
