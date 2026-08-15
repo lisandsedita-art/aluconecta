@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Proyectos y necesidades - AluConecta</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .tarjeta h2 {
+      margin-top: 0;
+    }
+
+    .proyecto {
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .proyecto:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      background: #eef2ff;
+      padding: 6px 10px;
+      border-radius: 20px;
+      margin: 3px;
+      font-size: 14px;
+    }
+
+    .boton {
+      display: inline-block;
+      padding: 13px 20px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 7px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .boton.verde {
+      background: #16a34a;
+    }
+
+    .sin-resultados {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px 0;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <h1>
+    Proyectos y necesidades
+  </h1>
+
+  <p>
+    Encontrá oportunidades y conectá con quienes
+    necesitan un profesional.
+  </p>
+
+</header>
+
+
+
+<main class="contenedor">
+
+
+  <section class="tarjeta">
+
+    <h2>
+      Oportunidades publicadas
+    </h2>
+
+    <p>
+      Acá aparecerán los proyectos y trabajos
+      publicados por personas, empresas y
+      profesionales que necesitan un servicio.
+    </p>
+
+  </section>
+
+
+
+  <section
+    id="listaProyectos"
+    class="tarjeta">
+
+  </section>
+
+
+
+  <a
+    href="index.html"
+    class="volver">
+
+    ← Volver a AluConecta
+
+  </a>
+
+
+</main>
+
+
+
+<footer>
+
+  <p>
+    © 2026 AluConecta
+  </p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+
+<script>
+
+
+const lista =
+  document.getElementById(
+    "listaProyectos"
+  );
+
+
+/*
+  Recuperamos los clientes registrados.
+*/
+
+const clientes =
+  JSON.parse(
+    localStorage.getItem(
+      "clientesAluConecta"
+    )
+  ) || [];
+
+
+
+if (clientes.length === 0) {
+
+
+  lista.innerHTML = `
+
+    <div class="sin-resultados">
+
+      <h3>
+        Todavía no hay proyectos publicados
+      </h3>
+
+      <p>
+        Cuando alguien publique una necesidad,
+        aparecerá en este espacio.
+      </p>
+
+      <br>
+
+      <a
+        href="registro-cliente.html"
+        class="boton verde">
+
+        Publicar mi proyecto
+
+      </a>
+
+    </div>
+
+  `;
+
+
+} else {
+
+
+  lista.innerHTML = `
+
+    <h2>
+      Proyectos publicados
+    </h2>
+
+    ${
+      clientes
+        .map(
+          function(cliente) {
+
+            return `
+
+              <div class="proyecto">
+
+                <h3>
+                  🏗️
+                  ${
+                    cliente.nombre ||
+                    "Proyecto"
+                  }
+                </h3>
+
+                <p>
+
+                  📍
+                  ${
+                    cliente.localidad ||
+                    "Localidad no indicada"
+                  }
+
+                </p>
+
+                <p>
+
+                  👤
+                  ${
+                    cliente.tipo ||
+                    "Usuario"
+                  }
+
+                </p>
+
+                <p>
+
+                  🔧
+                  ${
+                    cliente.proyecto ||
+                    "Necesidad no especificada"
+                  }
+
+                </p>
+
+                <span class="etiqueta">
+                  Proyecto
+                </span>
+
+                <span class="etiqueta">
+                  ${
+                    cliente.localidad ||
+                    "Zona"
+                  }
+                </span>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("")
+
+    }
+
+  `;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
