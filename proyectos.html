@@ -311,7 +311,18 @@ if (clientes.length === 0) {
                     "Zona"
                   }
                 </span>
+<br><br>
 
+<a
+  href="https://wa.me/${cliente.telefono.replace(/\D/g, "").length === 10 ? "54" + cliente.telefono.replace(/\D/g, "") : cliente.telefono.replace(/\D/g, "")}?text=${encodeURIComponent(
+    `Hola, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`
+  )}"
+  target="_blank"
+  class="boton verde">
+
+  💬 Estoy interesado
+
+</a>
               </div>
 
             `;
