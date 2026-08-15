@@ -96,6 +96,30 @@
       resize: vertical;
     }
 
+    .opciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .opcion {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafafa;
+    }
+
+    .opcion label {
+      margin: 0;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .opcion input {
+      width: auto;
+      margin-right: 8px;
+    }
+
     .ayuda {
       margin-top: 6px;
       font-size: 13px;
@@ -140,6 +164,14 @@
       color: #666;
     }
 
+    @media (max-width: 600px) {
+
+      .opciones {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
   </style>
 
 </head>
@@ -155,7 +187,7 @@
   </h1>
 
   <p>
-    Conectando profesionales con nuevos clientes.
+    Personas, profesionales y empresas conectadas.
   </p>
 
 </header>
@@ -165,248 +197,406 @@
 <main class="contenedor">
 
 
-  <section class="tarjeta">
+<section class="tarjeta">
 
 
-    <h2>
-      Registrá tus servicios
-    </h2>
+  <h2>
+    Crear mi perfil
+  </h2>
 
 
-    <p>
-      Completá tus datos para formar parte de
-      AluConecta y mostrar tus servicios a personas
-      que necesitan un profesional.
-    </p>
+  <p>
+    Completá tus datos para formar parte de AluConecta.
+    Tu perfil permitirá que otros usuarios conozcan
+    quién sos, qué actividad realizás y cómo contactarte.
+  </p>
 
 
 
-    <form id="formularioRegistro">
+  <form id="formularioRegistro">
 
 
-      <div class="campo">
+    <h3>
+      Información del usuario
+    </h3>
 
-        <label for="nombre">
-          Nombre o empresa
-        </label>
 
-        <input
-          type="text"
-          id="nombre"
-          placeholder="Ej: Juan Pérez / Aluminio JP"
-          required>
+    <div class="campo">
 
-      </div>
+      <label for="tipoUsuario">
+        ¿Qué tipo de usuario sos?
+      </label>
 
+      <select id="tipoUsuario" required>
 
+        <option value="">
+          Seleccioná una opción
+        </option>
 
-      <div class="campo">
+        <option value="Particular">
+          👤 Persona particular
+        </option>
 
-        <label for="localidad">
-          Localidad
-        </label>
+        <option value="Profesional independiente">
+          🧑‍🔧 Profesional independiente
+        </option>
 
-        <input
-          type="text"
-          id="localidad"
-          placeholder="Ej: Rosario"
-          required>
+        <option value="Empresa">
+          🏢 Empresa
+        </option>
 
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="rubro">
-          Rubro
-        </label>
-
-        <select id="rubro" required>
-
-          <option value="">
-            Seleccioná un rubro
-          </option>
-
-          <option value="Aluminio">
-            Aluminio
-          </option>
-
-          <option value="Construcción">
-            Construcción
-          </option>
-
-          <option value="Reparaciones">
-            Reparaciones
-          </option>
-
-          <option value="Servicios">
-            Servicios
-          </option>
-
-          <option value="Otro">
-            Otro
-          </option>
-
-        </select>
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="servicios">
-          ¿Qué servicios ofrecés?
-        </label>
-
-        <textarea
-          id="servicios"
-          placeholder="Ej: Ventanas, puertas, DVH, cerramientos, fabricación e instalación"
-          required></textarea>
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="telefono">
-          WhatsApp o teléfono
-        </label>
-
-        <input
-          type="tel"
-          id="telefono"
-          placeholder="Ej: 341 1234567"
-          required>
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="descripcion">
-          Presentación
-        </label>
-
-        <textarea
-          id="descripcion"
-          placeholder="Contanos brevemente sobre tu experiencia"
-          required></textarea>
-
-      </div>
-
-
-
-      <h3>
-        Presencia profesional
-      </h3>
-
-
-      <p>
-        Agregá tus redes sociales o sitio web para que
-        los clientes puedan conocer más sobre tu trabajo.
-      </p>
-
-
-
-      <div class="campo">
-
-        <label for="instagram">
-          Instagram
-        </label>
-
-        <input
-          type="text"
-          id="instagram"
-          placeholder="@tuempresa">
-
-        <div class="ayuda">
-          Ejemplo: @aluminio_hs
-        </div>
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="facebook">
-          Facebook
-        </label>
-
-        <input
-          type="text"
-          id="facebook"
-          placeholder="Nombre o usuario de Facebook">
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="tiktok">
-          TikTok
-        </label>
-
-        <input
-          type="text"
-          id="tiktok"
-          placeholder="@tuempresa">
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="web">
-          Sitio web
-        </label>
-
-        <input
-          type="text"
-          id="web"
-          placeholder="www.tuempresa.com">
-
-      </div>
-
-
-
-      <button
-        type="submit"
-        class="boton">
-
-        Crear mi perfil
-
-      </button>
-
-
-    </form>
-
-
-
-    <div
-      id="mensaje"
-      class="mensaje">
+      </select>
 
     </div>
 
 
-  </section>
+
+    <div class="campo">
+
+      <label>
+        ¿Cuál es tu actividad?
+      </label>
+
+      <div class="ayuda">
+        Podés seleccionar una o varias actividades.
+      </div>
+
+
+      <div class="opciones">
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Carpintería de aluminio">
+            Carpintería de aluminio
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Arquitectura">
+            Arquitectura
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Ingeniería">
+            Ingeniería
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Construcción">
+            Construcción
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Desarrollo inmobiliario">
+            Desarrollo inmobiliario
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Fabricación">
+            Fabricación
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Instalaciones">
+            Instalaciones
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Reparaciones">
+            Reparaciones
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Proveedor">
+            Proveedor
+          </label>
+        </div>
+
+
+        <div class="opcion">
+          <label>
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Otro">
+            Otra
+          </label>
+        </div>
+
+
+      </div>
+
+    </div>
 
 
 
-  <a
-    href="index.html"
-    class="volver">
+    <div class="campo">
 
-    ← Volver a AluConecta
+      <label for="participacion">
+        ¿Qué querés hacer en AluConecta?
+      </label>
 
-  </a>
+      <select id="participacion" required>
+
+        <option value="">
+          Seleccioná una opción
+        </option>
+
+        <option value="Busca servicios">
+          🔎 Necesito un servicio o profesional
+        </option>
+
+        <option value="Ofrece servicios">
+          🛠️ Ofrezco servicios
+        </option>
+
+      </select>
+
+    </div>
+
+
+
+    <h3>
+      Datos de contacto
+    </h3>
+
+
+
+    <div class="campo">
+
+      <label for="nombre">
+        Nombre o empresa
+      </label>
+
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Ej: Juan Pérez / Aluminio JP"
+        required>
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="localidad">
+        Localidad
+      </label>
+
+      <input
+        type="text"
+        id="localidad"
+        placeholder="Ej: Rosario"
+        required>
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="servicios">
+        Servicios que ofrecés
+      </label>
+
+      <textarea
+        id="servicios"
+        placeholder="Si ofrecés servicios, describilos aquí. Ej: ventanas, puertas, DVH, cerramientos e instalación."></textarea>
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="telefono">
+        WhatsApp o teléfono
+      </label>
+
+      <input
+        type="tel"
+        id="telefono"
+        placeholder="Ej: 341 1234567"
+        required>
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="descripcion">
+        Presentación
+      </label>
+
+      <textarea
+        id="descripcion"
+        placeholder="Contanos brevemente sobre vos, tu empresa o tu actividad."
+        required></textarea>
+
+    </div>
+
+
+
+    <h3>
+      Presencia profesional
+    </h3>
+
+
+    <p>
+      Agregá tus redes sociales o sitio web para que
+      otros usuarios puedan conocer más sobre tu actividad.
+    </p>
+
+
+
+    <div class="campo">
+
+      <label for="instagram">
+        Instagram
+      </label>
+
+      <input
+        type="text"
+        id="instagram"
+        placeholder="@tuempresa">
+
+      <div class="ayuda">
+        Ejemplo: @aluminio_hs
+      </div>
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="facebook">
+        Facebook
+      </label>
+
+      <input
+        type="text"
+        id="facebook"
+        placeholder="Nombre o usuario de Facebook">
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="tiktok">
+        TikTok
+      </label>
+
+      <input
+        type="text"
+        id="tiktok"
+        placeholder="@tuempresa">
+
+    </div>
+
+
+
+    <div class="campo">
+
+      <label for="web">
+        Sitio web
+      </label>
+
+      <input
+        type="text"
+        id="web"
+        placeholder="www.tuempresa.com">
+
+    </div>
+
+
+
+    <button
+      type="submit"
+      class="boton">
+
+      Crear mi perfil
+
+    </button>
+
+
+  </form>
+
+
+
+  <div
+    id="mensaje"
+    class="mensaje">
+
+  </div>
+
+
+</section>
+
+
+
+<a
+  href="index.html"
+  class="volver">
+
+  ← Volver a AluConecta
+
+</a>
 
 
 </main>
@@ -430,184 +620,344 @@
 <script>
 
 
+/*
+  Si llegamos desde acceso.html con parámetros,
+  los utilizamos para completar automáticamente
+  las elecciones correspondientes.
+*/
+
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const tipoDesdeAcceso =
+  parametros.get("tipo");
+
+
+const rolDesdeAcceso =
+  parametros.get("rol");
+
+
+if (tipoDesdeAcceso) {
+
+  const tipoUsuario =
+    document.getElementById("tipoUsuario");
+
+  const mapaTipos = {
+
+    "particular": "Particular",
+
+    "profesional":
+      "Profesional independiente",
+
+    "empresa":
+      "Empresa"
+
+  };
+
+  if (mapaTipos[tipoDesdeAcceso]) {
+
+    tipoUsuario.value =
+      mapaTipos[tipoDesdeAcceso];
+
+  }
+
+}
+
+
+if (rolDesdeAcceso) {
+
+  const participacion =
+    document.getElementById("participacion");
+
+  const mapaRoles = {
+
+    "busca": "Busca servicios",
+
+    "ofrece": "Ofrece servicios"
+
+  };
+
+  if (mapaRoles[rolDesdeAcceso]) {
+
+    participacion.value =
+      mapaRoles[rolDesdeAcceso];
+
+  }
+
+}
+
+
+
+/*
+  Registro
+*/
+
 document
   .getElementById("formularioRegistro")
-  .addEventListener("submit", function(event) {
+  .addEventListener(
+    "submit",
+    function(event) {
 
-
-    event.preventDefault();
-
-
-    const profesional = {
-
-      id:
-        Date.now().toString(),
-
-      nombre:
-        document
-          .getElementById("nombre")
-          .value
-          .trim(),
-
-      localidad:
-        document
-          .getElementById("localidad")
-          .value
-          .trim(),
-
-      rubro:
-        document
-          .getElementById("rubro")
-          .value,
-
-      servicios:
-        document
-          .getElementById("servicios")
-          .value
-          .trim(),
-
-      telefono:
-        document
-          .getElementById("telefono")
-          .value
-          .trim(),
-
-      descripcion:
-        document
-          .getElementById("descripcion")
-          .value
-          .trim(),
-
-      instagram:
-        document
-          .getElementById("instagram")
-          .value
-          .trim(),
-
-      facebook:
-        document
-          .getElementById("facebook")
-          .value
-          .trim(),
-
-      tiktok:
-        document
-          .getElementById("tiktok")
-          .value
-          .trim(),
-
-      web:
-        document
-          .getElementById("web")
-          .value
-          .trim()
-
-    };
+      event.preventDefault();
 
 
 
-    let profesionales =
-      JSON.parse(
-        localStorage.getItem(
-          "profesionalesAluConecta"
-        )
-      ) || [];
+      const actividades =
+        Array
+          .from(
+            document.querySelectorAll(
+              'input[name="actividad"]:checked'
+            )
+          )
+          .map(
+            function(opcion) {
+              return opcion.value;
+            }
+          );
 
 
 
-    /*
-      Si teníamos el perfil anterior
-      guardado con el sistema viejo,
-      lo conservamos.
-    */
+      if (actividades.length === 0) {
 
-    const perfilAnterior =
-      localStorage.getItem(
-        "profesionalAluConecta"
-      );
-
-
-    if (
-      perfilAnterior &&
-      profesionales.length === 0
-    ) {
-
-      try {
-
-        const anterior =
-          JSON.parse(perfilAnterior);
-
-        anterior.id =
-          Date.now().toString() + "-anterior";
-
-        profesionales.push(anterior);
-
-      } catch (error) {
-
-        console.log(
-          "No se pudo recuperar el perfil anterior."
+        alert(
+          "Seleccioná al menos una actividad."
         );
+
+        return;
 
       }
 
+
+
+      const profesional = {
+
+        id:
+          Date.now().toString(),
+
+        tipoUsuario:
+          document
+            .getElementById("tipoUsuario")
+            .value,
+
+        actividades:
+          actividades,
+
+        participacion:
+          document
+            .getElementById("participacion")
+            .value,
+
+        nombre:
+          document
+            .getElementById("nombre")
+            .value
+            .trim(),
+
+        localidad:
+          document
+            .getElementById("localidad")
+            .value
+            .trim(),
+
+        /*
+          Conservamos "rubro" para que los perfiles
+          anteriores sigan funcionando.
+        */
+
+        rubro:
+          actividades.join(", "),
+
+        servicios:
+          document
+            .getElementById("servicios")
+            .value
+            .trim(),
+
+        telefono:
+          document
+            .getElementById("telefono")
+            .value
+            .trim(),
+
+        descripcion:
+          document
+            .getElementById("descripcion")
+            .value
+            .trim(),
+
+        instagram:
+          document
+            .getElementById("instagram")
+            .value
+            .trim(),
+
+        facebook:
+          document
+            .getElementById("facebook")
+            .value
+            .trim(),
+
+        tiktok:
+          document
+            .getElementById("tiktok")
+            .value
+            .trim(),
+
+        web:
+          document
+            .getElementById("web")
+            .value
+            .trim()
+
+      };
+
+
+
+      let profesionales =
+        JSON.parse(
+          localStorage.getItem(
+            "profesionalesAluConecta"
+          )
+        ) || [];
+
+
+
+      /*
+        Conservamos perfiles anteriores.
+      */
+
+      const perfilAnterior =
+        localStorage.getItem(
+          "profesionalAluConecta"
+        );
+
+
+      if (
+        perfilAnterior &&
+        profesionales.length === 0
+      ) {
+
+        try {
+
+          const anterior =
+            JSON.parse(
+              perfilAnterior
+            );
+
+          anterior.id =
+            Date.now().toString() +
+            "-anterior";
+
+          profesionales.push(
+            anterior
+          );
+
+        } catch (error) {
+
+          console.log(
+            "No se pudo recuperar el perfil anterior."
+          );
+
+        }
+
+      }
+
+
+
+      profesionales.push(
+        profesional
+      );
+
+
+
+      localStorage.setItem(
+        "profesionalesAluConecta",
+        JSON.stringify(
+          profesionales
+        )
+      );
+
+
+
+      /*
+        También guardamos el último perfil
+        para mantener compatibilidad con
+        el perfil público que ya tenemos.
+      */
+
+      localStorage.setItem(
+        "profesionalAluConecta",
+        JSON.stringify(
+          profesional
+        )
+      );
+
+
+
+      const mensaje =
+        document.getElementById(
+          "mensaje"
+        );
+
+
+      mensaje.style.display =
+        "block";
+
+
+      mensaje.innerHTML = `
+
+        <h3>
+          ¡Perfil creado correctamente!
+        </h3>
+
+        <p>
+          ${profesional.nombre}
+        </p>
+
+        <p>
+          🏢 Tipo:
+          ${profesional.tipoUsuario}
+        </p>
+
+        <p>
+          🏷️ Actividad:
+          ${profesional.actividades.join(", ")}
+        </p>
+
+        <p>
+          📍 ${profesional.localidad}
+        </p>
+
+        <p>
+          Tu perfil fue agregado a AluConecta.
+        </p>
+
+        <p>
+          Ya podés continuar probando la plataforma.
+        </p>
+
+      `;
+
+
+
+      document
+        .getElementById(
+          "formularioRegistro"
+        )
+        .reset();
+
+
+
+      mensaje.scrollIntoView({
+        behavior: "smooth"
+      });
+
+
     }
-
-
-
-    profesionales.push(profesional);
-
-
-
-    localStorage.setItem(
-      "profesionalesAluConecta",
-      JSON.stringify(profesionales)
-    );
-
-
-
-    const mensaje =
-      document.getElementById("mensaje");
-
-
-    mensaje.style.display = "block";
-
-
-    mensaje.innerHTML = `
-
-      <h3>
-        ¡Perfil creado correctamente!
-      </h3>
-
-      <p>
-        ${profesional.nombre}
-      </p>
-
-      <p>
-        📍 ${profesional.localidad}
-      </p>
-
-      <p>
-        Tu perfil fue agregado a AluConecta.
-      </p>
-
-      <p>
-        Ya podés continuar probando la plataforma.
-      </p>
-
-    `;
-
-
-    document
-      .getElementById("formularioRegistro")
-      .reset();
-
-
-    mensaje.scrollIntoView({
-      behavior: "smooth"
-    });
-
-
-  });
+  );
 
 
 </script>
