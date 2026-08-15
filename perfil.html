@@ -447,14 +447,16 @@
           <div class="botones">
 
 
-            <a
-              href="${whatsapp}"
-              target="_blank"
-              class="boton whatsapp">
+          <a
+  href="${whatsapp}?text=${encodeURIComponent(
+    `Hola ${profesional.nombre}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
+  )}"
+  target="_blank"
+  class="boton whatsapp">
 
-              💬 Contactar por WhatsApp
+  💬 Contactar por WhatsApp
 
-            </a>
+</a>
 
 
             <a
