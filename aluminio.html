@@ -188,8 +188,6 @@
   <main class="contenedor">
 
 
-    <!-- BUSCADOR -->
-
     <section class="busqueda">
 
       <h2>
@@ -203,14 +201,15 @@
         <input
           type="text"
           id="necesidad"
-          placeholder="Ej.: 4 ventanas con DVH, puerta balcón, cerramiento..."
+          placeholder="Ej.: ventanas, DVH, puertas, cerramientos..."
         >
+
 
 
         <select id="localidad">
 
           <option value="">
-            Seleccioná una localidad
+            Todas las localidades
           </option>
 
           <option value="Rosario">
@@ -229,17 +228,14 @@
             Villa Gobernador Gálvez
           </option>
 
-          <option value="Otra localidad">
-            Otra localidad
-          </option>
-
         </select>
+
 
 
         <button
           type="button"
           class="boton"
-          onclick="buscarProfesional()">
+          onclick="buscarProfesionales()">
 
           Buscar
 
@@ -252,9 +248,8 @@
 
 
 
-    <!-- RESULTADOS -->
-
     <section class="resultados">
+
 
       <h2>
         Carpinteros de aluminio
@@ -265,40 +260,46 @@
         id="resultadosBusqueda"
         class="mensaje">
 
+
         <h3>
           Buscá un profesional
         </h3>
 
+
         <p>
-          Indicá qué necesitás y tu localidad
-          para encontrar carpinteros de aluminio.
+          Escribí qué necesitás o seleccioná
+          una localidad para comenzar.
         </p>
 
+
       </div>
+
 
     </section>
 
 
 
-    <!-- INFORMACIÓN -->
-
     <section class="mensaje">
 
+
       <p>
-        AluConecta está creando una red de carpinteros
-        de aluminio para conectar clientes con
-        profesionales de su zona.
+        AluConecta está creando una red de
+        carpinteros de aluminio para conectar
+        clientes con profesionales de su zona.
       </p>
 
 
       <p>
+
         ¿Sos carpintero de aluminio?
 
         <strong>
-          Registrá tus servicios y formá parte de AluConecta.
+          Registrá tus servicios y formá parte
+          de AluConecta.
         </strong>
 
       </p>
+
 
     </section>
 
@@ -319,426 +320,364 @@
 
   <footer>
 
+
     <p>
       © 2026 AluConecta
     </p>
+
 
     <p>
       Conectando personas, trabajos y oportunidades.
     </p>
 
+
   </footer>
 
 
 
-  <script>
+<script>
 
 
-    function buscarProfesional() {
+function buscarProfesionales() {
 
 
-      const texto =
-        document
-          .getElementById("necesidad")
-          .value
-          .trim()
-          .toLowerCase();
+  const texto =
+    document
+      .getElementById("necesidad")
+      .value
+      .trim()
+      .toLowerCase();
 
 
-      const localidad =
-        document
-          .getElementById("localidad")
-          .value;
+  const localidad =
+    document
+      .getElementById("localidad")
+      .value
+      .trim()
+      .toLowerCase();
 
 
-      const resultados =
-        document
-          .getElementById("resultadosBusqueda");
-
-
-
-      /*
-
-        VALIDACIÓN
-
-      */
-
-
-      if (texto === "" && localidad === "") {
-
-        resultados.innerHTML = `
-
-          <h3>
-            Contanos qué estás buscando
-          </h3>
-
-          <p>
-            Escribí qué necesitás y seleccioná
-            una localidad para comenzar la búsqueda.
-          </p>
-
-        `;
-
-        return;
-
-      }
+  const resultados =
+    document
+      .getElementById("resultadosBusqueda");
 
 
 
-      /*
+  /*
+    Obtenemos todos los profesionales
+    registrados.
+  */
 
-        LOCALIDAD MOSTRADA
-
-      */
-
-
-      const lugar =
-        localidad === ""
-          ? "Rosario, Santa Fe"
-          : localidad;
-
-
-
-      let html = `
-
-        <h3>
-          Profesionales encontrados
-        </h3>
-
-      `;
+  let profesionales =
+    JSON.parse(
+      localStorage.getItem(
+        "profesionalesAluConecta"
+      )
+    ) || [];
 
 
 
-      /*
+  /*
+    Compatibilidad con el sistema anterior.
+  */
 
-        PROFESIONAL REGISTRADO
+  if (
+    profesionales.length === 0
+  ) {
 
-      */
+
+    const anterior =
+      localStorage.getItem(
+        "profesionalAluConecta"
+      );
 
 
-      const profesionalGuardado =
-        localStorage.getItem(
-          "profesionalAluConecta"
+    if (anterior) {
+
+      try {
+
+        const profesionalAnterior =
+          JSON.parse(anterior);
+
+        profesionalAnterior.id =
+          "anterior";
+
+        profesionales.push(
+          profesionalAnterior
         );
 
+      } catch (error) {
 
-
-      if (profesionalGuardado) {
-
-
-        const profesional =
-          JSON.parse(profesionalGuardado);
-
-
-
-        const localidadBuscada =
-          localidad === "" ||
-          profesional.localidad
-            .toLowerCase()
-            .includes(
-              localidad.toLowerCase()
-            );
-
-
-
-        const textoCompleto = (
-
-          profesional.nombre +
-          " " +
-          profesional.rubro +
-          " " +
-          profesional.servicios +
-          " " +
-          profesional.descripcion
-
-        ).toLowerCase();
-
-
-
-        const servicioCoincide =
-          texto === "" ||
-          textoCompleto.includes(texto);
-
-
-
-        if (
-          localidadBuscada &&
-          servicioCoincide
-        ) {
-
-
-          html += `
-
-            <div class="profesional">
-
-              <h3>
-                🪟 ${profesional.nombre}
-              </h3>
-
-
-              <p>
-                📍 ${profesional.localidad}
-              </p>
-
-
-              <p>
-                ⭐ ${profesional.rubro}
-              </p>
-
-
-              <p>
-                ${profesional.descripcion}
-              </p>
-
-
-              <span class="etiqueta">
-                ${profesional.rubro}
-              </span>
-
-
-              <span class="etiqueta">
-                ${profesional.servicios}
-              </span>
-
-
-              <br><br>
-
-
-              <a
-                href="perfil.html"
-                class="boton">
-
-                Ver perfil
-
-              </a>
-
-            </div>
-
-          `;
-
-        }
+        console.log(
+          "No se pudo recuperar el perfil anterior."
+        );
 
       }
 
+    }
 
+  }
 
-      /*
 
-        PROFESIONAL DE DEMOSTRACIÓN 1
 
-      */
+  /*
+    Si no hay profesionales.
+  */
 
+  if (
+    profesionales.length === 0
+  ) {
 
-      html += `
 
-        <div class="profesional">
+    resultados.innerHTML = `
 
-          <h3>
-            🪟 Especialista en DVH
-          </h3>
+      <h3>
+        Todavía no hay profesionales registrados
+      </h3>
 
+      <p>
+        Sé el primero en formar parte de AluConecta.
+      </p>
 
-          <p>
-            📍 ${lugar}
-          </p>
+      <a
+        href="registro.html"
+        class="boton">
 
+        Registrarme
 
-          <p>
-            ⭐ Fabricación e instalación
-          </p>
+      </a>
 
+    `;
 
-          <p>
-            Especialista en ventanas y puertas
-            con DVH.
-          </p>
 
+    return;
 
-          <span class="etiqueta">
-            Ventanas
-          </span>
+  }
 
 
-          <span class="etiqueta">
-            DVH
-          </span>
 
+  /*
+    Filtramos los profesionales.
+  */
 
-          <span class="etiqueta">
-            Puertas
-          </span>
+  const encontrados =
+    profesionales.filter(
+      function(profesional) {
 
 
-          <span class="etiqueta">
-            Instalación
-          </span>
+        const nombre =
+          (profesional.nombre || "")
+            .toLowerCase();
 
 
-          <br><br>
+        const servicios =
+          (profesional.servicios || "")
+            .toLowerCase();
 
 
-          <a
-            href="perfil-aluminio-1.html"
-            class="boton">
+        const rubro =
+          (profesional.rubro || "")
+            .toLowerCase();
 
-            Ver perfil
 
-          </a>
+        const descripcion =
+          (profesional.descripcion || "")
+            .toLowerCase();
 
-        </div>
 
-      `;
+        const lugar =
+          (profesional.localidad || "")
+            .toLowerCase();
 
 
 
-      /*
+        /*
+          Buscamos el texto en
+          nombre, servicios, rubro
+          o descripción.
+        */
 
-        PROFESIONAL DE DEMOSTRACIÓN 2
+        const coincideTexto =
+          texto === "" ||
+          nombre.includes(texto) ||
+          servicios.includes(texto) ||
+          rubro.includes(texto) ||
+          descripcion.includes(texto);
 
-      */
 
 
-      html += `
+        /*
+          Filtramos por localidad.
+        */
 
-        <div class="profesional">
+        const coincideLocalidad =
+          localidad === "" ||
+          lugar === localidad;
 
-          <h3>
-            📐 Aberturas a medida
-          </h3>
 
 
-          <p>
-            📍 ${lugar}
-          </p>
+        return (
+          coincideTexto &&
+          coincideLocalidad
+        );
 
+      }
+    );
 
-          <p>
-            ⭐ Especialista en proyectos personalizados
-          </p>
 
 
-          <p>
-            Aberturas especiales, grandes paños
-            y soluciones a medida.
-          </p>
+  /*
+    Si no encontramos resultados.
+  */
 
+  if (
+    encontrados.length === 0
+  ) {
 
-          <span class="etiqueta">
-            Aberturas a medida
-          </span>
 
+    resultados.innerHTML = `
 
-          <span class="etiqueta">
-            Grandes paños
-          </span>
+      <h3>
+        No encontramos profesionales
+      </h3>
 
+      <p>
+        Probá con otra localidad o con
+        otras palabras de búsqueda.
+      </p>
 
-          <span class="etiqueta">
-            Puertas balcón
-          </span>
+    `;
 
 
-          <br><br>
+    return;
 
+  }
 
-          <a
-            href="perfil-aluminio-2.html"
-            class="boton">
 
-            Ver perfil
 
-          </a>
+  /*
+    Mostramos los resultados.
+  */
 
-        </div>
+  resultados.innerHTML = `
 
-      `;
+    <h3>
+      ${encontrados.length}
+      ${
+        encontrados.length === 1
+          ? "profesional encontrado"
+          : "profesionales encontrados"
+      }
+    </h3>
 
+    ${
 
 
-      /*
+      encontrados
+        .map(
+          function(profesional) {
 
-        PROFESIONAL DE DEMOSTRACIÓN 3
 
-      */
+            const id =
+              profesional.id ||
+              Date.now().toString();
 
 
-      html += `
 
-        <div class="profesional">
+            const servicios =
+              profesional.servicios ||
+              "Servicios profesionales";
 
-          <h3>
-            🏠 Cerramientos y obras
-          </h3>
 
 
-          <p>
-            📍 ${lugar}
-          </p>
+            return `
 
 
-          <p>
-            ⭐ Fabricación e instalación
-          </p>
+              <div class="profesional">
 
 
-          <p>
-            Cerramientos, aberturas para obra
-            y soluciones para viviendas.
-          </p>
+                <h3>
 
+                  🪟
+                  ${
+                    profesional.nombre ||
+                    "Profesional de aluminio"
+                  }
 
-          <span class="etiqueta">
-            Cerramientos
-          </span>
+                </h3>
 
 
-          <span class="etiqueta">
-            Obras
-          </span>
 
+                <p>
 
-          <span class="etiqueta">
-            Ventanas
-          </span>
+                  📍
+                  ${
+                    profesional.localidad ||
+                    "Localidad no indicada"
+                  }
 
+                </p>
 
-          <span class="etiqueta">
-            Instalación
-          </span>
 
 
-          <br><br>
+                <p>
 
+                  🏷️
+                  ${
+                    profesional.rubro ||
+                    "Aluminio"
+                  }
 
-          <a
-            href="perfil-aluminio-3.html"
-            class="boton">
+                </p>
 
-            Ver perfil
 
-          </a>
 
-        </div>
+                <p>
 
-      `;
+                  🔧
+                  ${servicios}
 
+                </p>
 
 
-      /*
 
-        MOSTRAR RESULTADOS
+                <p>
 
-      */
+                  ⭐
+                  Profesional registrado en
+                  AluConecta
 
+                </p>
 
-      resultados.innerHTML = html;
 
+
+                <a
+                  href="perfil.html?id=${encodeURIComponent(id)}"
+                  class="boton">
+
+                  Ver perfil
+
+                </a>
+
+
+              </div>
+
+
+            `;
+
+          }
+        )
+        .join("")
 
 
     }
 
+  `;
 
-  </script>
+}
+
+
+</script>
 
 
 </body>
