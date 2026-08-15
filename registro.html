@@ -68,8 +68,8 @@
 
     h3 {
       margin-top: 30px;
-      border-bottom: 1px solid #ddd;
       padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
     }
 
 
@@ -97,6 +97,14 @@
     }
 
 
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+
     textarea {
       min-height: 100px;
       resize: vertical;
@@ -104,9 +112,10 @@
 
 
     .ayuda {
-      margin-top: 5px;
+      margin-top: 6px;
       font-size: 13px;
       color: #666;
+      line-height: 1.4;
     }
 
 
@@ -146,6 +155,11 @@
       border-radius: 10px;
       border: 1px solid #ddd;
       text-align: left;
+    }
+
+
+    .red-agregada {
+      margin: 8px 0;
     }
 
 
@@ -333,9 +347,8 @@
 
 
         <p>
-          Podés agregar tus redes sociales o sitio web
-          para que los clientes conozcan más sobre tu
-          trabajo.
+          Agregá tus redes sociales o sitio web para que
+          los clientes puedan conocer más sobre tu trabajo.
         </p>
 
 
@@ -347,12 +360,13 @@
           </label>
 
           <input
-            type="url"
+            type="text"
             id="instagram"
-            placeholder="https://instagram.com/tuempresa">
+            placeholder="@tuempresa">
 
           <div class="ayuda">
-            Opcional
+            Escribí solamente tu usuario, por ejemplo:
+            @aluminiojp
           </div>
 
         </div>
@@ -366,12 +380,12 @@
           </label>
 
           <input
-            type="url"
+            type="text"
             id="facebook"
-            placeholder="https://facebook.com/tuempresa">
+            placeholder="Nombre o usuario de Facebook">
 
           <div class="ayuda">
-            Opcional
+            Opcional.
           </div>
 
         </div>
@@ -385,12 +399,12 @@
           </label>
 
           <input
-            type="url"
+            type="text"
             id="tiktok"
-            placeholder="https://tiktok.com/@tuempresa">
+            placeholder="@tuempresa">
 
           <div class="ayuda">
-            Opcional
+            Podés escribir solamente tu usuario.
           </div>
 
         </div>
@@ -404,12 +418,12 @@
           </label>
 
           <input
-            type="url"
+            type="text"
             id="web"
-            placeholder="https://www.tuempresa.com">
+            placeholder="www.tuempresa.com">
 
           <div class="ayuda">
-            Opcional
+            Opcional. Si tenés un sitio web, escribí su dirección.
           </div>
 
         </div>
@@ -417,9 +431,11 @@
 
 
         <p class="ayuda">
+
           AluConecta podrá revisar los enlaces declarados
           antes de otorgar una identificación de presencia
           profesional verificada.
+
         </p>
 
 
@@ -490,11 +506,13 @@
 
           const profesional = {
 
+
             nombre:
               document
                 .getElementById("nombre")
                 .value
                 .trim(),
+
 
             localidad:
               document
@@ -502,10 +520,12 @@
                 .value
                 .trim(),
 
+
             rubro:
               document
                 .getElementById("rubro")
                 .value,
+
 
             servicios:
               document
@@ -513,11 +533,13 @@
                 .value
                 .trim(),
 
+
             telefono:
               document
                 .getElementById("telefono")
                 .value
                 .trim(),
+
 
             descripcion:
               document
@@ -525,11 +547,13 @@
                 .value
                 .trim(),
 
+
             instagram:
               document
                 .getElementById("instagram")
                 .value
                 .trim(),
+
 
             facebook:
               document
@@ -537,17 +561,20 @@
                 .value
                 .trim(),
 
+
             tiktok:
               document
                 .getElementById("tiktok")
                 .value
                 .trim(),
 
+
             web:
               document
                 .getElementById("web")
                 .value
                 .trim()
+
 
           };
 
@@ -567,6 +594,7 @@
           mensaje.style.display = "block";
 
 
+
           mensaje.innerHTML = `
 
             <h3>
@@ -576,11 +604,12 @@
 
             <p>
               Tus datos fueron guardados
-              correctamente para esta prueba.
+              correctamente.
             </p>
 
 
             <div class="perfil-creado">
+
 
               <p>
                 <strong>
@@ -588,21 +617,26 @@
                 </strong>
               </p>
 
+
               <p>
                 📍 ${profesional.localidad}
               </p>
+
 
               <p>
                 🏷️ ${profesional.rubro}
               </p>
 
+
               <p>
                 🔧 ${profesional.servicios}
               </p>
 
+
               <p>
                 📱 ${profesional.telefono}
               </p>
+
 
               <p>
                 ${profesional.descripcion}
@@ -611,28 +645,48 @@
 
               ${
                 profesional.instagram
-                  ? `<p>📸 Instagram agregado</p>`
+                  ? `
+                    <p class="red-agregada">
+                      📸 Instagram:
+                      ${profesional.instagram}
+                    </p>
+                  `
                   : ""
               }
 
 
               ${
                 profesional.facebook
-                  ? `<p>📘 Facebook agregado</p>`
+                  ? `
+                    <p class="red-agregada">
+                      📘 Facebook:
+                      ${profesional.facebook}
+                    </p>
+                  `
                   : ""
               }
 
 
               ${
                 profesional.tiktok
-                  ? `<p>🎵 TikTok agregado</p>`
+                  ? `
+                    <p class="red-agregada">
+                      🎵 TikTok:
+                      ${profesional.tiktok}
+                    </p>
+                  `
                   : ""
               }
 
 
               ${
                 profesional.web
-                  ? `<p>🌐 Sitio web agregado</p>`
+                  ? `
+                    <p class="red-agregada">
+                      🌐 Sitio web:
+                      ${profesional.web}
+                    </p>
+                  `
                   : ""
               }
 
@@ -641,9 +695,10 @@
 
 
             <p>
-              El próximo paso será mostrar esta
+              El próximo paso será mostrar toda esta
               información en el perfil público.
             </p>
+
 
           `;
 
