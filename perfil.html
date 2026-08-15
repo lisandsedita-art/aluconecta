@@ -114,16 +114,6 @@
     }
 
 
-    .etiqueta {
-      display: inline-block;
-      background: #eef2ff;
-      padding: 7px 12px;
-      border-radius: 20px;
-      margin: 4px;
-      font-size: 14px;
-    }
-
-
     .botones {
       display: flex;
       flex-direction: column;
@@ -150,11 +140,6 @@
 
     .llamar {
       background: #2563eb;
-    }
-
-
-    .red {
-      background: #1f2937;
     }
 
 
@@ -191,8 +176,6 @@
     .sin-datos {
       text-align: center;
       padding: 40px 20px;
-      background: white;
-      border-radius: 14px;
     }
 
 
@@ -264,18 +247,100 @@
   <script>
 
 
-    const datos =
-      localStorage.getItem(
-        "profesionalAluConecta"
-      );
-
-
     const perfil =
       document.getElementById("perfil");
 
 
+    /*
+      Buscamos el ID del profesional
+      que viene desde el buscador.
+    */
 
-    if (!datos) {
+    const parametros =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const id =
+      parametros.get("id");
+
+
+
+    /*
+      Primero buscamos en el nuevo sistema
+      de múltiples profesionales.
+    */
+
+    let profesionales =
+      JSON.parse(
+        localStorage.getItem(
+          "profesionalesAluConecta"
+        )
+      ) || [];
+
+
+
+    let profesional = null;
+
+
+
+    /*
+      Si recibimos un ID,
+      buscamos exactamente ese profesional.
+    */
+
+    if (id) {
+
+      profesional =
+        profesionales.find(
+          function(p) {
+            return String(p.id) === String(id);
+          }
+        );
+
+    }
+
+
+
+    /*
+      Compatibilidad con el perfil anterior.
+      Esto permite seguir viendo el perfil
+      que ya teníamos durante las pruebas.
+    */
+
+    if (!profesional) {
+
+      const anterior =
+        localStorage.getItem(
+          "profesionalAluConecta"
+        );
+
+
+      if (anterior) {
+
+        try {
+
+          profesional =
+            JSON.parse(anterior);
+
+        } catch (error) {
+
+          profesional = null;
+
+        }
+
+      }
+
+    }
+
+
+
+    /*
+      Si no encontramos ningún profesional.
+    */
+
+    if (!profesional) {
 
 
       perfil.innerHTML = `
@@ -287,8 +352,7 @@
           </h2>
 
           <p>
-            Todavía no hay datos de un profesional
-            registrados en este dispositivo.
+            No encontramos los datos de este profesional.
           </p>
 
         </div>
@@ -299,10 +363,9 @@
     } else {
 
 
-      const profesional =
-        JSON.parse(datos);
-
-
+      /*
+        Inicial del nombre.
+      */
 
       const inicial =
         profesional.nombre
@@ -313,18 +376,22 @@
 
 
 
+      /*
+        Número para WhatsApp.
+      */
+
       let telefono =
         profesional.telefono
-          .replace(/\D/g, "");
+          ? profesional.telefono
+              .replace(/\D/g, "")
+          : "";
 
 
 
       /*
-        Para esta primera versión,
-        si el número tiene 10 dígitos,
-        asumimos un celular argentino.
+        Si tiene 10 dígitos,
+        agregamos código de Argentina.
       */
-
 
       if (telefono.length === 10) {
 
@@ -341,22 +408,22 @@
 
 
       const instagram =
-        profesional.instagram;
+        profesional.instagram || "";
 
 
 
       const facebook =
-        profesional.facebook;
+        profesional.facebook || "";
 
 
 
       const tiktok =
-        profesional.tiktok;
+        profesional.tiktok || "";
 
 
 
       const web =
-        profesional.web;
+        profesional.web || "";
 
 
 
@@ -373,7 +440,7 @@
 
         <h1 class="nombre">
 
-          ${profesional.nombre}
+          ${profesional.nombre || "Profesional"}
 
         </h1>
 
@@ -381,7 +448,7 @@
 
         <p class="ubicacion">
 
-          📍 ${profesional.localidad}
+          📍 ${profesional.localidad || "Localidad no indicada"}
 
         </p>
 
@@ -389,7 +456,7 @@
 
         <p class="rubro">
 
-          🏷️ ${profesional.rubro}
+          🏷️ ${profesional.rubro || "Servicios profesionales"}
 
         </p>
 
@@ -401,10 +468,9 @@
             Servicios
           </h2>
 
-
           <p class="dato">
 
-            ${profesional.servicios}
+            ${profesional.servicios || "No especificados"}
 
           </p>
 
@@ -418,10 +484,9 @@
             Sobre el profesional
           </h2>
 
-
           <p class="dato">
 
-            ${profesional.descripcion}
+            ${profesional.descripcion || "Sin presentación"}
 
           </p>
 
@@ -438,7 +503,7 @@
 
           <p class="dato">
 
-            📱 ${profesional.telefono}
+            📱 ${profesional.telefono || "No indicado"}
 
           </p>
 
@@ -447,25 +512,42 @@
           <div class="botones">
 
 
-          <a
-  href="${whatsapp}?text=${encodeURIComponent(
-    `Hola ${profesional.nombre}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
-  )}"
-  target="_blank"
-  class="boton whatsapp">
+            ${
+              telefono
+              ? `
 
-  💬 Contactar por WhatsApp
+                <a
+                  href="${whatsapp}?text=${encodeURIComponent(
+                    `Hola ${profesional.nombre || ""}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
+                  )}"
+                  target="_blank"
+                  class="boton whatsapp">
 
-</a>
+                  💬 Contactar por WhatsApp
+
+                </a>
+
+              `
+              : ""
+            }
 
 
-            <a
-              href="tel:${profesional.telefono}"
-              class="boton llamar">
 
-              📞 Llamar
+            ${
+              profesional.telefono
+              ? `
 
-            </a>
+                <a
+                  href="tel:${profesional.telefono}"
+                  class="boton llamar">
+
+                  📞 Llamar
+
+                </a>
+
+              `
+              : ""
+            }
 
 
           </div>
@@ -578,20 +660,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
