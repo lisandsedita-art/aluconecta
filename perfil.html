@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
   <title>Perfil profesional - AluConecta</title>
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -17,6 +26,7 @@
       color: #222;
     }
 
+
     header {
       background: #1f2937;
       color: white;
@@ -24,275 +34,557 @@
       padding: 30px 20px;
     }
 
+
     header h1 {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
     }
 
+
+    header p {
+      margin: 0;
+    }
+
+
     .contenedor {
-      max-width: 850px;
+      max-width: 700px;
       margin: 30px auto;
       padding: 20px;
     }
 
+
     .perfil {
       background: white;
-      border-radius: 14px;
       padding: 30px;
+      border-radius: 14px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
-    .cabecera-perfil {
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 25px;
-      margin-bottom: 25px;
-    }
 
-    .foto {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 15px;
+    .avatar {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
       border-radius: 50%;
-      background: #e5e7eb;
+      background: #2563eb;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 45px;
+      font-size: 36px;
+      font-weight: bold;
     }
 
-    .cabecera-perfil h2 {
-      margin: 10px 0 5px;
+
+    .nombre {
+      text-align: center;
+      margin: 0;
     }
+
 
     .ubicacion {
-      color: #666;
-    }
-
-    .seccion {
-      margin-bottom: 25px;
-    }
-
-    .seccion h3 {
-      margin-bottom: 10px;
-    }
-.trabajos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-}
-
-.trabajo {
-  background: #f4f6f8;
-  padding: 25px 15px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 40px;
-}
-
-.trabajo p {
-  font-size: 15px;
-  margin-bottom: 0;
-}
-    .servicios {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .servicio {
-      background: #eef2ff;
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-
-    .contacto {
       text-align: center;
-      border-top: 1px solid #ddd;
-      padding-top: 25px;
+      color: #666;
+      margin-top: 8px;
     }
 
-    .boton {
-      display: inline-block;
-      padding: 13px 25px;
-      border-radius: 7px;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
+
+    .rubro {
+      text-align: center;
       font-weight: bold;
       margin-top: 10px;
     }
 
+
+    .seccion {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+
+
+    .seccion h2 {
+      font-size: 20px;
+      margin-top: 0;
+    }
+
+
+    .dato {
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+
+    .etiqueta {
+      display: inline-block;
+      background: #eef2ff;
+      padding: 7px 12px;
+      border-radius: 20px;
+      margin: 4px;
+      font-size: 14px;
+    }
+
+
+    .botones {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+
+    .boton {
+      display: block;
+      padding: 14px;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+    }
+
+
+    .whatsapp {
+      background: #16a34a;
+    }
+
+
+    .llamar {
+      background: #2563eb;
+    }
+
+
+    .red {
+      background: #1f2937;
+    }
+
+
+    .instagram {
+      background: #c13584;
+    }
+
+
+    .facebook {
+      background: #1877f2;
+    }
+
+
+    .tiktok {
+      background: #111827;
+    }
+
+
+    .web {
+      background: #475569;
+    }
+
+
     .volver {
       display: block;
       text-align: center;
-      margin: 30px 0;
+      margin: 25px 0;
       color: #2563eb;
       text-decoration: none;
       font-weight: bold;
     }
+
+
+    .sin-datos {
+      text-align: center;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 14px;
+    }
+
 
     footer {
       text-align: center;
       padding: 25px;
       color: #666;
     }
+
   </style>
+
 </head>
+
 
 <body>
 
+
   <header>
-    <h1>AluConecta</h1>
-    <p>Perfil profesional</p>
+
+    <h1>
+      AluConecta
+    </h1>
+
+    <p>
+      Conectando personas con profesionales.
+    </p>
+
   </header>
+
+
 
   <main class="contenedor">
 
-    <section class="perfil">
 
-      <div class="cabecera-perfil">
-
-        <div class="foto">
-          👷
-        </div>
-
-        <h2>Carpintería de aluminio</h2>
-
-<p class="ubicacion">
-  📍 Rosario, Santa Fe
-</p>
-
-<p>
-  ⭐ Perfil profesional
-</p>
-
-      </div>
-
-      <div class="seccion">
-
-        <h3>Sobre el profesional</h3>
-
-        <p>
-          Profesional especializado en carpintería de aluminio,
-          fabricación e instalación de aberturas para viviendas,
-          comercios y proyectos de construcción.
-        </p>
-
-      </div>
-<div class="seccion">
-
-  <h3>Trabajos realizados</h3>
-
-  <div class="trabajos">
-
-    <div class="trabajo">
-      🪟
-      <p>Ventanas de aluminio</p>
-    </div>
-
-    <div class="trabajo">
-      🚪
-      <p>Puertas de aluminio</p>
-    </div>
-
-    <div class="trabajo">
-      🏠
-      <p>Cerramiento de vivienda</p>
-    </div>
-
-  </div>
-
-  <p>
-    Próximamente los profesionales podrán
-    publicar fotografías de sus trabajos.
-  </p>
-
-</div>
-      <div class="seccion">
-
-        <h3>Servicios</h3>
-<p>
-  Especializado en soluciones de aluminio para viviendas,
-  comercios y proyectos de construcción.
-</p>
-        <div class="servicios">
-
-          <span class="servicio">🪟 Ventanas</span>
-          <span class="servicio">🚪 Puertas</span>
-          <span class="servicio">🏠 Cerramientos</span>
-          <span class="servicio">🔧 Reparaciones</span>
-          <span class="servicio">📐 Fabricación a medida</span>
-          <span class="servicio">🛠️ Instalación</span>
-
-        </div>
-<div class="seccion">
-
-  <h3>Tipos de aberturas</h3>
-
-  <div class="servicios">
-
-    <span class="servicio">🪟 Ventanas</span>
-    <span class="servicio">🚪 Puertas</span>
-    <span class="servicio">🏠 Grandes paños</span>
-    <span class="servicio">🌧️ Cerramientos</span>
-    <span class="servicio">🛡️ DVH</span>
-    <span class="servicio">📐 Aberturas a medida</span>
-
-  </div>
-
-</div>
-      </div>
-
-      <div class="seccion">
-
-        <h3>Zona de trabajo</h3>
-
-        <p>
-          Rosario y alrededores.
-        </p>
-
-      </div>
-
-      <div class="seccion">
-
-        <h3>Experiencia</h3>
-
-        <p>
-          Profesional especializado en trabajos de carpintería
-          de aluminio y soluciones para aberturas.
-        </p>
-
-      </div>
-
-      <div class="contacto">
-
-        <h3>¿Querés contactar a este profesional?</h3>
-
-        <p>
-          Próximamente podrás comunicarte directamente.
-        </p>
-
-        <a href="#" class="boton">
-          Contactar
-        </a>
-
-      </div>
+    <section
+      id="perfil"
+      class="perfil">
 
     </section>
 
-    <a href="aluminio.html" class="volver">
-      ← Volver a Carpintería de aluminio
+
+    <a
+      href="aluminio.html"
+      class="volver">
+
+      ← Volver a profesionales
+
     </a>
+
 
   </main>
 
+
+
   <footer>
 
-    <p>© 2026 AluConecta</p>
-    <p>Conectando personas, trabajos y oportunidades.</p>
+    <p>
+      © 2026 AluConecta
+    </p>
+
+    <p>
+      Conectando personas, trabajos y oportunidades.
+    </p>
 
   </footer>
 
+
+
+  <script>
+
+
+    const datos =
+      localStorage.getItem(
+        "profesionalAluConecta"
+      );
+
+
+    const perfil =
+      document.getElementById("perfil");
+
+
+
+    if (!datos) {
+
+
+      perfil.innerHTML = `
+
+        <div class="sin-datos">
+
+          <h2>
+            Perfil no disponible
+          </h2>
+
+          <p>
+            Todavía no hay datos de un profesional
+            registrados en este dispositivo.
+          </p>
+
+        </div>
+
+      `;
+
+
+    } else {
+
+
+      const profesional =
+        JSON.parse(datos);
+
+
+
+      const inicial =
+        profesional.nombre
+          ? profesional.nombre
+              .charAt(0)
+              .toUpperCase()
+          : "A";
+
+
+
+      let telefono =
+        profesional.telefono
+          .replace(/\D/g, "");
+
+
+
+      /*
+        Para esta primera versión,
+        si el número tiene 10 dígitos,
+        asumimos un celular argentino.
+      */
+
+
+      if (telefono.length === 10) {
+
+        telefono =
+          "54" + telefono;
+
+      }
+
+
+
+      const whatsapp =
+        "https://wa.me/" + telefono;
+
+
+
+      const instagram =
+        profesional.instagram;
+
+
+
+      const facebook =
+        profesional.facebook;
+
+
+
+      const tiktok =
+        profesional.tiktok;
+
+
+
+      const web =
+        profesional.web;
+
+
+
+      perfil.innerHTML = `
+
+
+        <div class="avatar">
+
+          ${inicial}
+
+        </div>
+
+
+
+        <h1 class="nombre">
+
+          ${profesional.nombre}
+
+        </h1>
+
+
+
+        <p class="ubicacion">
+
+          📍 ${profesional.localidad}
+
+        </p>
+
+
+
+        <p class="rubro">
+
+          🏷️ ${profesional.rubro}
+
+        </p>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Servicios
+          </h2>
+
+
+          <p class="dato">
+
+            ${profesional.servicios}
+
+          </p>
+
+        </div>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Sobre el profesional
+          </h2>
+
+
+          <p class="dato">
+
+            ${profesional.descripcion}
+
+          </p>
+
+        </div>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Contacto
+          </h2>
+
+
+          <p class="dato">
+
+            📱 ${profesional.telefono}
+
+          </p>
+
+
+
+          <div class="botones">
+
+
+            <a
+              href="${whatsapp}"
+              target="_blank"
+              class="boton whatsapp">
+
+              💬 Contactar por WhatsApp
+
+            </a>
+
+
+            <a
+              href="tel:${profesional.telefono}"
+              class="boton llamar">
+
+              📞 Llamar
+
+            </a>
+
+
+          </div>
+
+        </div>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Presencia profesional
+          </h2>
+
+
+
+          <div class="botones">
+
+
+            ${
+              instagram
+              ? `
+
+                <a
+                  href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
+                  target="_blank"
+                  class="boton instagram">
+
+                  📸 Ver Instagram
+                  ${instagram}
+
+                </a>
+
+              `
+              : ""
+            }
+
+
+
+            ${
+              facebook
+              ? `
+
+                <a
+                  href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
+                  target="_blank"
+                  class="boton facebook">
+
+                  📘 Ver Facebook
+
+                </a>
+
+              `
+              : ""
+            }
+
+
+
+            ${
+              tiktok
+              ? `
+
+                <a
+                  href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
+                  target="_blank"
+                  class="boton tiktok">
+
+                  🎵 Ver TikTok
+                  ${tiktok}
+
+                </a>
+
+              `
+              : ""
+            }
+
+
+
+            ${
+              web
+              ? `
+
+                <a
+                  href="${web.startsWith("http") ? web : "https://" + web}"
+                  target="_blank"
+                  class="boton web">
+
+                  🌐 Visitar sitio web
+
+                </a>
+
+              `
+              : ""
+            }
+
+
+          </div>
+
+        </div>
+
+
+      `;
+
+    }
+
+
+  </script>
+
+
 </body>
+
 </html>
+
+Después hacemos esta prueba
+
+Entrá nuevamente al buscador de Carpintería de aluminio, buscá un profesional y tocá Ver perfil.
+
+Deberías ver a Juan, con:
+
+📱 Contactar por WhatsApp
+📞 Llamar
+📸 Ver Instagram @aluminio_hs
+
+Si eso funciona, ya tenemos una parte muy importante de la plataforma funcionando de punta a punta: registro → búsqueda → perfil → contacto → red profesional.
