@@ -94,10 +94,23 @@
       background: #16a34a;
     }
 
+    .boton.gris {
+      background: #475569;
+    }
+
     .sin-resultados {
       text-align: center;
       padding: 30px;
       color: #666;
+    }
+
+    .aviso-registro {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      color: #475569;
+      line-height: 1.5;
     }
 
     .volver {
@@ -153,6 +166,13 @@
       profesionales que necesitan un servicio.
     </p>
 
+    <div class="aviso-registro">
+
+      🔐 Para contactar a quien publicó un proyecto,
+      necesitás tener un perfil registrado en AluConecta.
+
+    </div>
+
   </section>
 
 
@@ -201,8 +221,25 @@ const lista =
   );
 
 
+
 /*
-  Recuperamos los clientes registrados.
+  Comprobamos si este navegador
+  tiene un usuario registrado.
+
+  Esta es una solución de prueba.
+  Más adelante será reemplazada por
+  autenticación real.
+*/
+
+const usuarioRegistrado =
+  localStorage.getItem(
+    "aluConectaUsuarioRegistrado"
+  ) === "true";
+
+
+
+/*
+  Recuperamos los proyectos registrados.
 */
 
 const clientes =
@@ -211,6 +248,72 @@ const clientes =
       "clientesAluConecta"
     )
   ) || [];
+
+
+
+/*
+  Función para contactar.
+
+  Si no está registrado:
+  -> acceso.html
+
+  Si está registrado:
+  -> WhatsApp del proyecto.
+*/
+
+function contactarProyecto(
+  telefono,
+  nombre
+) {
+
+
+  if (!usuarioRegistrado) {
+
+    window.location.href =
+      "acceso.html";
+
+    return;
+
+  }
+
+
+
+  let numero =
+    (telefono || "")
+      .replace(/\D/g, "");
+
+
+
+  if (numero.length === 10) {
+
+    numero =
+      "54" + numero;
+
+  }
+
+
+
+  const mensaje =
+    `Hola ${nombre || ""}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
+
+
+
+  const url =
+    "https://wa.me/" +
+    numero +
+    "?text=" +
+    encodeURIComponent(
+      mensaje
+    );
+
+
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
 
 
 
@@ -233,7 +336,7 @@ if (clientes.length === 0) {
       <br>
 
       <a
-        href="registro-cliente.html"
+        href="acceso.html"
         class="boton verde">
 
         Publicar mi proyecto
@@ -264,12 +367,15 @@ if (clientes.length === 0) {
               <div class="proyecto">
 
                 <h3>
+
                   🏗️
                   ${
                     cliente.nombre ||
                     "Proyecto"
                   }
+
                 </h3>
+
 
                 <p>
 
@@ -281,6 +387,7 @@ if (clientes.length === 0) {
 
                 </p>
 
+
                 <p>
 
                   👤
@@ -290,6 +397,7 @@ if (clientes.length === 0) {
                   }
 
                 </p>
+
 
                 <p>
 
@@ -301,28 +409,57 @@ if (clientes.length === 0) {
 
                 </p>
 
-                <span class="etiqueta">
-                  Proyecto
-                </span>
 
                 <span class="etiqueta">
+
+                  Proyecto
+
+                </span>
+
+
+                <span class="etiqueta">
+
                   ${
                     cliente.localidad ||
                     "Zona"
                   }
+
                 </span>
-<br><br>
 
-<a
-  href="https://wa.me/${cliente.telefono.replace(/\D/g, "").length === 10 ? "54" + cliente.telefono.replace(/\D/g, "") : cliente.telefono.replace(/\D/g, "")}?text=${encodeURIComponent(
-    `Hola, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`
-  )}"
-  target="_blank"
-  class="boton verde">
 
-  💬 Estoy interesado
+                <br>
+                <br>
 
-</a>
+
+                <button
+                  type="button"
+                  class="boton verde"
+                  onclick="contactarProyecto(
+                    ${JSON.stringify(cliente.telefono || "")},
+                    ${JSON.stringify(cliente.nombre || "usuario")}
+                  )">
+
+                  💬 Estoy interesado
+
+                </button>
+
+
+                ${
+                  usuarioRegistrado
+                    ? ""
+                    : `
+
+                      <div class="aviso-registro">
+
+                        🔐 Registrate en AluConecta
+                        para poder contactar este proyecto.
+
+                      </div>
+
+                    `
+                }
+
+
               </div>
 
             `;
