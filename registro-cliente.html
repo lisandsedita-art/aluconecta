@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Crear perfil - AluConecta</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .introduccion {
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .ayuda {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .boton {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .mensaje {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #eef2ff;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 25px 0;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <h1>
+    AluConecta
+  </h1>
+
+  <p>
+    Donde los proyectos encuentran sus aberturas.
+  </p>
+
+</header>
+
+
+
+<main class="contenedor">
+
+
+  <section class="tarjeta">
+
+
+    <h2>
+      Crear perfil
+    </h2>
+
+
+    <p class="introduccion">
+
+      Registrate en AluConecta para encontrar
+      profesionales, publicar necesidades y
+      conectar con personas o empresas que
+      puedan ayudarte con tu proyecto.
+
+    </p>
+
+
+
+    <form id="formularioCliente">
+
+
+      <div class="campo">
+
+        <label for="nombre">
+          Nombre o empresa
+        </label>
+
+        <input
+          type="text"
+          id="nombre"
+          placeholder="Ej: Juan Pérez / Constructora JP"
+          required>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="tipo">
+          ¿Qué tipo de usuario sos?
+        </label>
+
+        <select id="tipo" required>
+
+          <option value="">
+            Seleccioná una opción
+          </option>
+
+          <option value="Particular">
+            Particular
+          </option>
+
+          <option value="Arquitecto">
+            Arquitecto/a
+          </option>
+
+          <option value="Ingeniero">
+            Ingeniero/a
+          </option>
+
+          <option value="Constructor">
+            Constructor/a
+          </option>
+
+          <option value="Desarrollador">
+            Desarrollador/a
+          </option>
+
+          <option value="Empresa">
+            Empresa
+          </option>
+
+          <option value="Otro">
+            Otro
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="localidad">
+          Localidad
+        </label>
+
+        <input
+          type="text"
+          id="localidad"
+          placeholder="Ej: Rosario"
+          required>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="proyecto">
+          ¿Qué necesitás?
+        </label>
+
+        <textarea
+          id="proyecto"
+          placeholder="Ej: Necesito 20 ventanas de aluminio con DVH para una obra."
+          required></textarea>
+
+        <div class="ayuda">
+
+          Contanos brevemente qué estás buscando
+          o qué proyecto tenés.
+
+        </div>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="telefono">
+          WhatsApp o teléfono
+        </label>
+
+        <input
+          type="tel"
+          id="telefono"
+          placeholder="Ej: 341 1234567"
+          required>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="instagram">
+          Instagram
+        </label>
+
+        <input
+          type="text"
+          id="instagram"
+          placeholder="@tuempresa">
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="web">
+          Sitio web
+        </label>
+
+        <input
+          type="text"
+          id="web"
+          placeholder="www.tuempresa.com">
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="presentacion">
+          Presentación
+        </label>
+
+        <textarea
+          id="presentacion"
+          placeholder="Contanos brevemente sobre vos, tu empresa o tu actividad."></textarea>
+
+      </div>
+
+
+
+      <button
+        type="submit"
+        class="boton">
+
+        Crear mi perfil
+
+      </button>
+
+
+    </form>
+
+
+
+    <div
+      id="mensaje"
+      class="mensaje">
+
+    </div>
+
+
+  </section>
+
+
+
+  <a
+    href="index.html"
+    class="volver">
+
+    ← Volver a AluConecta
+
+  </a>
+
+
+</main>
+
+
+
+<footer>
+
+  <p>
+    © 2026 AluConecta
+  </p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+
+<script>
+
+
+document
+  .getElementById("formularioCliente")
+  .addEventListener("submit", function(event) {
+
+
+    event.preventDefault();
+
+
+
+    const cliente = {
+
+      id:
+        "cliente-" + Date.now(),
+
+      nombre:
+        document
+          .getElementById("nombre")
+          .value
+          .trim(),
+
+      tipo:
+        document
+          .getElementById("tipo")
+          .value,
+
+      localidad:
+        document
+          .getElementById("localidad")
+          .value
+          .trim(),
+
+      proyecto:
+        document
+          .getElementById("proyecto")
+          .value
+          .trim(),
+
+      telefono:
+        document
+          .getElementById("telefono")
+          .value
+          .trim(),
+
+      instagram:
+        document
+          .getElementById("instagram")
+          .value
+          .trim(),
+
+      web:
+        document
+          .getElementById("web")
+          .value
+          .trim(),
+
+      presentacion:
+        document
+          .getElementById("presentacion")
+          .value
+          .trim()
+
+    };
+
+
+
+    let clientes =
+      JSON.parse(
+        localStorage.getItem(
+          "clientesAluConecta"
+        )
+      ) || [];
+
+
+
+    clientes.push(cliente);
+
+
+
+    localStorage.setItem(
+      "clientesAluConecta",
+      JSON.stringify(clientes)
+    );
+
+
+
+    const mensaje =
+      document.getElementById("mensaje");
+
+
+
+    mensaje.style.display = "block";
+
+
+
+    mensaje.innerHTML = `
+
+      <h3>
+        ¡Perfil creado correctamente!
+      </h3>
+
+      <p>
+        ${cliente.nombre}
+      </p>
+
+      <p>
+        ${cliente.tipo}
+      </p>
+
+      <p>
+        📍 ${cliente.localidad}
+      </p>
+
+      <p>
+        Tus datos fueron guardados correctamente.
+      </p>
+
+      <p>
+        Próximamente podrás publicar tus proyectos
+        y conectar con profesionales de AluConecta.
+      </p>
+
+    `;
+
+
+
+    document
+      .getElementById("formularioCliente")
+      .reset();
+
+
+
+    mensaje.scrollIntoView({
+      behavior: "smooth"
+    });
+
+
+  });
+
+
+</script>
+
+
+</body>
+
+</html>
