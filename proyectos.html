@@ -263,10 +263,39 @@ const clientes =
 
 
 
-function contactarProyecto(
-  telefono,
-  nombre
-) {
+function contactarProyecto(telefono, nombre) {
+
+  const registrado =
+    localStorage.getItem("aluConectaUsuarioRegistrado") === "true";
+
+  if (!registrado) {
+    window.location.href = "acceso.html";
+    return;
+  }
+
+  let numero =
+    (telefono || "").replace(/\D/g, "");
+
+  if (numero.length === 10) {
+    numero = "54" + numero;
+  }
+
+  if (!numero) {
+    alert("Este proyecto todavía no tiene un teléfono de contacto.");
+    return;
+  }
+
+  const mensaje =
+    `Hola ${nombre || ""}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
+
+  const url =
+    "https://wa.me/" +
+    numero +
+    "?text=" +
+    encodeURIComponent(mensaje);
+
+  window.open(url, "_blank");
+}
 
   const registrado =
     localStorage.getItem(
