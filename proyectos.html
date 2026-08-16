@@ -261,13 +261,20 @@ const clientes =
   -> WhatsApp del proyecto.
 */
 
+
+
 function contactarProyecto(
   telefono,
   nombre
 ) {
 
+  const registrado =
+    localStorage.getItem(
+      "aluConectaUsuarioRegistrado"
+    ) === "true";
 
-  if (!usuarioRegistrado) {
+
+  if (!registrado) {
 
     window.location.href =
       "acceso.html";
@@ -275,8 +282,6 @@ function contactarProyecto(
     return;
 
   }
-
-
 
   let numero =
     (telefono || "")
