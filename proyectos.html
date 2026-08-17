@@ -214,33 +214,17 @@
 
 <script>
 
-
 const lista =
   document.getElementById(
     "listaProyectos"
   );
 
 
-
-/*
-  Comprobamos si este navegador
-  tiene un usuario registrado.
-
-  Esta es una solución de prueba.
-  Más adelante será reemplazada por
-  autenticación real.
-*/
-
 const usuarioRegistrado =
   localStorage.getItem(
     "aluConectaUsuarioRegistrado"
   ) === "true";
 
-
-
-/*
-  Recuperamos los proyectos registrados.
-*/
 
 const clientes =
   JSON.parse(
@@ -250,52 +234,7 @@ const clientes =
   ) || [];
 
 
-
-/*
-  Función para contactar.
-
-  Si no está registrado:
-  -> acceso.html
-
-  Si está registrado:
-  -> WhatsApp del proyecto.
-*/
-
-
-
 function contactarProyecto(telefono, nombre) {
-
-  const registrado =
-    localStorage.getItem("aluConectaUsuarioRegistrado") === "true";
-
-  if (!registrado) {
-    window.location.href = "acceso.html";
-    return;
-  }
-
-  let numero =
-    (telefono || "").replace(/\D/g, "");
-
-  if (numero.length === 10) {
-    numero = "54" + numero;
-  }
-
-  if (!numero) {
-    alert("Este proyecto todavía no tiene un teléfono de contacto.");
-    return;
-  }
-
-  const mensaje =
-    `Hola ${nombre || ""}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
-
-  const url =
-    "https://wa.me/" +
-    numero +
-    "?text=" +
-    encodeURIComponent(mensaje);
-
-  window.open(url, "_blank");
-}
 
   const registrado =
     localStorage.getItem(
@@ -312,10 +251,10 @@ function contactarProyecto(telefono, nombre) {
 
   }
 
+
   let numero =
     (telefono || "")
       .replace(/\D/g, "");
-
 
 
   if (numero.length === 10) {
@@ -326,10 +265,19 @@ function contactarProyecto(telefono, nombre) {
   }
 
 
+  if (!numero) {
+
+    alert(
+      "Este proyecto todavía no tiene un teléfono de contacto."
+    );
+
+    return;
+
+  }
+
 
   const mensaje =
     `Hola ${nombre || ""}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
-
 
 
   const url =
@@ -341,7 +289,6 @@ function contactarProyecto(telefono, nombre) {
     );
 
 
-
   window.open(
     url,
     "_blank"
@@ -350,9 +297,7 @@ function contactarProyecto(telefono, nombre) {
 }
 
 
-
 if (clientes.length === 0) {
-
 
   lista.innerHTML = `
 
@@ -507,7 +452,6 @@ if (clientes.length === 0) {
   `;
 
 }
-
 
 </script>
 
