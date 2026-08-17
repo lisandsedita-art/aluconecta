@@ -206,21 +206,38 @@
     <h3>Información del usuario</h3>
 
     <div class="campo">
+
       <label for="tipoUsuario">
         ¿Qué tipo de usuario sos?
       </label>
 
       <select id="tipoUsuario" required>
-        <option value="">Seleccioná una opción</option>
-        <option value="Particular">👤 Persona particular</option>
-        <option value="Profesional independiente">🧑‍🔧 Profesional independiente</option>
-        <option value="Empresa">🏢 Empresa</option>
+
+        <option value="">
+          Seleccioná una opción
+        </option>
+
+        <option value="Particular">
+          👤 Persona particular
+        </option>
+
+        <option value="Profesional independiente">
+          🧑‍🔧 Profesional independiente
+        </option>
+
+        <option value="Empresa">
+          🏢 Empresa
+        </option>
+
       </select>
+
     </div>
 
     <div class="campo">
 
-      <label>¿Cuál es tu actividad?</label>
+      <label>
+        ¿Cuál es tu actividad?
+      </label>
 
       <div class="ayuda">
         Podés seleccionar una o varias actividades.
@@ -230,75 +247,106 @@
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Carpintería de aluminio">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Carpintería de aluminio">
             Carpintería de aluminio
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Arquitectura">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Arquitectura">
             Arquitectura
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Ingeniería">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Ingeniería">
             Ingeniería
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Construcción">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Construcción">
             Construcción
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Desarrollo inmobiliario">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Desarrollo inmobiliario">
             Desarrollo inmobiliario
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Fabricación">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Fabricación">
             Fabricación
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Instalaciones">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Instalaciones">
             Instalaciones
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Reparaciones">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Reparaciones">
             Reparaciones
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Proveedor">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Proveedor">
             Proveedor
           </label>
         </div>
 
         <div class="opcion">
           <label>
-            <input type="checkbox" name="actividad" value="Otro">
+            <input
+              type="checkbox"
+              name="actividad"
+              value="Otra">
             Otra
           </label>
         </div>
 
       </div>
+
     </div>
 
     <div class="campo">
@@ -308,10 +356,23 @@
       </label>
 
       <select id="participacion" required>
-        <option value="">Seleccioná una opción</option>
-        <option value="Busca servicios">🔎 Necesito un servicio o profesional</option>
-        <option value="Ofrece servicios">🛠️ Ofrezco servicios</option>
-        <option value="Ambas cosas">🔄 Ambas cosas</option>
+
+        <option value="">
+          Seleccioná una opción
+        </option>
+
+        <option value="Busca servicios">
+          🔎 Necesito un servicio o profesional
+        </option>
+
+        <option value="Ofrece servicios">
+          🛠️ Ofrezco servicios
+        </option>
+
+        <option value="Ambas cosas">
+          🔄 Ambas cosas
+        </option>
+
       </select>
 
     </div>
@@ -391,7 +452,7 @@
 
       <textarea
         id="servicios"
-        placeholder="Si ofrecés servicios, describilos aquí. Ej: ventanas, puertas, DVH, cerramientos e instalación."></textarea>
+        placeholder="Ej: ventanas, puertas, DVH, cerramientos e instalación."></textarea>
 
     </div>
 
@@ -425,8 +486,8 @@
     <h3>Presencia profesional</h3>
 
     <p>
-      Agregá tus redes sociales o sitio web para que
-      otros usuarios puedan conocer más sobre tu actividad.
+      Agregá tus redes sociales o sitio web para que otros usuarios
+      puedan conocer más sobre tu actividad.
     </p>
 
     <div class="campo">
@@ -508,9 +569,7 @@
 
 <footer>
 
-  <p>
-    © 2026 AluConecta
-  </p>
+  <p>© 2026 AluConecta</p>
 
   <p>
     Conectando personas, trabajos y oportunidades.
@@ -535,55 +594,6 @@ const supabaseClient =
   );
 
 
-const parametros =
-  new URLSearchParams(
-    window.location.search
-  );
-
-
-const tipoDesdeAcceso =
-  parametros.get("tipo");
-
-const rolDesdeAcceso =
-  parametros.get("rol");
-
-
-if (tipoDesdeAcceso) {
-
-  const mapaTipos = {
-    particular: "Particular",
-    profesional: "Profesional independiente",
-    empresa: "Empresa"
-  };
-
-  if (mapaTipos[tipoDesdeAcceso]) {
-
-    document.getElementById("tipoUsuario").value =
-      mapaTipos[tipoDesdeAcceso];
-
-  }
-
-}
-
-
-if (rolDesdeAcceso) {
-
-  const mapaRoles = {
-    busca: "Busca servicios",
-    ofrece: "Ofrece servicios",
-    ambas: "Ambas cosas"
-  };
-
-  if (mapaRoles[rolDesdeAcceso]) {
-
-    document.getElementById("participacion").value =
-      mapaRoles[rolDesdeAcceso];
-
-  }
-
-}
-
-
 document
   .getElementById("formularioRegistro")
   .addEventListener(
@@ -597,7 +607,6 @@ document
 
       const mensaje =
         document.getElementById("mensaje");
-
 
       mensaje.style.display = "none";
       mensaje.className = "mensaje";
@@ -647,15 +656,15 @@ document
           .value
           .trim();
 
-      const telefono =
-        document
-          .getElementById("telefono")
-          .value
-          .trim();
-
       const servicios =
         document
           .getElementById("servicios")
+          .value
+          .trim();
+
+      const telefono =
+        document
+          .getElementById("telefono")
           .value
           .trim();
 
@@ -727,11 +736,35 @@ document
 
                 tipoUsuario: tipoUsuario,
 
-                actividades: actividades,
+                actividades:
+                  actividades.join(", "),
 
-                participacion: participacion,
+                participacion:
+                  participacion,
 
-                localidad: localidad
+                localidad:
+                  localidad,
+
+                servicios:
+                  servicios,
+
+                telefono:
+                  telefono,
+
+                descripcion:
+                  descripcion,
+
+                instagram:
+                  instagram,
+
+                facebook:
+                  facebook,
+
+                tiktok:
+                  tiktok,
+
+                web:
+                  web
 
               }
 
@@ -755,98 +788,59 @@ document
 
 
         /*
-          GUARDAR PERFIL EN SUPABASE
+          El perfil NO se inserta desde JavaScript.
+
+          El trigger de Supabase lo crea automáticamente
+          usando los datos enviados en raw_user_meta_data.
         */
 
-        const perfil = {
-
-          id: data.user.id,
-
-          nombre: nombre,
-
-          tipo_usuario: tipoUsuario,
-
-          actividades: actividades.join(", "),
-
-          participacion: participacion,
-
-          localidad: localidad,
-
-          servicios: servicios,
-
-          telefono: telefono,
-
-          descripcion: descripcion,
-
-          instagram: instagram,
-
-          facebook: facebook,
-
-          tiktok: tiktok,
-
-          web: web
-
-        };
-
-
-        const {
-          error: errorPerfil
-        } =
-          await supabaseClient
-            .from("perfiles")
-            .insert(perfil);
-
-
-        if (errorPerfil) {
-
-          console.error(
-            "Error guardando perfil:",
-            errorPerfil
-          );
-
-          throw new Error(
-            "La cuenta fue creada, pero no pudimos guardar el perfil: " +
-            errorPerfil.message
-          );
-
-        }
-
-
-        /*
-          COMPATIBILIDAD CON EL SITIO ACTUAL
-        */
 
         const profesional = {
 
-          id: data.user.id,
+          id:
+            data.user.id,
 
-          tipoUsuario: tipoUsuario,
+          tipoUsuario:
+            tipoUsuario,
 
-          actividades: actividades,
+          actividades:
+            actividades,
 
-          participacion: participacion,
+          participacion:
+            participacion,
 
-          nombre: nombre,
+          nombre:
+            nombre,
 
-          localidad: localidad,
+          localidad:
+            localidad,
 
-          rubro: actividades.join(", "),
+          rubro:
+            actividades.join(", "),
 
-          servicios: servicios,
+          servicios:
+            servicios,
 
-          telefono: telefono,
+          telefono:
+            telefono,
 
-          descripcion: descripcion,
+          descripcion:
+            descripcion,
 
-          instagram: instagram,
+          instagram:
+            instagram,
 
-          facebook: facebook,
+          facebook:
+            facebook,
 
-          tiktok: tiktok,
+          tiktok:
+            tiktok,
 
-          web: web,
+          web:
+            web,
 
-          email: email
+          email:
+            email
 
         };
 
@@ -880,10 +874,6 @@ document
         );
 
 
-        /*
-          MENSAJE FINAL
-        */
-
         mensaje.style.display = "block";
         mensaje.className = "mensaje exito";
 
@@ -895,10 +885,6 @@ document
             <h3>
               ¡Cuenta creada correctamente!
             </h3>
-
-            <p>
-              Bienvenido/a a AluConecta.
-            </p>
 
             <p>
               Tu perfil fue guardado correctamente.
