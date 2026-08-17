@@ -88,7 +88,6 @@
       font-weight: bold;
       border: none;
       cursor: pointer;
-      font-size: 16px;
     }
 
     .boton.verde {
@@ -97,18 +96,6 @@
 
     .boton.gris {
       background: #475569;
-    }
-
-    .boton.whatsapp {
-      background: #16a34a;
-    }
-
-    .boton.telefono {
-      background: #2563eb;
-    }
-
-    .boton.email {
-      background: #7c3aed;
     }
 
     .sin-resultados {
@@ -136,13 +123,22 @@
 
     .contacto h4 {
       margin-top: 0;
-      color: #123b5d;
+      margin-bottom: 8px;
     }
 
-    .opciones-contacto {
+    .botones-contacto {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 12px;
+    }
+
+    .boton-whatsapp {
+      background: #16a34a;
+    }
+
+    .boton-llamar {
+      background: #2563eb;
     }
 
     .volver {
@@ -162,11 +158,11 @@
 
     @media (max-width: 600px) {
 
-      .opciones-contacto {
+      .botones-contacto {
         flex-direction: column;
       }
 
-      .opciones-contacto .boton {
+      .botones-contacto .boton {
         width: 100%;
         text-align: center;
       }
@@ -260,52 +256,59 @@
 <script>
 
 
-/* ==========================================
-   DATOS
-========================================== */
+/* ================================
+   ELEMENTOS PRINCIPALES
+================================ */
+
+const lista =
+  document.getElementById(
+    "listaProyectos"
+  );
 
 
-const listaProyectos =
-  document.getElementById("listaProyectos");
+/* ================================
+   COMPROBAR REGISTRO
+================================ */
 
+const usuarioRegistrado =
+  localStorage.getItem(
+    "aluConectaUsuarioRegistrado"
+  ) === "true";
+
+
+/* ================================
+   RECUPERAR PROYECTOS
+================================ */
 
 const clientes =
   JSON.parse(
-    localStorage.getItem("clientesAluConecta")
+    localStorage.getItem(
+      "clientesAluConecta"
+    )
   ) || [];
 
 
+/* ================================
+   CONTACTAR CON UN PROYECTO
+================================ */
 
-/* ==========================================
-   COMPROBAR REGISTRO
-========================================== */
+function contactarProyecto(
+  telefono,
+  nombre
+) {
 
-
-function usuarioEstaRegistrado() {
-
-  return (
+  const registrado =
     localStorage.getItem(
       "aluConectaUsuarioRegistrado"
-    ) === "true"
-  );
-
-}
+    ) === "true";
 
 
+  /*
+    Si no está registrado,
+    primero debe crear su cuenta.
+  */
 
-/* ==========================================
-   CONTACTAR PROYECTO
-========================================== */
-
-
-function mostrarContacto(indice) {
-
-  const proyecto =
-    clientes[indice];
-
-
-
-  if (!usuarioEstaRegistrado()) {
+  if (!registrado) {
 
     window.location.href =
       "acceso.html";
@@ -315,204 +318,160 @@ function mostrarContacto(indice) {
   }
 
 
-
-  const contenedor =
-    document.getElementById(
-      "contacto-" + indice
-    );
-
-
-  if (!contenedor) {
-    return;
-  }
-
-
-
-  const telefono =
-    proyecto.telefono ||
-    "";
-
-
-
-  const email =
-    proyecto.email ||
-    proyecto.correo ||
-    "";
-
-
+  /*
+    Limpiamos el número
+    para utilizarlo con WhatsApp
+    o llamadas.
+  */
 
   const numero =
-    String(telefono)
+    (telefono || "")
       .replace(/\D/g, "");
 
 
+  /*
+    Si no existe teléfono,
+    no intentamos abrir WhatsApp.
+  */
 
-  let html = `
+  if (!numero) {
 
-    <div class="contacto">
+    alert(
+      "Este proyecto todavía no tiene un teléfono de contacto."
+    );
 
-      <h4>
-        📞 Formas de contacto
-      </h4>
-
-      <p>
-        Elegí cómo querés comunicarte
-        con quien publicó este proyecto.
-      </p>
-
-      <div class="opciones-contacto">
-
-  `;
-
-
-
-  let hayContacto = false;
-
-
-
-  /* WhatsApp */
-
-
-  if (numero) {
-
-    let numeroWhatsApp =
-      numero;
-
-
-    if (
-      numeroWhatsApp.length === 10
-    ) {
-
-      numeroWhatsApp =
-        "54" + numeroWhatsApp;
-
-    }
-
-
-
-    const mensaje =
-      "Hola, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
-
-
-    const enlaceWhatsApp =
-      "https://wa.me/" +
-      numeroWhatsApp +
-      "?text=" +
-      encodeURIComponent(
-        mensaje
-      );
-
-
-    html += `
-
-      <a
-        href="${enlaceWhatsApp}"
-        target="_blank"
-        class="boton whatsapp">
-
-        💬 WhatsApp
-
-      </a>
-
-    `;
-
-
-    hayContacto = true;
+    return;
 
   }
 
 
+  /*
+    Mostramos las opciones
+    de contacto.
+  */
 
-  /* Teléfono */
-
-
-  if (numero) {
-
-    html += `
-
-      <a
-        href="tel:${numero}"
-        class="boton telefono">
-
-        📞 Llamar
-
-      </a>
-
-    `;
+  const contacto =
+    document.getElementById(
+      "contacto-" + nombre
+    );
 
 
-    hayContacto = true;
+  if (contacto) {
+
+    contacto.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
 
   }
-
-
-
-  /* Email */
-
-
-  if (email) {
-
-    html += `
-
-      <a
-        href="mailto:${email}"
-        class="boton email">
-
-        ✉️ Email
-
-      </a>
-
-    `;
-
-
-    hayContacto = true;
-
-  }
-
-
-
-  if (!hayContacto) {
-
-    html += `
-
-      <p>
-
-        Este proyecto todavía no tiene
-        datos de contacto disponibles.
-
-      </p>
-
-    `;
-
-  }
-
-
-
-  html += `
-
-      </div>
-
-    </div>
-
-  `;
-
-
-
-  contenedor.innerHTML =
-    html;
 
 }
 
 
+/* ================================
+   ABRIR WHATSAPP
+================================ */
 
-/* ==========================================
+function abrirWhatsApp(
+  telefono,
+  nombre
+) {
+
+  const numero =
+    (telefono || "")
+      .replace(/\D/g, "");
+
+
+  if (!numero) {
+
+    alert(
+      "Este proyecto todavía no tiene WhatsApp disponible."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Si el número tiene 10 dígitos,
+    agregamos el código de Argentina.
+  */
+
+  let numeroWhatsApp =
+    numero;
+
+
+  if (
+    numeroWhatsApp.length === 10 &&
+    numeroWhatsApp.startsWith("9") === false
+  ) {
+
+    numeroWhatsApp =
+      "54" + numeroWhatsApp;
+
+  }
+
+
+  const mensaje =
+    `Hola ${nombre || "usuario"}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
+
+
+  const url =
+    "https://wa.me/" +
+    numeroWhatsApp +
+    "?text=" +
+    encodeURIComponent(
+      mensaje
+    );
+
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
+
+
+/* ================================
+   LLAMAR
+================================ */
+
+function llamar(
+  telefono
+) {
+
+  const numero =
+    (telefono || "")
+      .replace(/\D/g, "");
+
+
+  if (!numero) {
+
+    alert(
+      "Este proyecto todavía no tiene un teléfono de contacto."
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "tel:" + numero;
+
+}
+
+
+/* ================================
    MOSTRAR PROYECTOS
-========================================== */
-
+================================ */
 
 if (clientes.length === 0) {
 
-  listaProyectos.innerHTML = `
+
+  lista.innerHTML = `
 
     <div class="sin-resultados">
 
@@ -539,146 +498,208 @@ if (clientes.length === 0) {
 
   `;
 
+
 } else {
 
 
-  let contenido = `
+  lista.innerHTML = `
 
     <h2>
       Proyectos publicados
     </h2>
 
+
+    ${
+      clientes
+        .map(
+          function(cliente, indice) {
+
+
+            const nombreProyecto =
+              cliente.nombre ||
+              "Proyecto";
+
+
+            const localidad =
+              cliente.localidad ||
+              "Localidad no indicada";
+
+
+            const tipo =
+              cliente.tipo ||
+              "Usuario";
+
+
+            const necesidad =
+              cliente.proyecto ||
+              "Necesidad no especificada";
+
+
+            const telefono =
+              cliente.telefono ||
+              "";
+
+
+            /*
+              Para usuarios registrados
+              mostramos el nombre.
+
+              Para visitantes:
+              ocultamos el nombre.
+            */
+
+            const encabezado =
+              usuarioRegistrado
+
+                ? `🏗️ ${nombreProyecto}`
+
+                : `🏗️ Proyecto publicado`;
+
+
+            return `
+
+              <div class="proyecto">
+
+
+                <h3>
+                  ${encabezado}
+                </h3>
+
+
+                <p>
+
+                  📍
+                  ${localidad}
+
+                </p>
+
+
+                <p>
+
+                  👤
+                  ${tipo}
+
+                </p>
+
+
+                <p>
+
+                  🔧
+                  ${necesidad}
+
+                </p>
+
+
+                <span class="etiqueta">
+
+                  Proyecto
+
+                </span>
+
+
+                <span class="etiqueta">
+
+                  ${localidad}
+
+                </span>
+
+
+                <br>
+                <br>
+
+
+                <button
+                  type="button"
+                  class="boton verde"
+                  onclick="contactarProyecto(
+                    ${JSON.stringify(telefono)},
+                    ${JSON.stringify(nombreProyecto)}
+                  )">
+
+                  💬 Estoy interesado
+
+                </button>
+
+
+                ${
+                  usuarioRegistrado
+
+                    ? `
+
+                      <div
+                        id="contacto-${nombreProyecto}"
+                        class="contacto">
+
+                        <h4>
+                          📞 Formas de contacto
+                        </h4>
+
+                        <p>
+                          Elegí cómo querés comunicarte
+                          con quien publicó este proyecto.
+                        </p>
+
+
+                        <div class="botones-contacto">
+
+
+                          <button
+                            type="button"
+                            class="boton boton-whatsapp"
+                            onclick="abrirWhatsApp(
+                              ${JSON.stringify(telefono)},
+                              ${JSON.stringify(nombreProyecto)}
+                            )">
+
+                            💬 WhatsApp
+
+                          </button>
+
+
+                          <button
+                            type="button"
+                            class="boton boton-llamar"
+                            onclick="llamar(
+                              ${JSON.stringify(telefono)}
+                            )">
+
+                            📞 Llamar
+
+                          </button>
+
+
+                        </div>
+
+                      </div>
+
+                    `
+
+                    : `
+
+                      <div class="aviso-registro">
+
+                        🔐 Registrate en AluConecta
+                        para conocer quién publicó
+                        este proyecto y poder contactarlo.
+
+                      </div>
+
+                    `
+
+                }
+
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("")
+
+    }
+
   `;
-
-
-
-  clientes.forEach(
-    function(proyecto, indice) {
-
-
-      const nombre =
-        proyecto.nombre ||
-        "Proyecto";
-
-
-      const localidad =
-        proyecto.localidad ||
-        "Localidad no indicada";
-
-
-      const tipo =
-        proyecto.tipo ||
-        proyecto.tipoUsuario ||
-        "Usuario";
-
-
-      const necesidad =
-        proyecto.proyecto ||
-        proyecto.necesidad ||
-        "Necesidad no especificada";
-
-
-
-      contenido += `
-
-        <div class="proyecto">
-
-          <h3>
-            🏗️ ${nombre}
-          </h3>
-
-
-          <p>
-            📍 ${localidad}
-          </p>
-
-
-          <p>
-            👤 ${tipo}
-          </p>
-
-
-          <p>
-            🔧 ${necesidad}
-          </p>
-
-
-          <span class="etiqueta">
-            Proyecto
-          </span>
-
-
-          <span class="etiqueta">
-            ${localidad}
-          </span>
-
-
-          <br>
-          <br>
-
-
-          <button
-            type="button"
-            class="boton verde"
-            data-proyecto="${indice}">
-
-            💬 Estoy interesado
-
-          </button>
-
-
-          <div
-            id="contacto-${indice}">
-
-          </div>
-
-
-        </div>
-
-      `;
-
-    }
-  );
-
-
-
-  listaProyectos.innerHTML =
-    contenido;
-
-
-
-  /* ========================================
-     ACTIVAR BOTONES
-  ======================================== */
-
-
-  const botones =
-    document.querySelectorAll(
-      "[data-proyecto]"
-    );
-
-
-  botones.forEach(
-    function(boton) {
-
-      boton.addEventListener(
-        "click",
-        function() {
-
-          const indice =
-            this.getAttribute(
-              "data-proyecto"
-            );
-
-          mostrarContacto(
-            indice
-          );
-
-        }
-      );
-
-    }
-  );
 
 }
 
