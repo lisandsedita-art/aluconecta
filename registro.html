@@ -140,6 +140,10 @@
       margin-top: 10px;
     }
 
+    .boton:hover {
+      background: #1d4ed8;
+    }
+
     .mensaje {
       display: none;
       margin-top: 25px;
@@ -147,6 +151,11 @@
       border-radius: 10px;
       background: #eef2ff;
       text-align: center;
+    }
+
+    .mensaje.error {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .volver {
@@ -401,42 +410,56 @@
           🛠️ Ofrezco servicios
         </option>
 
+        <option value="Ambas cosas">
+          🔄 Ambas cosas
+        </option>
+
       </select>
 
     </div>
 
-<h3>
-  Datos de acceso
-</h3>
 
-<div class="campo">
 
-  <label for="email">
-    Correo electrónico
-  </label>
+    <h3>
+      Datos de acceso
+    </h3>
 
-  <input
-    type="email"
-    id="email"
-    placeholder="Ej: tucorreo@gmail.com"
-    required>
 
-</div>
+    <div class="campo">
 
-<div class="campo">
+      <label for="email">
+        Correo electrónico
+      </label>
 
-  <label for="password">
-    Contraseña
-  </label>
+      <input
+        type="email"
+        id="email"
+        placeholder="Ej: tucorreo@gmail.com"
+        required>
 
-  <input
-    type="password"
-    id="password"
-    placeholder="Mínimo 6 caracteres"
-    minlength="6"
-    required>
+    </div>
 
-</div>
+
+    <div class="campo">
+
+      <label for="password">
+        Contraseña
+      </label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Mínimo 6 caracteres"
+        minlength="6"
+        required>
+
+      <div class="ayuda">
+        Tu contraseña será utilizada para ingresar posteriormente a AluConecta.
+      </div>
+
+    </div>
+
+
 
     <h3>
       Datos de contacto
@@ -648,362 +671,404 @@
 
 
 
+<!--
+  Supabase queda preparado para el próximo paso.
+  TODAVÍA NO estamos conectando el registro con Supabase.
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
+  /*
+    Parámetros que pueden venir desde acceso.html
+  */
 
-/*
-  Si llegamos desde acceso.html con parámetros,
-  los utilizamos para completar automáticamente
-  las elecciones correspondientes.
-*/
-
-const parametros =
-  new URLSearchParams(
-    window.location.search
-  );
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
 
 
-const tipoDesdeAcceso =
-  parametros.get("tipo");
+  const tipoDesdeAcceso =
+    parametros.get("tipo");
 
 
-const rolDesdeAcceso =
-  parametros.get("rol");
+  const rolDesdeAcceso =
+    parametros.get("rol");
 
 
-if (tipoDesdeAcceso) {
 
-  const tipoUsuario =
-    document.getElementById("tipoUsuario");
+  /*
+    Completar automáticamente el tipo de usuario
+  */
 
-  const mapaTipos = {
+  if (tipoDesdeAcceso) {
 
-    "particular": "Particular",
-
-    "profesional":
-      "Profesional independiente",
-
-    "empresa":
-      "Empresa"
-
-  };
-
-  if (mapaTipos[tipoDesdeAcceso]) {
-
-    tipoUsuario.value =
-      mapaTipos[tipoDesdeAcceso];
-
-  }
-
-}
+    const tipoUsuario =
+      document.getElementById("tipoUsuario");
 
 
-if (rolDesdeAcceso) {
+    const mapaTipos = {
 
-  const participacion =
-    document.getElementById("participacion");
+      "particular": "Particular",
 
-  const mapaRoles = {
+      "profesional":
+        "Profesional independiente",
 
-    "busca": "Busca servicios",
+      "empresa":
+        "Empresa"
 
-    "ofrece": "Ofrece servicios"
+    };
 
-  };
 
-  if (mapaRoles[rolDesdeAcceso]) {
+    if (mapaTipos[tipoDesdeAcceso]) {
 
-    participacion.value =
-      mapaRoles[rolDesdeAcceso];
+      tipoUsuario.value =
+        mapaTipos[tipoDesdeAcceso];
+
+    }
 
   }
 
-}
+
+
+  /*
+    Completar automáticamente la participación
+  */
+
+  if (rolDesdeAcceso) {
+
+    const participacion =
+      document.getElementById("participacion");
+
+
+    const mapaRoles = {
+
+      "busca": "Busca servicios",
+
+      "ofrece": "Ofrece servicios",
+
+      "ambas": "Ambas cosas"
+
+    };
+
+
+    if (mapaRoles[rolDesdeAcceso]) {
+
+      participacion.value =
+        mapaRoles[rolDesdeAcceso];
+
+    }
+
+  }
 
 
 
-/*
-  Registro
-*/
+  /*
+    Registro provisional.
 
-document
-  .getElementById("formularioRegistro")
-  .addEventListener(
-    "submit",
-    function(event) {
+    Por ahora conservamos el funcionamiento
+    anterior con localStorage.
 
-      event.preventDefault();
+    En el próximo paso vamos a reemplazar
+    esta parte por Supabase Auth + base de datos.
+  */
+
+  document
+    .getElementById("formularioRegistro")
+    .addEventListener(
+      "submit",
+      function(event) {
+
+        event.preventDefault();
 
 
 
-      const actividades =
-        Array
-          .from(
-            document.querySelectorAll(
-              'input[name="actividad"]:checked'
+        const actividades =
+          Array
+            .from(
+              document.querySelectorAll(
+                'input[name="actividad"]:checked'
+              )
             )
-          )
-          .map(
-            function(opcion) {
-              return opcion.value;
-            }
-          );
-
-
-
-      if (actividades.length === 0) {
-
-        alert(
-          "Seleccioná al menos una actividad."
-        );
-
-        return;
-
-      }
-
-
-
-      const profesional = {
-
-        id:
-          Date.now().toString(),
-
-        tipoUsuario:
-          document
-            .getElementById("tipoUsuario")
-            .value,
-
-        actividades:
-          actividades,
-
-        participacion:
-          document
-            .getElementById("participacion")
-            .value,
-
-        nombre:
-          document
-            .getElementById("nombre")
-            .value
-            .trim(),
-
-        localidad:
-          document
-            .getElementById("localidad")
-            .value
-            .trim(),
-
-        /*
-          Conservamos "rubro" para que los perfiles
-          anteriores sigan funcionando.
-        */
-
-        rubro:
-          actividades.join(", "),
-
-        servicios:
-          document
-            .getElementById("servicios")
-            .value
-            .trim(),
-
-        telefono:
-          document
-            .getElementById("telefono")
-            .value
-            .trim(),
-
-        descripcion:
-          document
-            .getElementById("descripcion")
-            .value
-            .trim(),
-
-        instagram:
-          document
-            .getElementById("instagram")
-            .value
-            .trim(),
-
-        facebook:
-          document
-            .getElementById("facebook")
-            .value
-            .trim(),
-
-        tiktok:
-          document
-            .getElementById("tiktok")
-            .value
-            .trim(),
-
-        web:
-          document
-            .getElementById("web")
-            .value
-            .trim()
-
-      };
-
-
-
-      let profesionales =
-        JSON.parse(
-          localStorage.getItem(
-            "profesionalesAluConecta"
-          )
-        ) || [];
-
-localStorage.setItem(
-  "aluConectaUsuarioRegistrado",
-  "true"
-);
-
-      /*
-        Conservamos perfiles anteriores.
-      */
-
-      const perfilAnterior =
-        localStorage.getItem(
-          "profesionalAluConecta"
-        );
-
-
-      if (
-        perfilAnterior &&
-        profesionales.length === 0
-      ) {
-
-        try {
-
-          const anterior =
-            JSON.parse(
-              perfilAnterior
+            .map(
+              function(opcion) {
+                return opcion.value;
+              }
             );
 
-          anterior.id =
-            Date.now().toString() +
-            "-anterior";
 
-          profesionales.push(
-            anterior
+
+        if (actividades.length === 0) {
+
+          alert(
+            "Seleccioná al menos una actividad."
           );
 
-        } catch (error) {
-
-          console.log(
-            "No se pudo recuperar el perfil anterior."
-          );
+          return;
 
         }
 
-      }
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        if (password.length < 6) {
+
+          alert(
+            "La contraseña debe tener al menos 6 caracteres."
+          );
+
+          return;
+
+        }
 
 
 
-      profesionales.push(
-        profesional
-      );
+        const profesional = {
+
+          id:
+            Date.now().toString(),
+
+          email:
+            document
+              .getElementById("email")
+              .value
+              .trim(),
+
+          tipoUsuario:
+            document
+              .getElementById("tipoUsuario")
+              .value,
+
+          actividades:
+            actividades,
+
+          participacion:
+            document
+              .getElementById("participacion")
+              .value,
+
+          nombre:
+            document
+              .getElementById("nombre")
+              .value
+              .trim(),
+
+          localidad:
+            document
+              .getElementById("localidad")
+              .value
+              .trim(),
+
+          rubro:
+            actividades.join(", "),
+
+          servicios:
+            document
+              .getElementById("servicios")
+              .value
+              .trim(),
+
+          telefono:
+            document
+              .getElementById("telefono")
+              .value
+              .trim(),
+
+          descripcion:
+            document
+              .getElementById("descripcion")
+              .value
+              .trim(),
+
+          instagram:
+            document
+              .getElementById("instagram")
+              .value
+              .trim(),
+
+          facebook:
+            document
+              .getElementById("facebook")
+              .value
+              .trim(),
+
+          tiktok:
+            document
+              .getElementById("tiktok")
+              .value
+              .trim(),
+
+          web:
+            document
+              .getElementById("web")
+              .value
+              .trim()
+
+        };
 
 
 
-      localStorage.setItem(
-        "profesionalesAluConecta",
-        JSON.stringify(
-          profesionales
-        )
-      );
+        let profesionales =
+          JSON.parse(
+            localStorage.getItem(
+              "profesionalesAluConecta"
+            )
+          ) || [];
 
 
 
-      /*
-        También guardamos el último perfil
-        para mantener compatibilidad con
-        el perfil público que ya tenemos.
-      */
-
-      localStorage.setItem(
-        "profesionalAluConecta",
-        JSON.stringify(
-          profesional
-        )
-      );
-
-
-
-      const mensaje =
-        document.getElementById(
-          "mensaje"
+        localStorage.setItem(
+          "aluConectaUsuarioRegistrado",
+          "true"
         );
 
 
-      mensaje.style.display =
-        "block";
 
-
-      mensaje.innerHTML = `
-
-        <h3>
-          ¡Perfil creado correctamente!
-        </h3>
-
-        <p>
-          ${profesional.nombre}
-        </p>
-
-        <p>
-          🏢 Tipo:
-          ${profesional.tipoUsuario}
-        </p>
-
-        <p>
-          🏷️ Actividad:
-          ${profesional.actividades.join(", ")}
-        </p>
-
-        <p>
-          📍 ${profesional.localidad}
-        </p>
-
-        <p>
-          Tu perfil fue agregado a AluConecta.
-        </p>
-
-        <p>
-          Ya podés continuar probando la plataforma.
-        </p>
-
-      `;
+        const perfilAnterior =
+          localStorage.getItem(
+            "profesionalAluConecta"
+          );
 
 
 
-      document
-        .getElementById(
-          "formularioRegistro"
-        )
-        .reset();
+        if (
+          perfilAnterior &&
+          profesionales.length === 0
+        ) {
+
+          try {
+
+            const anterior =
+              JSON.parse(
+                perfilAnterior
+              );
+
+
+            anterior.id =
+              Date.now().toString() +
+              "-anterior";
+
+
+            profesionales.push(
+              anterior
+            );
+
+          } catch (error) {
+
+            console.log(
+              "No se pudo recuperar el perfil anterior."
+            );
+
+          }
+
+        }
 
 
 
-      mensaje.scrollIntoView({
-        behavior: "smooth"
-      });
+        profesionales.push(
+          profesional
+        );
 
 
-    }
-  );
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+        localStorage.setItem(
+          "profesionalesAluConecta",
+          JSON.stringify(
+            profesionales
+          )
+        );
+
+
+
+        localStorage.setItem(
+          "profesionalAluConecta",
+          JSON.stringify(
+            profesional
+          )
+        );
+
+
+
+        const mensaje =
+          document.getElementById(
+            "mensaje"
+          );
+
+
+        mensaje.className =
+          "mensaje";
+
+
+        mensaje.style.display =
+          "block";
+
+
+        mensaje.innerHTML = `
+
+          <h3>
+            ¡Perfil creado correctamente!
+          </h3>
+
+          <p>
+            ${profesional.nombre}
+          </p>
+
+          <p>
+            🏢 Tipo:
+            ${profesional.tipoUsuario}
+          </p>
+
+          <p>
+            🏷️ Actividad:
+            ${profesional.actividades.join(", ")}
+          </p>
+
+          <p>
+            📍 ${profesional.localidad}
+          </p>
+
+          <p>
+            📧 ${profesional.email}
+          </p>
+
+          <p>
+            Tu perfil fue agregado a AluConecta.
+          </p>
+
+          <p>
+            En el próximo paso conectaremos este registro
+            con Supabase para que la cuenta sea real.
+          </p>
+
+        `;
+
+
+
+        document
+          .getElementById(
+            "formularioRegistro"
+          )
+          .reset();
+
+
+
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
+
+      }
+    );
 
 </script>
-const SUPABASE_URL = "https://wroaxwjyjrxzwctfkyoo.supabase.co";
 
-const SUPABASE_KEY = "PEGAR_AQUI_TU_PUBLISHABLE_KEY";
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
 
 </body>
 
