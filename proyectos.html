@@ -88,10 +88,27 @@
       font-weight: bold;
       border: none;
       cursor: pointer;
+      font-size: 16px;
     }
 
     .boton.verde {
       background: #16a34a;
+    }
+
+    .boton.gris {
+      background: #475569;
+    }
+
+    .boton.whatsapp {
+      background: #16a34a;
+    }
+
+    .boton.telefono {
+      background: #2563eb;
+    }
+
+    .boton.email {
+      background: #7c3aed;
     }
 
     .sin-resultados {
@@ -109,6 +126,25 @@
       line-height: 1.5;
     }
 
+    .contacto {
+      margin-top: 18px;
+      padding: 18px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .contacto h4 {
+      margin-top: 0;
+      color: #123b5d;
+    }
+
+    .opciones-contacto {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .volver {
       display: block;
       text-align: center;
@@ -122,6 +158,19 @@
       text-align: center;
       padding: 25px;
       color: #666;
+    }
+
+    @media (max-width: 600px) {
+
+      .opciones-contacto {
+        flex-direction: column;
+      }
+
+      .opciones-contacto .boton {
+        width: 100%;
+        text-align: center;
+      }
+
     }
 
   </style>
@@ -210,6 +259,12 @@
 
 <script>
 
+
+/* ==========================================
+   DATOS
+========================================== */
+
+
 const listaProyectos =
   document.getElementById("listaProyectos");
 
@@ -220,78 +275,239 @@ const clientes =
   ) || [];
 
 
-window.contactarProyecto = function(telefono, nombre) {
 
-  const registrado =
-    localStorage.getItem("aluConectaUsuarioRegistrado") === "true";
-
-  if (!registrado) {
-    window.location.href = "acceso.html";
-    return;
-  }
-
-  if (!telefono) {
-    alert("Este proyecto todavía no tiene un teléfono de contacto.");
-    return;
-  }
-
-  let numero = String(telefono).replace(/\D/g, "");
-
-  if (numero.length === 10) {
-    numero = "54" + numero;
-  }
-
-  const mensaje =
-    "Hola " + (nombre || "usuario") +
-    ", vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
-
-  const whatsapp =
-    "https://wa.me/" +
-    numero +
-    "?text=" +
-    encodeURIComponent(mensaje);
-
-  window.location.href = whatsapp;
-};
-
-  if (!telefono) {
-
-    alert(
-      "Este proyecto todavía no tiene un teléfono de contacto."
-    );
-
-    return;
-  }
+/* ==========================================
+   COMPROBAR REGISTRO
+========================================== */
 
 
-  let numero =
-    String(telefono).replace(/\D/g, "");
+function usuarioEstaRegistrado() {
 
-
-  if (numero.length === 10) {
-
-    numero = "54" + numero;
-
-  }
-
-
-  const mensaje =
-    "Hola " +
-    (nombre || "usuario") +
-    ", vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
-
-
-  const whatsapp =
-    "https://wa.me/" +
-    numero +
-    "?text=" +
-    encodeURIComponent(mensaje);
-
-
-  window.location.href = whatsapp;
+  return (
+    localStorage.getItem(
+      "aluConectaUsuarioRegistrado"
+    ) === "true"
+  );
 
 }
 
+
+
+/* ==========================================
+   CONTACTAR PROYECTO
+========================================== */
+
+
+function mostrarContacto(indice) {
+
+  const proyecto =
+    clientes[indice];
+
+
+
+  if (!usuarioEstaRegistrado()) {
+
+    window.location.href =
+      "acceso.html";
+
+    return;
+
+  }
+
+
+
+  const contenedor =
+    document.getElementById(
+      "contacto-" + indice
+    );
+
+
+  if (!contenedor) {
+    return;
+  }
+
+
+
+  const telefono =
+    proyecto.telefono ||
+    "";
+
+
+
+  const email =
+    proyecto.email ||
+    proyecto.correo ||
+    "";
+
+
+
+  const numero =
+    String(telefono)
+      .replace(/\D/g, "");
+
+
+
+  let html = `
+
+    <div class="contacto">
+
+      <h4>
+        📞 Formas de contacto
+      </h4>
+
+      <p>
+        Elegí cómo querés comunicarte
+        con quien publicó este proyecto.
+      </p>
+
+      <div class="opciones-contacto">
+
+  `;
+
+
+
+  let hayContacto = false;
+
+
+
+  /* WhatsApp */
+
+
+  if (numero) {
+
+    let numeroWhatsApp =
+      numero;
+
+
+    if (
+      numeroWhatsApp.length === 10
+    ) {
+
+      numeroWhatsApp =
+        "54" + numeroWhatsApp;
+
+    }
+
+
+
+    const mensaje =
+      "Hola, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
+
+
+    const enlaceWhatsApp =
+      "https://wa.me/" +
+      numeroWhatsApp +
+      "?text=" +
+      encodeURIComponent(
+        mensaje
+      );
+
+
+    html += `
+
+      <a
+        href="${enlaceWhatsApp}"
+        target="_blank"
+        class="boton whatsapp">
+
+        💬 WhatsApp
+
+      </a>
+
+    `;
+
+
+    hayContacto = true;
+
+  }
+
+
+
+  /* Teléfono */
+
+
+  if (numero) {
+
+    html += `
+
+      <a
+        href="tel:${numero}"
+        class="boton telefono">
+
+        📞 Llamar
+
+      </a>
+
+    `;
+
+
+    hayContacto = true;
+
+  }
+
+
+
+  /* Email */
+
+
+  if (email) {
+
+    html += `
+
+      <a
+        href="mailto:${email}"
+        class="boton email">
+
+        ✉️ Email
+
+      </a>
+
+    `;
+
+
+    hayContacto = true;
+
+  }
+
+
+
+  if (!hayContacto) {
+
+    html += `
+
+      <p>
+
+        Este proyecto todavía no tiene
+        datos de contacto disponibles.
+
+      </p>
+
+    `;
+
+  }
+
+
+
+  html += `
+
+      </div>
+
+    </div>
+
+  `;
+
+
+
+  contenedor.innerHTML =
+    html;
+
+}
+
+
+
+/* ==========================================
+   MOSTRAR PROYECTOS
+========================================== */
 
 
 if (clientes.length === 0) {
@@ -335,84 +551,137 @@ if (clientes.length === 0) {
   `;
 
 
-  clientes.forEach(function(cliente) {
 
-    const nombre =
-      cliente.nombre ||
-      "Proyecto";
+  clientes.forEach(
+    function(proyecto, indice) {
 
 
-    const localidad =
-      cliente.localidad ||
-      "Localidad no indicada";
+      const nombre =
+        proyecto.nombre ||
+        "Proyecto";
 
 
-    const tipo =
-      cliente.tipo ||
-      "Usuario";
+      const localidad =
+        proyecto.localidad ||
+        "Localidad no indicada";
 
 
-    const proyecto =
-      cliente.proyecto ||
-      "Necesidad no especificada";
+      const tipo =
+        proyecto.tipo ||
+        proyecto.tipoUsuario ||
+        "Usuario";
 
 
-    const telefono =
-      cliente.telefono ||
-      "";
+      const necesidad =
+        proyecto.proyecto ||
+        proyecto.necesidad ||
+        "Necesidad no especificada";
 
 
-    contenido += `
 
-      <div class="proyecto">
+      contenido += `
 
-        <h3>
-          🏗️ ${nombre}
-        </h3>
+        <div class="proyecto">
 
-        <p>
-          📍 ${localidad}
-        </p>
+          <h3>
+            🏗️ ${nombre}
+          </h3>
 
-        <p>
-          👤 ${tipo}
-        </p>
 
-        <p>
-          🔧 ${proyecto}
-        </p>
+          <p>
+            📍 ${localidad}
+          </p>
 
-        <span class="etiqueta">
-          Proyecto
-        </span>
 
-        <span class="etiqueta">
-          ${localidad}
-        </span>
+          <p>
+            👤 ${tipo}
+          </p>
 
-        <br>
-        <br>
 
-      
-<button
-  type="button"
-  class="boton verde"
-  onclick="contactarProyecto(${JSON.stringify(telefono)}, ${JSON.stringify(nombre)})">
+          <p>
+            🔧 ${necesidad}
+          </p>
 
-  💬 Estoy interesado
 
-</button>
-      </div>
+          <span class="etiqueta">
+            Proyecto
+          </span>
 
-    `;
 
-  });
+          <span class="etiqueta">
+            ${localidad}
+          </span>
+
+
+          <br>
+          <br>
+
+
+          <button
+            type="button"
+            class="boton verde"
+            data-proyecto="${indice}">
+
+            💬 Estoy interesado
+
+          </button>
+
+
+          <div
+            id="contacto-${indice}">
+
+          </div>
+
+
+        </div>
+
+      `;
+
+    }
+  );
+
 
 
   listaProyectos.innerHTML =
     contenido;
 
+
+
+  /* ========================================
+     ACTIVAR BOTONES
+  ======================================== */
+
+
+  const botones =
+    document.querySelectorAll(
+      "[data-proyecto]"
+    );
+
+
+  botones.forEach(
+    function(boton) {
+
+      boton.addEventListener(
+        "click",
+        function() {
+
+          const indice =
+            this.getAttribute(
+              "data-proyecto"
+            );
+
+          mostrarContacto(
+            indice
+          );
+
+        }
+      );
+
+    }
+  );
+
 }
+
 
 </script>
 
