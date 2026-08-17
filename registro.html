@@ -140,8 +140,9 @@
       margin-top: 10px;
     }
 
-    .boton:hover {
-      background: #1d4ed8;
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: wait;
     }
 
     .mensaje {
@@ -156,6 +157,11 @@
     .mensaje.error {
       background: #fee2e2;
       color: #991b1b;
+    }
+
+    .mensaje.exito {
+      background: #dcfce7;
+      color: #166534;
     }
 
     .volver {
@@ -435,6 +441,7 @@
         type="email"
         id="email"
         placeholder="Ej: tucorreo@gmail.com"
+        autocomplete="email"
         required>
 
     </div>
@@ -450,6 +457,7 @@
         type="password"
         id="password"
         placeholder="Mínimo 6 caracteres"
+        autocomplete="new-password"
         minlength="6"
         required>
 
@@ -464,7 +472,6 @@
     <h3>
       Datos de contacto
     </h3>
-
 
 
     <div class="campo">
@@ -482,7 +489,6 @@
     </div>
 
 
-
     <div class="campo">
 
       <label for="localidad">
@@ -498,7 +504,6 @@
     </div>
 
 
-
     <div class="campo">
 
       <label for="servicios">
@@ -510,7 +515,6 @@
         placeholder="Si ofrecés servicios, describilos aquí. Ej: ventanas, puertas, DVH, cerramientos e instalación."></textarea>
 
     </div>
-
 
 
     <div class="campo">
@@ -526,7 +530,6 @@
         required>
 
     </div>
-
 
 
     <div class="campo">
@@ -555,7 +558,6 @@
     </p>
 
 
-
     <div class="campo">
 
       <label for="instagram">
@@ -574,7 +576,6 @@
     </div>
 
 
-
     <div class="campo">
 
       <label for="facebook">
@@ -589,7 +590,6 @@
     </div>
 
 
-
     <div class="campo">
 
       <label for="tiktok">
@@ -602,7 +602,6 @@
         placeholder="@tuempresa">
 
     </div>
-
 
 
     <div class="campo">
@@ -622,7 +621,8 @@
 
     <button
       type="submit"
-      class="boton">
+      class="boton"
+      id="botonRegistro">
 
       Crear mi perfil
 
@@ -672,245 +672,397 @@
 
 
 <!--
-  Supabase queda preparado para el próximo paso.
-  TODAVÍA NO estamos conectando el registro con Supabase.
+  Supabase JS
 -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-  /*
-    Parámetros que pueden venir desde acceso.html
-  */
 
-  const parametros =
-    new URLSearchParams(
-      window.location.search
+/* =====================================================
+   CONFIGURACIÓN DE SUPABASE
+   ===================================================== */
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+
+const SUPABASE_KEY =
+  "PEGAR_AQUI_TU_PUBLISHABLE_KEY";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+
+/* =====================================================
+   DATOS QUE PUEDEN VENIR DESDE acceso.html
+   ===================================================== */
+
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const tipoDesdeAcceso =
+  parametros.get("tipo");
+
+
+const rolDesdeAcceso =
+  parametros.get("rol");
+
+
+
+if (tipoDesdeAcceso) {
+
+  const tipoUsuario =
+    document.getElementById(
+      "tipoUsuario"
     );
 
 
-  const tipoDesdeAcceso =
-    parametros.get("tipo");
+  const mapaTipos = {
+
+    "particular":
+      "Particular",
+
+    "profesional":
+      "Profesional independiente",
+
+    "empresa":
+      "Empresa"
+
+  };
 
 
-  const rolDesdeAcceso =
-    parametros.get("rol");
+  if (mapaTipos[tipoDesdeAcceso]) {
 
-
-
-  /*
-    Completar automáticamente el tipo de usuario
-  */
-
-  if (tipoDesdeAcceso) {
-
-    const tipoUsuario =
-      document.getElementById("tipoUsuario");
-
-
-    const mapaTipos = {
-
-      "particular": "Particular",
-
-      "profesional":
-        "Profesional independiente",
-
-      "empresa":
-        "Empresa"
-
-    };
-
-
-    if (mapaTipos[tipoDesdeAcceso]) {
-
-      tipoUsuario.value =
-        mapaTipos[tipoDesdeAcceso];
-
-    }
+    tipoUsuario.value =
+      mapaTipos[tipoDesdeAcceso];
 
   }
 
+}
 
 
-  /*
-    Completar automáticamente la participación
-  */
 
-  if (rolDesdeAcceso) {
+if (rolDesdeAcceso) {
 
-    const participacion =
-      document.getElementById("participacion");
-
-
-    const mapaRoles = {
-
-      "busca": "Busca servicios",
-
-      "ofrece": "Ofrece servicios",
-
-      "ambas": "Ambas cosas"
-
-    };
+  const participacion =
+    document.getElementById(
+      "participacion"
+    );
 
 
-    if (mapaRoles[rolDesdeAcceso]) {
+  const mapaRoles = {
 
-      participacion.value =
-        mapaRoles[rolDesdeAcceso];
+    "busca":
+      "Busca servicios",
 
-    }
+    "ofrece":
+      "Ofrece servicios",
+
+    "ambas":
+      "Ambas cosas"
+
+  };
+
+
+  if (mapaRoles[rolDesdeAcceso]) {
+
+    participacion.value =
+      mapaRoles[rolDesdeAcceso];
 
   }
 
-
-
-  /*
-    Registro provisional.
-
-    Por ahora conservamos el funcionamiento
-    anterior con localStorage.
-
-    En el próximo paso vamos a reemplazar
-    esta parte por Supabase Auth + base de datos.
-  */
-
-  document
-    .getElementById("formularioRegistro")
-    .addEventListener(
-      "submit",
-      function(event) {
-
-        event.preventDefault();
+}
 
 
 
-        const actividades =
-          Array
-            .from(
-              document.querySelectorAll(
-                'input[name="actividad"]:checked'
-              )
+/* =====================================================
+   REGISTRO DE USUARIO
+   ===================================================== */
+
+document
+  .getElementById(
+    "formularioRegistro"
+  )
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const boton =
+        document.getElementById(
+          "botonRegistro"
+        );
+
+
+      const mensaje =
+        document.getElementById(
+          "mensaje"
+        );
+
+
+      mensaje.style.display =
+        "none";
+
+
+      mensaje.className =
+        "mensaje";
+
+
+      /* -----------------------------------------------
+         Actividades seleccionadas
+         ----------------------------------------------- */
+
+      const actividades =
+        Array
+          .from(
+            document.querySelectorAll(
+              'input[name="actividad"]:checked'
             )
-            .map(
-              function(opcion) {
-                return opcion.value;
+          )
+          .map(
+            function(opcion) {
+              return opcion.value;
+            }
+          );
+
+
+      if (actividades.length === 0) {
+
+        alert(
+          "Seleccioná al menos una actividad."
+        );
+
+        return;
+
+      }
+
+
+
+      /* -----------------------------------------------
+         Datos básicos
+         ----------------------------------------------- */
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+
+      const nombre =
+        document
+          .getElementById("nombre")
+          .value
+          .trim();
+
+
+      const localidad =
+        document
+          .getElementById("localidad")
+          .value
+          .trim();
+
+
+      const telefono =
+        document
+          .getElementById("telefono")
+          .value
+          .trim();
+
+
+      const servicios =
+        document
+          .getElementById("servicios")
+          .value
+          .trim();
+
+
+      const descripcion =
+        document
+          .getElementById("descripcion")
+          .value
+          .trim();
+
+
+      const instagram =
+        document
+          .getElementById("instagram")
+          .value
+          .trim();
+
+
+      const facebook =
+        document
+          .getElementById("facebook")
+          .value
+          .trim();
+
+
+      const tiktok =
+        document
+          .getElementById("tiktok")
+          .value
+          .trim();
+
+
+      const web =
+        document
+          .getElementById("web")
+          .value
+          .trim();
+
+
+      const tipoUsuario =
+        document
+          .getElementById("tipoUsuario")
+          .value;
+
+
+      const participacion =
+        document
+          .getElementById("participacion")
+          .value;
+
+
+
+      /* -----------------------------------------------
+         Desactivar botón mientras se registra
+         ----------------------------------------------- */
+
+      boton.disabled =
+        true;
+
+      boton.textContent =
+        "Creando cuenta...";
+
+
+
+      try {
+
+
+        /* ---------------------------------------------
+           CREAR USUARIO EN SUPABASE AUTH
+           --------------------------------------------- */
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth.signUp({
+
+            email:
+              email,
+
+            password:
+              password,
+
+            options: {
+
+              data: {
+
+                nombre:
+                  nombre,
+
+                tipoUsuario:
+                  tipoUsuario,
+
+                actividades:
+                  actividades,
+
+                participacion:
+                  participacion,
+
+                localidad:
+                  localidad
+
               }
-            );
+
+            }
+
+          });
 
 
 
-        if (actividades.length === 0) {
+        if (error) {
 
-          alert(
-            "Seleccioná al menos una actividad."
-          );
-
-          return;
-
-        }
-
-
-
-        const password =
-          document
-            .getElementById("password")
-            .value;
-
-
-        if (password.length < 6) {
-
-          alert(
-            "La contraseña debe tener al menos 6 caracteres."
-          );
-
-          return;
+          throw error;
 
         }
 
 
+
+        /* ---------------------------------------------
+           Guardamos también el perfil localmente
+           para conservar compatibilidad con el sitio
+           actual.
+           --------------------------------------------- */
 
         const profesional = {
 
           id:
-            Date.now().toString(),
-
-          email:
-            document
-              .getElementById("email")
-              .value
-              .trim(),
+            data.user
+              ? data.user.id
+              : Date.now().toString(),
 
           tipoUsuario:
-            document
-              .getElementById("tipoUsuario")
-              .value,
+            tipoUsuario,
 
           actividades:
             actividades,
 
           participacion:
-            document
-              .getElementById("participacion")
-              .value,
+            participacion,
 
           nombre:
-            document
-              .getElementById("nombre")
-              .value
-              .trim(),
+            nombre,
 
           localidad:
-            document
-              .getElementById("localidad")
-              .value
-              .trim(),
+            localidad,
 
           rubro:
             actividades.join(", "),
 
           servicios:
-            document
-              .getElementById("servicios")
-              .value
-              .trim(),
+            servicios,
 
           telefono:
-            document
-              .getElementById("telefono")
-              .value
-              .trim(),
+            telefono,
 
           descripcion:
-            document
-              .getElementById("descripcion")
-              .value
-              .trim(),
+            descripcion,
 
           instagram:
-            document
-              .getElementById("instagram")
-              .value
-              .trim(),
+            instagram,
 
           facebook:
-            document
-              .getElementById("facebook")
-              .value
-              .trim(),
+            facebook,
 
           tiktok:
-            document
-              .getElementById("tiktok")
-              .value
-              .trim(),
+            tiktok,
 
           web:
-            document
-              .getElementById("web")
-              .value
-              .trim()
+            web,
+
+          email:
+            email
 
         };
 
@@ -922,54 +1074,6 @@
               "profesionalesAluConecta"
             )
           ) || [];
-
-
-
-        localStorage.setItem(
-          "aluConectaUsuarioRegistrado",
-          "true"
-        );
-
-
-
-        const perfilAnterior =
-          localStorage.getItem(
-            "profesionalAluConecta"
-          );
-
-
-
-        if (
-          perfilAnterior &&
-          profesionales.length === 0
-        ) {
-
-          try {
-
-            const anterior =
-              JSON.parse(
-                perfilAnterior
-              );
-
-
-            anterior.id =
-              Date.now().toString() +
-              "-anterior";
-
-
-            profesionales.push(
-              anterior
-            );
-
-          } catch (error) {
-
-            console.log(
-              "No se pudo recuperar el perfil anterior."
-            );
-
-          }
-
-        }
 
 
 
@@ -997,58 +1101,69 @@
 
 
 
-        const mensaje =
-          document.getElementById(
-            "mensaje"
-          );
+        localStorage.setItem(
+          "aluConectaUsuarioRegistrado",
+          "true"
+        );
 
 
-        mensaje.className =
-          "mensaje";
 
+        /* ---------------------------------------------
+           Mensaje final
+           --------------------------------------------- */
 
         mensaje.style.display =
           "block";
 
 
-        mensaje.innerHTML = `
+        mensaje.className =
+          "mensaje exito";
 
-          <h3>
-            ¡Perfil creado correctamente!
-          </h3>
 
-          <p>
-            ${profesional.nombre}
-          </p>
+        if (data.session) {
 
-          <p>
-            🏢 Tipo:
-            ${profesional.tipoUsuario}
-          </p>
+          mensaje.innerHTML = `
 
-          <p>
-            🏷️ Actividad:
-            ${profesional.actividades.join(", ")}
-          </p>
+            <h3>
+              ¡Cuenta creada correctamente!
+            </h3>
 
-          <p>
-            📍 ${profesional.localidad}
-          </p>
+            <p>
+              Bienvenido/a a AluConecta.
+            </p>
 
-          <p>
-            📧 ${profesional.email}
-          </p>
+            <p>
+              Tu cuenta fue creada con el correo:
+              <strong>${email}</strong>
+            </p>
 
-          <p>
-            Tu perfil fue agregado a AluConecta.
-          </p>
+            <p>
+              Tu perfil quedó guardado correctamente.
+            </p>
 
-          <p>
-            En el próximo paso conectaremos este registro
-            con Supabase para que la cuenta sea real.
-          </p>
+          `;
 
-        `;
+        } else {
+
+          mensaje.innerHTML = `
+
+            <h3>
+              ¡Cuenta creada correctamente!
+            </h3>
+
+            <p>
+              Te enviamos un correo electrónico
+              para confirmar tu cuenta.
+            </p>
+
+            <p>
+              Revisá tu bandeja de entrada
+              y también la carpeta de spam.
+            </p>
+
+          `;
+
+        }
 
 
 
@@ -1059,13 +1174,68 @@
           .reset();
 
 
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
+
+
+
+      } catch (error) {
+
+
+        console.error(
+          "Error durante el registro:",
+          error
+        );
+
+
+        mensaje.style.display =
+          "block";
+
+
+        mensaje.className =
+          "mensaje error";
+
+
+        mensaje.innerHTML = `
+
+          <h3>
+            No pudimos crear la cuenta
+          </h3>
+
+          <p>
+            ${error.message}
+          </p>
+
+          <p>
+            Revisá el correo y la contraseña
+            e intentá nuevamente.
+          </p>
+
+        `;
+
 
         mensaje.scrollIntoView({
           behavior: "smooth"
         });
 
+
+      } finally {
+
+
+        boton.disabled =
+          false;
+
+
+        boton.textContent =
+          "Crear mi perfil";
+
+
       }
-    );
+
+    }
+  );
+
 
 </script>
 
