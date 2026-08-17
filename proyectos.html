@@ -220,21 +220,39 @@ const clientes =
   ) || [];
 
 
-function contactarProyecto(telefono, nombre) {
+window.contactarProyecto = function(telefono, nombre) {
 
   const registrado =
-    localStorage.getItem(
-      "aluConectaUsuarioRegistrado"
-    ) === "true";
-
+    localStorage.getItem("aluConectaUsuarioRegistrado") === "true";
 
   if (!registrado) {
-
     window.location.href = "acceso.html";
-
     return;
   }
 
+  if (!telefono) {
+    alert("Este proyecto todavía no tiene un teléfono de contacto.");
+    return;
+  }
+
+  let numero = String(telefono).replace(/\D/g, "");
+
+  if (numero.length === 10) {
+    numero = "54" + numero;
+  }
+
+  const mensaje =
+    "Hola " + (nombre || "usuario") +
+    ", vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
+
+  const whatsapp =
+    "https://wa.me/" +
+    numero +
+    "?text=" +
+    encodeURIComponent(mensaje);
+
+  window.location.href = whatsapp;
+};
 
   if (!telefono) {
 
