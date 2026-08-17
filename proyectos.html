@@ -94,10 +94,6 @@
       background: #16a34a;
     }
 
-    .boton.gris {
-      background: #475569;
-    }
-
     .sin-resultados {
       text-align: center;
       padding: 30px;
@@ -214,108 +210,75 @@
 
 <script>
 
-const lista =
-  document.getElementById(
-    "listaProyectos"
-  );
-
-
-const usuarioRegistrado =
-  localStorage.getItem(
-    "aluConectaUsuarioRegistrado"
-  ) === "true";
+const listaProyectos =
+  document.getElementById("listaProyectos");
 
 
 const clientes =
   JSON.parse(
-    localStorage.getItem(
-      "clientesAluConecta"
-    )
+    localStorage.getItem("clientesAluConecta")
   ) || [];
 
 
 function contactarProyecto(telefono, nombre) {
 
   const registrado =
-    localStorage.getItem("aluConectaUsuarioRegistrado") === "true";
+    localStorage.getItem(
+      "aluConectaUsuarioRegistrado"
+    ) === "true";
+
 
   if (!registrado) {
+
     window.location.href = "acceso.html";
+
     return;
   }
+
 
   if (!telefono) {
-    alert("Este proyecto todavía no tiene un teléfono de contacto.");
-    return;
-  }
-
-  let numero = telefono.replace(/\D/g, "");
-
-  if (numero.length === 10) {
-    numero = "54" + numero;
-  }
-
-  const mensaje =
-    "Hola " + (nombre || "usuario") +
-    ", vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
-
-  const url =
-    "https://wa.me/" +
-    numero +
-    "?text=" +
-    encodeURIComponent(mensaje);
-
-  window.location.href = url;
-}
-
-  let numero =
-    (telefono || "")
-      .replace(/\D/g, "");
-
-
-  if (numero.length === 10) {
-
-    numero =
-      "54" + numero;
-
-  }
-
-
-  if (!numero) {
 
     alert(
       "Este proyecto todavía no tiene un teléfono de contacto."
     );
 
     return;
+  }
+
+
+  let numero =
+    String(telefono).replace(/\D/g, "");
+
+
+  if (numero.length === 10) {
+
+    numero = "54" + numero;
 
   }
 
 
   const mensaje =
-    `Hola ${nombre || ""}, vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.`;
+    "Hola " +
+    (nombre || "usuario") +
+    ", vi tu proyecto en AluConecta y estoy interesado en ayudarte con tu necesidad.";
 
 
-  const url =
+  const whatsapp =
     "https://wa.me/" +
     numero +
     "?text=" +
-    encodeURIComponent(
-      mensaje
-    );
+    encodeURIComponent(mensaje);
 
 
-  window.open(
-    url,
-    "_blank"
-  );
+  window.location.href = whatsapp;
 
 }
 
 
+
 if (clientes.length === 0) {
 
-  lista.innerHTML = `
+  listaProyectos.innerHTML = `
 
     <div class="sin-resultados">
 
@@ -342,130 +305,97 @@ if (clientes.length === 0) {
 
   `;
 
-
 } else {
 
 
-  lista.innerHTML = `
+  let contenido = `
 
     <h2>
       Proyectos publicados
     </h2>
 
-    ${
-      clientes
-        .map(
-          function(cliente) {
-
-            return `
-
-              <div class="proyecto">
-
-                <h3>
-
-                  🏗️
-                  ${
-                    cliente.nombre ||
-                    "Proyecto"
-                  }
-
-                </h3>
-
-
-                <p>
-
-                  📍
-                  ${
-                    cliente.localidad ||
-                    "Localidad no indicada"
-                  }
-
-                </p>
-
-
-                <p>
-
-                  👤
-                  ${
-                    cliente.tipo ||
-                    "Usuario"
-                  }
-
-                </p>
-
-
-                <p>
-
-                  🔧
-                  ${
-                    cliente.proyecto ||
-                    "Necesidad no especificada"
-                  }
-
-                </p>
-
-
-                <span class="etiqueta">
-
-                  Proyecto
-
-                </span>
-
-
-                <span class="etiqueta">
-
-                  ${
-                    cliente.localidad ||
-                    "Zona"
-                  }
-
-                </span>
-
-
-                <br>
-                <br>
-
-
-              <button
-  type="button"
-  class="boton verde"
-  onclick="contactarProyecto(
-    ${JSON.stringify(cliente.telefono || "")},
-    ${JSON.stringify(cliente.nombre || "usuario")}
-  )">
-
-  💬 Estoy interesado
-
-</button>
-
-
-                ${
-                  usuarioRegistrado
-                    ? ""
-                    : `
-
-                      <div class="aviso-registro">
-
-                        🔐 Registrate en AluConecta
-                        para poder contactar este proyecto.
-
-                      </div>
-
-                    `
-                }
-
-
-              </div>
-
-            `;
-
-          }
-        )
-        .join("")
-
-    }
-
   `;
+
+
+  clientes.forEach(function(cliente) {
+
+    const nombre =
+      cliente.nombre ||
+      "Proyecto";
+
+
+    const localidad =
+      cliente.localidad ||
+      "Localidad no indicada";
+
+
+    const tipo =
+      cliente.tipo ||
+      "Usuario";
+
+
+    const proyecto =
+      cliente.proyecto ||
+      "Necesidad no especificada";
+
+
+    const telefono =
+      cliente.telefono ||
+      "";
+
+
+    contenido += `
+
+      <div class="proyecto">
+
+        <h3>
+          🏗️ ${nombre}
+        </h3>
+
+        <p>
+          📍 ${localidad}
+        </p>
+
+        <p>
+          👤 ${tipo}
+        </p>
+
+        <p>
+          🔧 ${proyecto}
+        </p>
+
+        <span class="etiqueta">
+          Proyecto
+        </span>
+
+        <span class="etiqueta">
+          ${localidad}
+        </span>
+
+        <br>
+        <br>
+
+        <button
+          type="button"
+          class="boton verde"
+          onclick="contactarProyecto(
+            ${JSON.stringify(telefono)},
+            ${JSON.stringify(nombre)}
+          )">
+
+          💬 Estoy interesado
+
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+
+  listaProyectos.innerHTML =
+    contenido;
 
 }
 
