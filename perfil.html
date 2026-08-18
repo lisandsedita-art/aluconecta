@@ -118,7 +118,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 25px;
+      margin-top: 20px;
     }
 
 
@@ -130,6 +130,8 @@
       text-decoration: none;
       font-weight: bold;
       color: white;
+      border: none;
+      cursor: pointer;
     }
 
 
@@ -140,6 +142,11 @@
 
     .llamar {
       background: #2563eb;
+    }
+
+
+    .editar {
+      background: #7c3aed;
     }
 
 
@@ -163,6 +170,11 @@
     }
 
 
+    .registro {
+      background: #2563eb;
+    }
+
+
     .volver {
       display: block;
       text-align: center;
@@ -179,6 +191,16 @@
     }
 
 
+    .aviso {
+      background: #eef2ff;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 25px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+
     .cargando {
       text-align: center;
       padding: 40px 20px;
@@ -187,6 +209,7 @@
 
     .error {
       color: #991b1b;
+      text-align: center;
     }
 
 
@@ -261,8 +284,6 @@
 
 
 
-  <!-- SUPABASE -->
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
@@ -284,20 +305,9 @@
       );
 
 
-
     const perfil =
       document.getElementById("perfil");
 
-
-
-    /*
-      Obtenemos el ID del profesional
-      desde la dirección de la página.
-
-      Ejemplo:
-
-      perfil.html?id=738fde39-444e-4117-b3d9-2c31e0647f66
-    */
 
     const parametros =
       new URLSearchParams(
@@ -313,85 +323,136 @@
     async function cargarPerfil() {
 
 
-      /*
-        Si no recibimos un ID,
-        no sabemos qué perfil mostrar.
-      */
-
       if (!id) {
 
-        perfil.innerHTML = `
-
-          <div class="sin-datos">
-
-            <h2>
-              Perfil no disponible
-            </h2>
-
-            <p>
-              No se indicó qué perfil queremos mostrar.
-            </p>
-
-          </div>
-
-        `;
+        mostrarError(
+          "No se indicó qué perfil queremos mostrar."
+        );
 
         return;
 
       }
 
 
-
       try {
 
 
         /*
-          Buscamos directamente en Supabase.
-
-          Ya no dependemos de localStorage.
+          Comprobamos si existe una sesión activa.
         */
 
         const {
-          data,
-          error
+          data: sesionData
         } =
-          await supabaseClient
-
-            .from("perfiles")
-
-            .select("*")
-
-            .eq("id", id)
-
-            .single();
+          await supabaseClient.auth.getSession();
 
 
+        const session =
+          sesionData.session;
 
-        if (error) {
 
-          throw error;
+        const usuarioActual =
+          session
+            ? session.user
+            : null;
+
+
+
+        /*
+          Comprobamos si el perfil pertenece
+          al usuario que está conectado.
+        */
+
+        const esPropietario =
+          usuarioActual &&
+          usuarioActual.id === id;
+
+
+
+        let profesional;
+
+
+
+        /*
+          PERFIL PROPIO
+          o
+          USUARIO REGISTRADO
+
+          En estos casos podemos consultar
+          el perfil completo.
+        */
+
+        if (usuarioActual) {
+
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient
+
+              .from("perfiles")
+
+              .select("*")
+
+              .eq("id", id)
+
+              .single();
+
+
+          if (error) {
+
+            throw error;
+
+          }
+
+
+          profesional = data;
+
+
+        } else {
+
+
+          /*
+            VISITANTE NO REGISTRADO.
+
+            Solamente consultamos la vista
+            pública segura.
+          */
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient
+
+              .from("perfiles_publicos")
+
+              .select("*")
+
+              .eq("id", id)
+
+              .single();
+
+
+          if (error) {
+
+            throw error;
+
+          }
+
+
+          profesional = data;
 
         }
 
 
 
-        if (!data) {
+        if (!profesional) {
 
-          perfil.innerHTML = `
-
-            <div class="sin-datos">
-
-              <h2>
-                Perfil no disponible
-              </h2>
-
-              <p>
-                No encontramos este profesional.
-              </p>
-
-            </div>
-
-          `;
+          mostrarError(
+            "No encontramos este perfil."
+          );
 
           return;
 
@@ -400,108 +461,52 @@
 
 
         /*
-          DATOS DEL PERFIL
-        */
-
-        const profesional =
-          data;
-
-
-
-        /*
-          Inicial del nombre.
-        */
-
-        const inicial =
-          profesional.nombre
-            ? profesional.nombre
-                .charAt(0)
-                .toUpperCase()
-            : "A";
-
-
-
-        /*
-          Actividades.
-
-          La tabla perfiles utiliza
-          la columna "actividades".
+          Datos públicos.
         */
 
         const actividades =
-          profesional.actividades || "Servicios profesionales";
+          profesional.actividades ||
+          "Servicios profesionales";
+
+
+        const localidad =
+          profesional.localidad ||
+          "Localidad no indicada";
+
+
+        const servicios =
+          profesional.servicios ||
+          "No especificados";
+
+
+        const descripcion =
+          profesional.descripcion ||
+          "Sin presentación";
 
 
 
         /*
-          Teléfono.
+          El nombre solamente existe
+          cuando el usuario está registrado.
         */
 
-        const telefonoOriginal =
-          profesional.telefono || "";
+        const nombre =
+          profesional.nombre ||
+          "Profesional de AluConecta";
+
+
+        const inicial =
+          nombre
+            .charAt(0)
+            .toUpperCase();
 
 
 
         /*
-          Limpiamos el teléfono
-          para WhatsApp.
+          Comenzamos a construir el perfil.
         */
 
-        let telefonoWhatsApp =
-          telefonoOriginal
-            .replace(/\D/g, "");
-
-
-
-        /*
-          Si tiene 10 dígitos,
-          agregamos código de Argentina.
-        */
-
-        if (
-          telefonoWhatsApp.length === 10
-        ) {
-
-          telefonoWhatsApp =
-            "54" + telefonoWhatsApp;
-
-        }
-
-
-
-        const whatsapp =
-          telefonoWhatsApp
-            ? "https://wa.me/" + telefonoWhatsApp
-            : "";
-
-
-
-        /*
-          Redes sociales.
-        */
-
-        const instagram =
-          profesional.instagram || "";
-
-
-        const facebook =
-          profesional.facebook || "";
-
-
-        const tiktok =
-          profesional.tiktok || "";
-
-
-        const web =
-          profesional.web || "";
-
-
-
-        /*
-          MOSTRAMOS EL PERFIL
-        */
-
-        perfil.innerHTML = `
+        let contenido = `
 
 
           <div class="avatar">
@@ -514,7 +519,7 @@
 
           <h1 class="nombre">
 
-            ${profesional.nombre || "Profesional"}
+            ${nombre}
 
           </h1>
 
@@ -522,7 +527,7 @@
 
           <p class="ubicacion">
 
-            📍 ${profesional.localidad || "Localidad no indicada"}
+            📍 ${localidad}
 
           </p>
 
@@ -544,7 +549,7 @@
 
             <p class="dato">
 
-              ${profesional.servicios || "No especificados"}
+              ${servicios}
 
             </p>
 
@@ -560,173 +565,336 @@
 
             <p class="dato">
 
-              ${profesional.descripcion || "Sin presentación"}
+              ${descripcion}
 
             </p>
-
-          </div>
-
-
-
-          <div class="seccion">
-
-            <h2>
-              Contacto
-            </h2>
-
-
-            <p class="dato">
-
-              📱 ${telefonoOriginal || "No indicado"}
-
-            </p>
-
-
-
-            <div class="botones">
-
-
-              ${
-                whatsapp
-                ? `
-
-                  <a
-                    href="${whatsapp}?text=${encodeURIComponent(
-                      `Hola ${profesional.nombre || ""}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
-                    )}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton whatsapp">
-
-                    💬 Contactar por WhatsApp
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-
-              ${
-                telefonoOriginal
-                ? `
-
-                  <a
-                    href="tel:${telefonoOriginal}"
-                    class="boton llamar">
-
-                    📞 Llamar
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-            </div>
-
-          </div>
-
-
-
-          <div class="seccion">
-
-            <h2>
-              Presencia profesional
-            </h2>
-
-
-
-            <div class="botones">
-
-
-              ${
-                instagram
-                ? `
-
-                  <a
-                    href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton instagram">
-
-                    📸 Ver Instagram
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-
-              ${
-                facebook
-                ? `
-
-                  <a
-                    href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton facebook">
-
-                    📘 Ver Facebook
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-
-              ${
-                tiktok
-                ? `
-
-                  <a
-                    href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton tiktok">
-
-                    🎵 Ver TikTok
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-
-              ${
-                web
-                ? `
-
-                  <a
-                    href="${web.startsWith("http") ? web : "https://" + web}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton web">
-
-                    🌐 Visitar sitio web
-
-                  </a>
-
-                `
-                : ""
-              }
-
-
-            </div>
 
           </div>
 
 
         `;
+
+
+
+        /*
+          PROPIETARIO
+        */
+
+        if (esPropietario) {
+
+
+          contenido += `
+
+
+            <div class="aviso">
+
+              <strong>
+                Este es tu perfil.
+              </strong>
+
+              <p>
+                Podés modificar tus datos
+                cuando quieras.
+              </p>
+
+            </div>
+
+
+
+            <div class="botones">
+
+              <a
+                href="editar-perfil.html"
+                class="boton editar">
+
+                ✏️ Editar mi perfil
+
+              </a>
+
+            </div>
+
+
+          `;
+
+
+        }
+
+
+
+        /*
+          USUARIO REGISTRADO VISITANDO
+          EL PERFIL DE OTRA PERSONA
+        */
+
+        else if (usuarioActual) {
+
+
+          const telefonoOriginal =
+            profesional.telefono || "";
+
+
+          let telefonoWhatsApp =
+            telefonoOriginal
+              .replace(/\D/g, "");
+
+
+          if (
+            telefonoWhatsApp.length === 10
+          ) {
+
+            telefonoWhatsApp =
+              "54" + telefonoWhatsApp;
+
+          }
+
+
+          const whatsapp =
+            telefonoWhatsApp
+              ? "https://wa.me/" +
+                telefonoWhatsApp
+              : "";
+
+
+          const instagram =
+            profesional.instagram || "";
+
+
+          const facebook =
+            profesional.facebook || "";
+
+
+          const tiktok =
+            profesional.tiktok || "";
+
+
+          const web =
+            profesional.web || "";
+
+
+
+          contenido += `
+
+
+            <div class="seccion">
+
+              <h2>
+                Contacto
+              </h2>
+
+
+              <p class="dato">
+
+                📱 ${
+                  telefonoOriginal ||
+                  "No indicado"
+                }
+
+              </p>
+
+
+              <div class="botones">
+
+
+                ${
+                  whatsapp
+                  ? `
+
+                    <a
+                      href="${whatsapp}?text=${encodeURIComponent(
+                        `Hola ${nombre}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boton whatsapp">
+
+                      💬 Contactar por WhatsApp
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+                ${
+                  telefonoOriginal
+                  ? `
+
+                    <a
+                      href="tel:${telefonoOriginal}"
+                      class="boton llamar">
+
+                      📞 Llamar
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+              </div>
+
+            </div>
+
+
+
+            <div class="seccion">
+
+              <h2>
+                Presencia profesional
+              </h2>
+
+
+              <div class="botones">
+
+
+                ${
+                  instagram
+                  ? `
+
+                    <a
+                      href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boton instagram">
+
+                      📸 Ver Instagram
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+                ${
+                  facebook
+                  ? `
+
+                    <a
+                      href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boton facebook">
+
+                      📘 Ver Facebook
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+                ${
+                  tiktok
+                  ? `
+
+                    <a
+                      href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boton tiktok">
+
+                      🎵 Ver TikTok
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+                ${
+                  web
+                  ? `
+
+                    <a
+                      href="${
+                        web.startsWith("http")
+                          ? web
+                          : "https://" + web
+                      }"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boton web">
+
+                      🌐 Visitar sitio web
+
+                    </a>
+
+                  `
+                  : ""
+                }
+
+
+              </div>
+
+            </div>
+
+
+          `;
+
+
+        }
+
+
+
+        /*
+          VISITANTE NO REGISTRADO
+        */
+
+        else {
+
+
+          contenido += `
+
+
+            <div class="aviso">
+
+              <strong>
+                ¿Querés conocer al profesional?
+              </strong>
+
+              <p>
+                Registrate gratis en AluConecta
+                para conocer su nombre y acceder
+                a sus datos de contacto.
+              </p>
+
+
+              <div class="botones">
+
+                <a
+                  href="registro.html"
+                  class="boton registro">
+
+                  Crear mi cuenta
+
+                </a>
+
+                <a
+                  href="acceso.html"
+                  class="boton editar">
+
+                  Iniciar sesión
+
+                </a>
+
+              </div>
+
+            </div>
+
+
+          `;
+
+        }
+
+
+
+        perfil.innerHTML =
+          contenido;
 
 
       } catch (error) {
@@ -738,23 +906,35 @@
         );
 
 
-        perfil.innerHTML = `
-
-          <div class="sin-datos error">
-
-            <h2>
-              No pudimos cargar el perfil
-            </h2>
-
-            <p>
-              Ocurrió un problema al consultar los datos.
-            </p>
-
-          </div>
-
-        `;
+        mostrarError(
+          "No pudimos cargar este perfil."
+        );
 
       }
+
+    }
+
+
+
+    function mostrarError(
+      mensaje
+    ) {
+
+      perfil.innerHTML = `
+
+        <div class="sin-datos error">
+
+          <h2>
+            Perfil no disponible
+          </h2>
+
+          <p>
+            ${mensaje}
+          </p>
+
+        </div>
+
+      `;
 
     }
 
