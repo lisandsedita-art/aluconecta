@@ -124,6 +124,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       margin-bottom: 20px;
+      text-align: left;
     }
 
 
@@ -137,16 +138,6 @@
     }
 
 
-    .etiqueta {
-      display: inline-block;
-      background: #eef2ff;
-      padding: 6px 10px;
-      border-radius: 20px;
-      margin: 3px;
-      font-size: 14px;
-    }
-
-
     .volver {
       display: block;
       text-align: center;
@@ -154,6 +145,17 @@
       color: #2563eb;
       text-decoration: none;
       font-weight: bold;
+    }
+
+
+    .cargando {
+      text-align: center;
+      padding: 25px;
+    }
+
+
+    .error {
+      color: #991b1b;
     }
 
 
@@ -335,349 +337,404 @@
 
 
 
-<script>
+  <!-- SUPABASE -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
-function buscarProfesionales() {
+  <script>
 
 
-  const texto =
-    document
-      .getElementById("necesidad")
-      .value
-      .trim()
-      .toLowerCase();
+    const SUPABASE_URL =
+      "https://wroaxwjyjrxzwctfkyoo.supabase.co";
 
 
-  const localidad =
-    document
-      .getElementById("localidad")
-      .value
-      .trim()
-      .toLowerCase();
+    const SUPABASE_KEY =
+      "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
 
 
-  const resultados =
-    document
-      .getElementById("resultadosBusqueda");
-
-
-
-  /*
-    Obtenemos todos los profesionales
-    registrados.
-  */
-
-  let profesionales =
-    JSON.parse(
-      localStorage.getItem(
-        "profesionalesAluConecta"
-      )
-    ) || [];
-
-
-
-  /*
-    Compatibilidad con el sistema anterior.
-  */
-
-  if (
-    profesionales.length === 0
-  ) {
-
-
-    const anterior =
-      localStorage.getItem(
-        "profesionalAluConecta"
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
       );
 
 
-    if (anterior) {
+
+    async function buscarProfesionales() {
+
+
+      const texto =
+        document
+          .getElementById("necesidad")
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const localidad =
+        document
+          .getElementById("localidad")
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const resultados =
+        document
+          .getElementById("resultadosBusqueda");
+
+
+
+      /*
+        Mostramos que estamos buscando.
+      */
+
+      resultados.innerHTML = `
+
+        <div class="cargando">
+
+          Buscando profesionales...
+
+        </div>
+
+      `;
+
+
 
       try {
 
-        const profesionalAnterior =
-          JSON.parse(anterior);
 
-        profesionalAnterior.id =
-          "anterior";
+        /*
+          Obtenemos los perfiles
+          directamente desde Supabase.
+        */
 
-        profesionales.push(
-          profesionalAnterior
-        );
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+
+            .from("perfiles")
+
+            .select("*")
+
+            .order("created_at", {
+              ascending: false
+            });
+
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+
+        const profesionales =
+          data || [];
+
+
+
+        /*
+          Si no hay profesionales.
+        */
+
+        if (
+          profesionales.length === 0
+        ) {
+
+
+          resultados.innerHTML = `
+
+            <h3>
+              Todavía no hay profesionales registrados
+            </h3>
+
+            <p>
+              Sé el primero en formar parte de AluConecta.
+            </p>
+
+            <a
+              href="registro.html"
+              class="boton">
+
+              Registrarme
+
+            </a>
+
+          `;
+
+
+          return;
+
+        }
+
+
+
+        /*
+          Filtramos los profesionales.
+        */
+
+        const encontrados =
+          profesionales.filter(
+            function(profesional) {
+
+
+              const nombre =
+                (
+                  profesional.nombre || ""
+                ).toLowerCase();
+
+
+              const servicios =
+                (
+                  profesional.servicios || ""
+                ).toLowerCase();
+
+
+              const actividades =
+                (
+                  profesional.actividades || ""
+                ).toLowerCase();
+
+
+              const descripcion =
+                (
+                  profesional.descripcion || ""
+                ).toLowerCase();
+
+
+              const lugar =
+                (
+                  profesional.localidad || ""
+                ).toLowerCase();
+
+
+
+              /*
+                Buscamos el texto en:
+                nombre
+                servicios
+                actividades
+                descripción
+              */
+
+              const coincideTexto =
+                texto === "" ||
+                nombre.includes(texto) ||
+                servicios.includes(texto) ||
+                actividades.includes(texto) ||
+                descripcion.includes(texto);
+
+
+
+              /*
+                Filtramos por localidad.
+              */
+
+              const coincideLocalidad =
+                localidad === "" ||
+                lugar === localidad;
+
+
+
+              return (
+                coincideTexto &&
+                coincideLocalidad
+              );
+
+            }
+          );
+
+
+
+        /*
+          Si no encontramos resultados.
+        */
+
+        if (
+          encontrados.length === 0
+        ) {
+
+
+          resultados.innerHTML = `
+
+            <h3>
+              No encontramos profesionales
+            </h3>
+
+            <p>
+              Probá con otra localidad o con
+              otras palabras de búsqueda.
+            </p>
+
+          `;
+
+
+          return;
+
+        }
+
+
+
+        /*
+          Mostramos los resultados.
+        */
+
+        resultados.innerHTML = `
+
+          <h3>
+
+            ${encontrados.length}
+
+            ${
+              encontrados.length === 1
+                ? "profesional encontrado"
+                : "profesionales encontrados"
+            }
+
+          </h3>
+
+
+          ${
+
+
+            encontrados
+              .map(
+                function(profesional) {
+
+
+                  const actividades =
+                    profesional.actividades ||
+                    "Carpintería de aluminio";
+
+
+                  const servicios =
+                    profesional.servicios ||
+                    "Servicios profesionales";
+
+
+
+                  return `
+
+
+                    <div class="profesional">
+
+
+                      <h3>
+
+                        🪟
+                        ${
+                          profesional.nombre ||
+                          "Profesional de aluminio"
+                        }
+
+                      </h3>
+
+
+
+                      <p>
+
+                        📍
+                        ${
+                          profesional.localidad ||
+                          "Localidad no indicada"
+                        }
+
+                      </p>
+
+
+
+                      <p>
+
+                        🏷️
+                        ${actividades}
+
+                      </p>
+
+
+
+                      <p>
+
+                        🔧
+                        ${servicios}
+
+                      </p>
+
+
+
+                      <p>
+
+                        ⭐
+                        Profesional registrado en
+                        AluConecta
+
+                      </p>
+
+
+
+                      <a
+                        href="perfil.html?id=${encodeURIComponent(
+                          profesional.id
+                        )}"
+                        class="boton">
+
+                        Ver perfil
+
+                      </a>
+
+
+                    </div>
+
+
+                  `;
+
+                }
+              )
+              .join("")
+
+
+          }
+
+        `;
+
 
       } catch (error) {
 
-        console.log(
-          "No se pudo recuperar el perfil anterior."
+
+        console.error(
+          "Error al buscar profesionales:",
+          error
         );
+
+
+        resultados.innerHTML = `
+
+          <div class="error">
+
+            <h3>
+              No pudimos realizar la búsqueda
+            </h3>
+
+            <p>
+              Ocurrió un problema al consultar
+              los profesionales.
+            </p>
+
+          </div>
+
+        `;
 
       }
 
     }
 
-  }
 
-
-
-  /*
-    Si no hay profesionales.
-  */
-
-  if (
-    profesionales.length === 0
-  ) {
-
-
-    resultados.innerHTML = `
-
-      <h3>
-        Todavía no hay profesionales registrados
-      </h3>
-
-      <p>
-        Sé el primero en formar parte de AluConecta.
-      </p>
-
-      <a
-        href="registro.html"
-        class="boton">
-
-        Registrarme
-
-      </a>
-
-    `;
-
-
-    return;
-
-  }
-
-
-
-  /*
-    Filtramos los profesionales.
-  */
-
-  const encontrados =
-    profesionales.filter(
-      function(profesional) {
-
-
-        const nombre =
-          (profesional.nombre || "")
-            .toLowerCase();
-
-
-        const servicios =
-          (profesional.servicios || "")
-            .toLowerCase();
-
-
-        const rubro =
-          (profesional.rubro || "")
-            .toLowerCase();
-
-
-        const descripcion =
-          (profesional.descripcion || "")
-            .toLowerCase();
-
-
-        const lugar =
-          (profesional.localidad || "")
-            .toLowerCase();
-
-
-
-        /*
-          Buscamos el texto en
-          nombre, servicios, rubro
-          o descripción.
-        */
-
-        const coincideTexto =
-          texto === "" ||
-          nombre.includes(texto) ||
-          servicios.includes(texto) ||
-          rubro.includes(texto) ||
-          descripcion.includes(texto);
-
-
-
-        /*
-          Filtramos por localidad.
-        */
-
-        const coincideLocalidad =
-          localidad === "" ||
-          lugar === localidad;
-
-
-
-        return (
-          coincideTexto &&
-          coincideLocalidad
-        );
-
-      }
-    );
-
-
-
-  /*
-    Si no encontramos resultados.
-  */
-
-  if (
-    encontrados.length === 0
-  ) {
-
-
-    resultados.innerHTML = `
-
-      <h3>
-        No encontramos profesionales
-      </h3>
-
-      <p>
-        Probá con otra localidad o con
-        otras palabras de búsqueda.
-      </p>
-
-    `;
-
-
-    return;
-
-  }
-
-
-
-  /*
-    Mostramos los resultados.
-  */
-
-  resultados.innerHTML = `
-
-    <h3>
-      ${encontrados.length}
-      ${
-        encontrados.length === 1
-          ? "profesional encontrado"
-          : "profesionales encontrados"
-      }
-    </h3>
-
-    ${
-
-
-      encontrados
-        .map(
-          function(profesional) {
-
-
-            const id =
-              profesional.id ||
-              Date.now().toString();
-
-
-
-            const servicios =
-              profesional.servicios ||
-              "Servicios profesionales";
-
-
-
-            return `
-
-
-              <div class="profesional">
-
-
-                <h3>
-
-                  🪟
-                  ${
-                    profesional.nombre ||
-                    "Profesional de aluminio"
-                  }
-
-                </h3>
-
-
-
-                <p>
-
-                  📍
-                  ${
-                    profesional.localidad ||
-                    "Localidad no indicada"
-                  }
-
-                </p>
-
-
-
-                <p>
-
-                  🏷️
-                  ${
-                    profesional.rubro ||
-                    "Aluminio"
-                  }
-
-                </p>
-
-
-
-                <p>
-
-                  🔧
-                  ${servicios}
-
-                </p>
-
-
-
-                <p>
-
-                  ⭐
-                  Profesional registrado en
-                  AluConecta
-
-                </p>
-
-
-
-                <a
-                  href="perfil.html?id=${encodeURIComponent(id)}"
-                  class="boton">
-
-                  Ver perfil
-
-                </a>
-
-
-              </div>
-
-
-            `;
-
-          }
-        )
-        .join("")
-
-
-    }
-
-  `;
-
-}
-
-
-</script>
+  </script>
 
 
 </body>
