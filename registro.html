@@ -700,10 +700,43 @@ document
           .value
           .trim();
 
-      const password =
-        document
-          .getElementById("password")
-          .value;
+const password =
+  document
+    .getElementById("password")
+    .value;
+
+const passwordConfirmacion =
+  document
+    .getElementById("passwordConfirmacion")
+    .value;
+
+if (password.length < 8) {
+
+  mensaje.style.display = "block";
+  mensaje.className = "mensaje error";
+
+  mensaje.innerHTML = `
+    <strong>La contraseña es demasiado corta.</strong>
+    <p>Debe tener al menos 8 caracteres.</p>
+  `;
+
+  return;
+}
+
+if (password !== passwordConfirmacion) {
+
+  mensaje.style.display = "block";
+  mensaje.className = "mensaje error";
+
+  mensaje.innerHTML = `
+    <strong>Las contraseñas no coinciden.</strong>
+    <p>Revisá ambas contraseñas e intentá nuevamente.</p>
+  `;
+
+  return;
+}
+
+
 
       const nombre =
         document
