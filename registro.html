@@ -44,7 +44,7 @@
       background: white;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
     h2 {
@@ -122,6 +122,73 @@
       line-height: 1.4;
     }
 
+    /* Contraseñas */
+
+    .password-contenedor {
+      position: relative;
+    }
+
+    .password-contenedor input {
+      padding-right: 50px;
+    }
+
+    .boton-ojo {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 5px;
+    }
+
+    .requisitos {
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .requisito {
+      color: #6b7280;
+      transition: color 0.2s;
+    }
+
+    .requisito.cumplido {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .icono-requisito {
+      display: inline-block;
+      width: 22px;
+      font-weight: bold;
+    }
+
+    .confirmacion-password {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .confirmacion-password.cumplida {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .campo-error {
+      border-color: #dc2626 !important;
+    }
+
+    .campo-correcto {
+      border-color: #16a34a !important;
+    }
+
     .boton {
       width: 100%;
       padding: 14px;
@@ -135,9 +202,13 @@
       margin-top: 10px;
     }
 
+    .boton:hover {
+      background: #1d4ed8;
+    }
+
     .boton:disabled {
       opacity: 0.6;
-      cursor: wait;
+      cursor: not-allowed;
     }
 
     .mensaje {
@@ -175,6 +246,16 @@
     }
 
     @media (max-width: 600px) {
+
+      .contenedor {
+        padding: 15px;
+        margin: 15px auto;
+      }
+
+      .tarjeta {
+        padding: 20px;
+      }
+
       .opciones {
         grid-template-columns: 1fr;
       }
@@ -394,86 +475,108 @@
 
     </div>
 
+
+    <!-- CONTRASEÑA -->
+
     <div class="campo">
 
-    
       <label for="password">
-  Contraseña
-</label>
+        Contraseña
+      </label>
 
-<div style="position:relative;">
+      <div class="password-contenedor">
 
-  <input
-    type="password"
-    id="password"
-    placeholder="Mínimo 8 caracteres"
-    autocomplete="new-password"
-    minlength="8"
-    required
-    style="padding-right:50px;">
+        <input
+          type="password"
+          id="password"
+          placeholder="Ingresá una contraseña segura"
+          autocomplete="new-password"
+          required>
 
-  <button
-    type="button"
-    onclick="mostrarPassword('password', this)"
-    style="
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      border:none;
-      background:none;
-      cursor:pointer;
-      font-size:20px;
-    ">
-    👁️
-  </button>
+        <button
+          type="button"
+          class="boton-ojo"
+          onclick="mostrarPassword('password', this)"
+          aria-label="Mostrar contraseña">
+          👁️
+        </button>
 
-</div>
+      </div>
 
-<div class="ayuda">
-  Usá al menos 8 caracteres. Recomendamos combinar
-  mayúsculas, minúsculas y números.
-</div>
+      <div class="ayuda">
+        Para proteger tu cuenta, tu contraseña debe cumplir estos requisitos:
+      </div>
 
+      <div class="requisitos">
 
-<div class="campo">
+        <div class="requisito" id="reqLongitud">
+          <span class="icono-requisito">○</span>
+          8 caracteres o más
+        </div>
 
-  <label for="passwordConfirmacion">
-    Repetir contraseña
-  </label>
+        <div class="requisito" id="reqMayuscula">
+          <span class="icono-requisito">○</span>
+          Una letra mayúscula
+        </div>
 
-  <div style="position:relative;">
+        <div class="requisito" id="reqMinuscula">
+          <span class="icono-requisito">○</span>
+          Una letra minúscula
+        </div>
 
-    <input
-      type="password"
-      id="passwordConfirmacion"
-      placeholder="Repetí tu contraseña"
-      autocomplete="new-password"
-      minlength="8"
-      required
-      style="padding-right:50px;">
+        <div class="requisito" id="reqNumero">
+          <span class="icono-requisito">○</span>
+          Un número
+        </div>
 
-    <button
-      type="button"
-      onclick="mostrarPassword('passwordConfirmacion', this)"
-      style="
-        position:absolute;
-        right:10px;
-        top:50%;
-        transform:translateY(-50%);
-        border:none;
-        background:none;
-        cursor:pointer;
-        font-size:20px;
-      ">
-      👁️
-    </button>
+        <div class="requisito" id="reqEspecial">
+          <span class="icono-requisito">○</span>
+          Un carácter especial
+        </div>
 
-  </div>
-
-</div>
+      </div>
 
     </div>
+
+
+    <!-- REPETIR CONTRASEÑA -->
+
+    <div class="campo">
+
+      <label for="passwordConfirmacion">
+        Repetir contraseña
+      </label>
+
+      <div class="password-contenedor">
+
+        <input
+          type="password"
+          id="passwordConfirmacion"
+          placeholder="Repetí tu contraseña"
+          autocomplete="new-password"
+          required>
+
+        <button
+          type="button"
+          class="boton-ojo"
+          onclick="mostrarPassword('passwordConfirmacion', this)"
+          aria-label="Mostrar contraseña">
+          👁️
+        </button>
+
+      </div>
+
+      <div
+        id="confirmacionPassword"
+        class="confirmacion-password">
+
+        <span class="icono-requisito">○</span>
+        Las contraseñas deben coincidir
+
+      </div>
+
+    </div>
+
 
     <h3>Datos de contacto</h3>
 
@@ -544,6 +647,7 @@
 
     </div>
 
+
     <h3>Presencia profesional</h3>
 
     <p>
@@ -607,6 +711,7 @@
 
     </div>
 
+
     <button
       type="submit"
       class="boton"
@@ -638,6 +743,7 @@
 
 </footer>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -655,6 +761,197 @@ const supabaseClient =
   );
 
 
+/* =========================
+   MOSTRAR / OCULTAR PASSWORD
+   ========================= */
+
+function mostrarPassword(id, boton) {
+
+  const campo =
+    document.getElementById(id);
+
+  if (campo.type === "password") {
+
+    campo.type = "text";
+    boton.textContent = "🙈";
+
+  } else {
+
+    campo.type = "password";
+    boton.textContent = "👁️";
+
+  }
+
+}
+
+
+/* =========================
+   VALIDACIÓN DE PASSWORD
+   ========================= */
+
+const passwordInput =
+  document.getElementById("password");
+
+const passwordConfirmacion =
+  document.getElementById("passwordConfirmacion");
+
+const confirmacionPassword =
+  document.getElementById("confirmacionPassword");
+
+
+function actualizarRequisito(id, cumplido) {
+
+  const elemento =
+    document.getElementById(id);
+
+  const icono =
+    elemento.querySelector(".icono-requisito");
+
+  if (cumplido) {
+
+    elemento.classList.add("cumplido");
+    icono.textContent = "✓";
+
+  } else {
+
+    elemento.classList.remove("cumplido");
+    icono.textContent = "○";
+
+  }
+
+}
+
+
+function validarPasswordVisual() {
+
+  const password =
+    passwordInput.value;
+
+  actualizarRequisito(
+    "reqLongitud",
+    password.length >= 8
+  );
+
+  actualizarRequisito(
+    "reqMayuscula",
+    /[A-Z]/.test(password)
+  );
+
+  actualizarRequisito(
+    "reqMinuscula",
+    /[a-z]/.test(password)
+  );
+
+  actualizarRequisito(
+    "reqNumero",
+    /[0-9]/.test(password)
+  );
+
+  actualizarRequisito(
+    "reqEspecial",
+    /[^A-Za-z0-9]/.test(password)
+  );
+
+  comprobarCoincidencia();
+
+}
+
+
+function passwordEsValida() {
+
+  const password =
+    passwordInput.value;
+
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[0-9]/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+
+}
+
+
+function comprobarCoincidencia() {
+
+  const password =
+    passwordInput.value;
+
+  const confirmacion =
+    passwordConfirmacion.value;
+
+  const icono =
+    confirmacionPassword.querySelector(
+      ".icono-requisito"
+    );
+
+  if (
+    confirmacion.length > 0 &&
+    password === confirmacion
+  ) {
+
+    confirmacionPassword.classList.add(
+      "cumplida"
+    );
+
+    icono.textContent = "✓";
+
+    passwordConfirmacion.classList.remove(
+      "campo-error"
+    );
+
+    passwordConfirmacion.classList.add(
+      "campo-correcto"
+    );
+
+  } else {
+
+    confirmacionPassword.classList.remove(
+      "cumplida"
+    );
+
+    icono.textContent = "○";
+
+    passwordConfirmacion.classList.remove(
+      "campo-correcto"
+    );
+
+    if (confirmacion.length > 0) {
+
+      passwordConfirmacion.classList.add(
+        "campo-error"
+      );
+
+    } else {
+
+      passwordConfirmacion.classList.remove(
+        "campo-error"
+      );
+
+    }
+
+  }
+
+}
+
+
+passwordInput.addEventListener(
+  "input",
+  validarPasswordVisual
+);
+
+
+passwordConfirmacion.addEventListener(
+  "input",
+  comprobarCoincidencia
+);
+
+
+/* =========================
+   REGISTRO
+   ========================= */
+
 document
   .getElementById("formularioRegistro")
   .addEventListener(
@@ -664,10 +961,15 @@ document
       event.preventDefault();
 
       const boton =
-        document.getElementById("botonRegistro");
+        document.getElementById(
+          "botonRegistro"
+        );
 
       const mensaje =
-        document.getElementById("mensaje");
+        document.getElementById(
+          "mensaje"
+        );
+
 
       mensaje.style.display = "none";
       mensaje.className = "mensaje";
@@ -679,15 +981,26 @@ document
             'input[name="actividad"]:checked'
           )
         ).map(function(opcion) {
+
           return opcion.value;
+
         });
 
 
       if (actividades.length === 0) {
 
-        alert(
-          "Seleccioná al menos una actividad."
-        );
+        mensaje.style.display = "block";
+        mensaje.className =
+          "mensaje error";
+
+        mensaje.innerHTML = `
+          <strong>Seleccioná al menos una actividad.</strong>
+          <p>Elegí una o varias actividades para continuar.</p>
+        `;
+
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
 
         return;
 
@@ -700,42 +1013,58 @@ document
           .value
           .trim();
 
-const password =
-  document
-    .getElementById("password")
-    .value;
 
-const passwordConfirmacion =
-  document
-    .getElementById("passwordConfirmacion")
-    .value;
+      const password =
+        passwordInput.value;
 
-if (password.length < 8) {
 
-  mensaje.style.display = "block";
-  mensaje.className = "mensaje error";
+      const passwordConfirmacionValue =
+        passwordConfirmacion.value;
 
-  mensaje.innerHTML = `
-    <strong>La contraseña es demasiado corta.</strong>
-    <p>Debe tener al menos 8 caracteres.</p>
-  `;
 
-  return;
-}
+      /* Validación completa de contraseña */
 
-if (password !== passwordConfirmacion) {
+      if (!passwordEsValida()) {
 
-  mensaje.style.display = "block";
-  mensaje.className = "mensaje error";
+        mensaje.style.display = "block";
+        mensaje.className =
+          "mensaje error";
 
-  mensaje.innerHTML = `
-    <strong>Las contraseñas no coinciden.</strong>
-    <p>Revisá ambas contraseñas e intentá nuevamente.</p>
-  `;
+        mensaje.innerHTML = `
+          <strong>La contraseña todavía no cumple los requisitos.</strong>
+          <p>Completá todos los requisitos indicados debajo de la contraseña.</p>
+        `;
 
-  return;
-}
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
 
+        return;
+
+      }
+
+
+      if (
+        password !==
+        passwordConfirmacionValue
+      ) {
+
+        mensaje.style.display = "block";
+        mensaje.className =
+          "mensaje error";
+
+        mensaje.innerHTML = `
+          <strong>Las contraseñas no coinciden.</strong>
+          <p>Revisá ambas contraseñas e intentá nuevamente.</p>
+        `;
+
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
+
+        return;
+
+      }
 
 
       const nombre =
@@ -744,11 +1073,13 @@ if (password !== passwordConfirmacion) {
           .value
           .trim();
 
+
       const localidad =
         document
           .getElementById("localidad")
           .value
           .trim();
+
 
       const servicios =
         document
@@ -756,11 +1087,13 @@ if (password !== passwordConfirmacion) {
           .value
           .trim();
 
+
       const telefono =
         document
           .getElementById("telefono")
           .value
           .trim();
+
 
       const descripcion =
         document
@@ -768,11 +1101,13 @@ if (password !== passwordConfirmacion) {
           .value
           .trim();
 
+
       const instagram =
         document
           .getElementById("instagram")
           .value
           .trim();
+
 
       const facebook =
         document
@@ -780,11 +1115,13 @@ if (password !== passwordConfirmacion) {
           .value
           .trim();
 
+
       const tiktok =
         document
           .getElementById("tiktok")
           .value
           .trim();
+
 
       const web =
         document
@@ -792,10 +1129,12 @@ if (password !== passwordConfirmacion) {
           .value
           .trim();
 
+
       const tipoUsuario =
         document
           .getElementById("tipoUsuario")
           .value;
+
 
       const participacion =
         document
@@ -804,7 +1143,8 @@ if (password !== passwordConfirmacion) {
 
 
       boton.disabled = true;
-      boton.textContent = "Creando cuenta...";
+      boton.textContent =
+        "Creando cuenta...";
 
 
       try {
@@ -822,12 +1162,15 @@ if (password !== passwordConfirmacion) {
             options: {
 
               emailRedirectTo:
-  "https://lisandsedita-art.github.io/aluconecta/confirmacion.html",
+                "https://lisandsedita-art.github.io/aluconecta/confirmacion.html",
+
               data: {
 
-                nombre: nombre,
+                nombre:
+                  nombre,
 
-                tipoUsuario: tipoUsuario,
+                tipoUsuario:
+                  tipoUsuario,
 
                 actividades:
                   actividades.join(", "),
@@ -946,18 +1289,24 @@ if (password !== passwordConfirmacion) {
           ) || [];
 
 
-        profesionales.push(profesional);
+        profesionales.push(
+          profesional
+        );
 
 
         localStorage.setItem(
           "profesionalesAluConecta",
-          JSON.stringify(profesionales)
+          JSON.stringify(
+            profesionales
+          )
         );
 
 
         localStorage.setItem(
           "profesionalAluConecta",
-          JSON.stringify(profesional)
+          JSON.stringify(
+            profesional
+          )
         );
 
 
@@ -967,8 +1316,11 @@ if (password !== passwordConfirmacion) {
         );
 
 
-        mensaje.style.display = "block";
-        mensaje.className = "mensaje exito";
+        mensaje.style.display =
+          "block";
+
+        mensaje.className =
+          "mensaje exito";
 
 
         if (data.session) {
@@ -1018,8 +1370,40 @@ if (password !== passwordConfirmacion) {
 
 
         document
-          .getElementById("formularioRegistro")
+          .getElementById(
+            "formularioRegistro"
+          )
           .reset();
+
+
+        /* Limpiar indicadores de contraseña */
+
+        actualizarRequisito(
+          "reqLongitud",
+          false
+        );
+
+        actualizarRequisito(
+          "reqMayuscula",
+          false
+        );
+
+        actualizarRequisito(
+          "reqMinuscula",
+          false
+        );
+
+        actualizarRequisito(
+          "reqNumero",
+          false
+        );
+
+        actualizarRequisito(
+          "reqEspecial",
+          false
+        );
+
+        comprobarCoincidencia();
 
 
         mensaje.scrollIntoView({
@@ -1035,8 +1419,11 @@ if (password !== passwordConfirmacion) {
         );
 
 
-        mensaje.style.display = "block";
-        mensaje.className = "mensaje error";
+        mensaje.style.display =
+          "block";
+
+        mensaje.className =
+          "mensaje error";
 
 
         mensaje.innerHTML = `
@@ -1064,32 +1451,14 @@ if (password !== passwordConfirmacion) {
       } finally {
 
         boton.disabled = false;
-        boton.textContent = "Crear mi perfil";
+
+        boton.textContent =
+          "Crear mi perfil";
 
       }
 
     }
   );
-function mostrarPassword(id, boton) {
-
-  const campo =
-    document.getElementById(id);
-
-  if (campo.type === "password") {
-
-    campo.type = "text";
-    boton.textContent = "🙈";
-
-  } else {
-
-    campo.type = "password";
-    boton.textContent = "👁️";
-
-  }
-
-}
-
-
 
 </script>
 
