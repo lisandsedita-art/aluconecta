@@ -2,8 +2,12 @@
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>Inicio - AluConecta</title>
 
@@ -16,12 +20,12 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #222;
+      background: #f4f7fa;
+      color: #17202a;
     }
 
     header {
-      background: #1f2937;
+      background: #123b5d;
       color: white;
       padding: 16px 20px;
     }
@@ -32,12 +36,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
     }
 
     .logo {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: bold;
+    }
+
+    .logo span {
+      color: #55c7e8;
     }
 
     .menu {
@@ -58,12 +65,16 @@
       position: absolute;
       right: 0;
       top: 45px;
-      width: 220px;
+      width: 230px;
       background: white;
       border-radius: 10px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
       overflow: hidden;
-      z-index: 10;
+      z-index: 20;
+    }
+
+    .menu-opciones.mostrar {
+      display: block;
     }
 
     .menu-opciones a,
@@ -85,8 +96,9 @@
       background: #f1f5f9;
     }
 
-    .menu-opciones.mostrar {
-      display: block;
+    .cerrar {
+      color: #b91c1c !important;
+      font-weight: bold;
     }
 
     .contenedor {
@@ -97,92 +109,562 @@
 
     .bienvenida {
       background: white;
-      border-radius: 14px;
-      padding: 30px;
+      border-radius: 16px;
+      padding: 32px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.07);
       margin-bottom: 25px;
     }
 
     .bienvenida h1 {
-      margin-top: 0;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
+      color: #123b5d;
       font-size: 30px;
     }
 
     .bienvenida p {
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 0;
+      color: #5f6b75;
+      line-height: 1.6;
+      margin: 8px 0;
     }
 
-    .busqueda {
-      margin-top: 25px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .busqueda input {
-      flex: 1;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    .boton-buscar {
-      border: none;
-      border-radius: 8px;
-      padding: 14px 22px;
-      background: #2563eb;
-      color: white;
+    .usuario {
+      margin-top: 15px;
+      padding: 12px 15px;
+      background: #eef5f9;
+      border-radius: 9px;
+      color: #123b5d;
       font-weight: bold;
-      cursor: pointer;
+      word-break: break-word;
     }
 
-    .titulo {
-      margin: 30px 0 15px;
-    }
-
-    .tarjetas {
+    .acciones {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 18px;
+      margin-top: 25px;
     }
 
     .tarjeta {
       background: white;
+      border-radius: 14px;
       padding: 25px;
-      border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     }
 
     .tarjeta h2 {
       margin-top: 0;
+      color: #123b5d;
+      font-size: 21px;
     }
 
     .tarjeta p {
-      color: #666;
+      color: #66727d;
       line-height: 1.5;
+      min-height: 48px;
     }
 
     .boton {
       display: inline-block;
       margin-top: 10px;
       padding: 12px 18px;
-      border-radius: 7px;
+      border-radius: 8px;
       background: #2563eb;
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
 
-    .boton-secundario {
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+    .verde {
       background: #16a34a;
+    }
+
+    .violeta {
+      background: #7c3aed;
+    }
+
+    .naranja {
+      background: #ea580c;
     }
 
     .estado {
       margin-top: 25px;
-      background: #eef2ff;
-      border-radius: 10px;
-      padding: 18px;
-      color: #374151
+      background: #eef5f9;
+      border-radius: 12px;
+      padding: 20px;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .estado strong {
+      color: #123b5d;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #66727d;
+      font-size: 14px;
+    }
+
+    .cargando {
+      text-align: center;
+      padding: 60px 20px;
+      color: #66727d;
+    }
+
+    @media (max-width: 700px) {
+
+      .acciones {
+        grid-template-columns: 1fr;
+      }
+
+      .bienvenida {
+        padding: 25px 20px;
+      }
+
+      .bienvenida h1 {
+        font-size: 26px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <div class="barra">
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <div class="menu">
+
+      <button
+        class="menu-boton"
+        id="menuBoton"
+        aria-label="Abrir menú">
+
+        ☰
+
+      </button>
+
+
+      <div
+        class="menu-opciones"
+        id="menuOpciones">
+
+        <a href="inicio.html">
+          🏠 Inicio
+        </a>
+
+        <a href="perfil.html">
+          👤 Mi perfil
+        </a>
+
+        <a href="aluminio.html">
+          🔎 Buscar profesionales
+        </a>
+
+        <a href="proyectos.html">
+          📋 Proyectos
+        </a>
+
+        <button
+          id="cerrarSesion"
+          class="cerrar">
+
+          🚪 Cerrar sesión
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<main
+  class="contenedor"
+  id="contenido">
+
+  <div class="cargando">
+
+    Cargando tu cuenta...
+
+  </div>
+
+</main>
+
+
+
+<footer>
+
+  <p>
+    © 2026 AluConecta
+  </p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const contenido =
+  document.getElementById("contenido");
+
+
+const menuBoton =
+  document.getElementById("menuBoton");
+
+
+const menuOpciones =
+  document.getElementById("menuOpciones");
+
+
+menuBoton.addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+    menuOpciones.classList.toggle(
+      "mostrar"
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "click",
+  function() {
+
+    menuOpciones.classList.remove(
+      "mostrar"
+    );
+
+  }
+);
+
+
+menuOpciones.addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+  }
+);
+
+
+async function comprobarSesion() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    const session =
+      data.session;
+
+
+    if (!session || !session.user) {
+
+      window.location.href =
+        "ingresar.html";
+
+      return;
+
+    }
+
+
+    const usuario =
+      session.user;
+
+
+    const email =
+      usuario.email ||
+      "Usuario de AluConecta";
+
+
+    const nombre =
+      usuario.user_metadata &&
+      (
+        usuario.user_metadata.nombre ||
+        usuario.user_metadata.name
+      )
+      ? (
+          usuario.user_metadata.nombre ||
+          usuario.user_metadata.name
+        )
+      : "Usuario";
+
+
+    contenido.innerHTML = `
+
+      <section class="bienvenida">
+
+        <h1>
+          ¡Bienvenido/a a AluConecta!
+        </h1>
+
+        <p>
+          Desde acá podés gestionar tu cuenta,
+          buscar profesionales y participar
+          en proyectos.
+        </p>
+
+        <div class="usuario">
+
+          👤 ${nombre}<br>
+
+          📧 ${email}
+
+        </div>
+
+      </section>
+
+
+      <section class="acciones">
+
+
+        <article class="tarjeta">
+
+          <h2>
+            👤 Mi perfil
+          </h2>
+
+          <p>
+            Completá y administrá tu información
+            profesional o personal para que otros
+            puedan conocerte.
+          </p>
+
+          <a
+            href="perfil.html"
+            class="boton violeta">
+
+            Ver mi perfil
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            🔎 Buscar profesionales
+          </h2>
+
+          <p>
+            Encontrá carpinteros de aluminio,
+            profesionales de construcción,
+            reparaciones y otros servicios.
+          </p>
+
+          <a
+            href="aluminio.html"
+            class="boton">
+
+            Buscar profesionales
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            🏗️ Mis proyectos
+          </h2>
+
+          <p>
+            Consultá tus proyectos y oportunidades
+            dentro de AluConecta.
+          </p>
+
+          <a
+            href="proyectos.html"
+            class="boton verde">
+
+            Ver proyectos
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            🛠️ Ofrecer mis servicios
+          </h2>
+
+          <p>
+            Presentá tus servicios y permití que
+            potenciales clientes conozcan lo que hacés.
+          </p>
+
+          <a
+            href="registro-carpintero.html"
+            class="boton naranja">
+
+            Completar perfil profesional
+
+          </a>
+
+        </article>
+
+
+      </section>
+
+
+      <section class="estado">
+
+        <strong>
+          Tu cuenta está activa.
+        </strong>
+
+        <p>
+          Próximamente desde este espacio vamos
+          a incorporar más herramientas para que
+          puedas administrar tus proyectos,
+          contactos y oportunidades.
+        </p>
+
+      </section>
+
+    `;
+
+
+  } catch (error) {
+
+    console.error(
+      "Error comprobando sesión:",
+      error
+    );
+
+
+    contenido.innerHTML = `
+
+      <section class="bienvenida">
+
+        <h1>
+          No pudimos cargar tu cuenta
+        </h1>
+
+        <p>
+          Ocurrió un problema al comprobar
+          tu sesión.
+        </p>
+
+        <a
+          href="ingresar.html"
+          class="boton">
+
+          Volver a ingresar
+
+        </a>
+
+      </section>
+
+    `;
+
+  }
+
+}
+
+
+document
+  .getElementById("cerrarSesion")
+  .addEventListener(
+    "click",
+    async function() {
+
+      try {
+
+        await supabaseClient.auth.signOut();
+
+        localStorage.removeItem(
+          "aluConectaUsuarioRegistrado"
+        );
+
+        window.location.href =
+          "index.html";
+
+      } catch (error) {
+
+        console.error(
+          "Error al cerrar sesión:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+
+comprobarSesion();
+
+</script>
+
+
+</body>
+
+</html>
+
+
