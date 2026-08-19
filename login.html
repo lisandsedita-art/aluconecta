@@ -1,1 +1,508 @@
-<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Ingresar - AluConecta</title> <style> * { box-sizing: border-box; } body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f8; color: #222; } header { background: #1f2937; color: white; text-align: center; padding: 30px 20px; } header h1 { margin: 0 0 10px; } header p { margin: 0; } .contenedor { max-width: 500px; margin: 40px auto; padding: 20px; } .tarjeta { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); } h2 { text-align: center; margin-top: 0; } .campo { margin-bottom: 20px; } label { display: block; margin-bottom: 7px; font-weight: bold; } input { width: 100%; padding: 13px; border: 1px solid #ccc; border-radius: 7px; font-size: 16px; } input:focus { outline: none; border-color: #2563eb; } .boton { width: 100%; padding: 14px; border: none; border-radius: 7px; background: #2563eb; color: white; font-size: 17px; font-weight: bold; cursor: pointer; } .boton:disabled { opacity: 0.6; cursor: wait; } .mensaje { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; } .mensaje.error { display: block; background: #fee2e2; color: #991b1b; } .mensaje.exito { display: block; background: #dcfce7; color: #166534; } .enlace { display: block; text-align: center; margin-top: 20px; color: #2563eb; text-decoration: none; font-weight: bold; } .registro { text-align: center; margin-top: 25px; color: #555; } footer { text-align: center; padding: 25px; color: #666; } </style> </head> <body> <header> <h1>AluConecta</h1> <p>Personas, profesionales y empresas conectadas.</p> </header> <main class="contenedor"> <section class="tarjeta"> <h2>Ingresar</h2> <p style="text-align:center;"> Ingresá a tu cuenta de AluConecta. </p> <form id="formularioLogin"> <div class="campo"> <label for="email"> Correo electrónico </label> <input type="email" id="email" placeholder="tu@email.com" autocomplete="email" required> </div> <div class="campo"> <label for="password"> Contraseña </label> <input type="password" id="password" placeholder="Tu contraseña" autocomplete="current-password" required> </div> <button type="submit" class="boton" id="botonLogin"> Ingresar </button> </form> <div id="mensaje" class="mensaje"> </div> <a href="index.html" class="enlace"> ← Volver a AluConecta </a> <div class="registro"> ¿Todavía no tenés una cuenta? <br> <a href="registro.html" class="enlace"> Crear mi perfil </a> </div> </section> </main> <footer> <p>© 2026 AluConecta</p> <p> Conectando personas, trabajos y oportunidades. </p> </footer> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <script> const SUPABASE_URL = "https://wroaxwjyjrxzwctfkyoo.supabase.co"; const SUPABASE_KEY = "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3"; const supabaseClient = window.supabase.createClient( SUPABASE_URL, SUPABASE_KEY ); document .getElementById("formularioLogin") .addEventListener( "submit", async function(event) { event.preventDefault(); const email = document .getElementById("email") .value .trim(); const password = document .getElementById("password") .value; const boton = document .getElementById("botonLogin"); const mensaje = document .getElementById("mensaje"); boton.disabled = true; boton.textContent = "Ingresando..."; mensaje.style.display = "none"; try { const { data, error } = await supabaseClient.auth.signInWithPassword({ email: email, password: password }); if (error) { throw error; } if (!data.user) { throw new Error( "No se pudo iniciar la sesión." ); } localStorage.setItem( "aluConectaUsuarioRegistrado", "true" ); mensaje.className = "mensaje exito"; mensaje.style.display = "block"; mensaje.innerHTML = ` <h3> ¡Bienvenido/a a AluConecta! </h3> <p> Ingresaste correctamente. </p> `; setTimeout(function() { window.location.href = "perfil.html"; }, 1200); } catch (error) { console.error( "Error al iniciar sesión:", error ); mensaje.className = "mensaje error"; mensaje.style.display = "block"; mensaje.innerHTML = ` <strong> No pudimos iniciar sesión. </strong> <p> ${error.message} </p> <p> Revisá tu correo y contraseña. </p> `; } finally { boton.disabled = false; boton.textContent = "Ingresar"; } } ); </script> </body> </html> 
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ingresar - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .intro {
+      text-align: center;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .password-contenedor {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    #password {
+      padding-right: 50px;
+    }
+
+    .ver-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .olvido {
+      display: block;
+      text-align: right;
+      margin-top: -8px;
+      margin-bottom: 22px;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .olvido:hover,
+    .enlace:hover {
+      text-decoration: underline;
+    }
+
+    .boton {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .boton:hover {
+      background: #1d4ed8;
+    }
+
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .mensaje {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .mensaje.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .mensaje.exito {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .enlace {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .registro {
+      text-align: center;
+      margin-top: 25px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .registro .enlace {
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>AluConecta</h1>
+  <p>Personas, profesionales y empresas conectadas.</p>
+</header>
+
+<main class="contenedor">
+
+  <section class="tarjeta">
+
+    <h2>Ingresar</h2>
+
+    <p class="intro">
+      Ingresá a tu cuenta de AluConecta.
+    </p>
+
+    <form id="formularioLogin">
+
+      <div class="campo">
+
+        <label for="email">
+          Correo electrónico
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="tu@email.com"
+          autocomplete="email"
+          required>
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="password">
+          Contraseña
+        </label>
+
+        <div class="password-contenedor">
+
+          <input
+            type="password"
+            id="password"
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
+            required>
+
+          <button
+            type="button"
+            class="ver-password"
+            onclick="mostrarPassword()"
+            aria-label="Mostrar contraseña">
+            👁️
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <a
+        href="recuperar-password.html"
+        class="olvido">
+        ¿Olvidaste tu contraseña?
+      </a>
+
+
+      <button
+        type="submit"
+        class="boton"
+        id="botonLogin">
+
+        Ingresar
+
+      </button>
+
+    </form>
+
+
+    <div
+      id="mensaje"
+      class="mensaje">
+    </div>
+
+
+    <a
+      href="index.html"
+      class="enlace">
+      ← Volver a AluConecta
+    </a>
+
+
+    <div class="registro">
+
+      ¿Todavía no tenés una cuenta?
+
+      <a
+        href="registro.html"
+        class="enlace">
+        Crear mi perfil
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <p>© 2026 AluConecta</p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+function mostrarPassword() {
+
+  const password =
+    document.getElementById("password");
+
+  const boton =
+    document.querySelector(".ver-password");
+
+  if (password.type === "password") {
+
+    password.type = "text";
+
+    boton.textContent = "🙈";
+
+    boton.setAttribute(
+      "aria-label",
+      "Ocultar contraseña"
+    );
+
+  } else {
+
+    password.type = "password";
+
+    boton.textContent = "👁️";
+
+    boton.setAttribute(
+      "aria-label",
+      "Mostrar contraseña"
+    );
+
+  }
+
+}
+
+
+document
+  .getElementById("formularioLogin")
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+      const boton =
+        document
+          .getElementById("botonLogin");
+
+      const mensaje =
+        document
+          .getElementById("mensaje");
+
+
+      boton.disabled = true;
+      boton.textContent =
+        "Ingresando...";
+
+      mensaje.style.display =
+        "none";
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth.signInWithPassword({
+
+            email: email,
+
+            password: password
+
+          });
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        if (!data.user) {
+
+          throw new Error(
+            "No se pudo iniciar la sesión."
+          );
+
+        }
+
+
+        localStorage.setItem(
+          "aluConectaUsuarioRegistrado",
+          "true"
+        );
+
+
+        mensaje.className =
+          "mensaje exito";
+
+        mensaje.style.display =
+          "block";
+
+        mensaje.innerHTML = `
+
+          <strong>
+            ¡Bienvenido/a a AluConecta!
+          </strong>
+
+          <p>
+            Ingresaste correctamente.
+          </p>
+
+        `;
+
+
+        setTimeout(function() {
+
+          window.location.href =
+            "perfil.html";
+
+        }, 1200);
+
+
+      } catch (error) {
+
+        console.error(
+          "Error al iniciar sesión:",
+          error
+        );
+
+
+        mensaje.className =
+          "mensaje error";
+
+        mensaje.style.display =
+          "block";
+
+        mensaje.innerHTML = `
+
+          <strong>
+            No pudimos iniciar sesión.
+          </strong>
+
+          <p>
+            ${error.message}
+          </p>
+
+          <p>
+            Revisá tu correo y contraseña.
+          </p>
+
+        `;
+
+      } finally {
+
+        boton.disabled = false;
+
+        boton.textContent =
+          "Ingresar";
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+
+</html>
