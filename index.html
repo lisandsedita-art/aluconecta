@@ -1,295 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>
+    AluConecta | Donde los proyectos encuentran sus aberturas
+  </title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      color: #17202a;
+      line-height: 1.5;
+    }
+
+    header {
+      background: #123b5d;
+      color: white;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #55c7e8;
+    }
+
+    .menu {
+      font-size: 25px;
+    }
+
+    .hero {
+      background:
+        linear-gradient(
+          135deg,
+          #123b5d,
+          #1976a8
+        );
+
+      color: white;
+      text-align: center;
+      padding: 65px 22px;
+    }
+
+    .hero h1 {
+      max-width: 800px;
+      margin: 0 auto 18px;
+      font-size: 38px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      max-width: 850px;
+      margin: 0 auto 30px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .boton {
+      display: inline-block;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .boton-principal {
+      background: #f5a623;
+      color: #17202a;
+    }
+
+    .boton-principal:hover {
+      background: #ffb63d;
+    }
+
+    .contenedor {
+      max-width: 1000px;
+      margin: auto;
+      padding: 45px 20px;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .titulo h2 {
+      color: #123b5d;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .titulo p {
+      color: #66727d;
+    }
+
+    .busqueda {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 45px;
+    }
+
+    .busqueda input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccd5dc;
+      border-radius: 9px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .busqueda input:focus {
+      outline: none;
+      border-color: #1976a8;
+    }
+
+    .categorias {
+      display: grid;
+      grid-template-columns:
+        repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .categoria {
+      background: #eef5f9;
+      padding: 20px 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: #123b5d;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .categoria:hover {
+      background: #dcecf4;
+      transform: translateY(-2px);
+    }
+
+    .participar {
+      background: white;
+      border-radius: 18px;
+      padding: 35px 25px;
+      margin-bottom: 45px;
+      box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .participar h2 {
+      color: #123b5d;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .participar p {
+      color: #66727d;
+      margin-bottom: 25px;
+    }
+
+    .opciones-participar {
+      display: grid;
+      grid-template-columns:
+        repeat(2, 1fr);
+      gap: 15px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .opcion-participar {
+      display: block;
+      padding: 22px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .ofrecer {
+      background: #123b5d;
+      color: white;
+    }
+
+    .proyecto {
+      background: #16a34a;
+      color: white;
+    }
+
+    .opcion-participar:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .ver-proyectos {
+      display: inline-block;
+      margin-top: 20px;
+      color: #2563eb;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .como {
+      background: white;
+      padding: 45px 20px;
+    }
+
+    .pasos {
+      max-width: 1000px;
+      margin: auto;
+      display: grid;
+      grid-template-columns:
+        repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .paso {
+      background: #f8fafc;
+      border-left: 5px solid #f5a623;
+      padding: 22px;
+      border-radius: 10px;
+    }
+
+    .paso h3 {
+      color: #123b5d;
+      margin-bottom: 8px;
+    }
+
+    .paso p {
+      color: #66727d;
+    }
+
+    .mensaje-final {
+      text-align: center;
+      padding: 45px 20px;
+      background: #123b5d;
+      color: white;
+    }
+
+    .mensaje-final h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .mensaje-final p {
+      max-width: 700px;
+      margin: 0 auto 22px;
+    }
+
+    .boton-ingresar {
+      background: white;
+      color: #123b5d;
+      margin-left: 10px;
+    }
+
+    footer {
+      background: #0d2b43;
+      color: #cbd5dc;
+      text-align: center;
+      padding: 25px 20px;
+      font-size: 14px;
+    }
+
+    footer p {
+      margin: 4px 0;
+    }
+
+    @media (max-width: 700px) {
+
+      .hero {
+        padding: 50px 20px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .categorias {
+        grid-template-columns: 1fr;
+      }
+
+      .opciones-participar {
+        grid-template-columns: 1fr;
+      }
+
+      .pasos {
+        grid-template-columns: 1fr;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+      .boton-ingresar {
+        margin-left: 0;
+        margin-top: 12px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <div class="menu">
+      ☰
+    </div>
+
+  </header>
 
 
+  <section class="hero">
 
-  
-
-
-
-  
-  
-
-
-  
-  
-
-<div class="logo">
-  Alu<span>Conecta</span>
-</div>
-
-<div class="menu">
-  ☰
-</div>
-
-
-  
-  
-  
-
-
-<h1>
-  Donde los proyectos encuentran sus aberturas.
-</h1>
-
-
-<p>
-  Conectamos carpinteros de aluminio con
-  arquitectos, ingenieros, constructores y
-  personas que buscan hacer realidad sus ideas.
-</p>
-
-
-<a
-  href="ingresar.html"
-  class="boton boton-principal">
-
-  🔎 Buscar un profesional
-
-</a>
-
-
-  
-
-  
-  
-
-<section>
-
-  <div class="titulo">
-
-    <h2>
-      ¿Qué estás buscando?
-    </h2>
+    <h1>
+      Donde los proyectos encuentran sus aberturas.
+    </h1>
 
     <p>
-      Elegí una categoría o buscá lo que necesitás.
+      Conectamos carpinteros de aluminio con
+      arquitectos, ingenieros, constructores y
+      personas que buscan hacer realidad sus ideas.
     </p>
 
-  </div>
+    <a
+      href="ingresar.html"
+      class="boton boton-principal">
+
+      🔎 Buscar un profesional
+
+    </a>
+
+  </section>
 
 
-  <div class="busqueda">
+  <main class="contenedor">
 
-    <input
-      type="text"
-      placeholder="Ej: ventanas de aluminio, albañil, reparación...">
+    <section>
+
+      <div class="titulo">
+
+        <h2>
+          ¿Qué estás buscando?
+        </h2>
+
+        <p>
+          Elegí una categoría o buscá lo que necesitás.
+        </p>
+
+      </div>
+
+      <div class="busqueda">
+
+        <input
+          type="text"
+          placeholder="Ej: ventanas de aluminio, albañil, reparación...">
+
+        <div class="categorias">
+
+          <a
+            href="aberturas.html"
+            class="categoria">
+
+            🏠 Aberturas
+
+          </a>
+
+          <a
+            href="construccion.html"
+            class="categoria">
+
+            🏗️ Construcción
+
+          </a>
+
+          <a
+            href="reparaciones.html"
+            class="categoria">
+
+            🔧 Reparaciones
+
+          </a>
+
+          <a
+            href="servicios.html"
+            class="categoria">
+
+            🛠️ Servicios
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
 
 
-    <div class="categorias">
+    <section class="participar">
 
+      <h2>
+        ¿Cómo querés participar?
+      </h2>
+
+      <p>
+        En AluConecta todos pueden formar parte:
+        personas, profesionales y empresas.
+      </p>
+
+      <div class="opciones-participar">
+
+        <a
+          href="ingresar.html"
+          class="opcion-participar ofrecer">
+
+          🛠️ Ofrezco mis servicios
+
+        </a>
+
+        <a
+          href="ingresar.html"
+          class="opcion-participar proyecto">
+
+          🏗️ Tengo un proyecto /
+          necesito un servicio
+
+        </a>
+
+      </div>
 
       <a
-        href="aberturas.html"
-        class="categoria">
+        href="proyectos.html"
+        class="ver-proyectos">
 
-        🏠 Aberturas
+        📋 Ver proyectos y oportunidades
 
       </a>
 
+    </section>
 
-      <a
-        href="construccion.html"
-        class="categoria">
-
-        🏗️ Construcción
-
-      </a>
+  </main>
 
 
-      <a
-        href="reparaciones.html"
-        class="categoria">
+  <section class="como">
 
-        🔧 Reparaciones
+    <div class="titulo">
 
-      </a>
+      <h2>
+        ¿Cómo funciona AluConecta?
+      </h2>
 
-
-      <a
-        href="servicios.html"
-        class="categoria">
-
-        🛠️ Servicios
-
-      </a>
-
+      <p>
+        Simple, rápido y pensado para conectar
+        proyectos con profesionales.
+      </p>
 
     </div>
 
-  </div>
+    <div class="pasos">
 
-</section>
+      <div class="paso">
+
+        <h3>
+          1. Registrate
+        </h3>
+
+        <p>
+          Creá una sola cuenta como persona,
+          profesional o empresa.
+        </p>
+
+      </div>
+
+      <div class="paso">
+
+        <h3>
+          2. Buscá o publicá
+        </h3>
+
+        <p>
+          Encontrá un profesional o publicá
+          el proyecto o servicio que necesitás.
+        </p>
+
+      </div>
+
+      <div class="paso">
+
+        <h3>
+          3. Conectá
+        </h3>
+
+        <p>
+          Conocé perfiles, compará opciones
+          y contactá directamente.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
 
 
+  <section class="mensaje-final">
 
-<!-- =========================
-     PARTICIPAR
-========================== -->
+    <h2>
+      Los proyectos necesitan personas.
+    </h2>
 
-<section class="participar">
-
-  <h2>
-    ¿Cómo querés participar?
-  </h2>
-
-
-  <p>
-    En AluConecta todos pueden formar parte:
-    personas, profesionales y empresas.
-  </p>
-
-
-  <div class="opciones-participar">
-
+    <p>
+      AluConecta busca unir a quienes necesitan
+      hacer un trabajo con quienes pueden hacerlo.
+    </p>
 
     <a
-      href="ingresar.html"
-      class="opcion-participar ofrecer">
+      href="registro.html"
+      class="boton boton-principal">
 
-      🛠️ Ofrezco mis servicios
+      Crear mi cuenta
 
     </a>
 
-
     <a
       href="ingresar.html"
-      class="opcion-participar proyecto">
+      class="boton boton-ingresar">
 
-      🏗️ Tengo un proyecto /
-      necesito un servicio
+      Ingresar
 
     </a>
 
-
-  </div>
-
-
-  <a
-    href="proyectos.html"
-    class="ver-proyectos">
-
-    📋 Ver proyectos y oportunidades
-
-  </a>
-
-</section>
+  </section>
 
 
-  
-  
-  
-
-
-<div class="titulo">
-
-  <h2>
-    ¿Cómo funciona AluConecta?
-  </h2>
-
-  <p>
-    Simple, rápido y pensado para conectar
-    proyectos con profesionales.
-  </p>
-
-</div>
-
-
-<div class="pasos">
-
-
-  <div class="paso">
-
-    <h3>
-      1. Registrate
-    </h3>
+  <footer>
 
     <p>
-      Creá una sola cuenta como persona,
-      profesional o empresa.
+      © 2026 AluConecta
     </p>
-
-  </div>
-
-
-  <div class="paso">
-
-    <h3>
-      2. Buscá o publicá
-    </h3>
 
     <p>
-      Encontrá un profesional o publicá
-      el proyecto o servicio que necesitás.
+      Conectando personas, trabajos y oportunidades.
     </p>
 
-  </div>
+  </footer>
 
+</body>
 
-  <div class="paso">
-
-    <h3>
-      3. Conectá
-    </h3>
-
-    <p>
-      Conocé perfiles, compará opciones
-      y contactá directamente.
-    </p>
-
-  </div>
-
-
-</div>
-
-
-  
-
-  
-  
-
-
-<h2>
-  Los proyectos necesitan personas.
-</h2>
-
-
-<p>
-  AluConecta busca unir a quienes necesitan
-  hacer un trabajo con quienes pueden hacerlo.
-</p>
-
-
-<a
-  href="registro.html"
-  class="boton boton-principal">
-
-  Crear mi cuenta
-
-</a>
-
-
-<a
-  href="ingresar.html"
-  class="boton">
-
-  Ingresar
-
-</a>
-
-
-  
-
-  
-  
-
-<p>
-  © 2026 AluConecta
-</p>
-
-<p>
-  Conectando personas, trabajos y oportunidades.
-</p>
-
-
-  
+</html>
 
 
