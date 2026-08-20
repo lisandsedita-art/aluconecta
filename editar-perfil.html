@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Editar mi perfil - AluConecta</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      color: #17202a;
+    }
+
+    header {
+      background: #123b5d;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    .barra {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #55c7e8;
+    }
+
+    .contenedor {
+      max-width: 700px;
+      margin: 35px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #123b5d;
+    }
+
+    .intro {
+      color: #66727d;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccd5dc;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #1976a8;
+    }
+
+    .botones {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .boton {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .guardar {
+      background: #16a34a;
+      color: white;
+    }
+
+    .cancelar {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .mensaje {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .mensaje.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .mensaje.exito {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .cargando {
+      text-align: center;
+      padding: 40px 20px;
+      color: #66727d;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #66727d;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+
+      .tarjeta {
+        padding: 22px 18px;
+      }
+
+      .botones {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <div class="barra">
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<main class="contenedor">
+
+  <section class="tarjeta" id="contenido">
+
+    <div class="cargando">
+      Cargando tus datos...
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<footer>
+
+  <p>
+    © 2026 AluConecta
+  </p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const contenido =
+  document.getElementById("contenido");
+
+
+async function cargarPerfil() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    const session =
+      data.session;
+
+
+    if (!session || !session.user) {
+
+      window.location.href =
+        "ingresar.html";
+
+      return;
+
+    }
+
+
+    const usuario =
+      session.user;
+
+
+    const {
+      data: perfil,
+      error: errorPerfil
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .select("*")
+
+        .eq("id", usuario.id)
+
+        .single();
+
+
+    if (errorPerfil) {
+      throw errorPerfil;
+    }
+
+
+    if (!perfil) {
+
+      throw new Error(
+        "No encontramos tu perfil."
+      );
+
+    }
+
+
+    contenido.innerHTML = `
+
+      <h1>
+        Editar mi perfil
+      </h1>
+
+      <p class="intro">
+        Modificá tus datos. Los cambios se guardarán
+        únicamente en tu perfil de AluConecta.
+      </p>
+
+
+      <form id="formularioPerfil">
+
+
+        <div class="campo">
+
+          <label for="nombre">
+            Nombre o empresa
+          </label>
+
+          <input
+            type="text"
+            id="nombre"
+            value="${escaparHTML(perfil.nombre || "")}"
+            required>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="tipo_usuario">
+            Tipo de usuario
+          </label>
+
+          <select id="tipo_usuario">
+
+            <option value="Particular">
+              Particular
+            </option>
+
+            <option value="Profesional">
+              Profesional
+            </option>
+
+            <option value="Empresa">
+              Empresa
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="actividades">
+            Actividad
+          </label>
+
+          <input
+            type="text"
+            id="actividades"
+            value="${escaparHTML(perfil.actividades || "")}"
+            placeholder="Ej.: Carpintería de aluminio">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="participacion">
+            ¿Cómo participás?
+          </label>
+
+          <select id="participacion">
+
+            <option value="Ofrece servicios">
+              Ofrece servicios
+            </option>
+
+            <option value="Busca servicios">
+              Busca servicios
+            </option>
+
+            <option value="Ambos">
+              Ambos
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="localidad">
+            Localidad
+          </label>
+
+          <input
+            type="text"
+            id="localidad"
+            value="${escaparHTML(perfil.localidad || "")}"
+            placeholder="Ej.: Rosario">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="servicios">
+            Servicios
+          </label>
+
+          <textarea
+            id="servicios"
+            placeholder="Contanos qué servicios ofrecés o buscás">${escaparHTML(perfil.servicios || "")}</textarea>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="telefono">
+            Teléfono / WhatsApp
+          </label>
+
+          <input
+            type="tel"
+            id="telefono"
+            value="${escaparHTML(perfil.telefono || "")}"
+            placeholder="Ej.: 3411234567">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="descripcion">
+            Sobre vos
+          </label>
+
+          <textarea
+            id="descripcion"
+            placeholder="Presentate brevemente">${escaparHTML(perfil.descripcion || "")}</textarea>
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="instagram">
+            Instagram
+          </label>
+
+          <input
+            type="text"
+            id="instagram"
+            value="${escaparHTML(perfil.instagram || "")}"
+            placeholder="@usuario">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="facebook">
+            Facebook
+          </label>
+
+          <input
+            type="text"
+            id="facebook"
+            value="${escaparHTML(perfil.facebook || "")}"
+            placeholder="Usuario o página">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="tiktok">
+            TikTok
+          </label>
+
+          <input
+            type="text"
+            id="tiktok"
+            value="${escaparHTML(perfil.tiktok || "")}"
+            placeholder="@usuario">
+
+        </div>
+
+
+
+        <div class="campo">
+
+          <label for="web">
+            Sitio web
+          </label>
+
+          <input
+            type="text"
+            id="web"
+            value="${escaparHTML(perfil.web || "")}"
+            placeholder="www.ejemplo.com">
+
+        </div>
+
+
+
+        <div class="botones">
+
+          <button
+            type="submit"
+            class="boton guardar"
+            id="botonGuardar">
+
+            Guardar cambios
+
+          </button>
+
+
+          <a
+            href="javascript:history.back()"
+            class="boton cancelar">
+
+            Cancelar
+
+          </a>
+
+        </div>
+
+
+        <div
+          id="mensaje"
+          class="mensaje">
+        </div>
+
+
+      </form>
+
+    `;
+
+
+    document
+      .getElementById("tipo_usuario")
+      .value =
+      perfil.tipo_usuario || "Particular";
+
+
+    document
+      .getElementById("participacion")
+      .value =
+      perfil.participacion || "Ofrece servicios";
+
+
+    document
+      .getElementById("formularioPerfil")
+      .addEventListener(
+        "submit",
+        guardarPerfil
+      );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando perfil:",
+      error
+    );
+
+
+    contenido.innerHTML = `
+
+      <div class="cargando">
+
+        <h2>
+          No pudimos cargar tu perfil
+        </h2>
+
+        <p>
+          ${escaparHTML(error.message || "Ocurrió un error.")}
+        </p>
+
+        <a
+          href="inicio.html"
+          class="boton guardar">
+
+          Volver a inicio
+
+        </a>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+
+async function guardarPerfil(event) {
+
+  event.preventDefault();
+
+
+  const boton =
+    document.getElementById("botonGuardar");
+
+
+  const mensaje =
+    document.getElementById("mensaje");
+
+
+  boton.disabled = true;
+
+  boton.textContent =
+    "Guardando...";
+
+  mensaje.className =
+    "mensaje";
+
+  mensaje.style.display =
+    "none";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    const session =
+      data.session;
+
+
+    if (!session || !session.user) {
+
+      window.location.href =
+        "ingresar.html";
+
+      return;
+
+    }
+
+
+    const usuario =
+      session.user;
+
+
+    const datosActualizados = {
+
+      nombre:
+        document
+          .getElementById("nombre")
+          .value
+          .trim(),
+
+      tipo_usuario:
+        document
+          .getElementById("tipo_usuario")
+          .value,
+
+      actividades:
+        document
+          .getElementById("actividades")
+          .value
+          .trim(),
+
+      participacion:
+        document
+          .getElementById("participacion")
+          .value,
+
+      localidad:
+        document
+          .getElementById("localidad")
+          .value
+          .trim(),
+
+      servicios:
+        document
+          .getElementById("servicios")
+          .value
+          .trim(),
+
+      telefono:
+        document
+          .getElementById("telefono")
+          .value
+          .trim(),
+
+      descripcion:
+        document
+          .getElementById("descripcion")
+          .value
+          .trim(),
+
+      instagram:
+        document
+          .getElementById("instagram")
+          .value
+          .trim(),
+
+      facebook:
+        document
+          .getElementById("facebook")
+          .value
+          .trim(),
+
+      tiktok:
+        document
+          .getElementById("tiktok")
+          .value
+          .trim(),
+
+      web:
+        document
+          .getElementById("web")
+          .value
+          .trim()
+
+    };
+
+
+    const {
+      error: errorUpdate
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .update(datosActualizados)
+
+        .eq("id", usuario.id);
+
+
+    if (errorUpdate) {
+      throw errorUpdate;
+    }
+
+
+    mensaje.className =
+      "mensaje exito";
+
+    mensaje.style.display =
+      "block";
+
+    mensaje.innerHTML = `
+      <strong>
+        ¡Perfil actualizado!
+      </strong>
+
+      <p>
+        Tus cambios se guardaron correctamente.
+      </p>
+    `;
+
+
+    setTimeout(
+      function() {
+
+        window.location.href =
+          "perfil.html?id=" +
+          encodeURIComponent(usuario.id);
+
+      },
+      1000
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error guardando perfil:",
+      error
+    );
+
+
+    mensaje.className =
+      "mensaje error";
+
+    mensaje.style.display =
+      "block";
+
+    mensaje.innerHTML = `
+
+      <strong>
+        No pudimos guardar los cambios.
+      </strong>
+
+      <p>
+        ${escaparHTML(error.message || "Ocurrió un error.")}
+      </p>
+
+    `;
+
+
+  } finally {
+
+    boton.disabled = false;
+
+    boton.textContent =
+      "Guardar cambios";
+
+  }
+
+}
+
+
+
+function escaparHTML(valor) {
+
+  return String(valor)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+
+}
+
+
+
+cargarPerfil();
+
+</script>
+
+
+</body>
+
+</html>
+
+
