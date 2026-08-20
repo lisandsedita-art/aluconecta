@@ -9,8 +9,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-  <title>Crear perfil - AluConecta</title>
-
+  <title>Publicar proyecto - AluConecta</title>
 
   <style>
 
@@ -116,14 +115,32 @@
       margin-top: 10px;
     }
 
+    .boton:hover {
+      background: #1d4ed8;
+    }
+
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
     .mensaje {
       display: none;
       margin-top: 25px;
       padding: 20px;
       border-radius: 10px;
-      background: #eef2ff;
       text-align: center;
       line-height: 1.6;
+    }
+
+    .exito {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .volver {
@@ -170,16 +187,16 @@
 
 
     <h2>
-      Crear perfil
+      Publicar proyecto
     </h2>
 
 
     <p class="introduccion">
 
-      Registrate en AluConecta para encontrar
-      profesionales, publicar necesidades y
-      conectar con personas o empresas que
-      puedan ayudarte con tu proyecto.
+      Completá los datos de tu proyecto.
+      Tu necesidad será visible para los profesionales
+      de AluConecta, pero tus datos de contacto
+      permanecerán protegidos.
 
     </p>
 
@@ -300,49 +317,12 @@
           placeholder="Ej: 341 1234567"
           required>
 
-      </div>
+        <div class="ayuda">
 
+          Este dato será privado y no aparecerá
+          en la lista pública de proyectos.
 
-
-      <div class="campo">
-
-        <label for="instagram">
-          Instagram
-        </label>
-
-        <input
-          type="text"
-          id="instagram"
-          placeholder="@tuempresa">
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="web">
-          Sitio web
-        </label>
-
-        <input
-          type="text"
-          id="web"
-          placeholder="www.tuempresa.com">
-
-      </div>
-
-
-
-      <div class="campo">
-
-        <label for="presentacion">
-          Presentación
-        </label>
-
-        <textarea
-          id="presentacion"
-          placeholder="Contanos brevemente sobre vos, tu empresa o tu actividad."></textarea>
+        </div>
 
       </div>
 
@@ -350,9 +330,10 @@
 
       <button
         type="submit"
-        class="boton">
+        class="boton"
+        id="botonPublicar">
 
-        Crear mi perfil
+        Publicar mi proyecto
 
       </button>
 
@@ -399,146 +380,303 @@
 
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
 
+/* =================================
+   SUPABASE
+================================= */
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+
+/* =================================
+   FORMULARIO
+================================= */
+
 document
   .getElementById("formularioCliente")
-  .addEventListener("submit", function(event) {
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
 
 
-    event.preventDefault();
+      const boton =
+        document.getElementById(
+          "botonPublicar"
+        );
+
+      const mensaje =
+        document.getElementById(
+          "mensaje"
+        );
+
+
+      boton.disabled = true;
+
+      boton.textContent =
+        "Publicando...";
+
+      mensaje.style.display =
+        "none";
+
+
+      try {
+
+
+        /* =========================
+           COMPROBAR SESIÓN
+        ========================= */
+
+        const {
+          data: usuarioData,
+          error: usuarioError
+        } =
+          await supabaseClient.auth.getUser();
+
+
+        if (usuarioError) {
+
+          throw usuarioError;
+
+        }
+
+
+        const usuario =
+          usuarioData.user;
+
+
+        if (!usuario) {
+
+          throw new Error(
+            "Necesitás ingresar a tu cuenta antes de publicar un proyecto."
+          );
+
+        }
 
 
 
-    const cliente = {
+        /* =========================
+           DATOS DEL FORMULARIO
+        ========================= */
 
-      id:
-        "cliente-" + Date.now(),
+        const nombre =
+          document
+            .getElementById("nombre")
+            .value
+            .trim();
 
-      nombre:
+
+        const tipo =
+          document
+            .getElementById("tipo")
+            .value;
+
+
+        const localidad =
+          document
+            .getElementById("localidad")
+            .value
+            .trim();
+
+
+        const proyecto =
+          document
+            .getElementById("proyecto")
+            .value
+            .trim();
+
+
+        const telefono =
+          document
+            .getElementById("telefono")
+            .value
+            .trim();
+
+
+
+        /* =========================
+           GUARDAR PROYECTO
+        ========================= */
+
+        const {
+          data: proyectoCreado,
+          error: proyectoError
+        } =
+          await supabaseClient
+            .from("proyectos")
+            .insert([
+              {
+
+                Nombre: nombre,
+
+                Tipo: tipo,
+
+                Localidad: localidad,
+
+                Proyecto: proyecto,
+
+                publicado_por:
+                  usuario.id
+
+              }
+            ])
+            .select()
+            .single();
+
+
+        if (proyectoError) {
+
+          throw proyectoError;
+
+        }
+
+
+
+        /* =========================
+           GUARDAR CONTACTO PRIVADO
+        ========================= */
+
+        const {
+          error: contactoError
+        } =
+          await supabaseClient
+            .from("contactos")
+            .insert([
+              {
+
+                Nombre: nombre,
+
+                telefono: telefono,
+
+                proyecto_id:
+                  proyectoCreado.id
+
+              }
+            ]);
+
+
+        if (contactoError) {
+
+          throw contactoError;
+
+        }
+
+
+
+        /* =========================
+           ÉXITO
+        ========================= */
+
+        mensaje.className =
+          "mensaje exito";
+
+        mensaje.style.display =
+          "block";
+
+        mensaje.innerHTML = `
+
+          <h3>
+            ¡Proyecto publicado correctamente!
+          </h3>
+
+          <p>
+            Tu proyecto ya está disponible
+            para los profesionales de AluConecta.
+          </p>
+
+          <p>
+            Tus datos de contacto permanecen protegidos.
+          </p>
+
+          <p>
+            Proyecto Nº ${proyectoCreado.id}
+          </p>
+
+          <a
+            href="proyectos.html"
+            class="boton">
+
+            Ver proyectos publicados
+
+          </a>
+
+        `;
+
+
         document
-          .getElementById("nombre")
-          .value
-          .trim(),
-
-      tipo:
-        document
-          .getElementById("tipo")
-          .value,
-
-      localidad:
-        document
-          .getElementById("localidad")
-          .value
-          .trim(),
-
-      proyecto:
-        document
-          .getElementById("proyecto")
-          .value
-          .trim(),
-
-      telefono:
-        document
-          .getElementById("telefono")
-          .value
-          .trim(),
-
-      instagram:
-        document
-          .getElementById("instagram")
-          .value
-          .trim(),
-
-      web:
-        document
-          .getElementById("web")
-          .value
-          .trim(),
-
-      presentacion:
-        document
-          .getElementById("presentacion")
-          .value
-          .trim()
-
-    };
+          .getElementById(
+            "formularioCliente"
+          )
+          .reset();
 
 
-
-    let clientes =
-      JSON.parse(
-        localStorage.getItem(
-          "clientesAluConecta"
-        )
-      ) || [];
+        mensaje.scrollIntoView({
+          behavior: "smooth"
+        });
 
 
-
-    clientes.push(cliente);
-
+      } catch (error) {
 
 
-    localStorage.setItem(
-      "clientesAluConecta",
-      JSON.stringify(clientes)
-    );
+        console.error(
+          "Error al publicar proyecto:",
+          error
+        );
 
 
+        mensaje.className =
+          "mensaje error";
 
-    const mensaje =
-      document.getElementById("mensaje");
+        mensaje.style.display =
+          "block";
 
+        mensaje.innerHTML = `
 
+          <h3>
+            No pudimos publicar el proyecto
+          </h3>
 
-    mensaje.style.display = "block";
+          <p>
+            ${error.message}
+          </p>
 
+          <p>
+            Revisá los datos e intentá nuevamente.
+          </p>
 
-
-    mensaje.innerHTML = `
-
-      <h3>
-        ¡Perfil creado correctamente!
-      </h3>
-
-      <p>
-        ${cliente.nombre}
-      </p>
-
-      <p>
-        ${cliente.tipo}
-      </p>
-
-      <p>
-        📍 ${cliente.localidad}
-      </p>
-
-      <p>
-        Tus datos fueron guardados correctamente.
-      </p>
-
-      <p>
-        Próximamente podrás publicar tus proyectos
-        y conectar con profesionales de AluConecta.
-      </p>
-
-    `;
+        `;
 
 
-
-    document
-      .getElementById("formularioCliente")
-      .reset();
+      } finally {
 
 
+        boton.disabled = false;
 
-    mensaje.scrollIntoView({
-      behavior: "smooth"
-    });
+        boton.textContent =
+          "Publicar mi proyecto";
 
+      }
 
-  });
+    }
+  );
 
 
 </script>
