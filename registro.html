@@ -2,12 +2,17 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Registrarme - AluConecta</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Crear perfil - AluConecta</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -37,25 +42,24 @@
     .contenedor {
       max-width: 700px;
       margin: 30px auto;
-      padding: 25px;
+      padding: 20px;
     }
 
     .tarjeta {
       background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     h2 {
-      text-align: center;
       margin-top: 0;
+      text-align: center;
     }
 
-    h3 {
-      margin-top: 30px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #ddd;
+    .introduccion {
+      line-height: 1.6;
+      color: #555;
     }
 
     .campo {
@@ -87,32 +91,8 @@
     }
 
     textarea {
-      min-height: 100px;
+      min-height: 110px;
       resize: vertical;
-    }
-
-    .opciones {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .opcion {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 12px;
-      background: #fafafa;
-    }
-
-    .opcion label {
-      margin: 0;
-      font-weight: normal;
-      cursor: pointer;
-    }
-
-    .opcion input {
-      width: auto;
-      margin-right: 8px;
     }
 
     .ayuda {
@@ -122,84 +102,20 @@
       line-height: 1.4;
     }
 
-    /* Contraseñas */
-
-    .password-contenedor {
-      position: relative;
-    }
-
-    .password-contenedor input {
-      padding-right: 50px;
-    }
-
-    .boton-ojo {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-size: 20px;
-      padding: 5px;
-    }
-
-    .requisitos {
-      margin-top: 10px;
-      padding: 12px 14px;
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .requisito {
-      color: #6b7280;
-      transition: color 0.2s;
-    }
-
-    .requisito.cumplido {
-      color: #15803d;
-      font-weight: 600;
-    }
-
-    .icono-requisito {
-      display: inline-block;
-      width: 22px;
-      font-weight: bold;
-    }
-
-    .confirmacion-password {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #6b7280;
-    }
-
-    .confirmacion-password.cumplida {
-      color: #15803d;
-      font-weight: 600;
-    }
-
-    .campo-error {
-      border-color: #dc2626 !important;
-    }
-
-    .campo-correcto {
-      border-color: #16a34a !important;
-    }
-
     .boton {
       width: 100%;
       padding: 14px;
       border: none;
-      border-radius: 7px;
+      border-radius: 8px;
       background: #2563eb;
       color: white;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
       margin-top: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
     }
 
     .boton:hover {
@@ -208,7 +124,7 @@
 
     .boton:disabled {
       opacity: 0.6;
-      cursor: not-allowed;
+      cursor: wait;
     }
 
     .mensaje {
@@ -216,24 +132,24 @@
       margin-top: 25px;
       padding: 20px;
       border-radius: 10px;
-      background: #eef2ff;
       text-align: center;
+      line-height: 1.6;
     }
 
-    .mensaje.error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .mensaje.exito {
+    .exito {
       background: #dcfce7;
       color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .volver {
       display: block;
       text-align: center;
-      margin-top: 20px;
+      margin: 25px 0;
       color: #2563eb;
       text-decoration: none;
       font-weight: bold;
@@ -245,497 +161,166 @@
       color: #666;
     }
 
-    @media (max-width: 600px) {
-
-      .contenedor {
-        padding: 15px;
-        margin: 15px auto;
-      }
-
-      .tarjeta {
-        padding: 20px;
-      }
-
-      .opciones {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
+
 </head>
+
 
 <body>
 
+
 <header>
-  <h1>AluConecta</h1>
-  <p>Personas, profesionales y empresas conectadas.</p>
+
+  <h1>
+    AluConecta
+  </h1>
+
+  <p>
+    Donde los proyectos encuentran sus aberturas.
+  </p>
+
 </header>
+
+
 
 <main class="contenedor">
 
-<section class="tarjeta">
 
-  <h2>Crear mi perfil</h2>
+  <section class="tarjeta">
 
-  <p>
-    Completá tus datos para formar parte de AluConecta.
-    Tu perfil permitirá que otros usuarios conozcan
-    quién sos, qué actividad realizás y cómo contactarte.
-  </p>
 
-  <form id="formularioRegistro">
+    <h2>
+      Crear mi perfil
+    </h2>
 
-    <h3>Información del usuario</h3>
 
-    <div class="campo">
+    <p class="introduccion">
 
-      <label for="tipoUsuario">
-        ¿Qué tipo de usuario sos?
-      </label>
+      Completá tus datos para crear tu perfil
+      profesional en AluConecta.
 
-      <select id="tipoUsuario" required>
+      Tu perfil permitirá que otras personas
+      conozcan tus servicios y puedan contactarte.
 
-        <option value="">
-          Seleccioná una opción
-        </option>
-
-        <option value="Particular">
-          👤 Persona particular
-        </option>
-
-        <option value="Profesional independiente">
-          🧑‍🔧 Profesional independiente
-        </option>
-
-        <option value="Empresa">
-          🏢 Empresa
-        </option>
-
-      </select>
-
-    </div>
-
-    <div class="campo">
-
-      <label>
-        ¿Cuál es tu actividad?
-      </label>
-
-      <div class="ayuda">
-        Podés seleccionar una o varias actividades.
-      </div>
-
-      <div class="opciones">
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Carpintería de aluminio">
-            Carpintería de aluminio
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Arquitectura">
-            Arquitectura
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Ingeniería">
-            Ingeniería
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Construcción">
-            Construcción
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Desarrollo inmobiliario">
-            Desarrollo inmobiliario
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Fabricación">
-            Fabricación
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Instalaciones">
-            Instalaciones
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Reparaciones">
-            Reparaciones
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Proveedor">
-            Proveedor
-          </label>
-        </div>
-
-        <div class="opcion">
-          <label>
-            <input
-              type="checkbox"
-              name="actividad"
-              value="Otra">
-            Otra
-          </label>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="campo">
-
-      <label for="participacion">
-        ¿Qué querés hacer en AluConecta?
-      </label>
-
-      <select id="participacion" required>
-
-        <option value="">
-          Seleccioná una opción
-        </option>
-
-        <option value="Busca servicios">
-          🔎 Necesito un servicio o profesional
-        </option>
-
-        <option value="Ofrece servicios">
-          🛠️ Ofrezco servicios
-        </option>
-
-        <option value="Ambas cosas">
-          🔄 Ambas cosas
-        </option>
-
-      </select>
-
-    </div>
-
-    <h3>Datos de acceso</h3>
-
-    <div class="campo">
-
-      <label for="email">
-        Correo electrónico
-      </label>
-
-      <input
-        type="email"
-        id="email"
-        placeholder="Ej: tucorreo@gmail.com"
-        autocomplete="email"
-        required>
-
-    </div>
-
-
-    <!-- CONTRASEÑA -->
-
-    <div class="campo">
-
-      <label for="password">
-        Contraseña
-      </label>
-
-      <div class="password-contenedor">
-
-        <input
-          type="password"
-          id="password"
-          placeholder="Ingresá una contraseña segura"
-          autocomplete="new-password"
-          required>
-
-        <button
-          type="button"
-          class="boton-ojo"
-          onclick="mostrarPassword('password', this)"
-          aria-label="Mostrar contraseña">
-          👁️
-        </button>
-
-      </div>
-
-      <div class="ayuda">
-        Para proteger tu cuenta, tu contraseña debe cumplir estos requisitos:
-      </div>
-
-      <div class="requisitos">
-
-        <div class="requisito" id="reqLongitud">
-          <span class="icono-requisito">○</span>
-          8 caracteres o más
-        </div>
-
-        <div class="requisito" id="reqMayuscula">
-          <span class="icono-requisito">○</span>
-          Una letra mayúscula
-        </div>
-
-        <div class="requisito" id="reqMinuscula">
-          <span class="icono-requisito">○</span>
-          Una letra minúscula
-        </div>
-
-        <div class="requisito" id="reqNumero">
-          <span class="icono-requisito">○</span>
-          Un número
-        </div>
-
-        <div class="requisito" id="reqEspecial">
-          <span class="icono-requisito">○</span>
-          Un carácter especial
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- REPETIR CONTRASEÑA -->
-
-    <div class="campo">
-
-      <label for="passwordConfirmacion">
-        Repetir contraseña
-      </label>
-
-      <div class="password-contenedor">
-
-        <input
-          type="password"
-          id="passwordConfirmacion"
-          placeholder="Repetí tu contraseña"
-          autocomplete="new-password"
-          required>
-
-        <button
-          type="button"
-          class="boton-ojo"
-          onclick="mostrarPassword('passwordConfirmacion', this)"
-          aria-label="Mostrar contraseña">
-          👁️
-        </button>
-
-      </div>
-
-      <div
-        id="confirmacionPassword"
-        class="confirmacion-password">
-
-        <span class="icono-requisito">○</span>
-        Las contraseñas deben coincidir
-
-      </div>
-
-    </div>
-
-
-    <h3>Datos de contacto</h3>
-
-    <div class="campo">
-
-      <label for="nombre">
-        Nombre o empresa
-      </label>
-
-      <input
-        type="text"
-        id="nombre"
-        placeholder="Ej: Juan Pérez / Aluminio JP"
-        required>
-
-    </div>
-
-    <div class="campo">
-
-      <label for="localidad">
-        Localidad
-      </label>
-
-      <input
-        type="text"
-        id="localidad"
-        placeholder="Ej: Rosario"
-        required>
-
-    </div>
-
-    <div class="campo">
-
-      <label for="servicios">
-        Servicios que ofrecés
-      </label>
-
-      <textarea
-        id="servicios"
-        placeholder="Ej: ventanas, puertas, DVH, cerramientos e instalación."></textarea>
-
-    </div>
-
-    <div class="campo">
-
-      <label for="telefono">
-        WhatsApp o teléfono
-      </label>
-
-      <input
-        type="tel"
-        id="telefono"
-        placeholder="Ej: 341 1234567"
-        required>
-
-    </div>
-
-    <div class="campo">
-
-      <label for="descripcion">
-        Presentación
-      </label>
-
-      <textarea
-        id="descripcion"
-        placeholder="Contanos brevemente sobre vos, tu empresa o tu actividad."
-        required></textarea>
-
-    </div>
-
-
-    <h3>Presencia profesional</h3>
-
-    <p>
-      Agregá tus redes sociales o sitio web para que otros usuarios
-      puedan conocer más sobre tu actividad.
     </p>
 
-    <div class="campo">
 
-      <label for="instagram">
-        Instagram
-      </label>
 
-      <input
-        type="text"
-        id="instagram"
-        placeholder="@tuempresa">
+    <form id="formularioPerfil">
 
-      <div class="ayuda">
-        Ejemplo: @aluminio_hs
+
+      <div class="campo">
+
+        <label for="actividades">
+          Rubro o actividad
+        </label>
+
+        <input
+          type="text"
+          id="actividades"
+          placeholder="Ej: Carpintería de aluminio"
+          required>
+
       </div>
 
+
+
+      <div class="campo">
+
+        <label for="localidad">
+          Localidad
+        </label>
+
+        <input
+          type="text"
+          id="localidad"
+          placeholder="Ej: Rosario"
+          required>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="servicios">
+          Servicios que ofrecés
+        </label>
+
+        <textarea
+          id="servicios"
+          placeholder="Ej: Fabricación e instalación de ventanas, puertas, DVH y cerramientos."
+          required></textarea>
+
+      </div>
+
+
+
+      <div class="campo">
+
+        <label for="descripcion">
+          Presentación
+        </label>
+
+        <textarea
+          id="descripcion"
+          placeholder="Contanos brevemente quién sos y qué experiencia tenés."
+          required></textarea>
+
+        <div class="ayuda">
+
+          Esta información podrá ser visible
+          para otros usuarios de AluConecta.
+
+        </div>
+
+      </div>
+
+
+
+      <button
+        type="submit"
+        class="boton"
+        id="botonCrear">
+
+        Crear mi perfil
+
+      </button>
+
+
+    </form>
+
+
+
+    <div
+      id="mensaje"
+      class="mensaje">
+
     </div>
 
-    <div class="campo">
 
-      <label for="facebook">
-        Facebook
-      </label>
-
-      <input
-        type="text"
-        id="facebook"
-        placeholder="Nombre o usuario de Facebook">
-
-    </div>
-
-    <div class="campo">
-
-      <label for="tiktok">
-        TikTok
-      </label>
-
-      <input
-        type="text"
-        id="tiktok"
-        placeholder="@tuempresa">
-
-    </div>
-
-    <div class="campo">
-
-      <label for="web">
-        Sitio web
-      </label>
-
-      <input
-        type="text"
-        id="web"
-        placeholder="www.tuempresa.com">
-
-    </div>
+  </section>
 
 
-    <button
-      type="submit"
-      class="boton"
-      id="botonRegistro">
 
-      Crear mi perfil
+  <a
+    href="index.html"
+    class="volver">
 
-    </button>
+    ← Volver a AluConecta
 
-  </form>
+  </a>
 
-  <div id="mensaje" class="mensaje"></div>
-
-</section>
-
-<a href="index.html" class="volver">
-  ← Volver a AluConecta
-</a>
 
 </main>
 
+
+
 <footer>
 
-  <p>© 2026 AluConecta</p>
+  <p>
+    © 2026 AluConecta
+  </p>
 
   <p>
     Conectando personas, trabajos y oportunidades.
@@ -744,15 +329,22 @@
 </footer>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+/* =================================
+   SUPABASE
+================================= */
 
 const SUPABASE_URL =
   "https://wroaxwjyjrxzwctfkyoo.supabase.co";
 
 const SUPABASE_KEY =
   "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
 
 const supabaseClient =
   window.supabase.createClient(
@@ -761,649 +353,167 @@ const supabaseClient =
   );
 
 
-/* =========================
-   MOSTRAR / OCULTAR PASSWORD
-   ========================= */
-
-function mostrarPassword(id, boton) {
-
-  const campo =
-    document.getElementById(id);
-
-  if (campo.type === "password") {
-
-    campo.type = "text";
-    boton.textContent = "🙈";
-
-  } else {
-
-    campo.type = "password";
-    boton.textContent = "👁️";
-
-  }
-
-}
-
-
-/* =========================
-   VALIDACIÓN DE PASSWORD
-   ========================= */
-
-const passwordInput =
-  document.getElementById("password");
-
-const passwordConfirmacion =
-  document.getElementById("passwordConfirmacion");
-
-const confirmacionPassword =
-  document.getElementById("confirmacionPassword");
-
-
-function actualizarRequisito(id, cumplido) {
-
-  const elemento =
-    document.getElementById(id);
-
-  const icono =
-    elemento.querySelector(".icono-requisito");
-
-  if (cumplido) {
-
-    elemento.classList.add("cumplido");
-    icono.textContent = "✓";
-
-  } else {
-
-    elemento.classList.remove("cumplido");
-    icono.textContent = "○";
-
-  }
-
-}
-
-
-function validarPasswordVisual() {
-
-  const password =
-    passwordInput.value;
-
-  actualizarRequisito(
-    "reqLongitud",
-    password.length >= 8
-  );
-
-  actualizarRequisito(
-    "reqMayuscula",
-    /[A-Z]/.test(password)
-  );
-
-  actualizarRequisito(
-    "reqMinuscula",
-    /[a-z]/.test(password)
-  );
-
-  actualizarRequisito(
-    "reqNumero",
-    /[0-9]/.test(password)
-  );
-
-  actualizarRequisito(
-    "reqEspecial",
-    /[^A-Za-z0-9]/.test(password)
-  );
-
-  comprobarCoincidencia();
-
-}
-
-
-function passwordEsValida() {
-
-  const password =
-    passwordInput.value;
-
-  return (
-    password.length >= 8 &&
-    /[A-Z]/.test(password) &&
-    /[a-z]/.test(password) &&
-    /[0-9]/.test(password) &&
-    /[^A-Za-z0-9]/.test(password)
-  );
-
-}
-
-
-function comprobarCoincidencia() {
-
-  const password =
-    passwordInput.value;
-
-  const confirmacion =
-    passwordConfirmacion.value;
-
-  const icono =
-    confirmacionPassword.querySelector(
-      ".icono-requisito"
-    );
-
-  if (
-    confirmacion.length > 0 &&
-    password === confirmacion
-  ) {
-
-    confirmacionPassword.classList.add(
-      "cumplida"
-    );
-
-    icono.textContent = "✓";
-
-    passwordConfirmacion.classList.remove(
-      "campo-error"
-    );
-
-    passwordConfirmacion.classList.add(
-      "campo-correcto"
-    );
-
-  } else {
-
-    confirmacionPassword.classList.remove(
-      "cumplida"
-    );
-
-    icono.textContent = "○";
-
-    passwordConfirmacion.classList.remove(
-      "campo-correcto"
-    );
-
-    if (confirmacion.length > 0) {
-
-      passwordConfirmacion.classList.add(
-        "campo-error"
-      );
-
-    } else {
-
-      passwordConfirmacion.classList.remove(
-        "campo-error"
-      );
-
-    }
-
-  }
-
-}
-
-
-passwordInput.addEventListener(
-  "input",
-  validarPasswordVisual
-);
-
-
-passwordConfirmacion.addEventListener(
-  "input",
-  comprobarCoincidencia
-);
-
-
-/* =========================
-   REGISTRO
-   ========================= */
+/* =================================
+   FORMULARIO
+================================= */
 
 document
-  .getElementById("formularioRegistro")
+  .getElementById("formularioPerfil")
   .addEventListener(
     "submit",
     async function(event) {
 
       event.preventDefault();
 
+
       const boton =
-        document.getElementById(
-          "botonRegistro"
-        );
+        document.getElementById("botonCrear");
 
       const mensaje =
-        document.getElementById(
-          "mensaje"
-        );
-
-
-      mensaje.style.display = "none";
-      mensaje.className = "mensaje";
-
-
-      const actividades =
-        Array.from(
-          document.querySelectorAll(
-            'input[name="actividad"]:checked'
-          )
-        ).map(function(opcion) {
-
-          return opcion.value;
-
-        });
-
-
-      if (actividades.length === 0) {
-
-        mensaje.style.display = "block";
-        mensaje.className =
-          "mensaje error";
-
-        mensaje.innerHTML = `
-          <strong>Seleccioná al menos una actividad.</strong>
-          <p>Elegí una o varias actividades para continuar.</p>
-        `;
-
-        mensaje.scrollIntoView({
-          behavior: "smooth"
-        });
-
-        return;
-
-      }
-
-
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
-
-
-      const password =
-        passwordInput.value;
-
-
-      const passwordConfirmacionValue =
-        passwordConfirmacion.value;
-
-
-      /* Validación completa de contraseña */
-
-      if (!passwordEsValida()) {
-
-        mensaje.style.display = "block";
-        mensaje.className =
-          "mensaje error";
-
-        mensaje.innerHTML = `
-          <strong>La contraseña todavía no cumple los requisitos.</strong>
-          <p>Completá todos los requisitos indicados debajo de la contraseña.</p>
-        `;
-
-        mensaje.scrollIntoView({
-          behavior: "smooth"
-        });
-
-        return;
-
-      }
-
-
-      if (
-        password !==
-        passwordConfirmacionValue
-      ) {
-
-        mensaje.style.display = "block";
-        mensaje.className =
-          "mensaje error";
-
-        mensaje.innerHTML = `
-          <strong>Las contraseñas no coinciden.</strong>
-          <p>Revisá ambas contraseñas e intentá nuevamente.</p>
-        `;
-
-        mensaje.scrollIntoView({
-          behavior: "smooth"
-        });
-
-        return;
-
-      }
-
-
-      const nombre =
-        document
-          .getElementById("nombre")
-          .value
-          .trim();
-
-
-      const localidad =
-        document
-          .getElementById("localidad")
-          .value
-          .trim();
-
-
-      const servicios =
-        document
-          .getElementById("servicios")
-          .value
-          .trim();
-
-
-      const telefono =
-        document
-          .getElementById("telefono")
-          .value
-          .trim();
-
-
-      const descripcion =
-        document
-          .getElementById("descripcion")
-          .value
-          .trim();
-
-
-      const instagram =
-        document
-          .getElementById("instagram")
-          .value
-          .trim();
-
-
-      const facebook =
-        document
-          .getElementById("facebook")
-          .value
-          .trim();
-
-
-      const tiktok =
-        document
-          .getElementById("tiktok")
-          .value
-          .trim();
-
-
-      const web =
-        document
-          .getElementById("web")
-          .value
-          .trim();
-
-
-      const tipoUsuario =
-        document
-          .getElementById("tipoUsuario")
-          .value;
-
-
-      const participacion =
-        document
-          .getElementById("participacion")
-          .value;
+        document.getElementById("mensaje");
 
 
       boton.disabled = true;
+
       boton.textContent =
-        "Creando cuenta...";
+        "Guardando perfil...";
+
+      mensaje.style.display =
+        "none";
 
 
       try {
 
+        /* =========================
+           COMPROBAR SESIÓN
+        ========================= */
+
         const {
-          data,
-          error
+          data: usuarioData,
+          error: usuarioError
         } =
-          await supabaseClient.auth.signUp({
-
-            email: email,
-
-            password: password,
-
-            options: {
-
-              emailRedirectTo:
-                "https://lisandsedita-art.github.io/aluconecta/confirmacion.html",
-
-              data: {
-
-                nombre:
-                  nombre,
-
-                tipoUsuario:
-                  tipoUsuario,
-
-                actividades:
-                  actividades.join(", "),
-
-                participacion:
-                  participacion,
-
-                localidad:
-                  localidad,
-
-                servicios:
-                  servicios,
-
-                telefono:
-                  telefono,
-
-                descripcion:
-                  descripcion,
-
-                instagram:
-                  instagram,
-
-                facebook:
-                  facebook,
-
-                tiktok:
-                  tiktok,
-
-                web:
-                  web
-
-              }
-
-            }
-
-          });
+          await supabaseClient.auth.getUser();
 
 
-        if (error) {
-          throw error;
+        if (usuarioError) {
+          throw usuarioError;
         }
 
 
-        if (!data.user) {
+        const usuario =
+          usuarioData.user;
+
+
+        if (!usuario) {
 
           throw new Error(
-            "No se pudo obtener el usuario creado."
+            "Necesitás ingresar a tu cuenta antes de crear tu perfil."
           );
 
         }
 
 
-        /*
-          El perfil NO se inserta desde JavaScript.
+        /* =========================
+           DATOS DEL FORMULARIO
+        ========================= */
 
-          El trigger de Supabase lo crea automáticamente
-          usando los datos enviados en raw_user_meta_data.
-        */
-
-
-        const profesional = {
-
-          id:
-            data.user.id,
-
-          tipoUsuario:
-            tipoUsuario,
-
-          actividades:
-            actividades,
-
-          participacion:
-            participacion,
-
-          nombre:
-            nombre,
-
-          localidad:
-            localidad,
-
-          rubro:
-            actividades.join(", "),
-
-          servicios:
-            servicios,
-
-          telefono:
-            telefono,
-
-          descripcion:
-            descripcion,
-
-          instagram:
-            instagram,
-
-          facebook:
-            facebook,
-
-          tiktok:
-            tiktok,
-
-          web:
-            web,
-
-          email:
-            email
-
-        };
+        const actividades =
+          document
+            .getElementById("actividades")
+            .value
+            .trim();
 
 
-        let profesionales =
-          JSON.parse(
-            localStorage.getItem(
-              "profesionalesAluConecta"
-            )
-          ) || [];
+        const localidad =
+          document
+            .getElementById("localidad")
+            .value
+            .trim();
 
 
-        profesionales.push(
-          profesional
-        );
+        const servicios =
+          document
+            .getElementById("servicios")
+            .value
+            .trim();
 
 
-        localStorage.setItem(
-          "profesionalesAluConecta",
-          JSON.stringify(
-            profesionales
-          )
-        );
+        const descripcion =
+          document
+            .getElementById("descripcion")
+            .value
+            .trim();
 
 
-        localStorage.setItem(
-          "profesionalAluConecta",
-          JSON.stringify(
-            profesional
-          )
-        );
+        /* =========================
+           GUARDAR PERFIL PÚBLICO
+        ========================= */
+
+        const {
+          error: perfilError
+        } =
+          await supabaseClient
+            .from("perfiles_publicos")
+            .upsert(
+              [
+                {
+                  id: usuario.id,
+                  actividades: actividades,
+                  localidad: localidad,
+                  servicios: servicios,
+                  descripcion: descripcion
+                }
+              ],
+              {
+                onConflict: "id"
+              }
+            );
 
 
-        localStorage.setItem(
-          "aluConectaUsuarioRegistrado",
-          "true"
-        );
+        if (perfilError) {
+          throw perfilError;
+        }
 
 
-        mensaje.style.display =
-          "block";
+        /* =========================
+           ÉXITO
+        ========================= */
 
         mensaje.className =
           "mensaje exito";
 
+        mensaje.style.display =
+          "block";
 
-        if (data.session) {
+        mensaje.innerHTML = `
 
-          mensaje.innerHTML = `
+          <h3>
+            ¡Perfil creado correctamente!
+          </h3>
 
-            <h3>
-              ¡Cuenta creada correctamente!
-            </h3>
+          <p>
+            Tu perfil ya está guardado en AluConecta.
+          </p>
 
-            <p>
-              Tu perfil fue guardado correctamente.
-            </p>
+          <p>
+            Ahora otros usuarios podrán conocer
+            tus servicios.
+          </p>
 
-            <p>
-              Ya podés comenzar a utilizar AluConecta.
-            </p>
+          <a
+            href="index.html"
+            class="boton">
 
-          `;
+            Volver a AluConecta
 
-        } else {
+          </a>
 
-          mensaje.innerHTML = `
-
-            <h3>
-              ¡Cuenta creada correctamente!
-            </h3>
-
-            <p>
-              Te enviamos un correo electrónico
-              para confirmar tu cuenta.
-            </p>
-
-            <p>
-              Revisá tu bandeja de entrada
-              y también la carpeta de spam.
-            </p>
-
-            <p>
-              Una vez confirmado tu correo,
-              podrás ingresar a AluConecta.
-            </p>
-
-          `;
-
-        }
+        `;
 
 
         document
-          .getElementById(
-            "formularioRegistro"
-          )
+          .getElementById("formularioPerfil")
           .reset();
-
-
-        /* Limpiar indicadores de contraseña */
-
-        actualizarRequisito(
-          "reqLongitud",
-          false
-        );
-
-        actualizarRequisito(
-          "reqMayuscula",
-          false
-        );
-
-        actualizarRequisito(
-          "reqMinuscula",
-          false
-        );
-
-        actualizarRequisito(
-          "reqNumero",
-          false
-        );
-
-        actualizarRequisito(
-          "reqEspecial",
-          false
-        );
-
-        comprobarCoincidencia();
 
 
         mensaje.scrollIntoView({
@@ -1414,22 +524,21 @@ document
       } catch (error) {
 
         console.error(
-          "Error durante el registro:",
+          "Error al crear perfil:",
           error
         );
 
 
-        mensaje.style.display =
-          "block";
-
         mensaje.className =
           "mensaje error";
 
+        mensaje.style.display =
+          "block";
 
         mensaje.innerHTML = `
 
           <h3>
-            No pudimos completar el registro
+            No pudimos crear tu perfil
           </h3>
 
           <p>
@@ -1441,12 +550,6 @@ document
           </p>
 
         `;
-
-
-        mensaje.scrollIntoView({
-          behavior: "smooth"
-        });
-
 
       } finally {
 
@@ -1461,6 +564,7 @@ document
   );
 
 </script>
+
 
 </body>
 
