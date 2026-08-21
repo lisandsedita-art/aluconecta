@@ -3,76 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AluConecta - Donde los proyectos encuentran sus aberturas</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<style>*{font-family:'Inter',sans-serif} html{scroll-behavior:smooth}</style>
+<title>AluConecta</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@900;800;700;500&display=swap" rel="stylesheet">
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box;margin:0;padding:0}
+body{background:#f8fbfd;color:#0f2e4d}
+.header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;padding:16px 20px}
+@media(min-width:768px){.header{padding:24px 32px}}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{position:relative;width:48px;height:48px} @media(min-width:768px){.logo-icon{width:56px;height:56px}}
+.icon1{position:absolute;left:0;bottom:0;width:36px;height:36px;background:#0f2e4d;border-radius:11px} @media(min-width:768px){.icon1{width:42px;height:42px}}
+.icon2{position:absolute;right:0;top:0;width:36px;height:36px;background:#5cc8e8;border-radius:11px;border:3px solid #fff} @media(min-width:768px){.icon2{width:42px;height:42px}}
+.logo-text{font-weight:900;font-size:28px;letter-spacing:-.05em} @media(min-width:768px){.logo-text{font-size:40px}}
+.hero{background:#0f2e4d;padding:32px 20px 48px;color:#fff} @media(min-width:768px){.hero{padding:64px 32px 80px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;max-width:1280px;margin:0 auto}}
+.hero h1{font-size:36px;line-height:.92;letter-spacing:-.04em;font-weight:900} @media(min-width:768px){.hero h1{font-size:72px}}
+.hero h1 span{color:#5cc8e8}
+.hero p{margin-top:24px;font-size:17px;color:rgba(255,255,255,.7);line-height:1.5;max-width:520px}
+.btns{margin-top:32px;display:flex;flex-direction:column;gap:12px} @media(min-width:768px){.btns{flex-direction:row}}
+.btn-primary{background:#f5a623;color:#0f2e4d;height:56px;border-radius:999px;border:0;padding:0 28px;font-weight:800;font-size:16px}
+.btn-sec{background:rgba(255,255,255,.1);color:#fff;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,.1);padding:0 28px;font-weight:600}
+.card{background:#fff;border-radius:28px;padding:24px;margin-top:32px;color:#0f2e4d} @media(min-width:768px){.card{margin-top:0}}
+.card-row{border-radius:16px;border:1px solid rgba(0,0,0,.06);padding:16px;display:flex;justify-content:space-between;margin-top:12px}
+.como{max-width:1280px;margin:0 auto;padding:48px 20px} @media(min-width:768px){.como{padding:80px 32px}}
+.grid3{display:grid;gap:24px;margin-top:32px} @media(min-width:768px){.grid3{grid-template-columns:1fr 1fr 1fr}}
+.box{background:#fff;border-radius:28px;padding:32px;border:1px solid rgba(0,0,0,.04)}
+footer{border-top:1px solid rgba(0,0,0,.06);background:#fff;height:88px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+</style>
 </head>
-<body class="min-h-screen bg-[#f8fbfd] text-[#0f2e4d] antialiased">
+<body>
 
-<header class="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
-  <div class="mx-auto max-w-[1280px] px-5 md:px-8 py-4 md:py-6 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="relative w-[48px] h-[48px] md:w-[56px] md:h-[56px]">
-        <div class="absolute left-0 bottom-0 w-[36px] h-[36px] md:w-[42px] md:h-[42px] bg-[#0f2e4d] rounded-[11px]"></div>
-        <div class="absolute right-0 top-0 w-[36px] h-[36px] md:w-[42px] md:h-[42px] bg-[#5cc8e8] rounded-[11px] border-[3px] border-white"></div>
-      </div>
-      <div><span class="font-black text-[28px] md:text-[40px] tracking-[-0.05em]">Alu</span><span class="font-black text-[28px] md:text-[40px] tracking-[-0.05em] text-[#5cc8e8]">Conecta</span></div>
-    </div>
-    <div class="hidden md:flex gap-3">
-      <button class="h-11 px-5 rounded-full text-[14px] font-semibold">Ingresar</button>
-      <button class="h-11 px-6 rounded-full bg-[#0f2e4d] text-white font-bold">Publicar obra</button>
-    </div>
-    <button id="menuBtn" class="md:hidden w-11 h-11 rounded-full bg-[#f8fbfd] border">☰</button>
-  </div>
-  <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-5 py-5 flex-col gap-3">
-    <button class="w-full h-12 rounded-full bg-[#0f2e4d] text-white font-bold">Publicar obra</button>
-    <button class="w-full h-12 rounded-full bg-[#f8fbfd] border font-semibold">Ingresar</button>
-  </div>
-</header>
+<div class="header">
+  <div class="logo"><div class="logo-icon"><div class="icon1"></div><div class="icon2"></div></div><div class="logo-text"><span>Alu</span><span style="color:#5cc8e8">Conecta</span></div></div>
+  <div>☰</div>
+</div>
 
-<section class="relative bg-[#0f2e4d] overflow-hidden">
-  <div class="mx-auto max-w-[1280px] px-5 md:px-8 pt-8 md:pt-16 pb-12 md:pb-20 grid lg:grid-cols-[1.15fr_0.85fr] gap-8">
-    <div>
-      <h1 class="text-[36px] md:text-[72px] leading-[0.92] font-black text-white tracking-[-0.04em]">Donde los proyectos<br>encuentran <span class="text-[#5cc8e8]">sus aberturas.</span></h1>
-      <p class="mt-6 text-[17px] md:text-[19px] text-white/70 max-w-[520px]">Conectamos tu obra con carpinteros de aluminio de confianza. Publicá tu proyecto, recibí presupuestos comparables y elegí tranquilo.</p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <button class="h-[56px] px-7 rounded-full bg-[#f5a623] text-[#0f2e4d] font-extrabold">Publicar obra gratis</button>
-        <button onclick="document.getElementById('como').scrollIntoView({behavior:'smooth'})" class="h-[56px] px-7 rounded-full bg-white/10 border border-white/10 text-white font-semibold">Cómo funciona</button>
-      </div>
-    </div>
-    <div class="bg-white rounded-[28px] p-6 shadow-[0_32px_80px_-24px_rgba(0,0,0,0.45)]">
-      <div class="text-[11px] font-bold uppercase tracking-widest opacity-40">Obra reciente</div>
-      <div class="mt-2 font-extrabold">Casa 240m² · 18 aberturas</div>
-      <div class="mt-6 grid gap-3">
-        <div class="rounded-2xl border bg-[#f8fbfd] p-4 flex justify-between"><div><div class="font-bold text-[13px]">Taller Sur</div><div class="text-[11px] opacity-50">Roto + Chamical ✓ Premium combinado</div></div><div class="font-black">$3.240.000</div></div>
-        <div class="rounded-2xl border p-4 flex justify-between"><div><div class="font-bold text-[13px]">Aberturas Centro</div><div class="text-[11px] opacity-50">Giesse + Siegenia ✓ Premium</div></div><div class="font-black">$3.180.000</div></div>
-      </div>
+<div class="hero">
+  <div>
+    <h1>Donde los proyectos<br>encuentran <span>sus aberturas.</span></h1>
+    <p>Conectamos tu obra con carpinteros de aluminio de confianza. Publicá tu proyecto, recibí presupuestos comparables y elegí tranquilo.</p>
+    <div class="btns">
+      <button class="btn-primary">Publicar obra gratis</button>
+      <button class="btn-sec">Cómo funciona</button>
     </div>
   </div>
-</section>
-
-<main class="mx-auto max-w-[1280px] px-5 md:px-8 py-12 md:py-20">
-<section id="como">
-  <h2 class="text-[32px] md:text-[44px] font-black tracking-[-0.03em]">Cómo funciona</h2>
-  <div class="mt-8 grid md:grid-cols-3 gap-6">
-    <div class="bg-white rounded-[28px] p-8 border"><div class="w-10 h-10 rounded-full bg-[#5cc8e8] grid place-items-center font-black">01</div><h3 class="mt-6 font-extrabold">Publicá tu obra</h3></div>
-    <div class="bg-white rounded-[28px] p-8 border"><div class="w-10 h-10 rounded-full bg-[#f5a623] grid place-items-center font-black">02</div><h3 class="mt-6 font-extrabold">Recibí cotizaciones comparables</h3><p class="mt-2 text-[14px] opacity-60">Podés combinar Premium: Roto, Giesse, Chamical</p></div>
-    <div class="bg-white rounded-[28px] p-8 border"><div class="w-10 h-10 rounded-full bg-[#0f2e4d] text-white grid place-items-center font-black">03</div><h3 class="mt-6 font-extrabold">Elegí y conectá</h3></div>
+  <div class="card">
+    <div style="font-size:11px;letter-spacing:.1em;font-weight:700;opacity:.4">OBRA RECIENTE</div>
+    <div style="font-weight:800;margin-top:8px">Casa 240m² · 18 aberturas</div>
+    <div class="card-row"><div><b style="font-size:13px">Taller Sur</b><br><span style="font-size:11px;opacity:.5">Roto + Chamical ✓ Premium combinado</span></div><b>$3.240.000</b></div>
+    <div class="card-row"><div><b style="font-size:13px">Aberturas Centro</b><br><span style="font-size:11px;opacity:.5">Giesse + Siegenia ✓ Premium</span></div><b>$3.180.000</b></div>
   </div>
-</section>
-</main>
+</div>
 
-<footer class="border-t bg-white h-[88px] flex items-center px-5 md:px-8 justify-between">
-  <div class="flex items-center gap-3"><div class="relative w-[36px] h-[36px]"><div class="absolute left-0 bottom-0 w-[27px] h-[27px] bg-[#0f2e4d] rounded-[8px]"></div><div class="absolute right-0 top-0 w-[27px] h-[27px] bg-[#5cc8e8] rounded-[8px] border-2 border-white"></div></div><span class="font-black">AluConecta</span></div>
-  <span class="text-[12px] opacity-40">© 2026</span>
-</footer>
+<div class="como">
+  <h2 style="font-size:32px;font-weight:900;letter-spacing:-.03em">Cómo funciona</h2>
+  <div class="grid3">
+    <div class="box"><div style="width:40px;height:40px;background:#5cc8e8;border-radius:50%;display:grid;place-items:center;font-weight:900">01</div><h3 style="margin-top:24px;font-weight:800">Publicá tu obra</h3></div>
+    <div class="box"><div style="width:40px;height:40px;background:#f5a623;border-radius:50%;display:grid;place-items:center;font-weight:900">02</div><h3 style="margin-top:24px;font-weight:800">Recibí cotizaciones comparables</h3><p style="margin-top:8px;font-size:14px;opacity:.6">Podés combinar Premium: Roto, Giesse, Chamical</p></div>
+    <div class="box"><div style="width:40px;height:40px;background:#0f2e4d;color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:900">03</div><h3 style="margin-top:24px;font-weight:800">Elegí y conectá</h3></div>
+  </div>
+</div>
 
-<script>
-document.getElementById('menuBtn').onclick=()=>{
-  document.getElementById('mobileMenu').classList.toggle('hidden');
-  document.getElementById('mobileMenu').classList.toggle('flex');
-}
-</script>
+<footer><div style="display:flex;align-items:center;gap:8px;font-weight:900"><span>AluConecta</span></div><span style="font-size:12px;opacity:.4">© 2026</span></footer>
+
 </body>
 </html>
