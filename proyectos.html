@@ -1,580 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proyectos y necesidades - AluConecta</title>
-
   <style>
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #222;
-    }
-
-    header {
-      background: #1f2937;
-      color: white;
-      text-align: center;
-      padding: 35px 20px;
-    }
-
-    header h1 {
-      margin: 0 0 10px;
-    }
-
-    header p {
-      margin: 0;
-    }
-
-    .contenedor {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-    }
-
-    .tarjeta {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-    }
-
-    .tarjeta h2 {
-      margin-top: 0;
-    }
-
-    .proyecto {
-      border-top: 1px solid #ddd;
-      padding-top: 20px;
-      margin-top: 20px;
-    }
-
-    .proyecto:first-child {
-      border-top: none;
-      padding-top: 0;
-      margin-top: 0;
-    }
-
-    .etiqueta {
-      display: inline-block;
-      background: #eef2ff;
-      padding: 6px 10px;
-      border-radius: 20px;
-      margin: 3px;
-      font-size: 14px;
-    }
-
-    .boton {
-      display: inline-block;
-      padding: 13px 20px;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
-      border-radius: 7px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-
-    .boton.verde {
-      background: #16a34a;
-    }
-
-    .sin-resultados {
-      text-align: center;
-      padding: 30px;
-      color: #666;
-    }
-
-    .aviso-registro {
-      margin-top: 15px;
-      padding: 15px;
-      background: #f1f5f9;
-      border-radius: 8px;
-      color: #475569;
-      line-height: 1.5;
-    }
-
-    .volver {
-      display: block;
-      text-align: center;
-      margin: 30px 0;
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #666;
-    }
-
-    .cargando {
-      text-align: center;
-      padding: 30px;
-      color: #64748b;
-    }
-
-    .error {
-      text-align: center;
-      padding: 25px;
-      background: #fee2e2;
-      color: #991b1b;
-      border-radius: 10px;
-    }
-
+    * { box-sizing: border-box; } body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f8; color: #222; }
+    header { background: #123b5d; color: white; text-align: center; padding: 35px 20px; } header h1 { margin: 0 0 10px; } header p { margin: 0; }
+    .contenedor { max-width: 900px; margin: 30px auto; padding: 20px; }
+    .tarjeta { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .tarjeta h2 { margin-top: 0; color:#123b5d; }
+    .proyecto { border-top: 1px solid #ddd; padding-top: 20px; margin-top: 20px; } .proyecto:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+    .etiqueta { display: inline-block; background: #eef2ff; padding: 6px 10px; border-radius: 20px; margin: 3px; font-size: 13px; font-weight:bold; }
+    .etiqueta.perfil { background:#dcfce7; color:#166534; } .etiqueta.herraje { background:#fef3c7; color:#92400e; } .etiqueta.linea { background:#dbeafe; color:#1e40af; }
+    .boton { display: inline-block; padding: 13px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 7px; font-weight: bold; border: none; cursor: pointer; }
+    .boton.verde { background: #16a34a; } .boton.naranja { background:#f5a623; color:#17202a; }
+    .sin-resultados { text-align: center; padding: 30px; color: #666; }
+    .aviso-registro { margin-top: 15px; padding: 15px; background: #f1f5f9; border-radius: 8px; color: #475569; line-height: 1.5; }
+    .volver { display: block; text-align: center; margin: 30px 0; color: #2563eb; text-decoration: none; font-weight: bold; }
+    footer { text-align: center; padding: 25px; color: #666; }
+    .cargando { text-align: center; padding: 30px; color: #64748b; }
+    .error { text-align: center; padding: 25px; background: #fee2e2; color: #991b1b; border-radius: 10px; }
+    .filtros { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:15px; }
+    .filtros select { padding:10px; border-radius:8px; border:1px solid #ccd5dc; }
+    @media(max-width:700px){ .filtros{ grid-template-columns:1fr; } }
   </style>
-
 </head>
-
-
 <body>
-
-
 <header>
-
-  <h1>
-    Proyectos y necesidades
-  </h1>
-
-  <p>
-    Encontrá oportunidades y conectá con quienes
-    necesitan un profesional.
-  </p>
-
+  <h1>Proyectos y necesidades</h1>
+  <p>Encontrá oportunidades igualadas por marca - Peras con peras en Rosario</p>
 </header>
 
-
-
 <main class="contenedor">
-
-
   <section class="tarjeta">
-
-    <h2>
-      Oportunidades publicadas
-    </h2>
-
-    <p>
-      Acá aparecen los proyectos y trabajos
-      publicados por personas, empresas y
-      profesionales que necesitan un servicio.
-    </p>
-
-    <div class="aviso-registro">
-
-      🔐 Para contactar a quien publicó un proyecto,
-      necesitás tener un perfil registrado en AluConecta.
-
+    <h2>Oportunidades publicadas</h2>
+    <p>Acá aparecen los proyectos igualados por <strong>Línea + Marca de perfil + Marca de herrajes</strong>. Todos cotizan exactamente lo mismo.</p>
+    <div class="filtros">
+      <select id="filtroLinea"><option value="">Todas las líneas</option><option>Modena</option><option>A30</option><option>A30 New</option><option>A40</option><option>Herrero</option></select>
+      <select id="filtroPerfil"><option value="">Todos los perfiles</option><option>Aluar</option><option>Hydro</option><option>Metales del Talar</option><option>Flamia</option></select>
+      <select id="filtroHerraje"><option value="">Todos los herrajes</option><option>Roto</option><option>Giesse</option><option>Sia</option><option>Alcemar</option></select>
     </div>
-
+    <div class="aviso-registro">🔐 Para contactar a quien publicó un proyecto, necesitás tener un perfil registrado en AluConecta. Igualado por marca para comparar a igual calidad.</div>
   </section>
 
+  <section id="listaProyectos" class="tarjeta"><div class="cargando">Cargando proyectos igualados por marca...</div></section>
 
-
-  <section
-    id="listaProyectos"
-    class="tarjeta">
-
-    <div class="cargando">
-
-      Cargando proyectos...
-
-    </div>
-
-  </section>
-
-
-
-  <a
-    href="index.html"
-    class="volver">
-
-    ← Volver a AluConecta
-
-  </a>
-
-
+  <a href="index.html" class="volver">← Volver a AluConecta</a>
 </main>
 
-
-
-<footer>
-
-  <p>
-    © 2026 AluConecta
-  </p>
-
-  <p>
-    Conectando personas, trabajos y oportunidades.
-  </p>
-
-</footer>
-
-
+<footer><p>© 2026 AluConecta</p><p>Conectando personas, trabajos y oportunidades.</p></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
+const SUPABASE_URL = "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const lista = document.getElementById("listaProyectos");
+let todosProyectos = [];
 
-/* =================================
-   CONFIGURACIÓN SUPABASE
-================================= */
-
-const SUPABASE_URL =
-  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
-
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-
-/* =================================
-   ELEMENTOS
-================================= */
-
-const lista =
-  document.getElementById(
-    "listaProyectos"
-  );
-
-
-
-/* =================================
-   COMPROBAR USUARIO
-================================= */
-
-async function comprobarUsuario() {
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if (error) {
-
-    return null;
-
-  }
-
-
+async function comprobarUsuario(){
+  const {data} = await supabaseClient.auth.getUser();
   return data.user || null;
-
 }
 
+async function cargarProyectos(){
+  try{
+    const usuario = await comprobarUsuario();
+    let {data: proyectos, error} = await supabaseClient
+      .from("proyectos")
+      .select("id, created_at, titulo, ciudad, barrio, linea_solicitada, marca_perfil, marca_herrajes, cantidad_aberturas, medidas_texto, calidad_requerida, plano_url, Tipo, Localidad, Proyecto")
+      .order("created_at", {ascending:false});
 
-
-/* =================================
-   CARGAR PROYECTOS
-================================= */
-
-async function cargarProyectos() {
-
-
-  try {
-
-
-    const usuario =
-      await comprobarUsuario();
-
-
-
-    /*
-      Consultamos solamente
-      la vista pública.
-
-      IMPORTANTE:
-      esta vista NO contiene
-      Nombre ni Telefono.
-    */
-
-    const {
-      data: proyectos,
-      error
-    } =
-      await supabaseClient
-        .from("proyectos_publicos")
-        .select(
-          "id, created_at, Tipo, Localidad, Proyecto"
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-
-
-    if (error) {
-
-      throw error;
-
+    if(error){
+      const res2 = await supabaseClient.from("proyectos_publicos").select("id, created_at, Tipo, Localidad, Proyecto").order("created_at",{ascending:false});
+      proyectos = res2.data;
+      if(res2.error) throw res2.error;
     }
 
-
-
-    /* =========================
-       SIN PROYECTOS
-    ========================= */
-
-    if (
-      !proyectos ||
-      proyectos.length === 0
-    ) {
-
-      lista.innerHTML = `
-
-        <div class="sin-resultados">
-
-          <h3>
-            Todavía no hay proyectos publicados
-          </h3>
-
-          <p>
-            Cuando alguien publique una necesidad,
-            aparecerá en este espacio.
-          </p>
-
-          <br>
-
-          <a
-            href="registro-cliente.html"
-            class="boton verde">
-
-            Publicar mi proyecto
-
-          </a>
-
-        </div>
-
-      `;
-
+    todosProyectos = proyectos || [];
+    
+    if(!proyectos || proyectos.length===0){
+      lista.innerHTML = `<div class="sin-resultados"><h3>Todavía no hay proyectos publicados</h3><p>Cuando alguien publique una necesidad, aparecerá acá igualada por marca.</p><br><a href="index.html" class="boton verde">Publicar mi proyecto</a></div>`;
       return;
-
     }
-
-
-
-    /* =========================
-       MOSTRAR PROYECTOS
-    ========================= */
-
-    lista.innerHTML = `
-
-      <h2>
-        Proyectos publicados
-      </h2>
-
-      ${
-        proyectos
-          .map(
-            function(proyecto) {
-
-
-              const tipo =
-                proyecto.Tipo ||
-                "Usuario";
-
-
-              const localidad =
-                proyecto.Localidad ||
-                "Localidad no indicada";
-
-
-              const necesidad =
-                proyecto.Proyecto ||
-                "Necesidad no especificada";
-
-
-
-              return `
-
-                <div
-                  class="proyecto">
-
-
-                  <h3>
-                    🏗️ Proyecto publicado
-                  </h3>
-
-
-                  <p>
-
-                    📍
-                    ${localidad}
-
-                  </p>
-
-
-                  <p>
-
-                    👤
-                    ${tipo}
-
-                  </p>
-
-
-                  <p>
-
-                    🔧
-                    ${necesidad}
-
-                  </p>
-
-
-                  <span
-                    class="etiqueta">
-
-                    Proyecto
-
-                  </span>
-
-
-                  <span
-                    class="etiqueta">
-
-                    ${localidad}
-
-                  </span>
-
-
-                  <br>
-                  <br>
-
-
-                  ${
-                    usuario
-
-                      ? `
-
-                        <button
-                          type="button"
-                          class="boton verde"
-                          onclick="mostrarMensajeRegistro(${proyecto.id})">
-
-                          💬 Estoy interesado
-
-                        </button>
-
-                      `
-
-                      : `
-
-                        <a
-                          href="registro.html"
-                          class="boton verde">
-
-                          💬 Estoy interesado
-
-                        </a>
-
-                      `
-                  }
-
-
-                </div>
-
-              `;
-
-            }
-          )
-          .join("")
-
-      }
-
-    `;
-
-
-  } catch (error) {
-
-
-    console.error(
-      "Error al cargar proyectos:",
-      error
-    );
-
-
-    lista.innerHTML = `
-
-      <div class="error">
-
-        <h3>
-          No pudimos cargar los proyectos
-        </h3>
-
-        <p>
-          ${error.message}
-        </p>
-
-        <p>
-          Actualizá la página e intentá nuevamente.
-        </p>
-
-      </div>
-
-    `;
-
+    renderProyectos(todosProyectos, usuario);
+  }catch(error){
+    lista.innerHTML = `<div class="error"><h3>No pudimos cargar los proyectos</h3><p>${error.message}</p><p>Verificá que la tabla proyectos tenga las columnas marca_perfil y marca_herrajes y que el bucket planos-obras sea público.</p></div>`;
   }
-
 }
 
+function renderProyectos(proyectos, usuario){
+  const filtroLinea = document.getElementById('filtroLinea').value;
+  const filtroPerfil = document.getElementById('filtroPerfil').value;
+  const filtroHerraje = document.getElementById('filtroHerraje').value;
 
+  let filtrados = proyectos.filter(p=>{
+    if(filtroLinea && (p.linea_solicitada||'') !== filtroLinea) return false;
+    if(filtroPerfil && (p.marca_perfil||'') !== filtroPerfil) return false;
+    if(filtroHerraje && (p.marca_herrajes||'') !== filtroHerraje) return false;
+    return true;
+  });
 
-/* =================================
-   MENSAJE PARA USUARIO REGISTRADO
-================================= */
-
-function mostrarMensajeRegistro(
-  proyectoId
-) {
-
-
-  alert(
-    "Tu cuenta está registrada. Próximamente podremos mostrarte las opciones de contacto de este proyecto."
-  );
-
-
+  lista.innerHTML = `<h2>Proyectos publicados (${filtrados.length}) - Igualados por marca</h2>` + filtrados.map(proyecto=>{
+    const titulo = proyecto.titulo || proyecto.Proyecto || 'Proyecto publicado';
+    const localidad = proyecto.barrio || proyecto.Localidad || proyecto.ciudad || 'Rosario';
+    const linea = proyecto.linea_solicitada || 'Línea no indicada';
+    const marcaPerfil = proyecto.marca_perfil || 'Aluar';
+    const marcaHerraje = proyecto.marca_herrajes || 'Roto';
+    const cantidad = proyecto.cantidad_aberturas ? `${proyecto.cantidad_aberturas} aberturas` : '';
+    const medidas = proyecto.medidas_texto || '';
+    return `
+      <div class="proyecto">
+        <h3>🏗️ ${titulo}</h3>
+        <p>📍 ${localidad} ${cantidad ? ' - '+cantidad : ''}</p>
+        ${medidas ? `<p>📐 ${medidas}</p>` : ''}
+        <div style="margin:8px 0;">
+          <span class="etiqueta linea">${linea}</span>
+          <span class="etiqueta perfil">Perfil: ${marcaPerfil}</span>
+          <span class="etiqueta herraje">Herraje: ${marcaHerraje}</span>
+        </div>
+        <p style="font-size:12px; color:#64748b;">Igualado: ${linea} + ${marcaPerfil} + ${marcaHerraje} - Todos cotizan lo mismo, comparás a igual calidad</p>
+        ${proyecto.plano_url ? `<a href="${proyecto.plano_url}" target="_blank" style="color:#2563eb; font-size:13px;">📄 Ver plano</a><br><br>` : '<br>'}
+        ${usuario ? `<button type="button" class="boton verde" onclick="mostrarMensajeRegistro(${proyecto.id})">💬 Estoy interesado - Cotizar ${linea} ${marcaPerfil}</button>` : `<a href="registro.html" class="boton verde">💬 Estoy interesado - Cotizar ${linea} ${marcaPerfil}</a>`}
+      </div>
+    `;
+  }).join('');
 }
 
+function mostrarMensajeRegistro(proyectoId){
+  alert('Tu cuenta está registrada. Podés cotizar esta obra igualada por marca: todos cotizan misma línea y marca, comparás a igual calidad, elegís mejor precio.');
+}
 
-
-/* =================================
-   INICIAR
-================================= */
+document.getElementById('filtroLinea').addEventListener('change', async ()=>{ renderProyectos(todosProyectos, await comprobarUsuario()); });
+document.getElementById('filtroPerfil').addEventListener('change', async ()=>{ renderProyectos(todosProyectos, await comprobarUsuario()); });
+document.getElementById('filtroHerraje').addEventListener('change', async ()=>{ renderProyectos(todosProyectos, await comprobarUsuario()); });
 
 cargarProyectos();
-
-
 </script>
-
-
 </body>
-
 </html>
