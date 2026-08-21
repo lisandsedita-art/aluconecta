@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editar perfil - AluConecta</title>
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFsdUNvbmVjdGEgLSBEb25kZSBsb3MgcHJveWVjdG9zIGVuY3VlbnRyYW4gc3VzIGFiZXJ0dXJhcyIsCiAgInNob3J0X25hbWUiOiAiQWx1Q29uZWN0YSIsCiAgImRlc2NyaXB0aW9uIjogIkNvbmVjdGFtb3MgdHUgb2JyYSBjb24gY2FycGludGVyb3MgZGUgYWx1bWluaW8gZGUgY29uZmlhbnphIiwKICAic3RhcnRfdXJsIjogIi9hbHVjb25lY3RhLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMmU0ZCIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjJlNGQiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJpY29uLTE5Mi5wbmciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiaWNvbi01MTIucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#f5f7fa;padding:16px;padding-bottom:90px}
+.card{background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+h2{color:#0F2E4D;margin-bottom:12px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin:6px 0 12px;font-size:15px}
+.btn{background:#0F2E4D;color:white;border:none;padding:14px;border-radius:12px;width:100%;font-weight:700;font-size:16px}
+.btn-sec{background:#E6F6FF;color:#0F2E4D;margin-top:8px}
+small{color:#666}
+</style>
+</head>
+<body>
+<h2>✏️ Editar mi perfil profesional</h2>
+
+<div class="card">
+<h3>Datos básicos</h3>
+<input id="nombre" placeholder="Nombre / Empresa ej: Aluminio HS">
+<input id="zona" placeholder="Zona ej: Capitán Bermúdez">
+<input id="tel" placeholder="Teléfono">
+<textarea id="bio" placeholder="Descripción de tu trabajo..."></textarea>
+</div>
+
+<div class="card">
+<h3>🌐 Redes sociales y web (opcional)</h3>
+<small>Si las completás, se muestran en tu perfil público. Podés poner solo las que quieras.</small>
+<input id="wpp" placeholder="WhatsApp ej: 3411234567">
+<input id="ig" placeholder="Instagram ej: https://instagram.com/aluminio_hs o @aluminio_hs">
+<input id="fb" placeholder="Facebook ej: https://facebook.com/tu.pagina">
+<input id="tk" placeholder="TikTok ej: @aluminio.hs">
+<input id="yt" placeholder="YouTube link">
+<input id="web" placeholder="Página web https://...">
+<label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="mostrarRedes" checked style="width:auto"> Mostrar mis redes en perfil público</label>
+</div>
+
+<div class="card">
+<h3>Verificación</h3>
+<small>Subí foto de DNI o CUIT y 2 fotos de trabajos para que te verifiquemos (24hs)</small>
+<input type="file" id="dni">
+<input type="file" id="trab1">
+<input type="file" id="trab2">
+</div>
+
+<button class="btn" onclick="guardar()">Guardar perfil</button>
+<button class="btn btn-sec" onclick="location.href='perfil.html'">Ver mi perfil público</button>
+
+<script src="data:application/javascript;base64,Ly8gYWNjZXNvLmpzIC0gQWx1Q29uZWN0YSAtIFNpc3RlbWEgZGUgcmVnaXN0cm8gb2JsaWdhdG9yaW8KLy8gMS4gQ29waWFyIGVzdGUgYXJjaGl2byBhIHR1IHJlcG8KLy8gMi4gRW4gY2FkYSBwYWdpbmEgc2Vuc2libGUgYWdyZWdhcjogPHNjcmlwdCBzcmM9ImFjY2Vzby5qcyI+PC9zY3JpcHQ+CgpmdW5jdGlvbiBlc3RhTG9ndWVhZG8oKXsKICByZXR1cm4gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ2FsdV91c2VyJykgIT09IG51bGw7Cn0KZnVuY3Rpb24gZ2V0VXNlcigpewogIHRyeXsgcmV0dXJuIEpTT04ucGFyc2UobG9jYWxTdG9yYWdlLmdldEl0ZW0oJ2FsdV91c2VyJykpOyB9Y2F0Y2goZSl7IHJldHVybiBudWxsOyB9Cn0KZnVuY3Rpb24gcHJvdGVnZXIodGlwbyl7CiAgLy8gdGlwbyA9ICdjbGllbnRlJyB8ICdwcm9mZXNpb25hbCcgfCAnY3VhbHF1aWVyYScKICBpZighZXN0YUxvZ3VlYWRvKCkpewogICAgY29uc3QgYWN0dWFsID0gd2luZG93LmxvY2F0aW9uLnBhdGhuYW1lLnNwbGl0KCcvJykucG9wKCkgKyB3aW5kb3cubG9jYXRpb24uc2VhcmNoOwogICAgd2luZG93LmxvY2F0aW9uLmhyZWYgPSAnaW5ncmVzYXIuaHRtbD9uZXh0PScgKyBlbmNvZGVVUklDb21wb25lbnQoYWN0dWFsKSArICcmcmVxPScgKyB0aXBvOwogICAgcmV0dXJuIGZhbHNlOwogIH0KICByZXR1cm4gdHJ1ZTsKfQpmdW5jdGlvbiBhcGxpY2FyQ2FuZGFkb3MoKXsKICBjb25zdCBsb2cgPSBlc3RhTG9ndWVhZG8oKTsKICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcuZGF0by1zZW5zaWJsZScpLmZvckVhY2goZWw9PnsKICAgIGlmKGxvZyl7CiAgICAgIGVsLmNsYXNzTGlzdC5yZW1vdmUoJ2Jsb3F1ZWFkbycpOwogICAgICBjb25zdCBjYW5kID0gZWwucXVlcnlTZWxlY3RvcignLmNhbmRhZG8tb3ZlcmxheScpOwogICAgICBpZihjYW5kKSBjYW5kLnJlbW92ZSgpOwogICAgICBlbC5zdHlsZS5maWx0ZXIgPSAnJzsKICAgIH0gZWxzZSB7CiAgICAgIGlmKGVsLnF1ZXJ5U2VsZWN0b3IoJy5jYW5kYWRvLW92ZXJsYXknKSkgcmV0dXJuOwogICAgICBlbC5zdHlsZS5wb3NpdGlvbiA9ICdyZWxhdGl2ZSc7CiAgICAgIGVsLnN0eWxlLmZpbHRlciA9ICdibHVyKDRweCknOwogICAgICBlbC5zdHlsZS51c2VyU2VsZWN0ID0gJ25vbmUnOwogICAgICBlbC5pbnNlcnRBZGphY2VudEhUTUwoJ2JlZm9yZWVuZCcsIGAKICAgICAgICA8ZGl2IGNsYXNzPSJjYW5kYWRvLW92ZXJsYXkiIHN0eWxlPSJwb3NpdGlvbjphYnNvbHV0ZTtpbnNldDowO2JhY2tncm91bmQ6cmdiYSgxNSw0Niw3NywwLjg1KTtjb2xvcjp3aGl0ZTtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2FsaWduLWl0ZW1zOmNlbnRlcjtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO2JvcmRlci1yYWRpdXM6MTJweDtmaWx0ZXI6bm9uZTtjdXJzb3I6cG9pbnRlcjt6LWluZGV4OjEwIj4KICAgICAgICAgIDxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxOHB4Ij7wn5SSPC9kaXY+CiAgICAgICAgICA8ZGl2IHN0eWxlPSJmb250LXdlaWdodDo3MDA7Zm9udC1zaXplOjEzcHg7bWFyZ2luLXRvcDo0cHg7dGV4dC1hbGlnbjpjZW50ZXIiPlJlZ2lzdHJhdGUgZ3JhdGlzPGJyPnBhcmEgdmVyIGVzdGUgZGF0bzwvZGl2PgogICAgICAgIDwvZGl2PgogICAgICBgKTsKICAgICAgZWwucXVlcnlTZWxlY3RvcignLmNhbmRhZG8tb3ZlcmxheScpLm9uY2xpY2sgPSAoKT0+IHdpbmRvdy5sb2NhdGlvbi5ocmVmPSdyZWdpc3Ryby5odG1sJzsKICAgIH0KICB9KTsKfQpkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdET01Db250ZW50TG9hZGVkJywgYXBsaWNhckNhbmRhZG9zKTsK"></script>
+<script>
+proteger('profesional');
+function guardar(){
+  const datos = {
+    nombre: document.getElementById('nombre').value,
+    zona: document.getElementById('zona').value,
+    tel: document.getElementById('tel').value,
+    bio: document.getElementById('bio').value,
+    redes: {
+      wpp: document.getElementById('wpp').value,
+      ig: document.getElementById('ig').value,
+      fb: document.getElementById('fb').value,
+      tk: document.getElementById('tk').value,
+      yt: document.getElementById('yt').value,
+      web: document.getElementById('web').value,
+      mostrar: document.getElementById('mostrarRedes').checked
+    },
+    rol: 'profesional',
+    verificado: false
+  };
+  localStorage.setItem('alu_user', JSON.stringify(datos));
+  localStorage.setItem('alu_perfil_' + datos.nombre, JSON.stringify(datos));
+  alert('Perfil guardado! Queda en revisión.');
+  location.href='perfil.html';
+}
+</script>
+</body>
+</html>
