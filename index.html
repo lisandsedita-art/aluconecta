@@ -4,164 +4,102 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AluConecta | Donde los proyectos encuentran sus aberturas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #f4f7fa; color: #17202a; line-height: 1.5; }
-    header { background: #123b5d; color: white; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; }
-   .logo { font-size: 27px; font-weight: bold; }.logo span { color: #55c7e8; }
-   .menu { font-size: 25px; cursor:pointer; }
-   .hero { background: linear-gradient(135deg,#123b5d,#1976a8); color: white; text-align: center; padding: 65px 22px; }
-   .hero h1 { max-width: 800px; margin: 0 auto 18px; font-size: 38px; line-height: 1.2; }
-   .hero p { max-width: 850px; margin: 0 auto 30px; font-size: 18px; line-height: 1.6; }
-   .boton { display: inline-block; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: bold; text-decoration: none; border: none; cursor: pointer; text-align: center; }
-   .boton-principal { background: #f5a623; color: #17202a; }
-   .contenedor { max-width: 1000px; margin: auto; padding: 45px 20px; }
-   .titulo { text-align: center; margin-bottom: 25px; }.titulo h2 { color: #123b5d; font-size: 28px; }.titulo p { color: #66727d; }
-   .busqueda { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 45px; }
-   .busqueda input,.busqueda select,.busqueda textarea { width: 100%; padding: 15px; border: 1px solid #ccd5dc; border-radius: 9px; font-size: 16px; margin-bottom: 15px; }
-   .categorias { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-   .categoria { background: #eef5f9; padding: 20px 12px; border-radius: 12px; text-align: center; font-weight: bold; color: #123b5d; text-decoration: none; }
-   .participar { background: white; border-radius: 18px; padding: 35px 25px; margin-bottom: 45px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
-   .participar h2 { color: #123b5d; font-size: 28px; }.opciones-participar { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 800px; margin: auto; }
-   .opcion-participar { display: block; padding: 22px 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 17px; }
-   .ofrecer { background: #123b5d; color: white; }.proyecto { background: #16a34a; color: white; }
-   .ver-proyectos { display: inline-block; margin-top: 20px; color: #2563eb; font-weight: bold; text-decoration: none; }
-   .como { background: white; padding: 45px 20px; }.pasos { max-width: 1000px; margin: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-   .paso { background: #f8fafc; border-left: 5px solid #f5a623; padding: 22px; border-radius: 10px; }
-   .mensaje-final { text-align: center; padding: 45px 20px; background: #123b5d; color: white; }
-   .boton-ingresar { background: white; color: #123b5d; margin-left: 10px; }
-    footer { background: #0d2b43; color: #cbd5dc; text-align: center; padding: 25px 20px; font-size: 14px; }
-   .modal-obra { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:99; justify-content:center; align-items:center; padding:15px; }
-   .modal-obra.activo { display:flex; }.modal-contenido { background:white; width:100%; max-width:600px; border-radius:16px; padding:25px; max-height:90vh; overflow-y:auto; }
-   .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-   .obras-lista { display:grid; gap:12px; margin-top:20px; }.obra-card { background:white; padding:18px; border-radius:12px; border-left:5px solid #f5a623; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
-   .badge { display:inline-block; background:#eef5f9; color:#123b5d; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:bold; margin-right:6px; }
-    @media (max-width: 700px) {.categorias,.opciones-participar,.pasos,.grid3 { grid-template-columns: 1fr; }.hero h1 { font-size: 30px; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
+  <style>body{font-family:'Inter',Arial,sans-serif}</style>
 </head>
-<body>
-  <header><div class="logo">Alu<span>Conecta</span></div><div class="menu" onclick="toggleConfig()">☰</div></header>
-  <section class="hero">
-    <h1>Donde los proyectos encuentran sus aberturas.</h1>
-    <p>Conectamos carpinteros de aluminio con arquitectos, ingenieros, constructores y personas que buscan hacer realidad sus ideas.</p>
-    <a href="#" onclick="abrirModal(); return false;" class="boton boton-principal">🔎 Buscar un profesional</a>
-  </section>
-  <main class="contenedor">
-    <section>
-      <div class="titulo"><h2>¿Qué estás buscando?</h2><p>Elegí una categoría o buscá lo que necesitás.</p></div>
-      <div class="busqueda">
-        <input type="text" placeholder="Ej: ventanas de aluminio, albañil, reparación...">
-        <div class="categorias">
-          <a href="aberturas.html" class="categoria">🏠 Aberturas</a>
-          <a href="construccion.html" class="categoria">🏗️ Construcción</a>
-          <a href="reparaciones.html" class="categoria">🔧 Reparaciones</a>
-          <a href="servicios.html" class="categoria">🛠️ Servicios</a>
-        </div>
-      </div>
-    </section>
-    <section class="participar">
-      <h2>¿Cómo querés participar?</h2>
-      <p>En AluConecta todos pueden formar parte: personas, profesionales y empresas.</p>
-      <div class="opciones-participar">
-        <a href="registro-carpintero.html" class="opcion-participar ofrecer">🛠️ Ofrezco mis servicios</a>
-        <a href="#" onclick="abrirModal(); return false;" class="opcion-participar proyecto">🏗️ Tengo un proyecto / necesito un servicio</a>
-      </div>
-      <a href="proyectos.html" class="ver-proyectos">📋 Ver proyectos y oportunidades</a>
-      <div id="listaObras" class="obras-lista"></div>
-    </section>
-  </main>
-  <section class="como">
-    <div class="titulo"><h2>¿Cómo funciona AluConecta?</h2><p>Simple, rápido y pensado para conectar proyectos con profesionales.</p></div>
-    <div class="pasos">
-      <div class="paso"><h3>1. Registrate</h3><p>Creá una sola cuenta como persona, profesional o empresa.</p></div>
-      <div class="paso"><h3>2. Buscá o publicá</h3><p>Encontrá un profesional o publicá el proyecto o servicio que necesitás.</p></div>
-      <div class="paso"><h3>3. Conectá</h3><p>Conocé perfiles, compará opciones y contactá directamente.</p></div>
+<body class="bg-[#f5f7fb]">
+<header class="bg-[#0f2e4d] text-white px-6 py-4 flex justify-between items-center sticky top-0 z-20">
+  <div class="text-[26px] font-extrabold">Alu<span class="text-[#5cc8e8]">Conecta</span></div>
+  <button onclick="abrirModal()" class="bg-[#f5a623] text-[#17202a] px-5 py-2.5 rounded-full font-bold text-sm">+ Publicar obra</button>
+</header>
+<section class="bg-gradient-to-br from-[#0f2e4d] via-[#14466e] to-[#1a7ab4] text-white px-6 py-14 md:py-20 text-center relative overflow-hidden">
+  <div class="absolute inset-0 opacity-20" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200'); background-size:cover;"></div>
+  <div class="relative max-w-4xl mx-auto">
+    <div class="inline-flex gap-2 mb-4"><span class="bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold">📍 ROSARIO</span><span class="bg-[#f5a623] text-[#17202a] px-3 py-1 rounded-full text-xs font-bold">IGUALADO POR MARCA</span></div>
+    <h1 class="text-[34px] md:text-[52px] font-extrabold leading-[0.95] mb-4">Donde los proyectos encuentran <span class="text-[#5cc8e8]">sus aberturas.</span></h1>
+    <p class="text-[16px] md:text-[18px] text-white/80 max-w-2xl mx-auto mb-8">Todos cotizan <b>Modena + Aluar + Roto</b>. Peras con peras. A igual calidad, elegís mejor precio.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <button onclick="abrirModal()" class="bg-[#f5a623] text-[#17202a] px-7 py-3.5 rounded-full font-extrabold">🏗️ Tengo un proyecto</button>
+      <a href="proyectos.html" class="bg-white text-[#0f2e4d] px-7 py-3.5 rounded-full font-extrabold">📋 Ver obras</a>
     </div>
-  </section>
-  <section class="mensaje-final">
-    <h2>Los proyectos necesitan personas.</h2>
-    <p>AluConecta busca unir a quienes necesitan hacer un trabajo con quienes pueden hacerlo.</p>
-    <a href="registro.html" class="boton boton-principal">Crear mi cuenta</a>
-    <a href="ingresar.html" class="boton boton-ingresar">Ingresar</a>
-  </section>
-  <footer><p>© 2026 AluConecta</p><p>Conectando personas, trabajos y oportunidades.</p></footer>
-
-  <div id="modalObra" class="modal-obra">
-    <div class="modal-contenido">
-      <h2 style="color:#123b5d; margin-bottom:5px;">Publicar obra</h2>
-      <p style="color:#66727d; font-size:14px; margin-bottom:18px;">Igualada por Línea + Marca de perfil + Marca de herrajes para comparar peras con peras</p>
-      <form id="formObra" class="busqueda" style="box-shadow:none; padding:0; margin:0;">
-        <input id="titulo" required placeholder="Título - Ej: Casa Fisherton 6 ventanas">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <input id="barrio" placeholder="Barrio - Ej: Fisherton">
-          <input id="cantidad" type="number" min="1" value="1" placeholder="Cantidad aberturas">
-        </div>
-        <div class="grid3">
-          <select id="linea"><option>Modena</option><option>A30</option><option>A30 New</option><option>A40</option><option>Herrero</option><option>Rotonda 700</option></select>
-          <select id="marca_perfil"><option value="Aluar">Aluar</option><option value="Hydro">Hydro</option><option value="Metales del Talar">Metales del Talar</option><option value="Flamia">Flamia</option></select>
-          <select id="marca_herrajes"><option value="Roto">Roto</option><option value="Giesse">Giesse</option><option value="Sia">Sia</option><option value="Alcemar">Alcemar</option><option value="Otro">Otro</option></select>
-        </div>
-        <textarea id="medidas" rows="3" placeholder="Medidas - Ej: 150x110, 200x200..."></textarea>
-        <textarea id="descripcion" rows="2" placeholder="Detalle adicional"></textarea>
-        <input id="planoFile" type="file" accept=".pdf,.jpg,.png,.jpeg">
-        <div style="display:flex; gap:10px; margin-top:10px;">
-          <button type="submit" class="boton boton-principal" style="flex:1;">Publicar en Supabase</button>
-          <button type="button" onclick="cerrarModal()" class="boton" style="background:#e5e7eb;">Cancelar</button>
-        </div>
-      </form>
+    <div class="grid grid-cols-3 gap-3 max-w-xl mx-auto mt-10">
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-3"><div class="text-xl">🪟</div><div class="text-[11px] font-bold">MODENA</div></div>
+      <div class="bg-white/10 rounded-2xl p-3 border border-[#5cc8e8]/30"><div class="text-xl">🏭</div><div class="text-[11px] font-bold">ALUAR</div><div class="text-[9px] text-[#5cc8e8]">PERFIL</div></div>
+      <div class="bg-white/10 rounded-2xl p-3 border border-[#f5a623]/30"><div class="text-xl">🔩</div><div class="text-[11px] font-bold">ROTO</div><div class="text-[9px] text-[#f5a623]">HERRAJE</div></div>
     </div>
   </div>
-
-  <script>
-    const SUPABASE_URL = "https://wroaxwjyjrxzwctfkyoo.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    function abrirModal(){ document.getElementById('modalObra').classList.add('activo'); }
-    function cerrarModal(){ document.getElementById('modalObra').classList.remove('activo'); }
-    function toggleConfig(){ abrirModal(); }
-    document.getElementById('formObra').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type=submit]'); btn.textContent='Publicando...'; btn.disabled=true;
-      try{
-        let planoUrl = null;
-        const file = document.getElementById('planoFile').files[0];
-        if(file){
-          const name = Date.now()+'_'+file.name.replace(/\s/g,'_');
-          const {error: upErr} = await supabaseClient.storage.from('planos-obras').upload(name, file);
-          if(upErr) throw upErr;
-          const {data} = supabaseClient.storage.from('planos-obras').getPublicUrl(name);
-          planoUrl = data.publicUrl;
-        }
-        const {error} = await supabaseClient.from('proyectos').insert({
-          titulo: document.getElementById('titulo').value,
-          ciudad: 'Rosario',
-          barrio: document.getElementById('barrio').value,
-          linea_solicitada: document.getElementById('linea').value,
-          marca_perfil: document.getElementById('marca_perfil').value,
-          marca_herrajes: document.getElementById('marca_herrajes').value,
-          cantidad_aberturas: parseInt(document.getElementById('cantidad').value) || 1,
-          medidas_texto: document.getElementById('medidas').value,
-          calidad_requerida: document.getElementById('descripcion').value,
-          plano_url: planoUrl,
-          estado: 'abierta'
-        });
-        if(error) throw error;
-        alert('¡Obra publicada con Marca igualada! Modena Aluar Roto peras con peras');
-        cerrarModal(); location.reload();
-      }catch(err){ alert('Error: '+err.message); }
-      btn.textContent='Publicar en Supabase'; btn.disabled=false;
-    });
-    async function cargarObras(){
-      const {data} = await supabaseClient.from('proyectos').select('*').order('created_at',{ascending:false}).limit(10);
-      if(!data) return;
-      const cont = document.getElementById('listaObras');
-      if(data.length===0) return;
-      cont.innerHTML = '<h3 style="color:#123b5d; margin-top:20px; text-align:left;">Obras recientes - Rosario</h3>' + data.map(o=>`
-        <div class="obra-card"><strong>${o.titulo || 'Obra'}</strong> - ${o.barrio || ''}<br><span class="badge">${o.linea_solicitada || ''}</span><span class="badge">${o.marca_perfil || ''}</span><span class="badge">${o.marca_herrajes || ''}</span><div style="color:#66727d; font-size:13px; margin-top:6px;">${o.cantidad_aberturas || ''} aberturas | ${o.medidas_texto || ''}</div></div>
-      `).join('');
-    }
-    cargarObras();
-  </script>
+</section>
+<main class="max-w-[1050px] mx-auto px-5 py-10">
+  <div class="grid md:grid-cols-3 gap-5 mb-12">
+    <a href="aberturas.html" class="bg-white rounded-[20px] p-5 shadow flex gap-4 items-center"><div class="w-12 h-12 rounded-full bg-[#e6f6fb] flex items-center justify-center">🏠</div><div><div class="font-extrabold text-[#0f2e4d]">Aberturas</div><div class="text-xs text-gray-500">Ventanas, puertas</div></div></a>
+    <a href="construccion.html" class="bg-white rounded-[20px] p-5 shadow flex gap-4 items-center"><div class="w-12 h-12 rounded-full bg-[#fff4d6] flex items-center justify-center">🏗️</div><div><div class="font-extrabold">Construcción</div><div class="text-xs text-gray-500">Obra gruesa</div></div></a>
+    <a href="reparaciones.html" class="bg-white rounded-[20px] p-5 shadow flex gap-4 items-center"><div class="w-12 h-12 rounded-full bg-[#dcfce7] flex items-center justify-center">🔧</div><div><div class="font-extrabold">Reparaciones</div><div class="text-xs text-gray-500">Service, herrajes</div></div></a>
+  </div>
+  <div class="bg-white rounded-[24px] p-7 shadow mb-10">
+    <div class="flex justify-between mb-6"><h2 class="text-[22px] font-extrabold text-[#0f2e4d]">Obras recientes - Igualadas por marca</h2><a href="proyectos.html" class="text-[#2563eb] font-bold text-sm">Ver todas →</a></div>
+    <div id="listaObras" class="grid md:grid-cols-2 gap-4"><div class="col-span-2 text-center text-gray-400 py-8">Cargando...</div></div>
+  </div>
+  <div class="bg-[#0f2e4d] rounded-[24px] p-8 text-white flex flex-col md:flex-row gap-8 items-center">
+    <div class="flex-1"><h3 class="text-[24px] font-extrabold mb-3">Peras con peras.</h3><p class="text-white/70 text-sm">1. Publicás con línea + marca perfil + marca herrajes.<br>2. Cotizan exactamente eso.<br>3. Comparás a igual calidad.</p></div>
+    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400" class="w-full md:w-[280px] h-[180px] object-cover rounded-2xl">
+  </div>
+</main>
+<footer class="text-center py-8 text-gray-500 text-xs">© 2026 AluConecta - Rosario</footer>
+<div id="modalObra" class="fixed inset-0 bg-black/60 hidden z-50 p-4 items-center justify-center">
+  <div class="bg-white w-full max-w-[600px] rounded-[20px] p-6 max-h-[90vh] overflow-y-auto">
+    <h2 class="text-xl font-extrabold text-[#0f2e4d]">Publicar obra igualada</h2>
+    <p class="text-xs text-gray-500 mb-4">Todos cotizan lo mismo: Línea + Marca perfil + Marca herraje.</p>
+    <form id="formObra" class="space-y-3">
+      <input id="titulo" required placeholder="Título - Ej: Casa Fisherton 6 ventanas" class="w-full border rounded-xl px-4 py-3">
+      <div class="grid grid-cols-2 gap-3">
+        <input id="barrio" placeholder="Barrio" class="border rounded-xl px-4 py-3">
+        <input id="cantidad" type="number" value="6" class="border rounded-xl px-4 py-3">
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <select id="linea" class="border rounded-xl px-3 py-3 text-sm"><option>Modena</option><option>A30</option><option>A40</option><option>Herrero</option></select>
+        <select id="marca_perfil" class="border rounded-xl px-3 py-3 text-sm font-bold bg-green-50"><option>Aluar</option><option>Hydro</option><option>Metales del Talar</option><option>Flamia</option></select>
+        <select id="marca_herrajes" class="border rounded-xl px-3 py-3 text-sm font-bold bg-amber-50"><option>Roto</option><option>Giesse</option><option>Sia</option><option>Alcemar</option></select>
+      </div>
+      <textarea id="medidas" rows="2" placeholder="Medidas" class="w-full border rounded-xl px-4 py-3"></textarea>
+      <input id="planoFile" type="file" accept=".pdf,.jpg,.png" class="w-full text-sm">
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 bg-[#f5a623] font-extrabold rounded-full py-3.5">Publicar obra - Modena Aluar Roto</button>
+        <button type="button" onclick="cerrarModal()" class="px-5 rounded-full bg-gray-100 font-bold">Cerrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+const SUPABASE_URL = "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+function abrirModal(){ document.getElementById('modalObra').classList.remove('hidden'); document.getElementById('modalObra').classList.add('flex'); }
+function cerrarModal(){ document.getElementById('modalObra').classList.add('hidden'); document.getElementById('modalObra').classList.remove('flex'); }
+document.getElementById('formObra').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn=e.target.querySelector('button[type=submit]'); btn.textContent='Publicando...'; btn.disabled=true;
+  try{
+    let planoUrl=null; const file=document.getElementById('planoFile').files[0];
+    if(file){ const name=Date.now()+'_'+file.name.replace(/\s/g,'_'); const {error}=await supabaseClient.storage.from('planos-obras').upload(name,file); if(error) throw error; const {data}=supabaseClient.storage.from('planos-obras').getPublicUrl(name); planoUrl=data.publicUrl; }
+    const {error}=await supabaseClient.from('proyectos').insert({ titulo:document.getElementById('titulo').value, ciudad:'Rosario', barrio:document.getElementById('barrio').value, linea_solicitada:document.getElementById('linea').value, marca_perfil:document.getElementById('marca_perfil').value, marca_herrajes:document.getElementById('marca_herrajes').value, cantidad_aberturas:parseInt(document.getElementById('cantidad').value)||1, medidas_texto:document.getElementById('medidas').value, plano_url:planoUrl, estado:'abierta' });
+    if(error) throw error; alert('¡Obra publicada!'); cerrarModal(); cargarObras();
+  }catch(err){ alert('Error: '+err.message); }
+  btn.textContent='Publicar obra - Modena Aluar Roto'; btn.disabled=false;
+});
+async function cargarObras(){
+  const {data}=await supabaseClient.from('proyectos').select('*').order('created_at',{ascending:false}).limit(6);
+  const cont=document.getElementById('listaObras'); if(!data||data.length===0){ cont.innerHTML='<div class="col-span-2 text-center text-gray-400 py-6">Aún no hay obras.</div>'; return; }
+  cont.innerHTML=data.map(o=>`
+    <div class="bg-[#f8fafc] rounded-2xl p-4 border">
+      <div class="flex justify-between mb-2"><div class="font-bold text-[#0f2e4d] text-sm">${o.titulo||'Obra'}</div><div class="text-[10px] bg-[#0f2e4d] text-white px-2 py-1 rounded-full">${o.barrio||'Rosario'}</div></div>
+      <div class="flex gap-1.5 mb-2"><span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">${o.linea_solicitada||''}</span><span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">${o.marca_perfil||'Aluar'}</span><span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-bold">${o.marca_herrajes||'Roto'}</span></div>
+      <div class="text-[11px] text-gray-500">${o.cantidad_aberturas||''} aberturas • ${o.medidas_texto||''}</div>
+    </div>
+  `).join('');
+}
+cargarObras();
+</script>
 </body>
 </html>
