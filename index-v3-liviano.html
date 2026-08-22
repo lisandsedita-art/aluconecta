@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AluConecta - Donde los proyectos encuentran sus aberturas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>*{font-family:Inter,system-ui} </style>
+</head>
+<body class="bg-[#f5f7fb] text-[#0f2e4d]">
+<header class="bg-[#0f2e4d] text-white sticky top-0 z-50">
+<div class="max-w-[1100px] mx-auto px-5 h-[64px] flex items-center justify-between">
+<div class="font-black text-[22px] tracking-tight">Alu<span class="text-[#5cc8e8]">Conecta</span><span class="ml-3 hidden md:inline text-[10px] tracking-widest uppercase bg-white/10 px-2.5 py-1 rounded-full border border-white/10">Rosario • Todo el país</span></div>
+<div class="flex gap-5 text-[12px] font-semibold"><a href="#obras" class="opacity-80">Obras</a><a href="#carpintero" class="bg-white text-[#0f2e4d] px-4 py-2 rounded-full font-bold">Soy carpintero</a></div>
+</div>
+</header>
+
+<section class="max-w-[1100px] mx-auto px-5 pt-10 pb-6">
+<div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-6 items-start">
+<div>
+<div class="inline-flex gap-2 mb-3"><span class="bg-[#0f2e4d] text-white px-3 py-1 rounded-full text-[10px] font-bold tracking-widest">COTIZACIÓN COMPARABLE</span><span class="bg-white border px-3 py-1 rounded-full text-[10px] font-bold tracking-widest">VERIFICADO DE LA ZONA</span></div>
+<h1 class="text-[32px] lg:text-[42px] font-[900] leading-[0.95] tracking-tight">Conectá tu obra<br>con carpinteros<br><span class="text-[#5cc8e8]">de tu zona.</span></h1>
+<p class="mt-3 text-[15px] text-[#0f2e4d]/70 max-w-[520px] leading-[1.4]">Donde los proyectos encuentran sus aberturas. Obras de la zona se conectan con carpinteros de la zona. Funciona en cualquier punto del país.</p>
+<div class="mt-6 grid grid-cols-3 gap-3 max-w-[520px]">
+<div class="bg-white rounded-[16px] p-3 border shadow-sm"><div class="text-[10px] font-bold opacity-50">01</div><div class="text-[13px] font-bold leading-tight mt-1">Publicá tu obra</div><div class="text-[11px] opacity-60 leading-tight mt-1">Zona + medidas</div></div>
+<div class="bg-white rounded-[16px] p-3 border shadow-sm"><div class="text-[10px] font-bold opacity-50">02</div><div class="text-[13px] font-bold leading-tight mt-1">Recibí cotizaciones comparables</div><div class="text-[11px] opacity-60 leading-tight mt-1">Sin marcas a la vista</div></div>
+<div class="bg-[#0f2e4d] rounded-[16px] p-3 text-white"><div class="text-[10px] font-bold opacity-60">03</div><div class="text-[13px] font-bold leading-tight mt-1">Elegí de tu zona</div><div class="text-[11px] opacity-60 leading-tight mt-1">Cerca tuyo</div></div>
+</div>
+</div>
+
+<div class="bg-white rounded-[24px] p-5 shadow-[0_10px_40px_rgba(15,46,77,0.08)] border">
+<div class="flex items-center justify-between mb-3"><div class="font-extrabold text-[16px]">Publicar obra en mi zona</div><span class="text-[10px] bg-[#f5f7fb] border px-2 py-1 rounded-full">Hoy</span></div>
+<form id="formObra" class="space-y-3">
+<input id="whatsapp" required placeholder="WhatsApp 341..." class="w-full border rounded-xl px-4 py-3 text-[14px] font-semibold">
+<div class="grid grid-cols-2 gap-2">
+<select id="ciudad" class="border rounded-xl px-3 py-3 text-[13px] font-bold bg-[#f5f7fb]"><option>Rosario</option><option>CABA</option><option>Córdoba</option><option>Mendoza</option><option>La Plata</option><option>Tucumán</option><option>Otra</option></select>
+<input id="zona" required placeholder="Zona - Fisherton" class="border rounded-xl px-4 py-3 text-[13px] font-bold">
+</div>
+<input id="aberturas" placeholder="Ej: Corrediza 3 paños 3.00x2.10" class="w-full border rounded-xl px-4 py-3 text-[13px]">
+<select id="tipo" class="w-full border rounded-xl px-4 py-3 text-[13px] bg-white"><option>Casa / Depto</option><option>Obra nueva</option><option>Local / Galpón</option><option>Reforma</option></select>
+
+<button type="button" id="btnPrefs" class="w-full border border-dashed rounded-xl px-4 py-3 text-left bg-[#f5f7fb]/70"><div class="text-[12px] font-bold">¿Tenés preferencia de perfilería? ¿Y de herrajes? (opcional)</div><div class="text-[11px] opacity-60">Solo para igualar peras con peras. No se muestra en el listado público.</div></button>
+<div id="prefs" class="hidden bg-[#f5f7fb] rounded-xl p-3 border space-y-3">
+<div><div class="text-[10px] font-bold tracking-widest opacity-50">PERFILERÍA</div><div class="grid grid-cols-2 gap-2 mt-2 text-[12px]"><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Aluar" class="perfil"> Aluar</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Hydro" class="perfil"> Hydro</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Flamia" class="perfil"> Flamia</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="MDT" class="perfil"> MDT</label></div></div>
+<div><div class="text-[10px] font-bold tracking-widest opacity-50">HERRAJES</div><div class="grid grid-cols-2 gap-2 mt-2 text-[12px]"><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Roto" class="herraje"> Roto</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Giesse" class="herraje"> Giesse</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Sia" class="herraje"> Sia</label><label class="bg-white p-2 rounded-lg border flex gap-2"><input type="checkbox" value="Chamical" class="herraje"> Chamical</label></div></div>
+</div>
+
+<div id="msg" class="hidden text-[12px] font-bold p-2 rounded-lg"></div>
+<button type="submit" class="w-full bg-[#0f2e4d] text-white font-extrabold rounded-full py-4 text-[14px]">Publicar obra - Conectar con mi zona</button>
+<p class="text-[10px] text-center opacity-50">Sin marcas a la vista. Solo al cotizar.</p>
+</form>
+</div>
+</div>
+</section>
+
+<section id="obras" class="max-w-[1100px] mx-auto px-5 py-6">
+<h3 class="font-extrabold text-[14px] mb-3">Obras recientes - Vista pública sin marcas</h3>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="bg-white rounded-[16px] p-4 border flex justify-between items-center"><div><div class="font-bold text-[13px]">📍 Fisherton • Rosario</div><div class="text-[12px] opacity-60">Corrediza 3 paños 3.00x2.10 • Hoy</div></div><span class="text-[10px] bg-[#0f2e4d] text-white px-2 py-1 rounded-full">Cotizable</span></div>
+<div class="bg-white rounded-[16px] p-4 border flex justify-between items-center"><div><div class="font-bold text-[13px]">📍 Palermo • CABA</div><div class="text-[12px] opacity-60">Paño fijo + corrediza • Ayer</div></div><span class="text-[10px] bg-[#0f2e4d] text-white px-2 py-1 rounded-full">Cotizable</span></div>
+<div class="bg-white rounded-[16px] p-4 border flex justify-between items-center"><div><div class="font-bold text-[13px]">📍 Nueva Córdoba • Córdoba</div><div class="text-[12px] opacity-60">Ventana 1.20x1.10 • Ayer</div></div><span class="text-[10px] bg-[#f5f7fb] border px-2 py-1 rounded-full">Zona</span></div>
+<div class="bg-white rounded-[16px] p-4 border flex justify-between items-center"><div><div class="font-bold text-[13px]">📍 Godoy Cruz • Mendoza</div><div class="text-[12px] opacity-60">Puerta balcón 1.50x2.10 • Hoy</div></div><span class="text-[10px] bg-[#f5f7fb] border px-2 py-1 rounded-full">Zona</span></div>
+</div>
+</section>
+
+<footer class="max-w-[1100px] mx-auto px-5 py-6 text-[11px] opacity-50 flex justify-between"><span>Alu<span class="text-[#5cc8e8] font-bold">Conecta</span> • Rosario - Todo el país</span><span>Cotización comparable • Verificado de la zona</span></footer>
+
+<script>
+const SUPABASE_URL="https://wroaxwjyjrxzwctfkyoo.supabase.co"; const SUPABASE_KEY="sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+document.getElementById('btnPrefs').onclick=()=>{document.getElementById('prefs').classList.toggle('hidden')};
+document.getElementById('formObra').addEventListener('submit', async (e)=>{
+ e.preventDefault(); const btn=e.target.querySelector('button[type=submit]'); btn.textContent='Publicando...'; btn.disabled=true;
+ const perfiles=[...document.querySelectorAll('.perfil:checked')].map(i=>i.value).join(', '); const herrajes=[...document.querySelectorAll('.herraje:checked')].map(i=>i.value).join(', ');
+ const data={whatsapp:document.getElementById('whatsapp').value, zona:document.getElementById('zona').value, ciudad:document.getElementById('ciudad').value, aberturas:document.getElementById('aberturas').value, marcas_perfiles:perfiles, marcas_herrajes:herrajes, tipo_obra:document.getElementById('tipo').value};
+ const msg=document.getElementById('msg'); msg.classList.remove('hidden'); msg.textContent='Guardando...'; msg.className='text-[12px] font-bold p-2 rounded-lg bg-blue-50 text-blue-700';
+ try{ const {error}=await supabaseClient.from('proyectos').insert(data); if(error) throw error; msg.textContent='¡Obra publicada! Carpinteros de '+data.zona+' la van a ver.'; msg.className='text-[12px] font-bold p-2 rounded-lg bg-emerald-50 text-emerald-700 border'; e.target.reset(); document.getElementById('prefs').classList.add('hidden'); }catch(err){ localStorage.setItem('obra_'+Date.now(), JSON.stringify(data)); msg.textContent='Guardado local (Supabase no responde). Igual quedó guardado.'; msg.className='text-[12px] font-bold p-2 rounded-lg bg-amber-50 text-amber-700 border'; }
+ btn.textContent='Publicar obra - Conectar con mi zona'; btn.disabled=false;
+});
+</script>
+</body>
+</html>
