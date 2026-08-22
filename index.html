@@ -81,5 +81,10 @@ footer{border-top:1px solid rgba(0,0,0,.06);background:#fff;height:88px;display:
 <script>
 function toggleMenu(){document.getElementById('drawer').classList.toggle('open')}
 </script>
+  <script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js');
+}
+  </script>
 </body>
 </html>
