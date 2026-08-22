@@ -60,6 +60,24 @@ footer{border-top:1px solid rgba(0,0,0,.06);background:#fff;height:88px;display:
 <a href="registro-cliente.html" class="btn-primary">Publicar obra gratis</a>
 <a href="#como" class="btn-sec">Cómo funciona</a>
 </div>
+  <button id="btnInstalar" style="display:none;margin-top:12px;width:100%;background:#fff;color:#0f2e4d;height:56px;border-radius:999px;border:0;font-weight:800;font-size:16px">📲 Instalar AluConecta</button>
+
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('btnInstalar').style.display = 'block';
+});
+document.getElementById('btnInstalar').addEventListener('click', async () => {
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('btnInstalar').style.display = 'none';
+  }
+});
+</script>
 <div class="card">
 <div style="font-size:11px;letter-spacing:.12em;font-weight:800;opacity:.4">OBRA RECIENTE</div>
 <div style="font-weight:800;margin-top:8px">Casa 240m² · 18 aberturas</div>
