@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AluConecta - Donde los proyectos encuentran sus aberturas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>*{font-family:Inter,system-ui}</style>
+</head>
+<body class="bg-[#f5f7fb] text-[#0f2e4d]">
+<header class="bg-[#0f2e4d] text-white sticky top-0 z-50">
+<div class="max-w-[1100px] mx-auto px-5 h-[72px] flex items-center justify-between">
+<div class="font-black text-[22px] tracking-tight">Alu<span class="text-[#5cc8e8]">Conecta</span></div>
+<div class="hidden md:flex items-center gap-3 text-[12px] font-bold">
+<a href="ingresar.html" class="opacity-80">Iniciar sesión</a>
+<a href="panel-carpintero.html" class="bg-white text-[#0f2e4d] px-4 py-2.5 rounded-full font-extrabold">Soy carpintero</a>
+<a href="registro-cliente.html" class="bg-[#facc15] text-[#0f2e4d] px-5 py-2.5 rounded-full font-[900]">QUIERO REGISTRARME</a>
+</div>
+<button id="btnMenu" class="md:hidden w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">☰</button>
+</div>
+<div id="menuMobile" class="hidden md:hidden border-t border-white/10 bg-[#0a2340]">
+<div class="px-5 py-4 flex flex-col gap-3">
+<a href="ingresar.html" class="bg-white/10 border text-white px-4 py-3 rounded-xl text-center font-bold text-[13px]">Iniciar sesión</a>
+<a href="panel-carpintero.html" class="bg-white text-[#0f2e4d] px-4 py-3 rounded-xl text-center font-extrabold text-[13px]">Soy carpintero</a>
+<a href="registro-cliente.html" class="bg-[#facc15] text-[#0f2e4d] px-4 py-3 rounded-xl text-center font-[900] text-[14px]">QUIERO REGISTRARME</a>
+</div>
+</div>
+</header>
+<section class="bg-[#0f2e4d] text-white">
+<div class="max-w-[1100px] mx-auto px-5 pt-10 pb-10 grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
+<div>
+<h1 class="text-[38px] lg:text-[52px] font-[900] leading-[0.9]">Donde los proyectos<br>encuentran sus<br><span class="text-[#facc15]">aberturas.</span></h1>
+<p class="mt-4 text-white/70 text-[15px] max-w-[520px]">Obras de la zona se conectan con carpinteros de la zona. Peras con peras, sin marcas a la vista. V1.2 NO ROMPER.</p>
+<div class="mt-6 flex gap-3">
+<a href="registro-cliente.html" class="bg-[#facc15] text-[#0f2e4d] px-7 py-3.5 rounded-full font-[900] text-[14px]">QUIERO REGISTRARME</a>
+<a href="#obras" class="bg-white text-[#0f2e4d] px-6 py-3.5 rounded-full font-bold text-[14px]">Ver obras</a>
+</div>
+</div>
+<div class="bg-white rounded-[24px] p-5 border text-[#0f2e4d]">
+<div class="font-extrabold text-[16px] mb-3">Publicar obra en mi zona</div>
+<form id="formObra" class="space-y-3">
+<input id="whatsapp" required placeholder="WhatsApp 341..." class="w-full border rounded-xl px-4 py-3 text-[14px] font-semibold">
+<div class="grid grid-cols-2 gap-2">
+<select id="ciudad" class="border rounded-xl px-3 py-3 text-[13px] font-bold bg-[#f5f7fb]"><option>Rosario</option><option>CABA</option><option>Córdoba</option><option>Mendoza</option><option>La Plata</option><option>Tucumán</option><option>Otra</option></select>
+<input id="zona" required placeholder="Zona - Fisherton" class="border rounded-xl px-4 py-3 text-[13px] font-bold">
+</div>
+<input id="aberturas" placeholder="Ej: Corrediza 3 paños 3.00x2.10" class="w-full border rounded-xl px-4 py-3 text-[13px]">
+<button type="submit" class="w-full bg-[#0f2e4d] text-white font-extrabold rounded-full py-4 text-[14px]">Publicar obra - Conectar con mi zona</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-[1100px] mx-auto px-5 py-8">
+<h3 class="font-extrabold text-[14px] mb-3">Obras recientes</h3>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="bg-white rounded-[16px] p-4 border flex justify-between"><div><div class="font-bold text-[13px]">📍 Fisherton • Rosario</div><div class="text-[12px] opacity-60">Corrediza 3 paños • Hoy</div></div><span class="text-[10px] bg-[#0f2e4d] text-white px-2 py-1 rounded-full">Cotizable</span></div>
+<div class="bg-white rounded-[16px] p-4 border flex justify-between"><div><div class="font-bold text-[13px]">📍 Palermo • CABA</div><div class="text-[12px] opacity-60">Paño fijo • Ayer</div></div><span class="text-[10px] bg-[#0f2e4d] text-white px-2 py-1 rounded-full">Cotizable</span></div>
+</div>
+</section>
+<script>
+document.getElementById('btnMenu').onclick=()=>{document.getElementById('menuMobile').classList.toggle('hidden')};
+</script>
+</body>
+</html>
