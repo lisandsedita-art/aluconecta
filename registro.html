@@ -453,7 +453,7 @@ document
           error: perfilError
         } =
           await supabaseClient
-            .from("perfiles_publicos")
+            .from("perfiles")
             .upsert(
               [
                 {
