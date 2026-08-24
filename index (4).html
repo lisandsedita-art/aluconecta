@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AluConecta - Donde los proyectos encuentran sus aberturas</title>
+<style>
+:root{--azul:#0f2e4d;--azul2:#12365e;--amarillo:#facc15;--celeste:#5ab3e8}
+body{margin:0;font-family:Inter,system-ui;background:#f8fafc;color:#0f172a}
+header{background:var(--azul);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.logo{font-weight:900;font-size:26px;letter-spacing:-0.5px} .logo b{color:var(--celeste)}
+.hero{background:var(--azul);color:#fff;padding:28px 20px 40px}
+.hero-inner{max-width:480px;margin:0 auto}
+.hero h1{font-size:42px;line-height:0.95;margin:20px 0 16px;font-weight:900;max-width:400px}
+.hero h1 em{color:var(--amarillo);font-style:normal}
+.hero p{color:#8fa6bc;font-size:15px;max-width:360px;line-height:1.4}
+.btn{display:inline-block;padding:10px 18px;border-radius:99px;font-weight:800;text-decoration:none;text-align:center;font-size:13px;min-width:220px}
+.btn-y{background:var(--amarillo);color:var(--azul)} .btn-outline{border:1px solid #1e3a5a;color:#fff;min-width:140px}
+.menu-btn{width:44px;height:44px;border-radius:50%;background:var(--azul2);display:grid;place-items:center;border:1px solid #1e3a5a;color:#fff;font-size:20px}
+section{padding:22px 20px;max-width:480px;margin:0 auto;box-sizing:border-box} .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px}
+.muted{color:#64748b;font-size:13px}
+.grid{display:grid;gap:12px}
+.footer{padding:20px;color:#94a3b8;font-size:12px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;max-width:480px;margin:0 auto;box-sizing:border-box}
+#menu{display:none;position:fixed;inset:0;background:rgba(15,46,77,0.95);z-index:50;padding:20px}
+#menu a{display:block;padding:14px;color:#fff;text-decoration:none;font-weight:700;border-bottom:1px solid #1e3a5a}
+</style>
+</head>
+<body>
+<header><div class="logo">Alu<b>Conecta</b></div><div class="menu-btn" onclick="document.getElementById('menu').style.display='block'">☰</div></header>
+<div id="menu"><div style="display:flex;justify-content:space-between;color:#fff;font-weight:900;font-size:20px"><span>Alu<b style="color:var(--celeste)">Conecta</b></span><span onclick="document.getElementById('menu').style.display='none'" style="cursor:pointer">✕</span></div><a href="index.html">Inicio</a><a href="panel-carpintero.html">Panel carpintero</a><a href="registro-carpintero.html" style="margin-top:20px;background:#facc15;color:#0f2e4d;border-radius:12px;text-align:center">QUIERO REGISTRARME</a><a href="login.html" style="text-align:center;color:#8fa6bc">Iniciar sesión</a></div>
+<div class="hero"><div class="hero-inner">
+<h1>Donde los proyectos encuentran sus <em>aberturas.</em></h1>
+<p>La red que une tu obra con carpinterías de aluminio verificadas. Diseñada para el ecosistema de la Construcción.</p>
+<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+<a class="btn btn-y" href="registro.html">QUIERO REGISTRARME</a>
+<a class="btn btn-outline" href="login.html">Iniciar sesión</a>
+</div>
+</div></div>
+<section>
+<div class="grid">
+<div class="card"><b>🏗️ Si construís</b><div class="muted">Publicá tu pedido de aberturas. Te cotizan solo carpinteros verificados de tu zona.</div><div style="margin-top:12px"><a class="btn btn-y" href="registro.html">Publicar mi obra</a></div></div>
+<div class="card"><b>🔨 Si fabricás</b><div class="muted">Recibí pedidos verificados cerca tuyo. Tu presupuesto no lo ven otros talleres. Solo lo ve el cliente.</div><div style="margin-top:12px"><a class="btn btn-y" href="registro-carpintero.html">Registrarme como carpintero</a></div></div>
+<div class="card"><b>🔒 Seguridad - Regla 1 y 2</b><div class="muted">Para ver teléfono, dirección de obra, planos y presupuestos tenés que estar registrado. Evitamos estafas para ambos lados.</div></div>
+</div>
+</section>
+<section style="background:#fff;border-top:1px solid #e2e8f0">
+<h2 style="margin:0 0 6px">Confianza Fase 1</h2>
+<div class="muted" style="margin-bottom:12px">Perfil verificado con fotos reales, sistemas que trabaja (Modena, A30 New, etc), zona y calificaciones.</div>
+<div class="card"><b>Taller Verificado ★ 4.9</b><div class="muted">Fisherton, Rosario • Modena, A30 • 23 obras • Fotos de trabajos reales</div></div>
+</section>
+<div class="footer"><div>AluConecta • Donde los proyectos encuentran sus aberturas</div><div>Seguro • Verificado</div></div>
+</body>
+</html>
