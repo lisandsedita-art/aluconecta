@@ -68,23 +68,41 @@ async function comprobarUsuario(){
 async function cargarProyectos(){
   try{
     const usuario = await comprobarUsuario();
-    let {data: proyectos, error} = await supabaseClient
-      .from("proyectos")
-      .select("id, created_at, titulo, ciudad, barrio, linea_solicitada, marca_perfil, marca_herrajes, cantidad_aberturas, medidas_texto, calidad_requerida, plano_url, Tipo, Localidad, Proyecto")
-      .order("created_at", {ascending:false});
 
-    if(error){
-      const res2 = await supabaseClient.from("proyectos_publicos").select("id, created_at, Tipo, Localidad, Proyecto").order("created_at",{ascending:false});
-      proyectos = res2.data;
-      if(res2.error) throw res2.error;
-    }
+    const { data: proyectos, error } = await supabaseClient
+      .from("proyectos_publicos")
+      .select("id, created_at, Tipo, Localidad, Proyecto")
+      .order("created_at", { ascending: false });
+
+    if(error) throw error;
 
     todosProyectos = proyectos || [];
-    
-    if(!proyectos || proyectos.length===0){
-      lista.innerHTML = `<div class="sin-resultados"><h3>Todavía no hay proyectos publicados</h3><p>Cuando alguien publique una necesidad, aparecerá acá igualada por marca.</p><br><a href="index.html" class="boton verde">Publicar mi proyecto</a></div>`;
+
+    if(!proyectos || proyectos.length === 0){
+      lista.innerHTML = `
+        <div class="sin-resultados">
+          <h3>Todavía no hay proyectos publicados</h3>
+          <p>Cuando alguien publique una necesidad, aparecerá acá.</p>
+          <br>
+          <a href="index.html" class="boton verde">Publicar mi proyecto</a>
+        </div>
+      `;
       return;
     }
+
+    renderProyectos(todosProyectos, usuario);
+
+  }catch(error){
+    console.error("Error cargando proyectos públicos:", error);
+
+    lista.innerHTML = `
+      <div class="error">
+        <h3>No pudimos cargar los proyectos</h3>
+        <p>Intentá nuevamente más tarde.</p>
+      </div>
+    `;
+  }
+}
     renderProyectos(todosProyectos, usuario);
   }catch(error){
     lista.innerHTML = `<div class="error"><h3>No pudimos cargar los proyectos</h3><p>${error.message}</p><p>Verificá que la tabla proyectos tenga las columnas marca_perfil y marca_herrajes y que el bucket planos-obras sea público.</p></div>`;
