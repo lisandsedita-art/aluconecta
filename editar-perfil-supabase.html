@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editar perfil - AluConecta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#f5f7fa;padding:16px;padding-bottom:90px}
+.card{background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+h2{color:#0F2E4D;margin-bottom:12px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin:6px 0 12px;font-size:15px}
+.btn{background:#0F2E4D;color:white;border:none;padding:14px;border-radius:12px;width:100%;font-weight:700;font-size:16px;cursor:pointer}
+.btn-sec{background:#E6F6FF;color:#0F2E4D;margin-top:8px}
+small{color:#666}
+.mensaje{margin:12px 0;padding:12px;border-radius:10px;display:none;line-height:1.4}
+.mensaje.error{display:block;background:#fee2e2;color:#991b1b}
+.mensaje.ok{display:block;background:#dcfce7;color:#166534}
+</style>
+</head>
+<body>
+<h2>✏️ Editar mi perfil profesional</h2>
+<div id="mensaje" class="mensaje"></div>
+
+<div class="card">
+<h3>Datos básicos</h3>
+<input id="nombre" placeholder="Nombre / Empresa ej: Aluminio HS">
+<input id="zona" placeholder="Zona ej: Capitán Bermúdez">
+<input id="tel" placeholder="Teléfono">
+<textarea id="bio" placeholder="Descripción de tu trabajo..."></textarea>
+</div>
+
+<div class="card">
+<h3>🌐 Redes sociales y web (opcional)</h3>
+<small>Si las completás, se muestran en tu perfil público. Podés poner solo las que quieras.</small>
+<input id="wpp" placeholder="WhatsApp ej: 3411234567">
+<input id="ig" placeholder="Instagram ej: https://instagram.com/aluminio_hs o @aluminio_hs">
+<input id="fb" placeholder="Facebook ej: https://facebook.com/tu.pagina">
+<input id="tk" placeholder="TikTok ej: @aluminio.hs">
+<input id="yt" placeholder="YouTube link">
+<input id="web" placeholder="Página web https://...">
+<label style="display:flex;gap:8px;align-items:center;margin-top:8px">
+<input type="checkbox" id="mostrarRedes" checked style="width:auto">
+Mostrar mis redes en perfil público
+</label>
+</div>
+
+<div class="card">
+<h3>Verificación</h3>
+<small>La carga de documentación para verificación se implementará en la etapa de verificación. Estos campos quedan preparados por ahora.</small>
+</div>
+
+<button class="btn" id="guardarBtn" type="button">Guardar perfil</button>
+<button class="btn btn-sec" id="verPerfilBtn" type="button">Ver mi perfil público</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://wroaxwjyjrxzwctfkyoo.supabase.co";
+const SUPABASE_KEY="sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const mensaje=document.getElementById("mensaje");
+let usuarioId=null;
+
+function mostrarMensaje(texto,tipo){
+  mensaje.textContent=texto;
+  mensaje.className="mensaje "+tipo;
+}
+
+async function cargarPerfil(){
+  try{
+    const {data:userData,error:userError}=await supabaseClient.auth.getUser();
+    if(userError) throw userError;
+    const usuario=userData.user;
+
+    if(!usuario){
+      window.location.href="ingresar.html";
+      return;
+    }
+
+    usuarioId=usuario.id;
+
+    const {data,error}=await supabaseClient
+      .from("perfiles")
+      .select("id,nombre,tipo_usuario,localidad,telefono,descripcion,instagram,facebook,tiktok,web")
+      .eq("id",usuarioId)
+      .single();
+
+    if(error && error.code!=="PGRST116") throw error;
+
+    if(data){
+      document.getElementById("nombre").value=data.nombre||"";
+      document.getElementById("zona").value=data.localidad||"";
+      document.getElementById("tel").value=data.telefono||"";
+      document.getElementById("bio").value=data.descripcion||"";
+      document.getElementById("wpp").value=data.telefono||"";
+      document.getElementById("ig").value=data.instagram||"";
+      document.getElementById("fb").value=data.facebook||"";
+      document.getElementById("tk").value=data.tiktok||"";
+      document.getElementById("web").value=data.web||"";
+    }
+  }catch(error){
+    console.error("Error cargando perfil:",error);
+    mostrarMensaje("No pudimos cargar tu perfil. Volvé a iniciar sesión e intentá nuevamente.","error");
+  }
+}
+
+async function guardar(){
+  if(!usuarioId){
+    mostrarMensaje("Tu sesión no está disponible. Volvé a iniciar sesión.","error");
+    return;
+  }
+
+  const nombre=document.getElementById("nombre").value.trim();
+  const zona=document.getElementById("zona").value.trim();
+  const tel=document.getElementById("tel").value.trim();
+  const bio=document.getElementById("bio").value.trim();
+  const wpp=document.getElementById("wpp").value.trim();
+  const ig=document.getElementById("ig").value.trim();
+  const fb=document.getElementById("fb").value.trim();
+  const tk=document.getElementById("tk").value.trim();
+  const web=document.getElementById("web").value.trim();
+
+  if(!nombre){
+    mostrarMensaje("El nombre o nombre de empresa es obligatorio.","error");
+    return;
+  }
+
+  const datos={
+    nombre:nombre,
+    localidad:zona,
+    telefono:wpp||tel,
+    descripcion:bio,
+    instagram:ig,
+    facebook:fb,
+    tiktok:tk,
+    web:web
+  };
+
+  const boton=document.getElementById("guardarBtn");
+  boton.disabled=true;
+  boton.textContent="Guardando...";
+
+  try{
+    const {error}=await supabaseClient
+      .from("perfiles")
+      .update(datos)
+      .eq("id",usuarioId);
+
+    if(error) throw error;
+
+    mostrarMensaje("Perfil guardado correctamente.","ok");
+  }catch(error){
+    console.error("Error guardando perfil:",error);
+    mostrarMensaje("No pudimos guardar los cambios. Revisá que tu sesión siga activa y que el perfil exista.","error");
+  }finally{
+    boton.disabled=false;
+    boton.textContent="Guardar perfil";
+  }
+}
+
+document.getElementById("guardarBtn").addEventListener("click",guardar);
+document.getElementById("verPerfilBtn").addEventListener("click",function(){
+  if(!usuarioId){
+    window.location.href="ingresar.html";
+    return;
+  }
+  window.location.href="perfil.html?id="+encodeURIComponent(usuarioId);
+});
+
+cargarPerfil();
+</script>
+</body>
+</html>
