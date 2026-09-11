@@ -273,7 +273,7 @@
         </a>
 
         <a href="aluminio.html">
-          🔎 Buscar profesionales
+          🔎 Buscar carpinteros
         </a>
 
         <a href="proyectos.html">
@@ -319,7 +319,7 @@
   </p>
 
   <p>
-    Conectando personas, trabajos y oportunidades.
+    Donde los proyectos encuentran sus aberturas.
   </p>
 
 </footer>
@@ -430,50 +430,112 @@ async function comprobarSesion() {
       session.user;
 
 
+    /*
+      Buscamos el perfil correspondiente
+      al usuario autenticado.
+
+      La relación es:
+
+      Auth user UUID
+            ↓
+      perfiles.id
+    */
+
+    const {
+      data: perfil,
+      error: errorPerfil
+    } =
+      await supabaseClient
+        .from("perfiles")
+        .select(
+          "id,nombre,tipo_usuario,localidad,descripcion"
+        )
+        .eq("id", usuario.id)
+        .single();
+
+
+    if (errorPerfil) {
+
+      console.error(
+        "Error cargando perfil:",
+        errorPerfil
+      );
+
+      contenido.innerHTML = `
+
+        <section class="bienvenida">
+
+          <h1>
+            Tu cuenta todavía no está completa
+          </h1>
+
+          <p>
+            Pudimos iniciar tu sesión,
+            pero no encontramos correctamente
+            tu perfil en AluConecta.
+          </p>
+
+          <a
+            href="editar-perfil.html"
+            class="boton">
+
+            Completar mi perfil
+
+          </a>
+
+        </section>
+
+      `;
+
+      return;
+
+    }
+
+
     const email =
       usuario.email ||
       "Usuario de AluConecta";
 
 
     const nombre =
-      usuario.user_metadata &&
-      (
-        usuario.user_metadata.nombre ||
-        usuario.user_metadata.name
-      )
-      ? (
-          usuario.user_metadata.nombre ||
-          usuario.user_metadata.name
-        )
-      : "Usuario";
+      perfil.nombre ||
+      usuario.user_metadata?.nombre ||
+      usuario.user_metadata?.name ||
+      "Usuario";
 
 
-    contenido.innerHTML = `
+    /*
+      ==================================================
+      ALUConecta tiene DOS lados principales:
 
-      <section class="bienvenida">
+      1. cliente_profesional
+         Publica obras y necesita aberturas.
 
-        <h1>
-          ¡Bienvenido/a a AluConecta!
-        </h1>
+      2. carpintero
+         Busca obras y cotiza aberturas.
 
-        <p>
-          Desde acá podés gestionar tu cuenta,
-          buscar profesionales y participar
-          en proyectos.
-        </p>
-
-        <div class="usuario">
-
-          👤 ${nombre}<br>
-
-          📧 ${email}
-
-        </div>
-
-      </section>
+      El tipo de usuario determina
+      qué herramientas mostramos.
+      ==================================================
+    */
 
 
-      <section class="acciones">
+    const esCarpintero =
+      perfil.tipo_usuario === "carpintero";
+
+
+    let accionesHTML = "";
+
+
+    if (esCarpintero) {
+
+      /*
+        ==============================================
+        VISTA CARPINTERO / TALLER
+        ==============================================
+      */
+
+      accionesHTML = `
 
 
         <article class="tarjeta">
@@ -483,40 +545,16 @@ async function comprobarSesion() {
           </h2>
 
           <p>
-            Completá y administrá tu información
-            profesional o personal para que otros
-            puedan conocerte.
+            Administrá la información de tu
+            carpintería o taller y mostrala
+            a potenciales clientes.
           </p>
 
           <a
-  href="perfil.html?id=${usuario.id}"
-  class="boton violeta">
+            href="perfil.html?id=${usuario.id}"
+            class="boton violeta">
 
-  Ver mi perfil
-
-</a>
-
-        </article>
-
-
-
-        <article class="tarjeta">
-
-          <h2>
-            🔎 Buscar profesionales
-          </h2>
-
-          <p>
-            Encontrá carpinteros de aluminio,
-            profesionales de construcción,
-            reparaciones y otros servicios.
-          </p>
-
-          <a
-            href="aluminio.html"
-            class="boton">
-
-            Buscar profesionales
+            Ver mi perfil
 
           </a>
 
@@ -527,19 +565,152 @@ async function comprobarSesion() {
         <article class="tarjeta">
 
           <h2>
-            🏗️ Mis proyectos
+            🔎 Buscar proyectos
           </h2>
 
           <p>
-            Consultá tus proyectos y oportunidades
+            Encontrá obras y necesidades de
+            aberturas publicadas por profesionales,
+            constructoras y desarrolladores.
+          </p>
+
+          <a
+            href="proyectos.html"
+            class="boton">
+
+            Ver oportunidades
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            💰 Mis cotizaciones
+          </h2>
+
+          <p>
+            Consultá las cotizaciones que
+            realizaste para proyectos publicados
+            en AluConecta.
+          </p>
+
+          <a
+            href="panel-carpintero.html"
+            class="boton verde">
+
+            Ir a mi panel
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            🛠️ Mi carpintería
+          </h2>
+
+          <p>
+            Completá y actualizá la información
+            de tu carpintería de aluminio,
+            servicios y presentación.
+          </p>
+
+          <a
+            href="editar-perfil.html"
+            class="boton naranja">
+
+            Editar mi perfil
+
+          </a>
+
+        </article>
+
+
+      `;
+
+    } else {
+
+      /*
+        ==============================================
+        VISTA PROFESIONAL / EMPRESA
+        ==============================================
+      */
+
+      accionesHTML = `
+
+
+        <article class="tarjeta">
+
+          <h2>
+            👤 Mi perfil
+          </h2>
+
+          <p>
+            Administrá tu información profesional
+            y los datos con los que te presentás
             dentro de AluConecta.
+          </p>
+
+          <a
+            href="perfil.html?id=${usuario.id}"
+            class="boton violeta">
+
+            Ver mi perfil
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            🏗️ Publicar una obra
+          </h2>
+
+          <p>
+            Publicá la necesidad de aberturas
+            de tu obra para que carpinteros
+            puedan analizarla y cotizar.
+          </p>
+
+          <a
+            href="proyectos.html"
+            class="boton">
+
+            Publicar obra
+
+          </a>
+
+        </article>
+
+
+
+        <article class="tarjeta">
+
+          <h2>
+            📋 Mis proyectos
+          </h2>
+
+          <p>
+            Consultá y administrá los proyectos
+            y necesidades de aberturas que
+            publicaste.
           </p>
 
           <a
             href="proyectos.html"
             class="boton verde">
 
-            Ver proyectos
+            Ver mis proyectos
 
           </a>
 
@@ -550,24 +721,68 @@ async function comprobarSesion() {
         <article class="tarjeta">
 
           <h2>
-            🛠️ Ofrecer mis servicios
+            🔎 Buscar carpinteros
           </h2>
 
           <p>
-            Presentá tus servicios y permití que
-            potenciales clientes conozcan lo que hacés.
+            Encontrá carpinteros de aluminio
+            y talleres para analizar las
+            necesidades de tu obra.
           </p>
 
           <a
-            href="registro-carpintero.html"
+            href="aluminio.html"
             class="boton naranja">
 
-            Completar perfil profesional
+            Buscar carpinteros
 
           </a>
 
         </article>
 
+
+      `;
+
+    }
+
+
+    contenido.innerHTML = `
+
+
+      <section class="bienvenida">
+
+        <h1>
+          ¡Bienvenido/a a AluConecta!
+        </h1>
+
+        <p>
+          ${
+            esCarpintero
+              ? "Desde acá podés encontrar oportunidades de trabajo, administrar tu perfil y gestionar tus cotizaciones."
+              : "Desde acá podés publicar tus obras, encontrar carpinteros de aluminio y administrar tus proyectos."
+          }
+        </p>
+
+        <div class="usuario">
+
+          👤 ${nombre}<br>
+
+          📧 ${email}<br>
+
+          ${
+            esCarpintero
+              ? "🛠️ Carpintero / Taller"
+              : "🏗️ Profesional / Empresa"
+          }
+
+        </div>
+
+      </section>
+
+
+      <section class="acciones">
+
+        ${accionesHTML}
 
       </section>
 
@@ -579,13 +794,15 @@ async function comprobarSesion() {
         </strong>
 
         <p>
-          Próximamente desde este espacio vamos
-          a incorporar más herramientas para que
-          puedas administrar tus proyectos,
-          contactos y oportunidades.
+          ${
+            esCarpintero
+              ? "Desde este espacio vas a poder encontrar proyectos, analizar necesidades de aberturas y enviar tus cotizaciones."
+              : "Desde este espacio vas a poder publicar tus obras, recibir cotizaciones y administrar tus proyectos de aberturas."
+          }
         </p>
 
       </section>
+
 
     `;
 
@@ -666,5 +883,3 @@ comprobarSesion();
 </body>
 
 </html>
-
-
