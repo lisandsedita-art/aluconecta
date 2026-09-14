@@ -26,36 +26,7 @@
   <option>Tucumán</option>
 </select><label>LOCALIDAD / ZONA</label><input id="loc" class="input" autocomplete="address-level2"><button id="send" class="button">ENVIAR ENLACE DE VERIFICACIÓN</button></div><div id="emailView" class="hidden"><h2>Revisá tu email</h2><p id="emailText"></p><button id="again" class="button">REENVIAR ENLACE</button></div></main><script>
 const URL='https://wroaxwjyjrxzwctfkyoo.supabase.co',KEY='sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3',sb=supabase.createClient(URL,KEY),P='aluconecta_cliente_pending',$=x=>document.getElementById(x);
-const provincias = [
-  'Buenos Aires',
-  'CABA',
-  'Catamarca',
-  'Chaco',
-  'Chubut',
-  'Córdoba',
-  'Corrientes',
-  'Entre Ríos',
-  'Formosa',
-  'Jujuy',
-  'La Pampa',
-  'La Rioja',
-  'Mendoza',
-  'Misiones',
-  'Neuquén',
-  'Río Negro',
-  'Salta',
-  'San Juan',
-  'San Luis',
-  'Santa Cruz',
-  'Santa Fe',
-  'Santiago del Estero',
-  'Tierra del Fuego',
-  'Tucumán'
-];
 
-provincias.forEach(function(provincia) {
-  $('prov').add(new Option(provincia, provincia));
-});
 function get(){return{nombre:$('nombre').value.trim(),rol:$('rol').value,whatsapp:$('wa').value.replace(/\D/g,''),email:$('email').value.trim().toLowerCase(),dni:$('dni').value.replace(/\D/g,''),provincia:$('prov').value,localidad:$('loc').value.trim()}}
 mfunction valid(d){if(d.nombre.length<5||!d.rol||!/^[0-9]{10}$/.test(d.whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)||!/^[0-9]{7,8}$/.test(d.dni)||!d.provincia||d.localidad.length<3){$('msg').textContent='Completá correctamente todos los datos requeridos.';$('msg').className='notice';$('msg').classList.remove('hidden');return false}return true}
 async function send(){const d=get();if(!valid(d))return;sessionStorage.setItem(P,JSON.stringify(d));$('send').disabled=true;const r=await sb.auth.signInWithOtp({email:d.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}});$('send').disabled=false;if(r.error){$('msg').textContent='No pudimos enviar el enlace: '+r.error.message;$('msg').className='notice';$('msg').classList.remove('hidden');return}$('form').classList.add('hidden');$('emailView').classList.remove('hidden');$('emailText').textContent='Enviamos un enlace seguro a '+d.email+'. Abrilo para verificar tu cuenta.'}
