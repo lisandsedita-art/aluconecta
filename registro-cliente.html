@@ -4,6 +4,15 @@ const URL='https://wroaxwjyjrxzwctfkyoo.supabase.co',KEY='sb_publishable_35152HM
 function get(){return{nombre:$('nombre').value.trim(),rol:$('rol').value,whatsapp:$('wa').value.replace(/\D/g,''),email:$('email').value.trim().toLowerCase(),dni:$('dni').value.replace(/\D/g,''),provincia:$('prov').value,localidad:$('loc').value.trim()}}
 function valid(d){if(d.nombre.length<5||!d.rol||!/^[0-9]{10}$/.test(d.whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)||!/^[0-9]{7,8}$/.test(d.dni)||!d.provincia||d.localidad.length<3){$('msg').textContent='Completá correctamente todos los datos requeridos.';$('msg').className='notice';$('msg').classList.remove('hidden');return false}return true}
 async function send(){const d=get();if(!valid(d))return;sessionStorage.setItem(P,JSON.stringify(d));$('send').disabled=true;const r=await sb.auth.signInWithOtp({email:d.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}});$('send').disabled=false;if(r.error){$('msg').textContent='No pudimos enviar el enlace: '+r.error.message;$('msg').className='notice';$('msg').classList.remove('hidden');return}$('form').classList.add('hidden');$('emailView').classList.remove('hidden');$('emailText').textContent='Enviamos un enlace seguro a '+d.email+'. Abrilo para verificar tu cuenta.'}
-async function finish(){const raw=sessionStorage.getItem(P);if(!raw)return;const d=JSON.parse(raw),u=await sb.auth.getUser();if(!u.data.user)return;const profile={id:u.data.user.id,nombre:d.nombre,tipo_usuario:'cliente_profesional',actividades:d.rol,localidad:d.localidad,telefono:d.whatsapp};const r=await sb.from('perfiles').upsert(profile,{onConflict:'id'});if(!r.error){sessionStorage.removeItem(P);location.href='index.html'}else{console.error(r.error);$('msg').textContent='La cuenta fue verificada, pero no pudimos guardar el perfil. Revisaremos este punto con Supabase.';$('msg').className='notice';$('msg').classList.remove('hidden')}}
+async function finish(){const raw=sessionStorage.getItem(P);if(!raw)return;const d=JSON.parse(raw),u=await sb.auth.getUser();if(!u.data.user)return;const profile={
+  id:u.data.user.id,
+  nombre:d.nombre,
+  tipo_usuario:'cliente_profesional',
+  actividades:d.rol,
+  localidad:d.localidad,
+  provincia:d.provincia,
+  dni:d.dni,
+  telefono:d.whatsapp
+};const r=await sb.from('perfiles').upsert(profile,{onConflict:'id'});if(!r.error){sessionStorage.removeItem(P);location.href='index.html'}else{console.error(r.error);$('msg').textContent='La cuenta fue verificada, pero no pudimos guardar el perfil. Revisaremos este punto con Supabase.';$('msg').className='notice';$('msg').classList.remove('hidden')}}
 $('send').onclick=send;$('again').onclick=async()=>{const d=JSON.parse(sessionStorage.getItem(P)||'{}');if(d.email)await sb.auth.signInWithOtp({email:d.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}})};finish();
 </script></body></html>
