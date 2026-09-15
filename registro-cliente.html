@@ -119,7 +119,6 @@ async function send(){
   dni:d.dni,
   telefono:d.whatsapp
 };const r=await sb.from('perfiles').upsert(profile,{onConflict:'id'});if(!r.error){sessionStorage.removeItem(P);location.href='index.html'}else{console.error(r.error);$('msg').textContent='La cuenta fue verificada, pero no pudimos guardar el perfil. Revisaremos este punto con Supabase.';$('msg').className='notice';$('msg').classList.remove('hidden')}}
-$('send').addEventListener('click',function(){
-  alert('EL BOTÓN FUNCIONA');
+$('send').onclick=send;
 });$('again').onclick=async()=>{const d=JSON.parse(sessionStorage.getItem(P)||'{}');if(d.email)await sb.auth.signInWithOtp({email:d.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}})};finish();
 </script></body></html>
