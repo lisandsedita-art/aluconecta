@@ -1,511 +1,933 @@
 <!doctype html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AluConecta — Crear cuenta</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>
+    AluConecta — Crear cuenta
+  </title>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
   <style>
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background: #eef2f7; color: #0f2e4a; }
-    .top { background: #0f2e4a; color: #fff; padding: 20px; }
-    .card { max-width: 430px; margin: 30px auto; background: #fff; border-radius: 24px; padding: 28px; box-shadow: 0 16px 40px #0f2e4a22; }
-    label { display: block; font-size: 11px; font-weight: 800; margin: 15px 0 7px; }
-    .input, .select { width: 100%; height: 50px; border: 1px solid #e6eaf0; border-radius: 13px; padding: 0 12px; box-sizing: border-box; font-size: 15px; }
-    .button { width: 100%; height: 54px; border: 0; border-radius: 15px; background: #fbcf3d; color: #0f2e4a; font-weight: 800; margin-top: 20px; cursor: pointer; }
-    .button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .error { color: #d33; font-size: 11px; margin-top: 5px; }
-    .hidden { display: none; }
-    .notice { padding: 12px; border-radius: 12px; background: #f7f9fb; font-size: 12px; margin: 15px 0; color: #0f2e4a; }
+
+    body {
+      margin: 0;
+      font-family:
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Arial;
+      background: #eef2f7;
+      color: #0f2e4a;
+    }
+
+    .top {
+      background: #0f2e4a;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 430px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow:
+        0 16px 40px #0f2e4a22;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      margin: 15px 0 7px;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #e6eaf0;
+      border-radius: 13px;
+      padding: 0 12px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    .button {
+      width: 100%;
+      height: 54px;
+      border: 0;
+      border-radius: 15px;
+      background: #fbcf3d;
+      color: #0f2e4a;
+      font-weight: 800;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #d33;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .notice {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f7f9fb;
+      font-size: 12px;
+      margin: 15px 0;
+      color: #0f2e4a;
+    }
+
   </style>
+
 </head>
+
+
 <body>
 
+
   <header class="top">
-    <b>Alu<span style="color:#7ab8e6">Conecta</span></b>
-    <h1 style="font-size:28px;margin:28px 0 8px">Publicar Obra - <span style="color:#fbcf3d">Crear cuenta</span></h1>
-    <p style="color:#9db0c0">Registrate para publicar tu obra y conectar con carpinteros de aluminio.</p>
+
+    <b>
+      Alu<span style="color:#7ab8e6">
+        Conecta
+      </span>
+    </b>
+
+    <h1
+      style="
+        font-size:28px;
+        margin:28px 0 8px
+      "
+    >
+      Publicar Obra -
+      <span style="color:#fbcf3d">
+        Crear cuenta
+      </span>
+    </h1>
+
+    <p style="color:#9db0c0">
+      Registrate para publicar tu obra
+      y conectar con carpinteros de aluminio.
+    </p>
+
   </header>
 
+
   <main class="card">
-    <div id="msg" class="notice hidden"></div>
+
+
+    <div
+      id="msg"
+      class="notice hidden"
+    ></div>
+
 
     <div id="form">
-      <label>NOMBRE Y APELLIDO</label>
-      <input id="nombre" class="input" autocomplete="name">
 
-      <label>ROL EN LA OBRA</label>
-      <select id="rol" class="select">
-        <option value="">Seleccioná tu rol</option>
-        <option>Arquitecto</option>
-        <option>Ingeniero</option>
-        <option>Constructor</option>
-        <option>Desarrollador</option>
-        <option>Empresa constructora</option>
-        <option>MMO</option>
+
+      <label>
+        NOMBRE Y APELLIDO
+      </label>
+
+      <input
+        id="nombre"
+        class="input"
+        autocomplete="name"
+      >
+
+
+      <label>
+        ROL EN LA OBRA
+      </label>
+
+      <select
+        id="rol"
+        class="select"
+      >
+
+        <option value="">
+          Seleccioná tu rol
+        </option>
+
+        <option>
+          Arquitecto
+        </option>
+
+        <option>
+          Ingeniero
+        </option>
+
+        <option>
+          Constructor
+        </option>
+
+        <option>
+          Desarrollador
+        </option>
+
+        <option>
+          Empresa constructora
+        </option>
+
+        <option>
+          MMO
+        </option>
+
       </select>
 
-      <label>WHATSAPP</label>
-      <input id="wa" class="input" inputmode="numeric" autocomplete="tel" placeholder="Ej: 1122334455">
 
-      <label>EMAIL</label>
-      <input id="email" class="input" type="email" autocomplete="email">
+      <label>
+        WHATSAPP
+      </label>
 
-      <label>DNI</label>
-      <input id="dni" class="input" inputmode="numeric" maxlength="8">
+      <input
+        id="wa"
+        class="input"
+        inputmode="numeric"
+        autocomplete="tel"
+        placeholder="Ej: 1122334455"
+      >
 
-      <label>PROVINCIA</label>
-      <select id="prov" class="select">
-        <option value="">Seleccioná tu provincia</option>
-        <option>Buenos Aires</option>
-        <option>CABA</option>
-        <option>Catamarca</option>
-        <option>Chaco</option>
-        <option>Chubut</option>
-        <option>Córdoba</option>
-        <option>Corrientes</option>
-        <option>Entre Ríos</option>
-        <option>Formosa</option>
-        <option>Jujuy</option>
-        <option>La Pampa</option>
-        <option>La Rioja</option>
-        <option>Mendoza</option>
-        <option>Misiones</option>
-        <option>Neuquén</option>
-        <option>Río Negro</option>
-        <option>Salta</option>
-        <option>San Juan</option>
-        <option>San Luis</option>
-        <option>Santa Cruz</option>
-        <option>Santa Fe</option>
-        <option>Santiago del Estero</option>
-        <option>Tierra del Fuego</option>
-        <option>Tucumán</option>
+
+      <label>
+        EMAIL
+      </label>
+
+      <input
+        id="email"
+        class="input"
+        type="email"
+        autocomplete="email"
+      >
+
+
+      <label>
+        DNI
+      </label>
+
+      <input
+        id="dni"
+        class="input"
+        inputmode="numeric"
+        maxlength="8"
+      >
+
+
+      <label>
+        PROVINCIA
+      </label>
+
+      <select
+        id="prov"
+        class="select"
+      >
+
+        <option value="">
+          Seleccioná tu provincia
+        </option>
+
+        <option>
+          Buenos Aires
+        </option>
+
+        <option>
+          CABA
+        </option>
+
+        <option>
+          Catamarca
+        </option>
+
+        <option>
+          Chaco
+        </option>
+
+        <option>
+          Chubut
+        </option>
+
+        <option>
+          Córdoba
+        </option>
+
+        <option>
+          Corrientes
+        </option>
+
+        <option>
+          Entre Ríos
+        </option>
+
+        <option>
+          Formosa
+        </option>
+
+        <option>
+          Jujuy
+        </option>
+
+        <option>
+          La Pampa
+        </option>
+
+        <option>
+          La Rioja
+        </option>
+
+        <option>
+          Mendoza
+        </option>
+
+        <option>
+          Misiones
+        </option>
+
+        <option>
+          Neuquén
+        </option>
+
+        <option>
+          Río Negro
+        </option>
+
+        <option>
+          Salta
+        </option>
+
+        <option>
+          San Juan
+        </option>
+
+        <option>
+          San Luis
+        </option>
+
+        <option>
+          Santa Cruz
+        </option>
+
+        <option>
+          Santa Fe
+        </option>
+
+        <option>
+          Santiago del Estero
+        </option>
+
+        <option>
+          Tierra del Fuego
+        </option>
+
+        <option>
+          Tucumán
+        </option>
+
       </select>
 
-      <label>LOCALIDAD / ZONA</label>
-      <input id="loc" class="input" autocomplete="address-level2">
+
+      <label>
+        LOCALIDAD / ZONA
+      </label>
+
+      <input
+        id="loc"
+        class="input"
+        autocomplete="address-level2"
+      >
+
 
       <button
-  id="send"
-  type="button"
-  class="button"
->
-  ENVIAR ENLACE DE VERIFICACIÓN
+        id="send"
+        type="button"
+        class="button"
+      >
+        ENVIAR ENLACE DE VERIFICACIÓN
       </button>
+
+
     </div>
 
-    <div id="emailView" class="hidden">
-      <h2>Revisá tu email</h2>
+
+    <div
+      id="emailView"
+      class="hidden"
+    >
+
+      <h2>
+        Revisá tu email
+      </h2>
+
       <p id="emailText"></p>
-      <button id="again" class="button">REENVIAR ENLACE</button>
+
+      <button
+        id="again"
+        type="button"
+        class="button"
+      >
+        REENVIAR ENLACE
+      </button>
+
     </div>
+
+
   </main>
 
+
   <script>
-    alert('PRUEBA');
 
-alert(
-  'SUPABASE: ' +
-  typeof window.supabase
-);
-const P =
-  'aluconecta_cliente_pending';
+    const SUPABASE_URL =
+      'https://wroaxwjyjrxzwctfkyoo.supabase.co';
 
-const $ =
-  x => document.getElementById(x);
-alert('JAVASCRIPT DE ALUCONECTA CARGADO');
+    const SUPABASE_KEY =
+      'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
-function get() {
-
-  return {
-
-    nombre:
-      $('nombre').value.trim(),
-
-    rol:
-      $('rol').value,
-
-    whatsapp:
-      $('wa').value.replace(/\D/g, ''),
-
-    email:
-      $('email').value
-        .trim()
-        .toLowerCase(),
-
-    dni:
-      $('dni').value.replace(/\D/g, ''),
-
-    provincia:
-      $('prov').value,
-
-    localidad:
-      $('loc').value.trim()
-
-  };
-
-}
-
-
-function valid(d) {
-
-  if (
-    d.nombre.length < 5 ||
-    !d.rol ||
-    !/^[0-9]{10}$/.test(
-      d.whatsapp
-    ) ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      d.email
-    ) ||
-    !/^[0-9]{7,8}$/.test(
-      d.dni
-    ) ||
-    !d.provincia ||
-    d.localidad.length < 3
-  ) {
-
-    $('msg').textContent =
-      'Completá correctamente todos los datos requeridos. El WhatsApp debe tener 10 dígitos.';
-
-    $('msg').className =
-      'notice';
-
-    $('msg').classList.remove(
-      'hidden'
-    );
-
-    return false;
-  }
-
-  return true;
-}
-
-
-async function send() {
-
-  const button =
-    $('send');
-
-  try {
-
-    $('msg').classList.add(
-      'hidden'
-    );
-
-    const d =
-      get();
-
-    if (!valid(d)) {
-      return;
-    }
-
-    sessionStorage.setItem(
-      P,
-      JSON.stringify(d)
-    );
-
-    button.disabled =
-      true;
-
-    button.textContent =
-      'ENVIANDO...';
-
-    console.log(
-      'Enviando enlace a:',
-      d.email
-    );
-
-    const r =
-      await sb.auth.signInWithOtp({
-
-        email:
-          d.email,
-
-        options: {
-
-          shouldCreateUser:
-            true,
-
-          emailRedirectTo:
-            window.location.origin +
-            window.location.pathname
-
-        }
-
-      });
-
-
-    if (r.error) {
-
-      throw r.error;
-
-    }
-
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'ENVIAR ENLACE DE VERIFICACIÓN';
-
-
-    $('form').classList.add(
-      'hidden'
-    );
-
-    $('emailView').classList.remove(
-      'hidden'
-    );
-
-    $('emailText').textContent =
-      'Enviamos un enlace seguro a ' +
-      d.email +
-      '. Abrilo para verificar tu cuenta.';
-
-
-  } catch (error) {
-
-    console.error(
-      'ERROR SUPABASE:',
-      error
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'ENVIAR ENLACE DE VERIFICACIÓN';
-
-    $('msg').textContent =
-      'No pudimos enviar el enlace: ' +
-      (error.message ||
-      'Error desconocido');
-
-    $('msg').className =
-      'notice';
-
-    $('msg').classList.remove(
-      'hidden'
-    );
-
-  }
-
-}
-
-
-async function handleUserSession(
-  user
-) {
-
-  try {
-
-    const raw =
-      sessionStorage.getItem(P);
-
-    if (!raw || !user) {
-      return;
-    }
-
-    const d =
-      JSON.parse(raw);
-
-
-    const profile = {
-
-      id:
-        user.id,
-
-      nombre:
-        d.nombre,
-
-      tipo_usuario:
-        'cliente_profesional',
-
-      actividades:
-        d.rol,
-
-      localidad:
-        d.localidad,
-
-      provincia:
-        d.provincia,
-
-      dni:
-        d.dni,
-
-      telefono:
-        d.whatsapp
-
-    };
-
-
-    console.log(
-      'Guardando perfil:',
-      profile
-    );
-
-
-    const r =
-      await sb
-        .from('perfiles')
-        .upsert(
-          profile,
-          {
-            onConflict:
-              'id'
-          }
-        );
-
-
-    if (r.error) {
-
-      throw r.error;
-
-    }
-
-
-    sessionStorage.removeItem(
-      P
-    );
-
-    window.location.href =
-      'index.html';
-
-
-  } catch (error) {
-
-    console.error(
-      'ERROR GUARDANDO PERFIL:',
-      error
-    );
-
-    $('msg').textContent =
-      'La cuenta fue verificada, pero no pudimos guardar el perfil: ' +
-      error.message;
-
-    $('msg').className =
-      'notice';
-
-    $('msg').classList.remove(
-      'hidden'
-    );
-
-  }
-
-}
-
-
-sb.auth.onAuthStateChange(
-  async (
-    event,
-    session
-  ) => {
-
-    console.log(
-      'Supabase Auth:',
-      event
-    );
-
-    if (
-      (
-        event ===
-          'SIGNED_IN' ||
-
-        event ===
-          'INITIAL_SESSION'
-      ) &&
-      session?.user
-    ) {
-
-      await handleUserSession(
-        session.user
+    const sb =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
       );
 
-    }
 
-  }
-);
-
-
-$('send').onclick =
-  send;
+    const P =
+      'aluconecta_cliente_pending';
 
 
-$('again').onclick =
-  async () => {
-
-    try {
-
-      const raw =
-        sessionStorage.getItem(
-          P
-        );
-
-      if (!raw) {
-        return;
-      }
-
-      const d =
-        JSON.parse(raw);
-
-      if (!d.email) {
-        return;
-      }
+    const $ =
+      id =>
+        document.getElementById(id);
 
 
-      const r =
-        await sb.auth.signInWithOtp({
+    function showMessage(message) {
 
-          email:
-            d.email,
+      const msg =
+        $('msg');
 
-          options: {
+      msg.textContent =
+        message;
 
-            shouldCreateUser:
-              true,
-
-            emailRedirectTo:
-              window.location.origin +
-              window.location.pathname
-
-          }
-
-        });
-
-
-      if (r.error) {
-        throw r.error;
-      }
-
-
-      $('emailText').textContent =
-        'Volvimos a enviar el enlace a ' +
-        d.email +
-        '. Revisá también la carpeta de spam.';
-
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-
-      $('msg').textContent =
-        'No pudimos reenviar el enlace: ' +
-        error.message;
-
-      $('msg').className =
+      msg.className =
         'notice';
 
-      $('msg').classList.remove(
+      msg.classList.remove(
         'hidden'
       );
 
     }
 
-  };
+
+    function hideMessage() {
+
+      $('msg').classList.add(
+        'hidden'
+      );
+
+    }
+
+
+    function get() {
+
+      return {
+
+        nombre:
+          $('nombre')
+            .value
+            .trim(),
+
+        rol:
+          $('rol')
+            .value,
+
+        whatsapp:
+          $('wa')
+            .value
+            .replace(
+              /\D/g,
+              ''
+            ),
+
+        email:
+          $('email')
+            .value
+            .trim()
+            .toLowerCase(),
+
+        dni:
+          $('dni')
+            .value
+            .replace(
+              /\D/g,
+              ''
+            ),
+
+        provincia:
+          $('prov')
+            .value,
+
+        localidad:
+          $('loc')
+            .value
+            .trim()
+
+      };
+
+    }
+
+
+    function valid(d) {
+
+      if (
+        d.nombre.length < 5
+      ) {
+
+        showMessage(
+          'Ingresá tu nombre y apellido.'
+        );
+
+        return false;
+      }
+
+
+      if (!d.rol) {
+
+        showMessage(
+          'Seleccioná tu rol en la obra.'
+        );
+
+        return false;
+      }
+
+
+      if (
+        !/^[0-9]{10}$/
+          .test(
+            d.whatsapp
+          )
+      ) {
+
+        showMessage(
+          'El WhatsApp debe tener 10 dígitos.'
+        );
+
+        return false;
+      }
+
+
+      if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          .test(
+            d.email
+          )
+      ) {
+
+        showMessage(
+          'Ingresá un email válido.'
+        );
+
+        return false;
+      }
+
+
+      if (
+        !/^[0-9]{7,8}$/
+          .test(
+            d.dni
+          )
+      ) {
+
+        showMessage(
+          'Ingresá un DNI válido de 7 u 8 dígitos.'
+        );
+
+        return false;
+      }
+
+
+      if (!d.provincia) {
+
+        showMessage(
+          'Seleccioná tu provincia.'
+        );
+
+        return false;
+      }
+
+
+      if (
+        d.localidad.length < 3
+      ) {
+
+        showMessage(
+          'Ingresá tu localidad o zona.'
+        );
+
+        return false;
+      }
+
+
+      return true;
+
+    }
+
+
+    async function send() {
+
+      const button =
+        $('send');
+
+
+      try {
+
+        hideMessage();
+
+
+        const d =
+          get();
+
+
+        if (!valid(d)) {
+          return;
+        }
+
+
+        sessionStorage.setItem(
+          P,
+          JSON.stringify(d)
+        );
+
+
+        button.disabled =
+          true;
+
+        button.textContent =
+          'ENVIANDO...';
+
+
+        const redirectUrl =
+          window.location.origin +
+          window.location.pathname;
+
+
+        const result =
+          await sb.auth.signInWithOtp({
+
+            email:
+              d.email,
+
+            options: {
+
+              shouldCreateUser:
+                true,
+
+              emailRedirectTo:
+                redirectUrl
+
+            }
+
+          });
+
+
+        if (result.error) {
+
+          throw result.error;
+
+        }
+
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          'ENVIAR ENLACE DE VERIFICACIÓN';
+
+
+        $('form')
+          .classList
+          .add(
+            'hidden'
+          );
+
+
+        $('emailView')
+          .classList
+          .remove(
+            'hidden'
+          );
+
+
+        $('emailText')
+          .textContent =
+          'Enviamos un enlace seguro a ' +
+          d.email +
+          '. Abrilo para verificar tu cuenta.';
+
+
+      } catch (error) {
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          'ENVIAR ENLACE DE VERIFICACIÓN';
+
+
+        showMessage(
+          'No pudimos enviar el enlace: ' +
+          (
+            error.message ||
+            'Error desconocido.'
+          )
+        );
+
+      }
+
+    }
+
+
+    async function handleUserSession(
+      user
+    ) {
+
+      try {
+
+        const raw =
+          sessionStorage.getItem(
+            P
+          );
+
+
+        if (
+          !raw ||
+          !user
+        ) {
+
+          return;
+
+        }
+
+
+        const d =
+          JSON.parse(raw);
+
+
+        const profile = {
+
+          id:
+            user.id,
+
+          nombre:
+            d.nombre,
+
+          tipo_usuario:
+            'cliente_profesional',
+
+          actividades:
+            d.rol,
+
+          localidad:
+            d.localidad,
+
+          telefono:
+            d.whatsapp
+
+        };
+
+
+        const result =
+          await sb
+            .from('perfiles')
+            .upsert(
+              profile,
+              {
+                onConflict:
+                  'id'
+              }
+            );
+
+
+        if (result.error) {
+
+          throw result.error;
+
+        }
+
+
+        sessionStorage.removeItem(
+          P
+        );
+
+
+        window.location.href =
+          'index.html';
+
+      } catch (error) {
+
+        showMessage(
+          'La cuenta fue verificada, pero no pudimos guardar el perfil: ' +
+          (
+            error.message ||
+            'Error desconocido.'
+          )
+        );
+
+      }
+
+    }
+
+
+    async function resend() {
+
+      try {
+
+        const raw =
+          sessionStorage.getItem(
+            P
+          );
+
+
+        if (!raw) {
+
+          showMessage(
+            'No encontramos los datos del registro.'
+          );
+
+          return;
+
+        }
+
+
+        const d =
+          JSON.parse(raw);
+
+
+        if (!d.email) {
+
+          showMessage(
+            'No encontramos el email del registro.'
+          );
+
+          return;
+
+        }
+
+
+        const result =
+          await sb.auth.signInWithOtp({
+
+            email:
+              d.email,
+
+            options: {
+
+              shouldCreateUser:
+                true,
+
+              emailRedirectTo:
+                window.location.origin +
+                window.location.pathname
+
+            }
+
+          });
+
+
+        if (result.error) {
+
+          throw result.error;
+
+        }
+
+
+        $('emailText')
+          .textContent =
+          'Volvimos a enviar el enlace a ' +
+          d.email +
+          '. Revisá también la carpeta de spam.';
+
+
+      } catch (error) {
+
+        showMessage(
+          'No pudimos reenviar el enlace: ' +
+          (
+            error.message ||
+            'Error desconocido.'
+          )
+        );
+
+      }
+
+    }
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        $('send').onclick =
+          send;
+
+        $('again').onclick =
+          resend;
+
+      }
+    );
+
+
+    sb.auth.onAuthStateChange(
+      async (
+        event,
+        session
+      ) => {
+
+        if (
+          (
+            event ===
+              'SIGNED_IN' ||
+
+            event ===
+              'INITIAL_SESSION'
+          ) &&
+          session &&
+          session.user
+        ) {
+
+          await handleUserSession(
+            session.user
+          );
+
+        }
+
+      }
+    );
+
   </script>
-  </script>
+
+
 </body>
+
 </html>
