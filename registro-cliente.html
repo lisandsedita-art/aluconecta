@@ -102,135 +102,416 @@
   </main>
 
   <script>
-    const URL = 'https://wroaxwjyjrxzwctfkyoo.supabase.co';
-    const KEY = 'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
-    const sb = supabase.createClient(URL, KEY);
-    const P = 'aluconecta_cliente_pending';
+const URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
 
-    const $ = x => document.getElementById(x);
+const KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
-    function get() {
-      return {
-        nombre: $('nombre').value.trim(),
-        rol: $('rol').value,
-        whatsapp: $('wa').value.replace(/\D/g, ''),
-        email: $('email').value.trim().toLowerCase(),
-        dni: $('dni').value.replace(/\D/g, ''),
-        provincia: $('prov').value,
-        localidad: $('loc').value.trim()
-      };
+const sb =
+  window.supabase.createClient(
+    URL,
+    KEY
+  );
+
+const P =
+  'aluconecta_cliente_pending';
+
+const $ =
+  x => document.getElementById(x);
+
+
+function get() {
+
+  return {
+
+    nombre:
+      $('nombre').value.trim(),
+
+    rol:
+      $('rol').value,
+
+    whatsapp:
+      $('wa').value.replace(/\D/g, ''),
+
+    email:
+      $('email').value
+        .trim()
+        .toLowerCase(),
+
+    dni:
+      $('dni').value.replace(/\D/g, ''),
+
+    provincia:
+      $('prov').value,
+
+    localidad:
+      $('loc').value.trim()
+
+  };
+
+}
+
+
+function valid(d) {
+
+  if (
+    d.nombre.length < 5 ||
+    !d.rol ||
+    !/^[0-9]{10}$/.test(
+      d.whatsapp
+    ) ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      d.email
+    ) ||
+    !/^[0-9]{7,8}$/.test(
+      d.dni
+    ) ||
+    !d.provincia ||
+    d.localidad.length < 3
+  ) {
+
+    $('msg').textContent =
+      'Completá correctamente todos los datos requeridos. El WhatsApp debe tener 10 dígitos.';
+
+    $('msg').className =
+      'notice';
+
+    $('msg').classList.remove(
+      'hidden'
+    );
+
+    return false;
+  }
+
+  return true;
+}
+
+
+async function send() {
+
+  const button =
+    $('send');
+
+  try {
+
+    $('msg').classList.add(
+      'hidden'
+    );
+
+    const d =
+      get();
+
+    if (!valid(d)) {
+      return;
     }
 
-    function valid(d) {
-      if (
-        d.nombre.length < 5 ||
-        !d.rol ||
-        !/^[0-9]{10}$/.test(d.whatsapp) ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email) ||
-        !/^[0-9]{7,8}$/.test(d.dni) ||
-        !d.provincia ||
-        d.localidad.length < 3
-      ) {
-        $('msg').textContent = 'Completá correctamente todos los datos requeridos (el WhatsApp debe tener 10 dígitos).';
-        $('msg').className = 'notice';
-        $('msg').classList.remove('hidden');
-        return false;
-      }
-      return true;
-    }
+    sessionStorage.setItem(
+      P,
+      JSON.stringify(d)
+    );
 
-    async function send() {
-      try {
-        const d = get();
+    button.disabled =
+      true;
 
-        if (!valid(d)) return;
+    button.textContent =
+      'ENVIANDO...';
 
-        sessionStorage.setItem(P, JSON.stringify(d));
+    console.log(
+      'Enviando enlace a:',
+      d.email
+    );
 
-        $('send').disabled = true;
-        $('send').textContent = 'ENVIANDO...';
+    const r =
+      await sb.auth.signInWithOtp({
 
-        const r = await sb.auth.signInWithOtp({
-          email: d.email,
-          options: {
-            shouldCreateUser: true,
-            emailRedirectTo: location.origin + location.pathname
-          }
-        });
+        email:
+          d.email,
 
-        $('send').disabled = false;
-        $('send').textContent = 'ENVIAR ENLACE DE VERIFICACIÓN';
+        options: {
 
-        if (r.error) {
-          $('msg').textContent = 'No pudimos enviar el enlace: ' + r.error.message;
-          $('msg').className = 'notice';
-          $('msg').classList.remove('hidden');
-          return;
+          shouldCreateUser:
+            true,
+
+          emailRedirectTo:
+            window.location.origin +
+            window.location.pathname
+
         }
 
-        $('form').classList.add('hidden');
-        $('emailView').classList.remove('hidden');
-        $('emailText').textContent = 'Enviamos un enlace seguro a ' + d.email + '. Abrilo para verificar tu cuenta.';
+      });
 
-      } catch (error) {
-        $('send').disabled = false;
-        $('send').textContent = 'ENVIAR ENLACE DE VERIFICACIÓN';
-        $('msg').textContent = 'Error al procesar el registro: ' + error.message;
-        $('msg').className = 'notice';
-        $('msg').classList.remove('hidden');
-      }
+
+    if (r.error) {
+
+      throw r.error;
+
     }
 
-    async function handleUserSession(user) {
-      const raw = sessionStorage.getItem(P);
-      if (!raw || !user) return;
 
-      const d = JSON.parse(raw);
+    button.disabled =
+      false;
 
-      const profile = {
-        id: user.id,
-        nombre: d.nombre,
-        tipo_usuario: 'cliente_profesional',
-        actividades: d.rol,
-        localidad: d.localidad,
-        provincia: d.provincia,
-        dni: d.dni,
-        telefono: d.whatsapp
-      };
+    button.textContent =
+      'ENVIAR ENLACE DE VERIFICACIÓN';
 
-      const r = await sb.from('perfiles').upsert(profile, { onConflict: 'id' });
 
-      if (!r.error) {
-        sessionStorage.removeItem(P);
-        window.location.href = 'index.html';
-      } else {
-        console.error(r.error);
-        $('msg').textContent = 'La cuenta fue verificada, pero no pudimos guardar el perfil: ' + r.error.message;
-        $('msg').className = 'notice';
-        $('msg').classList.remove('hidden');
-      }
+    $('form').classList.add(
+      'hidden'
+    );
+
+    $('emailView').classList.remove(
+      'hidden'
+    );
+
+    $('emailText').textContent =
+      'Enviamos un enlace seguro a ' +
+      d.email +
+      '. Abrilo para verificar tu cuenta.';
+
+
+  } catch (error) {
+
+    console.error(
+      'ERROR SUPABASE:',
+      error
+    );
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'ENVIAR ENLACE DE VERIFICACIÓN';
+
+    $('msg').textContent =
+      'No pudimos enviar el enlace: ' +
+      (error.message ||
+      'Error desconocido');
+
+    $('msg').className =
+      'notice';
+
+    $('msg').classList.remove(
+      'hidden'
+    );
+
+  }
+
+}
+
+
+async function handleUserSession(
+  user
+) {
+
+  try {
+
+    const raw =
+      sessionStorage.getItem(P);
+
+    if (!raw || !user) {
+      return;
     }
 
-    sb.auth.onAuthStateChange(async (event, session) => {
-      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
-        await handleUserSession(session.user);
-      }
-    });
+    const d =
+      JSON.parse(raw);
 
-    $('send').onclick = send;
 
-    $('again').onclick = async () => {
-      const d = JSON.parse(sessionStorage.getItem(P) || '{}');
-      if (d.email) {
-        await sb.auth.signInWithOtp({
-          email: d.email,
-          options: {
-            shouldCreateUser: true,
-            emailRedirectTo: location.origin + location.pathname
-          }
-        });
-      }
+    const profile = {
+
+      id:
+        user.id,
+
+      nombre:
+        d.nombre,
+
+      tipo_usuario:
+        'cliente_profesional',
+
+      actividades:
+        d.rol,
+
+      localidad:
+        d.localidad,
+
+      provincia:
+        d.provincia,
+
+      dni:
+        d.dni,
+
+      telefono:
+        d.whatsapp
+
     };
+
+
+    console.log(
+      'Guardando perfil:',
+      profile
+    );
+
+
+    const r =
+      await sb
+        .from('perfiles')
+        .upsert(
+          profile,
+          {
+            onConflict:
+              'id'
+          }
+        );
+
+
+    if (r.error) {
+
+      throw r.error;
+
+    }
+
+
+    sessionStorage.removeItem(
+      P
+    );
+
+    window.location.href =
+      'index.html';
+
+
+  } catch (error) {
+
+    console.error(
+      'ERROR GUARDANDO PERFIL:',
+      error
+    );
+
+    $('msg').textContent =
+      'La cuenta fue verificada, pero no pudimos guardar el perfil: ' +
+      error.message;
+
+    $('msg').className =
+      'notice';
+
+    $('msg').classList.remove(
+      'hidden'
+    );
+
+  }
+
+}
+
+
+sb.auth.onAuthStateChange(
+  async (
+    event,
+    session
+  ) => {
+
+    console.log(
+      'Supabase Auth:',
+      event
+    );
+
+    if (
+      (
+        event ===
+          'SIGNED_IN' ||
+
+        event ===
+          'INITIAL_SESSION'
+      ) &&
+      session?.user
+    ) {
+
+      await handleUserSession(
+        session.user
+      );
+
+    }
+
+  }
+);
+
+
+$('send').onclick =
+  send;
+
+
+$('again').onclick =
+  async () => {
+
+    try {
+
+      const raw =
+        sessionStorage.getItem(
+          P
+        );
+
+      if (!raw) {
+        return;
+      }
+
+      const d =
+        JSON.parse(raw);
+
+      if (!d.email) {
+        return;
+      }
+
+
+      const r =
+        await sb.auth.signInWithOtp({
+
+          email:
+            d.email,
+
+          options: {
+
+            shouldCreateUser:
+              true,
+
+            emailRedirectTo:
+              window.location.origin +
+              window.location.pathname
+
+          }
+
+        });
+
+
+      if (r.error) {
+        throw r.error;
+      }
+
+
+      $('emailText').textContent =
+        'Volvimos a enviar el enlace a ' +
+        d.email +
+        '. Revisá también la carpeta de spam.';
+
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
+
+      $('msg').textContent =
+        'No pudimos reenviar el enlace: ' +
+        error.message;
+
+      $('msg').className =
+        'notice';
+
+      $('msg').classList.remove(
+        'hidden'
+      );
+
+    }
+
+  };
+  </script>
   </script>
 </body>
 </html>
