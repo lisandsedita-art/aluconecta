@@ -125,7 +125,7 @@
         !d.provincia ||
         d.localidad.length < 3
       ) {
-        $('msg').textContent = 'Completá correctamente todos los datos requeridos.';
+        $('msg').textContent = 'Completá correctamente todos los datos requeridos (el WhatsApp debe tener 10 dígitos).';
         $('msg').className = 'notice';
         $('msg').classList.remove('hidden');
         return false;
@@ -172,21 +172,17 @@
         $('msg').textContent = 'Error al procesar el registro: ' + error.message;
         $('msg').className = 'notice';
         $('msg').classList.remove('hidden');
-        console.error(error);
       }
     }
 
-    async function finish() {
+    async function handleUserSession(user) {
       const raw = sessionStorage.getItem(P);
-      if (!raw) return;
+      if (!raw || !user) return;
 
       const d = JSON.parse(raw);
-      const u = await sb.auth.getUser();
-
-      if (!u.data.user) return;
 
       const profile = {
-        id: u.data.user.id,
+        id: user.id,
         nombre: d.nombre,
         tipo_usuario: 'cliente_profesional',
         actividades: d.rol,
@@ -200,16 +196,21 @@
 
       if (!r.error) {
         sessionStorage.removeItem(P);
-        location.href = 'index.html';
+        window.location.href = 'index.html';
       } else {
         console.error(r.error);
-        $('msg').textContent = 'La cuenta fue verificada, pero no pudimos guardar el perfil. Revisaremos este punto con Supabase.';
+        $('msg').textContent = 'La cuenta fue verificada, pero no pudimos guardar el perfil: ' + r.error.message;
         $('msg').className = 'notice';
         $('msg').classList.remove('hidden');
       }
     }
 
-    // Escuchadores de eventos
+    sb.auth.onAuthStateChange(async (event, session) => {
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+        await handleUserSession(session.user);
+      }
+    });
+
     $('send').onclick = send;
 
     $('again').onclick = async () => {
@@ -224,10 +225,6 @@
         });
       }
     };
-
-    // Ejecución al cargar
-    finish();
   </script>
 </body>
 </html>
-
