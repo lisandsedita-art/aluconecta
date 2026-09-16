@@ -990,9 +990,16 @@ async function registrarInteres(
     }
 
 
-    interesesActuales.add(
-      String(proyectoId)
-    );
+    
+    interesesActuales.set(
+  String(proyectoId),
+  {
+    proyecto_id: proyectoId,
+    estado: 'interesado',
+    created_at: new Date().toISOString()
+  }
+);
+    
 
 
     boton.disabled =
