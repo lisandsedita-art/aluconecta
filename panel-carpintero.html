@@ -1004,9 +1004,12 @@ async function registrarInteres(
 
 
     alert(
-      'No pudimos registrar tu interés. ' +
-      'La obra sigue disponible y tu panel continúa funcionando normalmente.'
-    );
+  'ERROR SUPABASE\n\n' +
+  'Código: ' + (error.code || 'sin código') + '\n\n' +
+  'Mensaje: ' + (error.message || 'sin mensaje') + '\n\n' +
+  'Detalles: ' + (error.details || 'sin detalles') + '\n\n' +
+  'Hint: ' + (error.hint || 'sin hint')
+);
 
   }
 
