@@ -8,9 +8,7 @@
   <title>Ingresar - AluConecta</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -26,13 +24,8 @@
       padding: 30px 20px;
     }
 
-    header h1 {
-      margin: 0 0 10px;
-    }
-
-    header p {
-      margin: 0;
-    }
+    header h1 { margin: 0 0 10px; }
+    header p { margin: 0; }
 
     .contenedor {
       max-width: 500px;
@@ -44,7 +37,7 @@
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 15px rgba(0,0,0,.08);
     }
 
     h2 {
@@ -58,9 +51,7 @@
       margin-bottom: 25px;
     }
 
-    .campo {
-      margin-bottom: 20px;
-    }
+    .campo { margin-bottom: 20px; }
 
     label {
       display: block;
@@ -68,9 +59,7 @@
       font-weight: bold;
     }
 
-    .password-contenedor {
-      position: relative;
-    }
+    .password-contenedor { position: relative; }
 
     input {
       width: 100%;
@@ -85,9 +74,7 @@
       border-color: #2563eb;
     }
 
-    #password {
-      padding-right: 50px;
-    }
+    #password { padding-right: 50px; }
 
     .ver-password {
       position: absolute;
@@ -112,11 +99,6 @@
       font-weight: bold;
     }
 
-    .olvido:hover,
-    .enlace:hover {
-      text-decoration: underline;
-    }
-
     .boton {
       width: 100%;
       padding: 14px;
@@ -129,12 +111,8 @@
       cursor: pointer;
     }
 
-    .boton:hover {
-      background: #1d4ed8;
-    }
-
     .boton:disabled {
-      opacity: 0.6;
+      opacity: .6;
       cursor: wait;
     }
 
@@ -171,10 +149,6 @@
       margin-top: 25px;
       color: #555;
       line-height: 1.5;
-    }
-
-    .registro .enlace {
-      margin-top: 8px;
     }
 
     footer {
@@ -215,10 +189,10 @@
           id="email"
           placeholder="tu@email.com"
           autocomplete="email"
-          required>
+          required
+        >
 
       </div>
-
 
       <div class="campo">
 
@@ -233,13 +207,15 @@
             id="password"
             placeholder="Tu contraseña"
             autocomplete="current-password"
-            required>
+            required
+          >
 
           <button
             type="button"
             class="ver-password"
-            onclick="mostrarPassword()"
-            aria-label="Mostrar contraseña">
+            id="verPassword"
+            aria-label="Mostrar contraseña"
+          >
             👁️
           </button>
 
@@ -247,47 +223,44 @@
 
       </div>
 
-
       <a
         href="recuperar-password.html"
-        class="olvido">
+        class="olvido"
+      >
         ¿Olvidaste tu contraseña?
       </a>
-
 
       <button
         type="submit"
         class="boton"
-        id="botonLogin">
-
+        id="botonLogin"
+      >
         Ingresar
-
       </button>
 
     </form>
 
-
     <div
       id="mensaje"
-      class="mensaje">
-    </div>
-
+      class="mensaje"
+    ></div>
 
     <a
       href="index.html"
-      class="enlace">
+      class="enlace"
+    >
       ← Volver a AluConecta
     </a>
-
 
     <div class="registro">
 
       ¿Todavía no tenés una cuenta?
 
       <a
-        href="registro.html"
-        class="enlace">
-        Crear mi perfil
+        href="acceso.html"
+        class="enlace"
+      >
+        Crear mi cuenta
       </a>
 
     </div>
@@ -296,15 +269,12 @@
 
 </main>
 
-
 <footer>
-
   <p>© 2026 AluConecta</p>
 
   <p>
     Conectando personas, trabajos y oportunidades.
   </p>
-
 </footer>
 
 
@@ -313,193 +283,320 @@
 <script>
 
 const SUPABASE_URL =
-  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
 
 const SUPABASE_KEY =
-  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
-const supabaseClient =
+const sb =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
 
 
-function mostrarPassword() {
+const formulario =
+  document.getElementById('formularioLogin');
 
-  const password =
-    document.getElementById("password");
+const boton =
+  document.getElementById('botonLogin');
 
-  const boton =
-    document.querySelector(".ver-password");
+const mensaje =
+  document.getElementById('mensaje');
 
-  if (password.type === "password") {
+const emailInput =
+  document.getElementById('email');
 
-    password.type = "text";
+const passwordInput =
+  document.getElementById('password');
 
-    boton.textContent = "🙈";
+const verPassword =
+  document.getElementById('verPassword');
 
-    boton.setAttribute(
-      "aria-label",
-      "Ocultar contraseña"
-    );
 
-  } else {
+verPassword.addEventListener(
+  'click',
+  function() {
 
-    password.type = "password";
+    if (
+      passwordInput.type === 'password'
+    ) {
 
-    boton.textContent = "👁️";
+      passwordInput.type = 'text';
+      verPassword.textContent = '🙈';
 
-    boton.setAttribute(
-      "aria-label",
-      "Mostrar contraseña"
-    );
+      verPassword.setAttribute(
+        'aria-label',
+        'Ocultar contraseña'
+      );
+
+    } else {
+
+      passwordInput.type = 'password';
+      verPassword.textContent = '👁️';
+
+      verPassword.setAttribute(
+        'aria-label',
+        'Mostrar contraseña'
+      );
+
+    }
 
   }
+);
+
+
+function mostrarMensaje(
+  texto,
+  tipo
+) {
+
+  mensaje.className =
+    'mensaje ' + tipo;
+
+  mensaje.textContent =
+    texto;
+
+  mensaje.style.display =
+    'block';
 
 }
 
 
-document
-  .getElementById("formularioLogin")
-  .addEventListener(
-    "submit",
-    async function(event) {
+function destinoPorTipo(tipoUsuario) {
 
-      event.preventDefault();
+  if (
+    tipoUsuario === 'carpintero'
+  ) {
 
+    return 'panel-carpintero.html';
 
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
+  }
 
-      const password =
-        document
-          .getElementById("password")
-          .value;
+  return 'inicio.html';
 
-      const boton =
-        document
-          .getElementById("botonLogin");
-
-      const mensaje =
-        document
-          .getElementById("mensaje");
+}
 
 
-      boton.disabled = true;
-      boton.textContent =
-        "Ingresando...";
+async function obtenerTipoUsuario(user) {
 
-      mensaje.style.display =
-        "none";
+  /*
+   * Primero consultamos perfiles.
+   * Esta es nuestra fuente de verdad
+   * para el perfil de AluConecta.
+   */
 
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth.signInWithPassword({
-
-            email: email,
-
-            password: password
-
-          });
+  const {
+    data,
+    error
+  } =
+    await sb
+      .from('perfiles')
+      .select('tipo_usuario')
+      .eq('id', user.id)
+      .maybeSingle();
 
 
-        if (error) {
-          throw error;
-        }
+  if (error) {
+    throw error;
+  }
 
 
-        if (!data.user) {
+  if (
+    data &&
+    data.tipo_usuario
+  ) {
 
-          throw new Error(
-            "No se pudo iniciar la sesión."
-          );
+    return data.tipo_usuario;
 
-        }
+  }
 
 
-        localStorage.setItem(
-          "aluConectaUsuarioRegistrado",
-          "true"
+  /*
+   * Respaldo para cuentas recién confirmadas:
+   * usamos metadata solamente para decidir
+   * la navegación, nunca como autorización.
+   */
+
+  return (
+    user.user_metadata?.tipo_usuario ||
+    null
+  );
+
+}
+
+
+formulario.addEventListener(
+  'submit',
+  async function(event) {
+
+    event.preventDefault();
+
+
+    mensaje.style.display =
+      'none';
+
+
+    const email =
+      emailInput.value
+        .trim()
+        .toLowerCase();
+
+    const password =
+      passwordInput.value;
+
+
+    if (
+      !email ||
+      !password
+    ) {
+
+      mostrarMensaje(
+        'Ingresá tu correo y contraseña.',
+        'error'
+      );
+
+      return;
+
+    }
+
+
+    boton.disabled = true;
+
+    boton.textContent =
+      'Ingresando...';
+
+
+    try {
+
+      const {
+        data,
+        error
+      } =
+        await sb.auth.signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (
+        !data.user
+      ) {
+
+        throw new Error(
+          'No se pudo iniciar la sesión.'
         );
-
-
-        mensaje.className =
-          "mensaje exito";
-
-        mensaje.style.display =
-          "block";
-
-        mensaje.innerHTML = `
-
-          <strong>
-            ¡Bienvenido/a a AluConecta!
-          </strong>
-
-          <p>
-            Ingresaste correctamente.
-          </p>
-
-        `;
-
-
-      setTimeout(function() {
-  window.location.href = "inicio.html";
-}, 1200);
-
-
-      } catch (error) {
-
-        console.error(
-          "Error al iniciar sesión:",
-          error
-        );
-
-
-        mensaje.className =
-          "mensaje error";
-
-        mensaje.style.display =
-          "block";
-
-        mensaje.innerHTML = `
-
-          <strong>
-            No pudimos iniciar sesión.
-          </strong>
-
-          <p>
-            ${error.message}
-          </p>
-
-          <p>
-            Revisá tu correo y contraseña.
-          </p>
-
-        `;
-
-      } finally {
-
-        boton.disabled = false;
-
-        boton.textContent =
-          "Ingresar";
 
       }
 
+
+      const tipoUsuario =
+        await obtenerTipoUsuario(
+          data.user
+        );
+
+
+      if (!tipoUsuario) {
+
+        await sb.auth.signOut();
+
+        throw new Error(
+          'Tu cuenta existe, pero no encontramos un perfil de AluConecta asociado.'
+        );
+
+      }
+
+
+      const destino =
+        destinoPorTipo(
+          tipoUsuario
+        );
+
+
+      mostrarMensaje(
+        '¡Bienvenido/a a AluConecta! Ingresaste correctamente.',
+        'exito'
+      );
+
+
+      setTimeout(
+        function() {
+
+          window.location.href =
+            destino;
+
+        },
+        700
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        'Error al iniciar sesión:',
+        error
+      );
+
+
+      let texto =
+        error.message ||
+        'No pudimos iniciar sesión.';
+
+
+      if (
+        texto
+          .toLowerCase()
+          .includes(
+            'invalid login credentials'
+          )
+      ) {
+
+        texto =
+          'Correo o contraseña incorrectos.';
+
+      }
+
+
+      if (
+        texto
+          .toLowerCase()
+          .includes(
+            'email not confirmed'
+          )
+      ) {
+
+        texto =
+          'Primero tenés que verificar tu correo electrónico.';
+
+      }
+
+
+      mostrarMensaje(
+        texto,
+        'error'
+      );
+
+
+    } finally {
+
+      boton.disabled = false;
+
+      boton.textContent =
+        'Ingresar';
+
     }
-  );
+
+  }
+);
 
 </script>
 
 </body>
-
 </html>
