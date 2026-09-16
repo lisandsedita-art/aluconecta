@@ -61,15 +61,48 @@
       font-size: 15px;
     }
 
+    .input:focus,
+    .select:focus {
+      outline: none;
+      border-color: #7ab8e6;
+    }
+
+    .password-box {
+      position: relative;
+    }
+
+    .password-box .input {
+      padding-right: 48px;
+    }
+
+    .ver-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 19px;
+    }
+
+    .ayuda {
+      font-size: 11px;
+      color: #64748b;
+      margin: 6px 2px 0;
+      line-height: 1.4;
+    }
+
     .button {
       width: 100%;
-      height: 54px;
+      min-height: 54px;
       border: 0;
       border-radius: 15px;
       background: #fbcf3d;
       color: #0f2e4a;
       font-weight: 800;
-      margin-top: 20px;
+      margin-top: 22px;
+      padding: 12px;
       cursor: pointer;
     }
 
@@ -83,532 +116,741 @@
     }
 
     .notice {
-      padding: 12px;
+      padding: 13px;
       border-radius: 12px;
       background: #f7f9fb;
-      font-size: 12px;
+      font-size: 13px;
       margin: 15px 0;
       color: #0f2e4a;
+      line-height: 1.5;
+    }
+
+    .notice.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .notice.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-  <header class="top">
+<header class="top">
 
-    <b>
-      Alu<span style="color:#7ab8e6">Conecta</span>
-    </b>
+  <b>
+    Alu<span style="color:#7ab8e6">Conecta</span>
+  </b>
 
-    <h1
-      style="
-        font-size:28px;
-        margin:28px 0 8px
-      "
+  <h1
+    style="
+      font-size:28px;
+      margin:28px 0 8px
+    "
+  >
+    Publicar Obra -
+    <span style="color:#fbcf3d">
+      Crear cuenta
+    </span>
+  </h1>
+
+  <p style="color:#9db0c0">
+    Registrate para publicar tu obra
+    y conectar con carpinteros de aluminio.
+  </p>
+
+</header>
+
+
+<main class="card">
+
+  <div
+    id="msg"
+    class="notice hidden"
+  ></div>
+
+
+  <div id="form">
+
+    <label for="nombre">
+      NOMBRE Y APELLIDO
+    </label>
+
+    <input
+      id="nombre"
+      class="input"
+      autocomplete="name"
     >
-      Publicar Obra -
-      <span style="color:#fbcf3d">
-        Crear cuenta
-      </span>
-    </h1>
 
-    <p style="color:#9db0c0">
-      Registrate para publicar tu obra
-      y conectar con carpinteros de aluminio.
+
+    <label for="rol">
+      ROL EN LA OBRA
+    </label>
+
+    <select
+      id="rol"
+      class="select"
+    >
+      <option value="">
+        Seleccioná tu rol
+      </option>
+
+      <option>Arquitecto</option>
+      <option>Ingeniero</option>
+      <option>Constructor</option>
+      <option>Desarrollador</option>
+      <option>Empresa constructora</option>
+      <option>MMO</option>
+    </select>
+
+
+    <label for="wa">
+      WHATSAPP
+    </label>
+
+    <input
+      id="wa"
+      class="input"
+      inputmode="numeric"
+      autocomplete="tel"
+      placeholder="Ej: 1122334455"
+    >
+
+
+    <label for="email">
+      EMAIL
+    </label>
+
+    <input
+      id="email"
+      class="input"
+      type="email"
+      autocomplete="email"
+      placeholder="tu@email.com"
+    >
+
+
+    <label for="email2">
+      CONFIRMAR EMAIL
+    </label>
+
+    <input
+      id="email2"
+      class="input"
+      type="email"
+      autocomplete="email"
+      placeholder="Volvé a escribir tu email"
+    >
+
+
+    <label for="dni">
+      DNI
+    </label>
+
+    <input
+      id="dni"
+      class="input"
+      inputmode="numeric"
+      maxlength="8"
+    >
+
+
+    <label for="prov">
+      PROVINCIA
+    </label>
+
+    <select
+      id="prov"
+      class="select"
+    >
+      <option value="">
+        Seleccioná tu provincia
+      </option>
+
+      <option>Buenos Aires</option>
+      <option>CABA</option>
+      <option>Catamarca</option>
+      <option>Chaco</option>
+      <option>Chubut</option>
+      <option>Córdoba</option>
+      <option>Corrientes</option>
+      <option>Entre Ríos</option>
+      <option>Formosa</option>
+      <option>Jujuy</option>
+      <option>La Pampa</option>
+      <option>La Rioja</option>
+      <option>Mendoza</option>
+      <option>Misiones</option>
+      <option>Neuquén</option>
+      <option>Río Negro</option>
+      <option>Salta</option>
+      <option>San Juan</option>
+      <option>San Luis</option>
+      <option>Santa Cruz</option>
+      <option>Santa Fe</option>
+      <option>Santiago del Estero</option>
+      <option>Tierra del Fuego</option>
+      <option>Tucumán</option>
+    </select>
+
+
+    <label for="loc">
+      LOCALIDAD / ZONA
+    </label>
+
+    <input
+      id="loc"
+      class="input"
+      autocomplete="address-level2"
+    >
+
+
+    <label for="password">
+      CONTRASEÑA
+    </label>
+
+    <div class="password-box">
+
+      <input
+        id="password"
+        class="input"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Creá una contraseña"
+      >
+
+      <button
+        type="button"
+        class="ver-password"
+        onclick="togglePassword('password', this)"
+        aria-label="Mostrar contraseña"
+      >
+        👁️
+      </button>
+
+    </div>
+
+    <p class="ayuda">
+      Usá al menos 8 caracteres.
     </p>
 
-  </header>
 
-  <main class="card">
+    <label for="password2">
+      CONFIRMAR CONTRASEÑA
+    </label>
 
-    <div
-      id="msg"
-      class="notice hidden"
-    ></div>
-
-    <div id="form">
-
-      <label>NOMBRE Y APELLIDO</label>
+    <div class="password-box">
 
       <input
-        id="nombre"
+        id="password2"
         class="input"
-        autocomplete="name"
-      >
-
-      <label>ROL EN LA OBRA</label>
-
-      <select
-        id="rol"
-        class="select"
-      >
-        <option value="">
-          Seleccioná tu rol
-        </option>
-
-        <option>Arquitecto</option>
-        <option>Ingeniero</option>
-        <option>Constructor</option>
-        <option>Desarrollador</option>
-        <option>Empresa constructora</option>
-        <option>MMO</option>
-      </select>
-
-      <label>WHATSAPP</label>
-
-      <input
-        id="wa"
-        class="input"
-        inputmode="numeric"
-        autocomplete="tel"
-        placeholder="Ej: 1122334455"
-      >
-
-      <label>EMAIL</label>
-
-      <input
-        id="email"
-        class="input"
-        type="email"
-        autocomplete="email"
-      >
-
-      <label>DNI</label>
-
-      <input
-        id="dni"
-        class="input"
-        inputmode="numeric"
-        maxlength="8"
-      >
-
-      <label>PROVINCIA</label>
-
-      <select
-        id="prov"
-        class="select"
-      >
-        <option value="">
-          Seleccioná tu provincia
-        </option>
-
-        <option>Buenos Aires</option>
-        <option>CABA</option>
-        <option>Catamarca</option>
-        <option>Chaco</option>
-        <option>Chubut</option>
-        <option>Córdoba</option>
-        <option>Corrientes</option>
-        <option>Entre Ríos</option>
-        <option>Formosa</option>
-        <option>Jujuy</option>
-        <option>La Pampa</option>
-        <option>La Rioja</option>
-        <option>Mendoza</option>
-        <option>Misiones</option>
-        <option>Neuquén</option>
-        <option>Río Negro</option>
-        <option>Salta</option>
-        <option>San Juan</option>
-        <option>San Luis</option>
-        <option>Santa Cruz</option>
-        <option>Santa Fe</option>
-        <option>Santiago del Estero</option>
-        <option>Tierra del Fuego</option>
-        <option>Tucumán</option>
-      </select>
-
-      <label>LOCALIDAD / ZONA</label>
-
-      <input
-        id="loc"
-        class="input"
-        autocomplete="address-level2"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Volvé a escribir la contraseña"
       >
 
       <button
-        id="send"
         type="button"
-        class="button"
+        class="ver-password"
+        onclick="togglePassword('password2', this)"
+        aria-label="Mostrar contraseña"
       >
-        ENVIAR ENLACE DE VERIFICACIÓN
+        👁️
       </button>
 
     </div>
 
-    <div
-      id="emailView"
-      class="hidden"
+
+    <button
+      id="send"
+      type="button"
+      class="button"
     >
+      CREAR CUENTA
+    </button>
 
-      <h2>Revisá tu email</h2>
+    <a
+      href="ingresar.html"
+      class="link"
+    >
+      Ya tengo una cuenta — Ingresar
+    </a>
 
-      <p id="emailText"></p>
+  </div>
 
-      <button
-        id="again"
-        type="button"
-        class="button"
-      >
-        REENVIAR ENLACE
-      </button>
 
-    </div>
+  <div
+    id="emailView"
+    class="hidden"
+  >
 
-  </main>
+    <h2>
+      Revisá tu email
+    </h2>
 
-  <script>
+    <p id="emailText"></p>
 
-    const SUPABASE_URL =
-      'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+    <p class="notice">
+      Abrí el correo de AluConecta y tocá el enlace
+      para verificar tu cuenta. Después vas a poder
+      ingresar con el email y la contraseña que
+      acabás de crear.
+    </p>
 
-    const SUPABASE_KEY =
-      'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+    <a
+      href="ingresar.html"
+      class="link"
+    >
+      Ir a Ingresar
+    </a>
 
-    const sb =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+  </div>
 
-    const $ =
-      id => document.getElementById(id);
+</main>
 
 
-    function showMessage(message) {
+<script>
 
-      const msg = $('msg');
+const SUPABASE_URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
 
-      msg.textContent = message;
+const SUPABASE_KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
-      msg.className = 'notice';
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-      msg.classList.remove('hidden');
 
-    }
+const $ =
+  id => document.getElementById(id);
 
 
-    function hideMessage() {
+function showMessage(message, type = 'error') {
 
-      $('msg').classList.add('hidden');
+  const msg = $('msg');
 
-    }
+  msg.textContent = message;
 
+  msg.className =
+    'notice ' + type;
 
-    function getData() {
+  msg.classList.remove('hidden');
 
-      return {
+}
 
-        nombre:
-          $('nombre').value.trim(),
 
-        rol:
-          $('rol').value,
+function hideMessage() {
 
-        whatsapp:
-          $('wa')
-            .value
-            .replace(/\D/g, ''),
+  $('msg').classList.add('hidden');
 
-        email:
-          $('email')
-            .value
-            .trim()
-            .toLowerCase(),
+}
 
-        dni:
-          $('dni')
-            .value
-            .replace(/\D/g, ''),
 
-        provincia:
-          $('prov').value,
+function togglePassword(id, button) {
 
-        localidad:
-          $('loc').value.trim()
+  const input = $(id);
 
-      };
+  if (input.type === 'password') {
 
-    }
+    input.type = 'text';
 
+    button.textContent = '🙈';
 
-    function validate(d) {
-
-      if (d.nombre.length < 5) {
-
-        showMessage(
-          'Ingresá tu nombre y apellido.'
-        );
-
-        return false;
-      }
-
-
-      if (!d.rol) {
-
-        showMessage(
-          'Seleccioná tu rol en la obra.'
-        );
-
-        return false;
-      }
-
-
-      if (!/^[0-9]{10}$/.test(d.whatsapp)) {
-
-        showMessage(
-          'El WhatsApp debe tener 10 dígitos.'
-        );
-
-        return false;
-      }
-
-
-      if (
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          .test(d.email)
-      ) {
-
-        showMessage(
-          'Ingresá un email válido.'
-        );
-
-        return false;
-      }
-
-
-      if (!/^[0-9]{7,8}$/.test(d.dni)) {
-
-        showMessage(
-          'Ingresá un DNI válido de 7 u 8 dígitos.'
-        );
-
-        return false;
-      }
-
-
-      if (!d.provincia) {
-
-        showMessage(
-          'Seleccioná tu provincia.'
-        );
-
-        return false;
-      }
-
-
-      if (d.localidad.length < 3) {
-
-        showMessage(
-          'Ingresá tu localidad o zona.'
-        );
-
-        return false;
-      }
-
-
-      return true;
-
-    }
-
-
-    function confirmationUrl() {
-
-      return new URL(
-        'confirmacion.html',
-        window.location.href
-      ).href;
-
-    }
-
-
-    async function sendMagicLink(d) {
-
-      const { error } =
-        await sb.auth.signInWithOtp({
-
-          email: d.email,
-
-          options: {
-
-            shouldCreateUser: true,
-
-            emailRedirectTo:
-              confirmationUrl(),
-
-            data: {
-
-              nombre:
-                d.nombre,
-
-              rol:
-                d.rol,
-
-              whatsapp:
-                d.whatsapp,
-
-              dni:
-                d.dni,
-
-              provincia:
-                d.provincia,
-
-              localidad:
-                d.localidad,
-
-              tipo_usuario:
-                'cliente_profesional'
-
-            }
-
-          }
-
-        });
-
-
-      if (error) {
-        throw error;
-      }
-
-    }
-
-
-    async function send() {
-
-      const button = $('send');
-
-      try {
-
-        hideMessage();
-
-        const d = getData();
-
-        if (!validate(d)) {
-          return;
-        }
-
-
-        button.disabled = true;
-
-        button.textContent =
-          'ENVIANDO...';
-
-
-        await sendMagicLink(d);
-
-
-        $('form')
-          .classList
-          .add('hidden');
-
-
-        $('emailView')
-          .classList
-          .remove('hidden');
-
-
-        $('emailText').textContent =
-          'Enviamos un enlace seguro a ' +
-          d.email +
-          '. Abrilo para verificar tu cuenta.';
-
-
-      } catch (error) {
-
-        showMessage(
-          'No pudimos enviar el enlace: ' +
-          (
-            error.message ||
-            'Error desconocido.'
-          )
-        );
-
-      } finally {
-
-        button.disabled = false;
-
-        button.textContent =
-          'ENVIAR ENLACE DE VERIFICACIÓN';
-
-      }
-
-    }
-
-
-    async function resend() {
-
-      const button = $('again');
-
-      try {
-
-        hideMessage();
-
-        const d = getData();
-
-        if (!validate(d)) {
-
-          $('emailView')
-            .classList
-            .add('hidden');
-
-          $('form')
-            .classList
-            .remove('hidden');
-
-          return;
-        }
-
-
-        button.disabled = true;
-
-        button.textContent =
-          'REENVIANDO...';
-
-
-        await sendMagicLink(d);
-
-
-        $('emailText').textContent =
-          'Volvimos a enviar el enlace a ' +
-          d.email +
-          '. Revisá también la carpeta de spam.';
-
-
-      } catch (error) {
-
-        showMessage(
-          'No pudimos reenviar el enlace: ' +
-          (
-            error.message ||
-            'Error desconocido.'
-          )
-        );
-
-      } finally {
-
-        button.disabled = false;
-
-        button.textContent =
-          'REENVIAR ENLACE';
-
-      }
-
-    }
-
-
-    document.addEventListener(
-      'DOMContentLoaded',
-      () => {
-
-        $('send').onclick = send;
-
-        $('again').onclick = resend;
-
-      }
+    button.setAttribute(
+      'aria-label',
+      'Ocultar contraseña'
     );
 
-  </script>
+  } else {
+
+    input.type = 'password';
+
+    button.textContent = '👁️';
+
+    button.setAttribute(
+      'aria-label',
+      'Mostrar contraseña'
+    );
+
+  }
+
+}
+
+
+function getData() {
+
+  return {
+
+    nombre:
+      $('nombre').value.trim(),
+
+    rol:
+      $('rol').value,
+
+    whatsapp:
+      $('wa')
+        .value
+        .replace(/\D/g, ''),
+
+    email:
+      $('email')
+        .value
+        .trim()
+        .toLowerCase(),
+
+    email2:
+      $('email2')
+        .value
+        .trim()
+        .toLowerCase(),
+
+    dni:
+      $('dni')
+        .value
+        .replace(/\D/g, ''),
+
+    provincia:
+      $('prov').value,
+
+    localidad:
+      $('loc').value.trim(),
+
+    password:
+      $('password').value,
+
+    password2:
+      $('password2').value
+
+  };
+
+}
+
+
+function validate(d) {
+
+  if (d.nombre.length < 5) {
+
+    showMessage(
+      'Ingresá tu nombre y apellido.'
+    );
+
+    return false;
+  }
+
+
+  if (!d.rol) {
+
+    showMessage(
+      'Seleccioná tu rol en la obra.'
+    );
+
+    return false;
+  }
+
+
+  if (!/^[0-9]{10}$/.test(d.whatsapp)) {
+
+    showMessage(
+      'El WhatsApp debe tener 10 dígitos.'
+    );
+
+    return false;
+  }
+
+
+  if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      .test(d.email)
+  ) {
+
+    showMessage(
+      'Ingresá un email válido.'
+    );
+
+    return false;
+  }
+
+
+  if (d.email !== d.email2) {
+
+    showMessage(
+      'Los emails no coinciden.'
+    );
+
+    return false;
+  }
+
+
+  if (!/^[0-9]{7,8}$/.test(d.dni)) {
+
+    showMessage(
+      'Ingresá un DNI válido de 7 u 8 dígitos.'
+    );
+
+    return false;
+  }
+
+
+  if (!d.provincia) {
+
+    showMessage(
+      'Seleccioná tu provincia.'
+    );
+
+    return false;
+  }
+
+
+  if (d.localidad.length < 3) {
+
+    showMessage(
+      'Ingresá tu localidad o zona.'
+    );
+
+    return false;
+  }
+
+
+  if (d.password.length < 8) {
+
+    showMessage(
+      'La contraseña debe tener al menos 8 caracteres.'
+    );
+
+    return false;
+  }
+
+
+  if (d.password !== d.password2) {
+
+    showMessage(
+      'Las contraseñas no coinciden.'
+    );
+
+    return false;
+  }
+
+
+  return true;
+
+}
+
+
+function confirmationUrl() {
+
+  return new URL(
+    'confirmacion.html',
+    window.location.href
+  ).href;
+
+}
+
+
+async function createAccount(d) {
+
+  const {
+    data,
+    error
+  } =
+    await sb.auth.signUp({
+
+      email: d.email,
+
+      password: d.password,
+
+      options: {
+
+        emailRedirectTo:
+          confirmationUrl(),
+
+        data: {
+
+          nombre:
+            d.nombre,
+
+          rol:
+            d.rol,
+
+          whatsapp:
+            d.whatsapp,
+
+          dni:
+            d.dni,
+
+          provincia:
+            d.provincia,
+
+          localidad:
+            d.localidad,
+
+          tipo_usuario:
+            'cliente_profesional'
+
+        }
+
+      }
+
+    });
+
+
+  if (error) {
+    throw error;
+  }
+
+
+  if (!data.user) {
+
+    throw new Error(
+      'No se pudo crear la cuenta.'
+    );
+
+  }
+
+
+  /*
+    Supabase puede devolver identidades vacías
+    cuando el email ya corresponde a una cuenta,
+    dependiendo de la configuración de seguridad.
+  */
+
+  if (
+    Array.isArray(data.user.identities) &&
+    data.user.identities.length === 0
+  ) {
+
+    throw new Error(
+      'Este correo ya está registrado. Ingresá a tu cuenta.'
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+async function send() {
+
+  const button = $('send');
+
+  try {
+
+    hideMessage();
+
+    const d = getData();
+
+
+    if (!validate(d)) {
+      return;
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+      'CREANDO CUENTA...';
+
+
+    await createAccount(d);
+
+
+    $('form')
+      .classList
+      .add('hidden');
+
+
+    $('emailView')
+      .classList
+      .remove('hidden');
+
+
+    $('emailText').textContent =
+      'Enviamos un enlace de verificación a ' +
+      d.email +
+      '.';
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al crear la cuenta:',
+      error
+    );
+
+
+    let message =
+      error.message ||
+      'No pudimos crear la cuenta.';
+
+
+    const lower =
+      message.toLowerCase();
+
+
+    if (
+      lower.includes('already registered') ||
+      lower.includes('already been registered') ||
+      lower.includes('user already registered')
+    ) {
+
+      message =
+        'Este correo ya está registrado. Ingresá a tu cuenta.';
+
+    }
+
+
+    if (
+      lower.includes('rate limit') ||
+      lower.includes('email rate')
+    ) {
+
+      message =
+        'Se alcanzó temporalmente el límite de correos de verificación. Esperá unos minutos antes de volver a intentarlo.';
+
+    }
+
+
+    showMessage(message);
+
+  } finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      'CREAR CUENTA';
+
+  }
+
+}
+
+
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    $('send').onclick = send;
+
+  }
+);
+
+</script>
 
 </body>
 </html>
