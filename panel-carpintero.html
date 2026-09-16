@@ -1150,7 +1150,124 @@ function crearProyectoElemento(proyecto) {
 
 }
 
+function renderizarMisIntereses() {
 
+  const contenedor =
+    document.getElementById('listaIntereses');
+
+  if (!contenedor) {
+    return;
+  }
+
+  contenedor.innerHTML = '';
+
+  if (interesesActuales.size === 0) {
+
+    const strong =
+      document.createElement('strong');
+
+    strong.textContent =
+      'Todavía no registraste intereses.';
+
+    const span =
+      document.createElement('span');
+
+    span.className =
+      'muted';
+
+    span.textContent =
+      'Cuando marques una obra como interesante aparecerá acá.';
+
+    contenedor.appendChild(strong);
+    contenedor.appendChild(span);
+
+    return;
+  }
+
+  const intereses =
+    Array.from(interesesActuales.values())
+      .sort((a, b) =>
+        new Date(b.created_at || 0) -
+        new Date(a.created_at || 0)
+      );
+
+  intereses.forEach(interes => {
+
+    const proyecto =
+      proyectosVisibles.get(
+        String(interes.proyecto_id)
+      );
+
+    const tarjeta =
+      document.createElement('div');
+
+    tarjeta.className =
+      'box-light';
+
+    tarjeta.style.marginTop =
+      '10px';
+
+    const titulo =
+      document.createElement('div');
+
+    titulo.className =
+      'value';
+
+    titulo.textContent =
+      proyecto
+        ? textoSeguro(
+            proyecto.Proyecto ||
+            proyecto.tipo_obra ||
+            proyecto.Tipo ||
+            'Proyecto de aberturas'
+          )
+        : 'Proyecto #' +
+          String(interes.proyecto_id);
+
+    const ubicacion =
+      document.createElement('div');
+
+    ubicacion.className =
+      'muted';
+
+    ubicacion.style.marginTop =
+      '5px';
+
+    ubicacion.textContent =
+      proyecto
+        ? '📍 ' +
+          textoSeguro(
+            proyecto.Localidad ||
+            proyecto.localidad ||
+            proyecto.ciudad ||
+            proyecto.zona
+          )
+        : 'Obra registrada en tus intereses';
+
+    const estado =
+      document.createElement('span');
+
+    estado.className =
+      'pill pill-green';
+
+    estado.style.display =
+      'inline-block';
+
+    estado.style.marginTop =
+      '10px';
+
+    estado.textContent =
+      'INTERESADO';
+
+    tarjeta.appendChild(titulo);
+    tarjeta.appendChild(ubicacion);
+    tarjeta.appendChild(estado);
+
+    contenedor.appendChild(tarjeta);
+
+  });
+
+}
 async function cargarProyectos() {
 
   const contenedor =
