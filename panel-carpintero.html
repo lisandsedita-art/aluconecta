@@ -908,9 +908,10 @@ async function cargarIntereses() {
     (data || []).forEach(
       interes => {
 
-        interesesActuales.add(
-          String(interes.proyecto_id)
-        );
+        interesesActuales.set(
+  String(interes.proyecto_id),
+  interes
+);
 
       }
     );
