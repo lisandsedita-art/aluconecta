@@ -42,8 +42,7 @@
       background: white;
       padding: 35px 25px;
       border-radius: 20px;
-      box-shadow:
-        0 16px 40px #0f2e4a22;
+      box-shadow: 0 16px 40px #0f2e4a22;
       text-align: center;
     }
 
@@ -56,6 +55,7 @@
       margin-top: 20px;
       padding: 18px;
       border-radius: 12px;
+      line-height: 1.5;
     }
 
     .cargando {
@@ -86,257 +86,508 @@
   </style>
 </head>
 
+
 <body>
 
-  <main class="contenedor">
+<main class="contenedor">
 
-    <section class="tarjeta">
+  <section class="tarjeta">
 
-      <h1>
-        Alu<span style="color:#7ab8e6">
-          Conecta
-        </span>
-      </h1>
+    <h1>
+      Alu<span style="color:#7ab8e6">Conecta</span>
+    </h1>
 
-      <div
-        id="mensaje"
-        class="mensaje cargando"
-      >
-        Verificando tu cuenta y creando tu perfil...
-      </div>
+    <div
+      id="mensaje"
+      class="mensaje cargando"
+    >
+      Verificando tu cuenta y creando tu perfil...
+    </div>
 
-    </section>
+  </section>
 
-  </main>
+</main>
 
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-  ></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
 
 
-  <script>
+<script>
 
-    const SUPABASE_URL =
-      'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+const SUPABASE_URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
 
-    const SUPABASE_KEY =
-      'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+const SUPABASE_KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
 
-    const sb =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const mensaje =
+  document.getElementById('mensaje');
+
+
+function escapeHtml(value) {
+
+  const div =
+    document.createElement('div');
+
+  div.textContent =
+    String(value || '');
+
+  return div.innerHTML;
+
+}
+
+
+function mostrarError(
+  texto,
+  tipoUsuario = null
+) {
+
+  let destino =
+    'acceso.html';
+
+
+  if (
+    tipoUsuario ===
+    'cliente_profesional'
+  ) {
+
+    destino =
+      'registro-cliente.html';
+
+  }
+
+
+  if (
+    tipoUsuario ===
+    'carpintero'
+  ) {
+
+    destino =
+      'registro-carpintero.html';
+
+  }
+
+
+  mensaje.className =
+    'mensaje error';
+
+
+  mensaje.innerHTML = `
+    <h2>
+      No pudimos completar el registro
+    </h2>
+
+    <p>
+      ${escapeHtml(texto)}
+    </p>
+
+    <a
+      href="${destino}"
+      class="boton"
+    >
+      Volver al registro
+    </a>
+  `;
+
+}
+
+
+function mostrarExito(
+  tipoUsuario
+) {
+
+  const esCarpintero =
+    tipoUsuario === 'carpintero';
+
+
+  const texto =
+    esCarpintero
+
+      ? 'Tu correo fue verificado y tu perfil de carpintero quedó registrado en AluConecta.'
+
+      : 'Tu correo fue verificado y tu perfil quedó registrado en AluConecta.';
+
+
+  mensaje.className =
+    'mensaje exito';
+
+
+  mensaje.innerHTML = `
+    <h2>
+      ¡Perfil creado correctamente!
+    </h2>
+
+    <p>
+      ${texto}
+    </p>
+
+    <a
+      href="ingresar.html"
+      class="boton"
+    >
+      CONTINUAR
+    </a>
+  `;
+
+}
+
+
+function validarCliente(metadata) {
+
+  return Boolean(
+    metadata.nombre &&
+    metadata.rol &&
+    metadata.whatsapp &&
+    metadata.dni &&
+    metadata.provincia &&
+    metadata.localidad
+  );
+
+}
+
+
+function validarCarpintero(metadata) {
+
+  return Boolean(
+    metadata.nombre &&
+    metadata.whatsapp &&
+    metadata.provincia &&
+    metadata.localidad &&
+    metadata.zonas
+  );
+
+}
+
+
+async function guardarCliente(
+  user,
+  metadata
+) {
+
+  if (!validarCliente(metadata)) {
+
+    throw new Error(
+      'El registro está incompleto. Volvé al formulario para completar tus datos.'
+    );
+
+  }
+
+
+  const profile = {
+
+    id:
+      user.id,
+
+    nombre:
+      metadata.nombre,
+
+    tipo_usuario:
+      'cliente_profesional',
+
+    actividades:
+      metadata.rol,
+
+    localidad:
+      metadata.localidad,
+
+    telefono:
+      metadata.whatsapp,
+
+    dni:
+      metadata.dni,
+
+    provincia:
+      metadata.provincia
+
+  };
+
+
+  const {
+    error
+  } =
+    await sb
+      .from('perfiles')
+      .upsert(
+        profile,
+        {
+          onConflict: 'id'
+        }
       );
 
 
-    const mensaje =
-      document.getElementById(
-        'mensaje'
+  if (error) {
+    throw error;
+  }
+
+}
+
+
+async function guardarCarpintero(
+  user,
+  metadata
+) {
+
+  if (!validarCarpintero(metadata)) {
+
+    throw new Error(
+      'El registro del carpintero está incompleto. Volvé al formulario para completar tus datos.'
+    );
+
+  }
+
+
+  /*
+   * Guardamos la identidad principal en perfiles.
+   *
+   * No dependemos de localStorage.
+   * El id coincide con el usuario autenticado
+   * de Supabase Auth.
+   */
+
+  const profile = {
+
+    id:
+      user.id,
+
+    nombre:
+      metadata.nombre,
+
+    tipo_usuario:
+      'carpintero',
+
+    actividades:
+      'Carpintería de aluminio',
+
+    participacion:
+      'ofrece_servicios',
+
+    localidad:
+      metadata.localidad,
+
+    telefono:
+      metadata.whatsapp,
+
+    provincia:
+      metadata.provincia,
+
+    servicios:
+      metadata.zonas
+
+  };
+
+
+  const {
+    error: profileError
+  } =
+    await sb
+      .from('perfiles')
+      .upsert(
+        profile,
+        {
+          onConflict: 'id'
+        }
       );
 
 
-    function showError(text) {
+  if (profileError) {
+    throw profileError;
+  }
 
-      mensaje.className =
-        'mensaje error';
 
-      mensaje.innerHTML = `
-        <h2>No pudimos completar el registro</h2>
+  /*
+   * Los datos técnicos específicos del taller
+   * quedan en perfiles_publicos.
+   *
+   * Esta tabla ya forma parte de la estructura
+   * actual de AluConecta.
+   */
 
-        <p>${escapeHtml(text)}</p>
+  const perfilPublico = {
 
-        <a
-          href="registro-cliente.html"
-          class="boton"
-        >
-          Volver al registro
-        </a>
-      `;
+    id:
+      user.id,
+
+    actividades:
+      'Carpintería de aluminio',
+
+    localidad:
+      metadata.localidad,
+
+    servicios:
+      metadata.zonas,
+
+    descripcion:
+      [
+        Array.isArray(
+          metadata.marcas_perfiles
+        ) &&
+        metadata.marcas_perfiles.length
+          ? 'Perfiles: ' +
+            metadata.marcas_perfiles.join(', ')
+          : '',
+
+        Array.isArray(
+          metadata.marcas_herrajes
+        ) &&
+        metadata.marcas_herrajes.length
+          ? 'Herrajes: ' +
+            metadata.marcas_herrajes.join(', ')
+          : ''
+
+      ]
+      .filter(Boolean)
+      .join(' · ')
+
+  };
+
+
+  const {
+    error: publicError
+  } =
+    await sb
+      .from('perfiles_publicos')
+      .upsert(
+        perfilPublico,
+        {
+          onConflict: 'id'
+        }
+      );
+
+
+  if (publicError) {
+    throw publicError;
+  }
+
+}
+
+
+async function confirmarCuenta() {
+
+  let tipoUsuario = null;
+
+
+  try {
+
+    /*
+     * Supabase procesa la autenticación recibida
+     * desde el enlace de confirmación.
+     */
+
+    const {
+      data,
+      error
+    } =
+      await sb.auth.getSession();
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    if (
+      !data.session ||
+      !data.session.user
+    ) {
+
+      throw new Error(
+        'No encontramos una sesión válida. El enlace puede haber vencido o ya haber sido utilizado.'
+      );
 
     }
 
 
-    function escapeHtml(value) {
-
-      const div =
-        document.createElement('div');
-
-      div.textContent =
-        String(value || '');
-
-      return div.innerHTML;
-
-    }
+    const user =
+      data.session.user;
 
 
-    async function confirmarCuenta() {
-
-      try {
-
-        /*
-         * Supabase JS procesa automáticamente
-         * los datos de autenticación presentes
-         * en la URL y recupera la sesión.
-         */
-
-        const {
-          data,
-          error
-        } =
-          await sb.auth.getSession();
+    const metadata =
+      user.user_metadata || {};
 
 
-        if (error) {
-          throw error;
-        }
+    tipoUsuario =
+      metadata.tipo_usuario || null;
 
 
-        if (
-          !data.session ||
-          !data.session.user
-        ) {
+    if (
+      tipoUsuario ===
+      'cliente_profesional'
+    ) {
 
-          throw new Error(
-            'No encontramos una sesión válida. El enlace puede haber vencido o ya haber sido utilizado.'
-          );
-
-        }
-
-
-        const user =
-          data.session.user;
+      await guardarCliente(
+        user,
+        metadata
+      );
 
 
-        const metadata =
-          user.user_metadata || {};
+      mostrarExito(
+        tipoUsuario
+      );
 
 
-        /*
-         * Confirmamos que este usuario viene
-         * del registro de cliente.
-         */
-
-        if (
-          metadata.tipo_usuario !==
-          'cliente_profesional'
-        ) {
-
-          throw new Error(
-            'No encontramos los datos necesarios para completar este registro.'
-          );
-
-        }
-
-
-        if (
-          !metadata.nombre ||
-          !metadata.rol ||
-          !metadata.whatsapp ||
-          !metadata.dni ||
-          !metadata.provincia ||
-          !metadata.localidad
-        ) {
-
-          throw new Error(
-            'El registro está incompleto. Volvé al formulario para completar tus datos.'
-          );
-
-        }
-
-
-        const profile = {
-
-          id:
-            user.id,
-
-          nombre:
-            metadata.nombre,
-
-          tipo_usuario:
-            'cliente_profesional',
-
-          actividades:
-            metadata.rol,
-
-          localidad:
-            metadata.localidad,
-
-          telefono:
-            metadata.whatsapp,
-
-          dni:
-            metadata.dni,
-
-          provincia:
-            metadata.provincia
-
-        };
-
-
-        const {
-          error: profileError
-        } =
-          await sb
-            .from('perfiles')
-            .upsert(
-              profile,
-              {
-                onConflict: 'id'
-              }
-            );
-
-
-        if (profileError) {
-          throw profileError;
-        }
-
-
-        mensaje.className =
-          'mensaje exito';
-
-
-        mensaje.innerHTML = `
-          <h2>
-            ¡Perfil creado correctamente!
-          </h2>
-
-          <p>
-            Tu correo fue verificado y
-            tu perfil quedó registrado en AluConecta.
-          </p>
-
-          <a
-            href="ingresar.html"
-            class="boton"
-          >
-            CONTINUAR
-          </a>
-        `;
-
-
-      } catch (error) {
-
-        console.error(
-          'Error al completar el registro:',
-          error
-        );
-
-
-        showError(
-          error.message ||
-          'Ocurrió un error inesperado.'
-        );
-
-      }
+      return;
 
     }
 
 
-    confirmarCuenta();
+    if (
+      tipoUsuario ===
+      'carpintero'
+    ) {
 
-  </script>
+      await guardarCarpintero(
+        user,
+        metadata
+      );
+
+
+      mostrarExito(
+        tipoUsuario
+      );
+
+
+      return;
+
+    }
+
+
+    throw new Error(
+      'No encontramos el tipo de usuario necesario para completar este registro.'
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al completar el registro:',
+      error
+    );
+
+
+    mostrarError(
+      error.message ||
+      'Ocurrió un error inesperado.',
+      tipoUsuario
+    );
+
+  }
+
+}
+
+
+confirmarCuenta();
+
+</script>
 
 </body>
 </html>
