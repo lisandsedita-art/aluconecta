@@ -229,6 +229,21 @@
       color: white;
     }
 
+    /* NUEVO: botón para registrar interés */
+    .btn-interes {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-interes:disabled {
+      cursor: default;
+      background: #dcfce7;
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
     .seguridad {
       background: #eff6ff;
       border: 1px solid #bfdbfe;
@@ -317,7 +332,9 @@
     }
 
     @keyframes girar {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @media (max-width: 500px) {
@@ -333,6 +350,7 @@
 
 <div id="cargando">
   <div class="gate-box">
+
     <div class="spinner"></div>
 
     <div style="color:white;font-weight:800;font-size:18px;">
@@ -342,6 +360,7 @@
     <p style="color:#9eb0c2;font-size:13px;">
       Estamos cargando tu panel de carpintero.
     </p>
+
   </div>
 </div>
 
@@ -706,6 +725,17 @@ const menu =
   document.getElementById('menu');
 
 
+/*
+ * NUEVO:
+ * Guardamos en memoria el usuario autenticado
+ * y los proyectos en los que ya mostró interés.
+ */
+let usuarioActual = null;
+
+let interesesActuales =
+  new Set();
+
+
 function ocultarCarga() {
 
   cargando.style.display =
@@ -800,6 +830,189 @@ function mostrarPerfil(perfil) {
 }
 
 
+/*
+ * NUEVO:
+ * Consultamos qué proyectos ya tienen
+ * un interés registrado por este carpintero.
+ *
+ * Si esta consulta falla, NO bloqueamos
+ * el panel ni la carga de obras.
+ */
+async function cargarIntereses() {
+
+  interesesActuales =
+    new Set();
+
+
+  if (!usuarioActual) {
+    return;
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from('intereses_proyectos')
+        .select(
+          'proyecto_id,estado,created_at'
+        )
+        .eq(
+          'carpintero_id',
+          usuarioActual.id
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    (data || []).forEach(
+      interes => {
+
+        interesesActuales.add(
+          String(interes.proyecto_id)
+        );
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al cargar intereses:',
+      error
+    );
+
+    /*
+     * Importante:
+     * la nueva función no debe romper
+     * lo que ya funcionaba.
+     */
+
+  }
+
+}
+
+
+/*
+ * NUEVO:
+ * Guarda la relación entre el proyecto
+ * y el carpintero autenticado.
+ */
+async function registrarInteres(
+  proyectoId,
+  boton
+) {
+
+  if (
+    !usuarioActual ||
+    proyectoId === null ||
+    proyectoId === undefined
+  ) {
+    return;
+  }
+
+
+  if (
+    interesesActuales.has(
+      String(proyectoId)
+    )
+  ) {
+
+    boton.disabled =
+      true;
+
+    boton.textContent =
+      '✓ INTERÉS REGISTRADO';
+
+    return;
+
+  }
+
+
+  boton.disabled =
+    true;
+
+  boton.textContent =
+    'REGISTRANDO...';
+
+
+  try {
+
+    const {
+      error
+    } =
+      await sb
+        .from('intereses_proyectos')
+        .insert({
+          proyecto_id: proyectoId,
+          carpintero_id: usuarioActual.id
+        });
+
+
+    /*
+     * 23505 significa registro duplicado.
+     *
+     * En nuestro caso también lo consideramos
+     * correcto porque significa que el interés
+     * ya existe.
+     */
+    if (
+      error &&
+      error.code !== '23505'
+    ) {
+      throw error;
+    }
+
+
+    interesesActuales.add(
+      String(proyectoId)
+    );
+
+
+    boton.disabled =
+      true;
+
+    boton.textContent =
+      '✓ INTERÉS REGISTRADO';
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al registrar interés:',
+      error
+    );
+
+
+    /*
+     * Si falla la función nueva,
+     * restauramos el botón.
+     * El resto del panel sigue funcionando.
+     */
+    boton.disabled =
+      false;
+
+    boton.textContent =
+      'ESTOY INTERESADO';
+
+
+    alert(
+      'No pudimos registrar tu interés. ' +
+      'La obra sigue disponible y tu panel continúa funcionando normalmente.'
+    );
+
+  }
+
+}
+
+
 function crearProyectoElemento(proyecto) {
 
   const tarjeta =
@@ -846,8 +1059,63 @@ function crearProyectoElemento(proyecto) {
     );
 
 
+  /*
+   * NUEVO:
+   * Creamos el botón para esta obra.
+   */
+  const botonInteres =
+    document.createElement('button');
+
+  botonInteres.type =
+    'button';
+
+  botonInteres.className =
+    'btn btn-interes';
+
+
+  const yaInteresado =
+    interesesActuales.has(
+      String(proyecto.id)
+    );
+
+
+  if (yaInteresado) {
+
+    botonInteres.disabled =
+      true;
+
+    botonInteres.textContent =
+      '✓ INTERÉS REGISTRADO';
+
+  } else {
+
+    botonInteres.textContent =
+      'ESTOY INTERESADO';
+
+
+    botonInteres.addEventListener(
+      'click',
+      function() {
+
+        registrarInteres(
+          proyecto.id,
+          botonInteres
+        );
+
+      }
+    );
+
+  }
+
+
   tarjeta.appendChild(titulo);
+
   tarjeta.appendChild(ubicacion);
+
+  tarjeta.appendChild(
+    botonInteres
+  );
+
 
   return tarjeta;
 
@@ -865,11 +1133,8 @@ async function cargarProyectos() {
   try {
 
     /*
-     * Consultamos solamente datos del proyecto
-     * que la política RLS permita ver al usuario.
-     *
-     * La seguridad real de datos sensibles
-     * debe permanecer en Supabase/RLS.
+     * Mantenemos exactamente la consulta
+     * de proyectos que ya estaba funcionando.
      */
 
     const {
@@ -893,7 +1158,8 @@ async function cargarProyectos() {
     }
 
 
-    contenedor.innerHTML = '';
+    contenedor.innerHTML =
+      '';
 
 
     if (
@@ -918,8 +1184,13 @@ async function cargarProyectos() {
         'Cuando se publiquen nuevas oportunidades aparecerán acá.';
 
 
-      contenedor.appendChild(strong);
-      contenedor.appendChild(span);
+      contenedor.appendChild(
+        strong
+      );
+
+      contenedor.appendChild(
+        span
+      );
 
       return;
 
@@ -947,7 +1218,8 @@ async function cargarProyectos() {
     );
 
 
-    contenedor.innerHTML = '';
+    contenedor.innerHTML =
+      '';
 
 
     const strong =
@@ -967,8 +1239,13 @@ async function cargarProyectos() {
       'Revisaremos los permisos de proyectos antes de habilitar esta función.';
 
 
-    contenedor.appendChild(strong);
-    contenedor.appendChild(span);
+    contenedor.appendChild(
+      strong
+    );
+
+    contenedor.appendChild(
+      span
+    );
 
   }
 
@@ -1016,8 +1293,7 @@ async function iniciarPanel() {
 
     /*
      * 2. Consultamos perfiles.
-     * No confiamos en localStorage para decidir
-     * si alguien puede acceder.
+     * Esto permanece igual.
      */
 
     const {
@@ -1054,8 +1330,8 @@ async function iniciarPanel() {
 
 
     /*
-     * 3. El panel es exclusivamente
-     * para perfiles tipo carpintero.
+     * 3. El panel sigue siendo
+     * exclusivamente para carpinteros.
      */
 
     if (
@@ -1074,14 +1350,39 @@ async function iniciarPanel() {
 
 
     /*
-     * 4. Recién ahora mostramos
-     * información del panel.
+     * NUEVO:
+     * Después de haber comprobado que realmente
+     * es carpintero guardamos el usuario.
+     */
+    usuarioActual =
+      session.user;
+
+
+    /*
+     * 4. Mostramos el perfil como antes.
      */
 
-    mostrarPerfil(perfil);
+    mostrarPerfil(
+      perfil
+    );
+
 
     permitirPanel();
 
+
+    /*
+     * NUEVO:
+     * Primero averiguamos qué intereses
+     * ya tiene registrados.
+     */
+    await cargarIntereses();
+
+
+    /*
+     * Después cargamos las obras.
+     * Así podemos marcar correctamente
+     * los botones de obras ya elegidas.
+     */
     await cargarProyectos();
 
 
