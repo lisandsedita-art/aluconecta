@@ -86,7 +86,6 @@
   </style>
 </head>
 
-
 <body>
 
 <main class="contenedor">
@@ -112,7 +111,6 @@
 <script
   src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 ></script>
-
 
 <script>
 
@@ -202,9 +200,7 @@ function mostrarError(
 }
 
 
-function mostrarExito(
-  tipoUsuario
-) {
+function mostrarExito(tipoUsuario) {
 
   const esCarpintero =
     tipoUsuario === 'carpintero';
@@ -283,7 +279,7 @@ async function guardarCliente(
   }
 
 
-  const profile = {
+  const perfil = {
 
     id:
       user.id,
@@ -318,7 +314,7 @@ async function guardarCliente(
     await sb
       .from('perfiles')
       .upsert(
-        profile,
+        perfil,
         {
           onConflict: 'id'
         }
@@ -346,15 +342,67 @@ async function guardarCarpintero(
   }
 
 
+  const perfiles =
+    Array.isArray(
+      metadata.marcas_perfiles
+    )
+      ? metadata.marcas_perfiles
+      : [];
+
+
+  const herrajes =
+    Array.isArray(
+      metadata.marcas_herrajes
+    )
+      ? metadata.marcas_herrajes
+      : [];
+
+
+  const descripcionPartes = [];
+
+
+  if (perfiles.length) {
+
+    descripcionPartes.push(
+      'Sistemas de perfiles: ' +
+      perfiles.join(', ')
+    );
+
+  }
+
+
+  if (herrajes.length) {
+
+    descripcionPartes.push(
+      'Herrajes: ' +
+      herrajes.join(', ')
+    );
+
+  }
+
+
+  const descripcion =
+    descripcionPartes.length
+      ? descripcionPartes.join(' · ')
+      : 'Carpintería de aluminio';
+
+
   /*
-   * Guardamos la identidad principal en perfiles.
+   * Toda la información se guarda
+   * únicamente en la tabla perfiles.
    *
-   * No dependemos de localStorage.
-   * El id coincide con el usuario autenticado
-   * de Supabase Auth.
+   * perfiles_publicos es una VIEW y
+   * toma automáticamente de perfiles:
+   *
+   * id
+   * created_at
+   * actividades
+   * localidad
+   * servicios
+   * descripcion
    */
 
-  const profile = {
+  const perfil = {
 
     id:
       user.id,
@@ -374,98 +422,36 @@ async function guardarCarpintero(
     localidad:
       metadata.localidad,
 
+    servicios:
+      metadata.zonas,
+
     telefono:
       metadata.whatsapp,
 
-    provincia:
-      metadata.provincia,
+    descripcion:
+      descripcion,
 
-    servicios:
-      metadata.zonas
+    provincia:
+      metadata.provincia
 
   };
 
 
   const {
-    error: profileError
+    error
   } =
     await sb
       .from('perfiles')
       .upsert(
-        profile,
+        perfil,
         {
           onConflict: 'id'
         }
       );
 
 
-  if (profileError) {
-    throw profileError;
-  }
-
-
-  /*
-   * Los datos técnicos específicos del taller
-   * quedan en perfiles_publicos.
-   *
-   * Esta tabla ya forma parte de la estructura
-   * actual de AluConecta.
-   */
-
-  const perfilPublico = {
-
-    id:
-      user.id,
-
-    actividades:
-      'Carpintería de aluminio',
-
-    localidad:
-      metadata.localidad,
-
-    servicios:
-      metadata.zonas,
-
-    descripcion:
-      [
-        Array.isArray(
-          metadata.marcas_perfiles
-        ) &&
-        metadata.marcas_perfiles.length
-          ? 'Perfiles: ' +
-            metadata.marcas_perfiles.join(', ')
-          : '',
-
-        Array.isArray(
-          metadata.marcas_herrajes
-        ) &&
-        metadata.marcas_herrajes.length
-          ? 'Herrajes: ' +
-            metadata.marcas_herrajes.join(', ')
-          : ''
-
-      ]
-      .filter(Boolean)
-      .join(' · ')
-
-  };
-
-
-  const {
-    error: publicError
-  } =
-    await sb
-      .from('perfiles_publicos')
-      .upsert(
-        perfilPublico,
-        {
-          onConflict: 'id'
-        }
-      );
-
-
-  if (publicError) {
-    throw publicError;
+  if (error) {
+    throw error;
   }
 
 }
@@ -477,11 +463,6 @@ async function confirmarCuenta() {
 
 
   try {
-
-    /*
-     * Supabase procesa la autenticación recibida
-     * desde el enlace de confirmación.
-     */
 
     const {
       data,
