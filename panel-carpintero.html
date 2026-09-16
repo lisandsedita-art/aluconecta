@@ -1,166 +1,1157 @@
-
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Panel Carpintero - AluConecta</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-:root{--azul:#132e4f;--azul2:#1a3a5f;--amarillo:#ffcf00;--gris:#f1f5f9;--borde:#e2e8f0}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui;background:#f8fafc;color:#0f2e4f}
-header{background:var(--azul);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
-.logo{font-weight:900;font-size:26px;letter-spacing:-0.5px} .logo span{color:#4fb0e2}
-.hamb{width:44px;height:44px;border-radius:50%;background:#1a3a5f;display:grid;place-items:center;border:1px solid #23476f;font-size:22px}
-.hero{background:var(--azul);color:#fff;padding:22px 18px 28px}
-.hero h1{font-size:40px;line-height:0.95;margin:14px 0 14px;font-weight:900;letter-spacing:-1px}
-.hero h1 i{color:var(--amarillo);font-style:normal}
-.hero p{color:#8aa0b8;font-size:14px;line-height:1.5;margin:0;max-width:95%}
-.card{background:#fff;border:1px solid var(--borde);border-radius:20px;padding:16px;margin:0;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
-.muted{color:#64748b;font-size:13px}
-.pill{display:inline-block;padding:6px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:0.3px}
-.pill-green{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
-.pill-dark{background:#132e4f;color:#fff}
-.sens{background:#f8fafc;border:1px dashed #d1d8e2;border-radius:14px;padding:12px;margin-top:10px;color:#64748b;font-size:12px;line-height:1.5}
-.sens b{color:#6b7a90;letter-spacing:0.5px;font-size:11px}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 18px;border-radius:99px;font-weight:800;text-decoration:none;font-size:14px;cursor:pointer;border:none}
-.btn-y{background:var(--amarillo);color:#132e4f} .btn-dark{background:var(--azul);color:#fff}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.box-light{background:#f8fafc;border:1px solid #eef2f7;border-radius:14px;padding:12px}
-.label{font-size:10px;letter-spacing:1px;color:#94a3b8;font-weight:700;margin-bottom:4px}
-.value{font-weight:800;font-size:14px;color:#132e4f;line-height:1.2}
-.regla{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:12px;color:#92400e;font-size:13px;line-height:1.4}
-.regla b{color:#78350f;letter-spacing:0.5px;font-size:11px}
-.wrap{padding:14px 16px;display:grid;gap:14px}
-.footer{padding:22px 16px;color:#94a3b8;font-size:12px;display:flex;justify-content:space-between;border-top:1px solid #eef2f7;margin-top:10px}
-#menu{display:none;position:fixed;inset:0;background:rgba(19,46,79,0.97);z-index:50;padding:18px}
-#menu a{display:block;padding:14px;color:#fff;text-decoration:none;font-weight:700;border-bottom:1px solid #1e3a5a}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Panel Carpintero - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --azul: #132e4f;
+      --azul2: #1a3a5f;
+      --amarillo: #ffcf00;
+      --gris: #f8fafc;
+      --borde: #e2e8f0;
+      --texto2: #64748b;
+      --verde: #166534;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--gris);
+      color: var(--azul);
+    }
+
+    body.bloqueado {
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 26px;
+      letter-spacing: -.5px;
+    }
+
+    .logo span {
+      color: #4fb0e2;
+    }
+
+    .hamb {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--azul2);
+      display: grid;
+      place-items: center;
+      border: 1px solid #23476f;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(19,46,79,.98);
+      z-index: 50;
+      padding: 18px;
+    }
+
+    #menu a,
+    #menu button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 0;
+      border-bottom: 1px solid #28496c;
+      background: transparent;
+      text-align: left;
+      font-family: inherit;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 22px 18px 30px;
+    }
+
+    .hero-inner,
+    .wrap {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 8vw, 42px);
+      line-height: 1;
+      margin: 14px 0;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 i {
+      color: var(--amarillo);
+      font-style: normal;
+    }
+
+    .hero p {
+      color: #9eb0c2;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .wrap {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .perfil-cabecera {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .perfil-cabecera h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .pill-green {
+      background: #dcfce7;
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
+    .box-light {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .value {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--azul);
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--texto2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 99px;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-y {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-dark {
+      background: var(--azul);
+      color: white;
+    }
+
+    .seguridad {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 13px;
+      color: #1e40af;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .estado-vacio {
+      padding: 28px 15px;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    .estado-vacio strong {
+      display: block;
+      color: var(--azul);
+      margin-bottom: 7px;
+    }
+
+    .footer {
+      max-width: 850px;
+      margin: 10px auto 0;
+      padding: 22px 16px;
+      color: #94a3b8;
+      font-size: 11px;
+      border-top: 1px solid #eef2f7;
+      text-align: center;
+    }
+
+    #cargando,
+    #accesoDenegado {
+      position: fixed;
+      inset: 0;
+      background: var(--azul);
+      z-index: 100;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #accesoDenegado {
+      display: none;
+    }
+
+    .gate-box {
+      width: 100%;
+      max-width: 430px;
+      text-align: center;
+    }
+
+    .gate-logo {
+      color: white;
+      font-weight: 900;
+      font-size: 32px;
+      margin-bottom: 28px;
+    }
+
+    .gate-logo span {
+      color: #4fb0e2;
+    }
+
+    .gate-card {
+      background: white;
+      border-radius: 22px;
+      padding: 28px 22px;
+    }
+
+    .gate-card h2 {
+      margin: 0 0 12px;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 4px solid rgba(255,255,255,.25);
+      border-top-color: white;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      animation: girar .8s linear infinite;
+    }
+
+    @keyframes girar {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 500px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body>
-<header><div class="logo">Alu<span>Conecta</span></div><div class="hamb" onclick="document.getElementById('menu').style.display='block'">☰</div></header>
+
+
+<body class="bloqueado">
+
+<div id="cargando">
+  <div class="gate-box">
+    <div class="spinner"></div>
+
+    <div style="color:white;font-weight:800;font-size:18px;">
+      Verificando tu cuenta...
+    </div>
+
+    <p style="color:#9eb0c2;font-size:13px;">
+      Estamos cargando tu panel de carpintero.
+    </p>
+  </div>
+</div>
+
+
+<div id="accesoDenegado">
+  <div class="gate-box">
+
+    <div class="gate-logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <div class="gate-card">
+
+      <h2 id="tituloAcceso">
+        Acceso privado
+      </h2>
+
+      <p
+        id="textoAcceso"
+        class="muted"
+      >
+        Para entrar al panel necesitás iniciar sesión
+        con una cuenta de carpintero.
+      </p>
+
+      <div style="display:grid;gap:10px;margin-top:22px;">
+
+        <a
+          href="ingresar.html"
+          class="btn btn-y"
+        >
+          INGRESAR
+        </a>
+
+        <a
+          href="registro-carpintero.html"
+          class="btn btn-dark"
+        >
+          CREAR CUENTA DE CARPINTERO
+        </a>
+
+        <a
+          href="index.html"
+          class="btn"
+          style="background:#eef2f7;color:#132e4f;"
+        >
+          Volver al inicio
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<header>
+
+  <div class="logo">
+    Alu<span>Conecta</span>
+  </div>
+
+  <button
+    class="hamb"
+    id="abrirMenu"
+    type="button"
+    aria-label="Abrir menú"
+  >
+    ☰
+  </button>
+
+</header>
+
+
 <div id="menu">
-<div style="display:flex;justify-content:space-between;color:#fff;font-weight:900;font-size:20px"><span>Alu<span style="color:#4fb0e2">Conecta</span></span><span onclick="document.getElementById('menu').style.display='none'" style="cursor:pointer">✕</span></div>
-<a href="index.html">Inicio</a>
-<a href="panel-carpintero.html">Panel carpintero</a>
-<a href="registro-carpintero.html" style="margin-top:20px;background:#ffcf00;color:#132e4f;border-radius:12px;text-align:center">QUIERO REGISTRARME</a>
-<a href="login.html" style="text-align:center;color:#8aa0b8">Iniciar sesión</a>
-</div>
 
-<div id="gate" style="display:none;position:fixed;inset:0;background:#132e4f;z-index:100;padding:22px 18px;overflow:auto">
-<div style="max-width:420px;margin:0 auto">
-<h1 style="color:#fff;font-size:40px;line-height:0.95;font-weight:900;letter-spacing:-1px;margin-top:40px">Donde los proyectos encuentran sus <i style="color:#ffcf00;font-style:normal">aberturas.</i></h1>
-<p style="color:#8aa0b8;font-size:14px;line-height:1.5;margin-top:14px">Este panel es solo para carpinteros registrados. Primero creá tu perfil verificado.</p>
-<div class="card" style="margin-top:18px">
-<div class="label">FLUJO CORRECTO</div>
-<div style="font-size:13px;line-height:1.4;margin-top:6px;color:#132e4f">
-1. Te registrás como carpintero (zona, sistemas, WhatsApp)<br>
-2. Verificamos tu taller<br>
-3. Entrás a este panel privado y ves obras de tu zona
-</div>
-</div>
-<div style="margin-top:18px;display:grid;gap:10px">
-<a class="btn btn-y" style="width:100%;padding:18px" href="registro-carpintero.html">QUIERO REGISTRARME COMO CARPINTERO</a>
-<a class="btn" style="width:100%;background:#fff;color:#132e4f" href="login.html">Ya estoy registrado - Iniciar sesión</a>
-<a class="btn" style="width:100%;background:transparent;color:#8aa0b8;border:1px solid #1a3a5f" href="index.html">Volver al inicio</a>
-</div>
-<div style="margin-top:20px;color:#5a738f;font-size:11px;text-align:center">AluConecta • La red que une tu obra con carpinterías verificadas</div>
-</div>
-</div>
-<div class="hero">
-<h1>Donde los proyectos encuentran sus <i>aberturas.</i></h1>
-<p>Panel carpintero • Vos ves obras de tu zona. El cliente elige. AluConecta conecta y da marco de confianza. No se hace cargo de lo que hacen las partes.</p>
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:white;
+      font-weight:900;
+      font-size:20px;
+      margin-bottom:15px;
+    "
+  >
 
-<div class="card" style="margin-top:18px;padding:16px">
-<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:16px">Mi perfil carpintero</b><span class="pill pill-green">VERIFICADO</span></div>
+    <span>
+      Alu<span style="color:#4fb0e2">Conecta</span>
+    </span>
 
-<div style="margin-top:12px" class="box-light">
-<div class="label">TALLER</div>
-<div class="value">Taller de Aluminio - Rosario</div>
-<div class="muted" style="margin-top:4px">Fisherton, Rosario • 10km</div>
-</div>
+    <button
+      type="button"
+      id="cerrarMenu"
+      style="
+        width:auto;
+        border:0;
+        font-size:22px;
+        padding:8px;
+      "
+    >
+      ✕
+    </button>
 
-<div class="grid2" style="margin-top:10px">
-<div class="box-light"><div class="label">SISTEMAS</div><div class="value">Modena, A30 New</div></div>
-<div class="box-light"><div class="label">CALIFICACIÓN</div><div class="value">★ 4.9 (23 obras)</div></div>
-</div>
+  </div>
 
-<div class="regla" style="margin-top:10px"><b>REGLA SEGURIDAD</b><br>Tenés que estar registrado para ver teléfono, dirección de obra y planos. Evitamos estafas para ambos lados.</div>
+  <a href="index.html">
+    Inicio
+  </a>
 
-<div style="margin-top:12px;display:grid;gap:10px">
-<a class="btn btn-dark" style="width:100%" href="#">Editar perfil verificado</a>
-<a class="btn btn-y" style="width:100%" href="registro-carpintero.html" id="btn-reg">QUIERO REGISTRARME</a>
-</div>
-</div>
-</div>
+  <a href="panel-carpintero.html">
+    Mi panel
+  </a>
 
-<div class="wrap">
-
-<div class="card">
-<b style="font-size:16px">Mis cotizaciones</b>
-<div style="margin-top:12px;display:grid;gap:10px">
-<div class="box-light" style="display:flex;justify-content:space-between;align-items:center"><span>Fisherton • 3 paños</span><b>$890.000</b></div>
-<div class="box-light" style="display:flex;justify-content:space-between;align-items:center"><span>Palermo • Paño fijo</span><b>$420.000</b></div>
-</div>
-<div class="muted" style="text-align:center;margin-top:12px;font-size:12px;line-height:1.4">Las cotizaciones no se ven entre carpinteros. Solo las ve el cliente.</div>
-</div>
-
-<div class="card">
-<b style="font-size:18px">Obras en tu zona para cotizar</b>
-<div class="muted" style="margin-top:4px">Vista pública sin marcas • Detalle completo solo registrado</div>
-<div style="margin-top:12px;display:flex;gap:10px">
-<select style="flex:1;padding:12px;border-radius:99px;border:1px solid #e2e8f0;background:#f8fafc;font-weight:700"><option>Todas</option></select>
-<button class="btn btn-dark" style="padding:12px 20px">Recargar</button>
-</div>
-</div>
-
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:18px">📍</span> <b>Zona •</b><div class="muted">Abertura a cotizar •</div><div class="muted" style="font-size:12px">ID 2</div></div><span class="pill pill-dark">Cotizable</span></div>
-<div class="sens"><b>DATOS SENSIBLES - SOLO REGISTRADO</b><br>WhatsApp: ••• ••• ••• • Dirección obra: ••• • Plano: requiere registro</div>
-<div style="margin-top:12px;display:flex;gap:10px"><a class="btn btn-y" style="flex:1" href="#" onclick="cotizar(2)">Cotizar</a><a class="btn btn-dark" href="#">Ver</a></div>
-</div>
-
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:18px">📍</span> <b>Zona •</b><div class="muted">Abertura a cotizar •</div><div class="muted" style="font-size:12px">ID 1</div></div><span class="pill pill-dark">Cotizable</span></div>
-<div class="sens"><b>DATOS SENSIBLES - SOLO REGISTRADO</b><br>WhatsApp: ••• ••• ••• • Dirección obra: ••• • Plano: requiere registro</div>
-<div style="margin-top:12px;display:flex;gap:10px"><a class="btn btn-y" style="flex:1" href="#" onclick="cotizar(1)">Cotizar</a><a class="btn btn-dark" href="#">Ver</a></div>
-</div>
-
-<div class="card" id="bloque-registro" style="background:var(--azul);color:#fff;border:none">
-<div style="font-size:20px;font-weight:900;line-height:1.2">¿Querés ver teléfono, dirección y planos?</div>
-<div style="color:#8aa0b8;font-size:13px;margin:10px 0 16px;line-height:1.4">Por seguridad tenés que registrarte. Evitamos estafas. AluConecta es punto de conexión con marco de confianza.</div>
-<div style="display:flex;gap:10px"><a class="btn btn-y" style="flex:1" href="registro-carpintero.html">QUIERO REGISTRARME</a><a class="btn" style="flex:1;background:#fff;color:var(--azul)" href="login.html">Iniciar sesión</a></div>
-</div>
-
-<div class="footer"><div>AluConecta • Donde los proyectos encuentran sus aberturas</div><div>Panel carpintero</div></div>
+  <button
+    type="button"
+    id="cerrarSesion"
+  >
+    Cerrar sesión
+  </button>
 
 </div>
+
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <h1>
+      Tu espacio de
+      <i>trabajo.</i>
+    </h1>
+
+    <p>
+      Consultá tu perfil y las oportunidades
+      disponibles para tu carpintería.
+    </p>
+
+  </div>
+
+</section>
+
+
+<main class="wrap">
+
+  <section class="card">
+
+    <div class="perfil-cabecera">
+
+      <h2>
+        Mi perfil carpintero
+      </h2>
+
+      <span class="pill pill-green">
+        CUENTA ACTIVA
+      </span>
+
+    </div>
+
+
+    <div
+      class="box-light"
+      style="margin-top:14px;"
+    >
+
+      <div class="label">
+        TALLER / NOMBRE
+      </div>
+
+      <div
+        class="value"
+        id="nombrePerfil"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid2"
+      style="margin-top:10px;"
+    >
+
+      <div class="box-light">
+
+        <div class="label">
+          LOCALIDAD
+        </div>
+
+        <div
+          class="value"
+          id="localidadPerfil"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="box-light">
+
+        <div class="label">
+          PROVINCIA
+        </div>
+
+        <div
+          class="value"
+          id="provinciaPerfil"
+        >
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="box-light"
+      style="margin-top:10px;"
+    >
+
+      <div class="label">
+        ZONAS DONDE TRABAJÁS
+      </div>
+
+      <div
+        class="value"
+        id="serviciosPerfil"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <div
+      class="box-light"
+      style="margin-top:10px;"
+    >
+
+      <div class="label">
+        SISTEMAS / HERRAJES
+      </div>
+
+      <div
+        class="value"
+        id="descripcionPerfil"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <div
+      class="seguridad"
+      style="margin-top:12px;"
+    >
+      <strong>Cuenta autenticada</strong><br>
+      Este panel se habilita únicamente después de
+      comprobar una sesión válida de Supabase y un
+      perfil registrado como carpintero.
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2
+      style="font-size:18px;margin:0;"
+    >
+      Obras disponibles
+    </h2>
+
+    <p class="muted">
+      Acá aparecerán las oportunidades publicadas
+      por clientes que puedan ser cotizadas.
+    </p>
+
+    <div
+      id="listaProyectos"
+      class="estado-vacio"
+    >
+
+      <strong>
+        Cargando oportunidades...
+      </strong>
+
+      <span class="muted">
+        Estamos consultando los proyectos disponibles.
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2
+      style="font-size:18px;margin:0;"
+    >
+      Mis cotizaciones
+    </h2>
+
+    <div class="estado-vacio">
+
+      <strong>
+        Todavía no tenés cotizaciones registradas.
+      </strong>
+
+      <span class="muted">
+        Esta sección se habilitará cuando implementemos
+        el sistema de cotización entre carpinteros
+        y clientes.
+      </span>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer class="footer">
+  © 2026 AluConecta · Panel carpintero
+</footer>
 
 
 <script>
-function estaRegistrado(){ return localStorage.getItem('alu_user') }
-function cotizar(id){
-  if(!estaRegistrado()){ window.location.href='registro-carpintero.html'; return; }
-  alert('Cotización privada - Solo la ve el cliente - Obra ID '+id);
+
+const SUPABASE_URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const cargando =
+  document.getElementById('cargando');
+
+const accesoDenegado =
+  document.getElementById('accesoDenegado');
+
+const tituloAcceso =
+  document.getElementById('tituloAcceso');
+
+const textoAcceso =
+  document.getElementById('textoAcceso');
+
+const menu =
+  document.getElementById('menu');
+
+
+function ocultarCarga() {
+
+  cargando.style.display =
+    'none';
+
 }
-document.addEventListener('DOMContentLoaded', ()=>{
-  const gate = document.getElementById('gate');
-  if(!estaRegistrado()){
-    gate.style.display='block';
-    document.body.style.overflow='hidden';
-  } else {
-    gate.style.display='none';
-    // ocultar botones de registro si ya verificado
-    document.querySelectorAll('a').forEach(el=>{
-      const t=el.textContent.trim().toUpperCase();
-      if(t==='QUIERO REGISTRARME' || t==='QUIERO REGISTRARME COMO CARPINTERO'){
-        // mantener solo el del gate, ocultar los del interior
-        if(el.closest('#gate')===null) el.style.display='none';
-      }
-      if(t==='INICIAR SESIÓN' && el.closest('#gate')===null) el.style.display='none';
-    });
-    const bloque=document.getElementById('bloque-registro'); if(bloque) bloque.style.display='none';
+
+
+function permitirPanel() {
+
+  ocultarCarga();
+
+  accesoDenegado.style.display =
+    'none';
+
+  document.body.classList.remove(
+    'bloqueado'
+  );
+
+}
+
+
+function bloquearPanel(
+  titulo,
+  texto
+) {
+
+  ocultarCarga();
+
+  tituloAcceso.textContent =
+    titulo;
+
+  textoAcceso.textContent =
+    texto;
+
+  accesoDenegado.style.display =
+    'flex';
+
+  document.body.classList.add(
+    'bloqueado'
+  );
+
+}
+
+
+function textoSeguro(valor) {
+
+  if (
+    valor === null ||
+    valor === undefined ||
+    String(valor).trim() === ''
+  ) {
+    return 'No informado';
   }
-});
+
+  return String(valor).trim();
+
+}
+
+
+function mostrarPerfil(perfil) {
+
+  document.getElementById(
+    'nombrePerfil'
+  ).textContent =
+    textoSeguro(perfil.nombre);
+
+
+  document.getElementById(
+    'localidadPerfil'
+  ).textContent =
+    textoSeguro(perfil.localidad);
+
+
+  document.getElementById(
+    'provinciaPerfil'
+  ).textContent =
+    textoSeguro(perfil.provincia);
+
+
+  document.getElementById(
+    'serviciosPerfil'
+  ).textContent =
+    textoSeguro(perfil.servicios);
+
+
+  document.getElementById(
+    'descripcionPerfil'
+  ).textContent =
+    textoSeguro(perfil.descripcion);
+
+}
+
+
+function crearProyectoElemento(proyecto) {
+
+  const tarjeta =
+    document.createElement('div');
+
+  tarjeta.className =
+    'box-light';
+
+  tarjeta.style.marginTop =
+    '10px';
+
+
+  const titulo =
+    document.createElement('div');
+
+  titulo.className =
+    'value';
+
+  titulo.textContent =
+    textoSeguro(
+      proyecto.Proyecto ||
+      proyecto.tipo_obra ||
+      proyecto.Tipo ||
+      'Proyecto de aberturas'
+    );
+
+
+  const ubicacion =
+    document.createElement('div');
+
+  ubicacion.className =
+    'muted';
+
+  ubicacion.style.marginTop =
+    '5px';
+
+  ubicacion.textContent =
+    '📍 ' +
+    textoSeguro(
+      proyecto.Localidad ||
+      proyecto.localidad ||
+      proyecto.ciudad ||
+      proyecto.zona
+    );
+
+
+  tarjeta.appendChild(titulo);
+  tarjeta.appendChild(ubicacion);
+
+  return tarjeta;
+
+}
+
+
+async function cargarProyectos() {
+
+  const contenedor =
+    document.getElementById(
+      'listaProyectos'
+    );
+
+
+  try {
+
+    /*
+     * Consultamos solamente datos del proyecto
+     * que la política RLS permita ver al usuario.
+     *
+     * La seguridad real de datos sensibles
+     * debe permanecer en Supabase/RLS.
+     */
+
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from('proyectos')
+        .select('*')
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        )
+        .limit(20);
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    contenedor.innerHTML = '';
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      const strong =
+        document.createElement('strong');
+
+      strong.textContent =
+        'No hay obras disponibles por el momento.';
+
+
+      const span =
+        document.createElement('span');
+
+      span.className =
+        'muted';
+
+      span.textContent =
+        'Cuando se publiquen nuevas oportunidades aparecerán acá.';
+
+
+      contenedor.appendChild(strong);
+      contenedor.appendChild(span);
+
+      return;
+
+    }
+
+
+    data.forEach(
+      proyecto => {
+
+        contenedor.appendChild(
+          crearProyectoElemento(
+            proyecto
+          )
+        );
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al cargar proyectos:',
+      error
+    );
+
+
+    contenedor.innerHTML = '';
+
+
+    const strong =
+      document.createElement('strong');
+
+    strong.textContent =
+      'No pudimos cargar las obras.';
+
+
+    const span =
+      document.createElement('span');
+
+    span.className =
+      'muted';
+
+    span.textContent =
+      'Revisaremos los permisos de proyectos antes de habilitar esta función.';
+
+
+    contenedor.appendChild(strong);
+    contenedor.appendChild(span);
+
+  }
+
+}
+
+
+async function iniciarPanel() {
+
+  try {
+
+    /*
+     * 1. Comprobamos la sesión real.
+     */
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } =
+      await sb.auth.getSession();
+
+
+    if (sessionError) {
+      throw sessionError;
+    }
+
+
+    const session =
+      sessionData.session;
+
+
+    if (
+      !session ||
+      !session.user
+    ) {
+
+      bloquearPanel(
+        'Iniciá sesión',
+        'Para entrar al panel necesitás iniciar sesión con tu cuenta de carpintero.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * 2. Consultamos perfiles.
+     * No confiamos en localStorage para decidir
+     * si alguien puede acceder.
+     */
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await sb
+        .from('perfiles')
+        .select(
+          'id,nombre,tipo_usuario,localidad,servicios,descripcion,provincia'
+        )
+        .eq(
+          'id',
+          session.user.id
+        )
+        .maybeSingle();
+
+
+    if (perfilError) {
+      throw perfilError;
+    }
+
+
+    if (!perfil) {
+
+      bloquearPanel(
+        'Perfil no encontrado',
+        'Tu cuenta está autenticada, pero no encontramos tu perfil de AluConecta.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * 3. El panel es exclusivamente
+     * para perfiles tipo carpintero.
+     */
+
+    if (
+      perfil.tipo_usuario !==
+      'carpintero'
+    ) {
+
+      bloquearPanel(
+        'Este panel es para carpinteros',
+        'Tu cuenta está activa, pero corresponde a otro tipo de usuario de AluConecta.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * 4. Recién ahora mostramos
+     * información del panel.
+     */
+
+    mostrarPerfil(perfil);
+
+    permitirPanel();
+
+    await cargarProyectos();
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al iniciar panel:',
+      error
+    );
+
+
+    bloquearPanel(
+      'No pudimos abrir tu panel',
+      'Ocurrió un problema al verificar tu cuenta. Volvé a iniciar sesión.'
+    );
+
+  }
+
+}
+
+
+document.getElementById(
+  'abrirMenu'
+).addEventListener(
+  'click',
+  function() {
+
+    menu.style.display =
+      'block';
+
+  }
+);
+
+
+document.getElementById(
+  'cerrarMenu'
+).addEventListener(
+  'click',
+  function() {
+
+    menu.style.display =
+      'none';
+
+  }
+);
+
+
+document.getElementById(
+  'cerrarSesion'
+).addEventListener(
+  'click',
+  async function() {
+
+    try {
+
+      await sb.auth.signOut();
+
+    } finally {
+
+      window.location.href =
+        'ingresar.html';
+
+    }
+
+  }
+);
+
+
+iniciarPanel();
+
 </script>
 
 </body>
