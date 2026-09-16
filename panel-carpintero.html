@@ -876,8 +876,7 @@ function mostrarPerfil(perfil) {
 async function cargarIntereses() {
 
   interesesActuales =
-    new Set();
-
+    new Map();
 
   if (!usuarioActual) {
     return;
