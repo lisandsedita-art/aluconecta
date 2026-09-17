@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Publicar proyecto - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --azul: #132e4f;
+      --azul2: #1a3a5f;
+      --amarillo: #ffcf00;
+      --gris: #f8fafc;
+      --borde: #e2e8f0;
+      --texto2: #64748b;
+      --verde: #166534;
+      --rojo: #991b1b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--gris);
+      color: var(--azul);
+    }
+
+    body.bloqueado {
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 14px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-inner {
+      max-width: 850px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 26px;
+      letter-spacing: -.5px;
+    }
+
+    .logo span {
+      color: #4fb0e2;
+    }
+
+    .volver {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 28px 18px 36px;
+    }
+
+    .hero-inner,
+    .wrap {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 7vw, 42px);
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: var(--amarillo);
+    }
+
+    .hero p {
+      margin: 0;
+      color: #b8c6d5;
+      line-height: 1.6;
+      font-size: 14px;
+      max-width: 680px;
+    }
+
+    .wrap {
+      padding: 18px 16px 40px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .card-intro {
+      margin: 0 0 20px;
+      color: var(--texto2);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    .campo:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 7px;
+      color: var(--azul);
+    }
+
+    .opcional {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      background: white;
+      color: #1e293b;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(19, 46, 79, .08);
+    }
+
+    textarea {
+      min-height: 125px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .ayuda {
+      margin-top: 6px;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .documentos {
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 18px;
+      background: #f8fafc;
+    }
+
+    .documentos input {
+      background: white;
+    }
+
+    .archivo-lista {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .archivo {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #475569;
+      overflow-wrap: anywhere;
+    }
+
+    .seguridad {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 14px;
+      color: #1e40af;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    .acciones {
+      display: grid;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 20px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-principal {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-principal:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .btn-secundario {
+      display: block;
+      background: #eef2f7;
+      color: var(--azul);
+    }
+
+    .mensaje {
+      display: none;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .mensaje.ok {
+      display: block;
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+      color: var(--verde);
+    }
+
+    .mensaje.error {
+      display: block;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: var(--rojo);
+    }
+
+    .mensaje.info {
+      display: block;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    #cargando,
+    #accesoDenegado {
+      position: fixed;
+      inset: 0;
+      background: var(--azul);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+    }
+
+    #accesoDenegado {
+      display: none;
+    }
+
+    .gate {
+      width: 100%;
+      max-width: 430px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 4px solid rgba(255,255,255,.25);
+      border-top-color: white;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      animation: girar .8s linear infinite;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .gate-card {
+      background: white;
+      padding: 26px 20px;
+      border-radius: 20px;
+    }
+
+    .gate-card h2 {
+      margin-top: 0;
+    }
+
+    footer {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 22px 16px 30px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body class="bloqueado">
+
+<div id="cargando">
+  <div class="gate">
+    <div class="spinner"></div>
+
+    <div style="color:white;font-weight:800;font-size:18px;">
+      Verificando tu cuenta...
+    </div>
+
+    <p style="color:#9eb0c2;font-size:13px;">
+      Preparando la publicación de tu proyecto.
+    </p>
+  </div>
+</div>
+
+
+<div id="accesoDenegado">
+  <div class="gate">
+
+    <div style="color:white;font-size:30px;font-weight:900;margin-bottom:25px;">
+      Alu<span style="color:#4fb0e2;">Conecta</span>
+    </div>
+
+    <div class="gate-card">
+
+      <h2 id="tituloAcceso">
+        Acceso privado
+      </h2>
+
+      <p id="textoAcceso" style="color:#64748b;line-height:1.6;">
+        Para publicar un proyecto necesitás ingresar con una cuenta habilitada.
+      </p>
+
+      <div class="acciones" style="margin-top:20px;">
+        <a href="ingresar.html" class="btn btn-principal">
+          INGRESAR
+        </a>
+
+        <a href="panel-cliente.html" class="btn btn-secundario">
+          VOLVER
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<header>
+  <div class="header-inner">
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <a href="panel-cliente.html" class="volver">
+      ← Mi panel
+    </a>
+
+  </div>
+</header>
+
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <h1>
+      Publicá un <span>proyecto.</span>
+    </h1>
+
+    <p>
+      Compartí la información necesaria para que carpinterías de aluminio
+      puedan evaluar el trabajo. La documentación técnica permanece privada
+      hasta que autorices el acceso.
+    </p>
+
+  </div>
+</section>
+
+
+<main class="wrap">
+
+  <div id="mensaje" class="mensaje"></div>
+
+  <form id="formProyecto">
+
+    <section class="card">
+
+      <h2>1. Datos generales</h2>
+
+      <p class="card-intro">
+        Identificá el proyecto y su ubicación general.
+        No publiques teléfonos, correos ni datos personales en la descripción.
+      </p>
+
+      <div class="campo">
+
+        <label for="nombreProyecto">
+          Nombre del proyecto
+        </label>
+
+        <input
+          id="nombreProyecto"
+          type="text"
+          maxlength="120"
+          required
+          placeholder="Ej.: Edificio San Martín - Aberturas"
+        >
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="tipoProyecto">
+          Tipo de proyecto
+        </label>
+
+        <select id="tipoProyecto" required>
+          <option value="">Seleccionar</option>
+          <option value="Obra nueva">Obra nueva</option>
+          <option value="Edificio">Edificio</option>
+          <option value="Desarrollo inmobiliario">Desarrollo inmobiliario</option>
+          <option value="Reforma / Remodelación">Reforma / Remodelación</option>
+          <option value="Local comercial">Local comercial</option>
+          <option value="Obra industrial">Obra industrial</option>
+          <option value="Institucional">Institucional</option>
+          <option value="Otro">Otro</option>
+        </select>
+
+      </div>
+
+
+      <div class="grid2">
+
+        <div class="campo">
+
+          <label for="localidad">
+            Localidad
+          </label>
+
+          <input
+            id="localidad"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="Ej.: Rosario"
+          >
+
+        </div>
+
+
+        <div class="campo">
+
+          <label for="zona">
+            Zona
+            <span class="opcional">(opcional)</span>
+          </label>
+
+          <input
+            id="zona"
+            type="text"
+            maxlength="120"
+            placeholder="Ej.: Zona centro"
+          >
+
+          <div class="ayuda">
+            Evitá ingresar una dirección exacta si no querés hacerla visible.
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>2. Alcance técnico</h2>
+
+      <p class="card-intro">
+        Describí lo necesario para que una carpintería pueda determinar
+        si el proyecto es de su interés.
+      </p>
+
+
+      <div class="campo">
+
+        <label for="descripcion">
+          Descripción general
+        </label>
+
+        <textarea
+          id="descripcion"
+          maxlength="3000"
+          required
+          placeholder="Describí brevemente el proyecto, etapa de obra, alcance y necesidades principales..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="aberturas">
+          Aberturas requeridas
+          <span class="opcional">(opcional)</span>
+        </label>
+
+        <textarea
+          id="aberturas"
+          maxlength="2000"
+          placeholder="Ej.: ventanas corredizas, paños fijos, puertas, frentes vidriados, cantidad aproximada..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="campo">
+
+        <label for="perfileria">
+          Sistema / perfilería solicitada
+          <span class="opcional">(opcional)</span>
+        </label>
+
+        <input
+          id="perfileria"
+          type="text"
+          maxlength="250"
+          placeholder="Indicá marca, línea o requerimiento si ya está definido"
+        >
+
+        <div class="ayuda">
+          Si todavía no está definido, podés dejar este campo vacío.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>3. Documentación técnica</h2>
+
+      <p class="card-intro">
+        Podés adjuntar documentación para facilitar el análisis del proyecto.
+      </p>
+
+
+      <div class="documentos">
+
+        <label for="archivos">
+          Adjuntar archivos
+          <span class="opcional">(opcional)</span>
+        </label>
+
+        <input
+          id="archivos"
+          type="file"
+          multiple
+          accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
+        >
+
+        <div class="ayuda">
+          Formatos habilitados en esta primera etapa:
+          PDF, JPG, PNG y WEBP.
+          Máximo 10 MB por archivo y 5 archivos por proyecto.
+        </div>
+
+        <div id="listaArchivos" class="archivo-lista"></div>
+
+      </div>
+
+
+      <div class="seguridad">
+        🔒 <strong>Documentación privada.</strong>
+        Los carpinteros no acceden automáticamente a estos archivos.
+        Primero manifiestan interés y el propietario del proyecto debe
+        autorizar su acceso.
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>4. Publicación</h2>
+
+      <p class="card-intro">
+        Al publicar, el proyecto quedará asociado internamente a tu cuenta.
+        Tu identidad y tus datos de contacto no se incluyen en la ficha
+        pública del proyecto.
+      </p>
+
+      <div class="acciones">
+
+        <button
+          id="btnPublicar"
+          class="btn btn-principal"
+          type="submit"
+        >
+          PUBLICAR PROYECTO
+        </button>
+
+        <a
+          href="panel-cliente.html"
+          class="btn btn-secundario"
+        >
+          CANCELAR
+        </a>
+
+      </div>
+
+    </section>
+
+  </form>
+
+</main>
+
+
+<footer>
+  © 2026 AluConecta<br>
+  Donde los proyectos encuentran sus aberturas.
+</footer>
+
+
+<script>
+
+const SUPABASE_URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const BUCKET =
+  'proyectos-documentacion';
+
+const MAX_ARCHIVOS = 5;
+
+const MAX_BYTES =
+  10 * 1024 * 1024;
+
+const TIPOS_PERMITIDOS = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp'
+];
+
+
+let usuarioActual = null;
+let perfilActual = null;
+
+
+const form =
+  document.getElementById('formProyecto');
+
+const inputArchivos =
+  document.getElementById('archivos');
+
+const listaArchivos =
+  document.getElementById('listaArchivos');
+
+const mensaje =
+  document.getElementById('mensaje');
+
+const btnPublicar =
+  document.getElementById('btnPublicar');
+
+
+function mostrarMensaje(
+  texto,
+  tipo = 'info'
+) {
+
+  mensaje.className =
+    'mensaje ' + tipo;
+
+  mensaje.textContent =
+    texto;
+
+  mensaje.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+
+}
+
+
+function ocultarMensaje() {
+
+  mensaje.className =
+    'mensaje';
+
+  mensaje.textContent =
+    '';
+
+}
+
+
+function mostrarAccesoDenegado(
+  titulo,
+  texto
+) {
+
+  document.getElementById(
+    'tituloAcceso'
+  ).textContent = titulo;
+
+  document.getElementById(
+    'textoAcceso'
+  ).textContent = texto;
+
+  document.getElementById(
+    'cargando'
+  ).style.display = 'none';
+
+  document.getElementById(
+    'accesoDenegado'
+  ).style.display = 'flex';
+
+  document.body.classList.add(
+    'bloqueado'
+  );
+
+}
+
+
+function habilitarPagina() {
+
+  document.getElementById(
+    'cargando'
+  ).style.display = 'none';
+
+  document.body.classList.remove(
+    'bloqueado'
+  );
+
+}
+
+
+async function verificarAcceso() {
+
+  try {
+
+    const {
+      data: authData,
+      error: authError
+    } =
+      await sb.auth.getUser();
+
+
+    if (
+      authError ||
+      !authData.user
+    ) {
+
+      mostrarAccesoDenegado(
+        'Iniciá sesión',
+        'Para publicar un proyecto necesitás ingresar con una cuenta de profesional o empresa.'
+      );
+
+      return;
+    }
+
+
+    usuarioActual =
+      authData.user;
+
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await sb
+        .from('perfiles')
+        .select(
+          'id,nombre,tipo_usuario,localidad,provincia'
+        )
+        .eq(
+          'id',
+          usuarioActual.id
+        )
+        .single();
+
+
+    if (
+      perfilError ||
+      !perfil
+    ) {
+
+      console.error(
+        'Error cargando perfil:',
+        perfilError
+      );
+
+      mostrarAccesoDenegado(
+        'Perfil requerido',
+        'Tu cuenta necesita un perfil válido antes de publicar proyectos.'
+      );
+
+      return;
+    }
+
+
+    if (
+      perfil.tipo_usuario ===
+      'carpintero'
+    ) {
+
+      mostrarAccesoDenegado(
+        'Acceso para profesionales y empresas',
+        'Las cuentas de carpintería utilizan el panel de oportunidades.'
+      );
+
+      return;
+    }
+
+
+    perfilActual =
+      perfil;
+
+
+    if (perfil.localidad) {
+
+      document.getElementById(
+        'localidad'
+      ).value =
+        perfil.localidad;
+
+    }
+
+
+    habilitarPagina();
+
+
+  } catch (error) {
+
+    console.error(
+      'Error verificando acceso:',
+      error
+    );
+
+    mostrarAccesoDenegado(
+      'No pudimos verificar tu cuenta',
+      'Volvé a ingresar e intentá nuevamente.'
+    );
+
+  }
+
+}
+
+
+function validarArchivos() {
+
+  const archivos =
+    Array.from(
+      inputArchivos.files || []
+    );
+
+
+  if (
+    archivos.length >
+    MAX_ARCHIVOS
+  ) {
+
+    throw new Error(
+      'Podés adjuntar hasta 5 archivos por proyecto.'
+    );
+
+  }
+
+
+  for (
+    const archivo of archivos
+  ) {
+
+    if (
+      archivo.size >
+      MAX_BYTES
+    ) {
+
+      throw new Error(
+        'El archivo "' +
+        archivo.name +
+        '" supera el máximo de 10 MB.'
+      );
+
+    }
+
+
+    if (
+      !TIPOS_PERMITIDOS.includes(
+        archivo.type
+      )
+    ) {
+
+      throw new Error(
+        'El archivo "' +
+        archivo.name +
+        '" tiene un formato no permitido.'
+      );
+
+    }
+
+  }
+
+
+  return archivos;
+
+}
+
+
+function mostrarArchivosSeleccionados() {
+
+  listaArchivos.innerHTML =
+    '';
+
+
+  const archivos =
+    Array.from(
+      inputArchivos.files || []
+    );
+
+
+  if (
+    archivos.length === 0
+  ) {
+
+    return;
+
+  }
+
+
+  archivos.forEach(
+    archivo => {
+
+      const item =
+        document.createElement(
+          'div'
+        );
+
+      item.className =
+        'archivo';
+
+      item.textContent =
+        archivo.name +
+        ' · ' +
+        (
+          archivo.size /
+          1024 /
+          1024
+        ).toFixed(2) +
+        ' MB';
+
+      listaArchivos.appendChild(
+        item
+      );
+
+    }
+  );
+
+}
+
+
+function limpiarNombreArchivo(
+  nombre
+) {
+
+  const partes =
+    nombre.split('.');
+
+  const extension =
+    partes.length > 1
+      ? partes.pop()
+          .toLowerCase()
+          .replace(
+            /[^a-z0-9]/g,
+            ''
+          )
+      : '';
+
+  const base =
+    partes
+      .join('.')
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      )
+      .replace(
+        /[^a-zA-Z0-9_-]/g,
+        '-'
+      )
+      .replace(
+        /-+/g,
+        '-'
+      )
+      .replace(
+        /^-|-$|/g,
+        ''
+      )
+      .slice(
+        0,
+        80
+      );
+
+
+  return {
+    base:
+      base ||
+      'archivo',
+
+    extension
+  };
+
+}
+
+
+function crearRutaArchivo(
+  proyectoId,
+  archivo
+) {
+
+  const limpio =
+    limpiarNombreArchivo(
+      archivo.name
+    );
+
+
+  const identificador =
+    crypto.randomUUID();
+
+
+  const nombreFinal =
+    limpio.base +
+    '-' +
+    identificador +
+    (
+      limpio.extension
+        ? '.' + limpio.extension
+        : ''
+    );
+
+
+  return (
+    proyectoId +
+    '/' +
+    nombreFinal
+  );
+
+}
+
+
+async function eliminarProyectoFallido(
+  proyectoId,
+  rutasSubidas
+) {
+
+  try {
+
+    if (
+      rutasSubidas.length >
+      0
+    ) {
+
+      await sb.storage
+        .from(BUCKET)
+        .remove(
+          rutasSubidas
+        );
+
+    }
+
+
+    await sb
+      .from('proyectos')
+      .delete()
+      .eq(
+        'id',
+        proyectoId
+      );
+
+
+  } catch (error) {
+
+    console.error(
+      'No se pudo completar la limpieza:',
+      error
+    );
+
+  }
+
+}
+
+
+async function subirDocumentacion(
+  proyectoId,
+  archivos
+) {
+
+  const rutasSubidas =
+    [];
+
+
+  try {
+
+    for (
+      const archivo of archivos
+    ) {
+
+      const ruta =
+        crearRutaArchivo(
+          proyectoId,
+          archivo
+        );
+
+
+      const {
+        error: uploadError
+      } =
+        await sb.storage
+          .from(BUCKET)
+          .upload(
+            ruta,
+            archivo,
+            {
+              cacheControl: '3600',
+              upsert: false,
+              contentType:
+                archivo.type
+            }
+          );
+
+
+      if (uploadError) {
+
+        throw new Error(
+          'No se pudo subir "' +
+          archivo.name +
+          '": ' +
+          uploadError.message
+        );
+
+      }
+
+
+      rutasSubidas.push(
+        ruta
+      );
+
+
+      const {
+        error: metadataError
+      } =
+        await sb
+          .from(
+            'archivos_proyecto'
+          )
+          .insert({
+            proyecto_id:
+              proyectoId,
+
+            subido_por:
+              usuarioActual.id,
+
+            nombre_archivo:
+              archivo.name,
+
+            ruta_storage:
+              ruta,
+
+            tipo_mime:
+              archivo.type,
+
+            tamano_bytes:
+              archivo.size
+          });
+
+
+      if (metadataError) {
+
+        throw new Error(
+          'El archivo "' +
+          archivo.name +
+          '" se subió, pero no pudo registrarse: ' +
+          metadataError.message
+        );
+
+      }
+
+    }
+
+
+    return rutasSubidas;
+
+
+  } catch (error) {
+
+    error.rutasSubidas =
+      rutasSubidas;
+
+    throw error;
+
+  }
+
+}
+
+
+async function publicarProyecto(
+  event
+) {
+
+  event.preventDefault();
+
+  ocultarMensaje();
+
+
+  if (
+    !usuarioActual ||
+    !perfilActual
+  ) {
+
+    mostrarMensaje(
+      'Tu sesión no está disponible. Volvé a ingresar.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  let archivos;
+
+
+  try {
+
+    archivos =
+      validarArchivos();
+
+  } catch (error) {
+
+    mostrarMensaje(
+      error.message,
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const nombre =
+    document.getElementById(
+      'nombreProyecto'
+    ).value.trim();
+
+  const tipo =
+    document.getElementById(
+      'tipoProyecto'
+    ).value;
+
+  const localidad =
+    document.getElementById(
+      'localidad'
+    ).value.trim();
+
+  const zona =
+    document.getElementById(
+      'zona'
+    ).value.trim();
+
+  const descripcion =
+    document.getElementById(
+      'descripcion'
+    ).value.trim();
+
+  const aberturas =
+    document.getElementById(
+      'aberturas'
+    ).value.trim();
+
+  const perfileria =
+    document.getElementById(
+      'perfileria'
+    ).value.trim();
+
+
+  if (
+    !nombre ||
+    !tipo ||
+    !localidad ||
+    !descripcion
+  ) {
+
+    mostrarMensaje(
+      'Completá los campos obligatorios antes de publicar.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  btnPublicar.disabled =
+    true;
+
+  btnPublicar.textContent =
+    'PUBLICANDO...';
+
+
+  let proyectoId =
+    null;
+
+  let rutasSubidas =
+    [];
+
+
+  try {
+
+    const {
+      data: proyecto,
+      error: proyectoError
+    } =
+      await sb
+        .from('proyectos')
+        .insert({
+          Nombre:
+            nombre,
+
+          Tipo:
+            tipo,
+
+          Localidad:
+            localidad,
+
+          Proyecto:
+            descripcion,
+
+          publicado_por:
+            usuarioActual.id,
+
+          zona:
+            zona || null,
+
+          aberturas:
+            aberturas || null,
+
+          tipo_obra:
+            tipo,
+
+          marcas_perfiles:
+            perfileria || null
+        })
+        .select('id')
+        .single();
+
+
+    if (proyectoError) {
+
+      throw new Error(
+        'No se pudo crear el proyecto: ' +
+        proyectoError.message
+      );
+
+    }
+
+
+    proyectoId =
+      proyecto.id;
+
+
+    if (
+      archivos.length >
+      0
+    ) {
+
+      mostrarMensaje(
+        'Proyecto creado. Estamos cargando la documentación técnica...',
+        'info'
+      );
+
+
+      try {
+
+        rutasSubidas =
+          await subirDocumentacion(
+            proyectoId,
+            archivos
+          );
+
+      } catch (
+        archivoError
+      ) {
+
+        rutasSubidas =
+          archivoError.rutasSubidas ||
+          [];
+
+
+        await eliminarProyectoFallido(
+          proyectoId,
+          rutasSubidas
+        );
+
+
+        proyectoId =
+          null;
+
+
+        throw new Error(
+          archivoError.message +
+          ' La publicación fue cancelada para evitar dejar un proyecto incompleto.'
+        );
+
+      }
+
+    }
+
+
+    mostrarMensaje(
+      archivos.length > 0
+        ? 'Proyecto y documentación publicados correctamente.'
+        : 'Proyecto publicado correctamente.',
+      'ok'
+    );
+
+
+    form.reset();
+
+    listaArchivos.innerHTML =
+      '';
+
+
+    setTimeout(
+      () => {
+
+        window.location.href =
+          'panel-cliente.html';
+
+      },
+      1500
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error publicando proyecto:',
+      error
+    );
+
+
+    mostrarMensaje(
+      error.message ||
+      'No pudimos publicar el proyecto. Intentá nuevamente.',
+      'error'
+    );
+
+
+    btnPublicar.disabled =
+      false;
+
+    btnPublicar.textContent =
+      'PUBLICAR PROYECTO';
+
+  }
+
+}
+
+
+inputArchivos.addEventListener(
+  'change',
+  () => {
+
+    try {
+
+      validarArchivos();
+
+      mostrarArchivosSeleccionados();
+
+      ocultarMensaje();
+
+    } catch (error) {
+
+      inputArchivos.value =
+        '';
+
+      listaArchivos.innerHTML =
+        '';
+
+      mostrarMensaje(
+        error.message,
+        'error'
+      );
+
+    }
+
+  }
+);
+
+
+form.addEventListener(
+  'submit',
+  publicarProyecto
+);
+
+
+verificarAcceso();
+
+</script>
+
+</body>
+</html>
