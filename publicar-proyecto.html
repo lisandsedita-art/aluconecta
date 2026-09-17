@@ -1073,9 +1073,9 @@ function limpiarNombreArchivo(
         '-'
       )
       .replace(
-        /^-|-$|/g,
-        ''
-      )
+  /^-+|-+$/g,
+  ''
+)
       .slice(
         0,
         80
