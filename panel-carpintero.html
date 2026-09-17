@@ -1252,8 +1252,22 @@ function renderizarMisIntereses() {
     estado.style.marginTop =
       '10px';
 
-    estado.textContent =
-      'INTERESADO';
+    if (interes.estado === 'autorizado') {
+
+  estado.textContent =
+    'AUTORIZADO';
+
+} else if (interes.estado === 'no_autorizado') {
+
+  estado.textContent =
+    'NO AUTORIZADO';
+
+} else {
+
+  estado.textContent =
+    'INTERESADO';
+
+}
 
     tarjeta.appendChild(titulo);
     tarjeta.appendChild(ubicacion);
