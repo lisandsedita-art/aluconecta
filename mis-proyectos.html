@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mis proyectos - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --azul: #132e4f;
+      --azul2: #1b3c61;
+      --amarillo: #ffcf00;
+      --fondo: #f5f7fa;
+      --borde: #e2e8f0;
+      --texto: #132e4f;
+      --texto2: #64748b;
+      --verde: #166534;
+      --verde-fondo: #dcfce7;
+      --rojo: #991b1b;
+      --rojo-fondo: #fee2e2;
+      --gris-fondo: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+    }
+
+    body.bloqueado {
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 15px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -.5px;
+    }
+
+    .logo span {
+      color: #4fb0e2;
+    }
+
+    .volver {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 28px 18px 34px;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 7vw, 42px);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: var(--amarillo);
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 700px;
+      color: #b9c7d6;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px 16px 45px;
+    }
+
+    .barra {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .barra-texto h2 {
+      margin: 0 0 5px;
+      font-size: 20px;
+    }
+
+    .barra-texto p {
+      margin: 0;
+      color: var(--texto2);
+      font-size: 12px;
+    }
+
+    .btn-nuevo {
+      flex-shrink: 0;
+      background: var(--amarillo);
+      color: var(--azul);
+      padding: 11px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .mensaje {
+      display: none;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .mensaje.ok {
+      display: block;
+      background: var(--verde-fondo);
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
+    .mensaje.error {
+      display: block;
+      background: var(--rojo-fondo);
+      color: var(--rojo);
+      border: 1px solid #fecaca;
+    }
+
+    .mensaje.info {
+      display: block;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    .proyecto {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .proyecto-cabecera {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .proyecto h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .meta {
+      color: var(--texto2);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .tipo {
+      display: inline-block;
+      background: #eef2f7;
+      color: var(--azul);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .descripcion {
+      margin: 16px 0;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .intereses-titulo {
+      margin: 18px 0 12px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .sin-intereses {
+      background: var(--gris-fondo);
+      color: var(--texto2);
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .interes {
+      border: 1px solid var(--borde);
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 10px;
+      background: #fbfcfd;
+    }
+
+    .interes-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .carpintero-nombre {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .carpintero-info {
+      color: var(--texto2);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .estado {
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .estado.interesado {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .estado.autorizado {
+      background: var(--verde-fondo);
+      color: var(--verde);
+    }
+
+    .estado.no_autorizado {
+      background: var(--rojo-fondo);
+      color: var(--rojo);
+    }
+
+    .acciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 12px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .btn-autorizar {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-rechazar {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .vacio {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 35px 20px;
+      text-align: center;
+    }
+
+    .vacio h3 {
+      margin: 0 0 8px;
+    }
+
+    .vacio p {
+      margin: 0 0 18px;
+      color: var(--texto2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .cargando-proyectos {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 30px;
+     
