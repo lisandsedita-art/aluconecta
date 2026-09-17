@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Panel Cliente - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --azul: #132e4f;
+      --azul2: #1a3a5f;
+      --amarillo: #ffcf00;
+      --gris: #f8fafc;
+      --borde: #e2e8f0;
+      --texto2: #64748b;
+      --verde: #166534;
+      --rojo: #991b1b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--gris);
+      color: var(--azul);
+    }
+
+    body.bloqueado {
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 26px;
+      letter-spacing: -.5px;
+    }
+
+    .logo span {
+      color: #4fb0e2;
+    }
+
+    .hamb {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--azul2);
+      display: grid;
+      place-items: center;
+      border: 1px solid #23476f;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(19,46,79,.98);
+      z-index: 50;
+      padding: 18px;
+    }
+
+    #menu a,
+    #menu button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      border: 0;
+      border-bottom: 1px solid #28496c;
+      background: transparent;
+      text-align: left;
+      font-family: inherit;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 22px 18px 30px;
+    }
+
+    .hero-inner,
+    .wrap {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 8vw, 42px);
+      line-height: 1.05;
+      margin: 14px 0;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 i {
+      color: var(--amarillo);
+      font-style: normal;
+    }
+
+    .hero p {
+      color: #b8c6d5;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .wrap {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .perfil-cabecera {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .perfil-cabecera h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      white-space: nowrap;
+    }
+
+    .pill-green {
+      background: #dcfce7;
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
+    .box-light {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .value {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--azul);
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--texto2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .acciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .accion {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 175px;
+      background: #fff;
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 17px;
+    }
+
+    .accion-principal {
+      border: 2px solid var(--amarillo);
+    }
+
+    .accion-icono {
+      font-size: 27px;
+      margin-bottom: 10px;
+    }
+
+    .accion h3 {
+      margin: 0 0 7px;
+      font-size: 16px;
+      color: var(--azul);
+    }
+
+    .accion p {
+      margin: 0 0 14px;
+      color: var(--texto2);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 17px;
+      border-radius: 99px;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      text-align: center;
+    }
+
+    .btn-y {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-dark {
+      background: var(--azul);
+      color: white;
+    }
+
+    .btn-light {
+      background: #eef2f7;
+      color: var(--azul);
+    }
+
+    .btn-disabled {
+      background: #eef2f7;
+      color: #94a3b8;
+      cursor: default;
+    }
+
+    .seguridad {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 13px;
+      color: #1e40af;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .resumen {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .resumen-item {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 14px;
+      padding: 15px 10px;
+      text-align: center;
+    }
+
+    .resumen-numero {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--azul);
+    }
+
+    .resumen-label {
+      margin-top: 4px;
+      color: var(--texto2);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .estado-vacio {
+      padding: 25px 15px;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    .estado-vacio strong {
+      display: block;
+      color: var(--azul);
+      margin-bottom: 7px;
+    }
+
+    .footer {
+      max-width: 850px;
+      margin: 10px auto 0;
+      padding: 22px 16px;
+      color: #94a3b8;
+      font-size: 11px;
+      border-top: 1px solid #eef2f7;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    #cargando,
+    #accesoDenegado {
+      position: fixed;
+      inset: 0;
+      background: var(--azul);
+      z-index: 100;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #accesoDenegado {
+      display: none;
+    }
+
+    .gate-box {
+      width: 100%;
+      max-width: 430px;
+      text-align: center;
+    }
+
+    .gate-logo {
+      color: white;
+      font-weight: 900;
+      font-size: 32px;
+      margin-bottom: 28px;
+    }
+
+    .gate-logo span {
+      color: #4fb0e2;
+    }
+
+    .gate-card {
+      background: white;
+      border-radius: 22px;
+      padding: 28px 22px;
+    }
+
+    .gate-card h2 {
+      margin: 0 0 12px;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 4px solid rgba(255,255,255,.25);
+      border-top-color: white;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      animation: girar .8s linear infinite;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .acciones,
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+
+      .resumen {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .resumen-numero {
+        font-size: 21px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .resumen {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="bloqueado">
+
+<div id="cargando">
+  <div class="gate-box">
+    <div class="spinner"></div>
+
+    <div style="color:white;font-weight:800;font-size:18px;">
+      Verificando tu cuenta...
+    </div>
+
+    <p style="color:#9eb0c2;font-size:13px;">
+      Estamos cargando tu espacio en AluConecta.
+    </p>
+  </div>
+</div>
+
+
+<div id="accesoDenegado">
+  <div class="gate-box">
+
+    <div class="gate-logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <div class="gate-card">
+
+      <h2 id="tituloAcceso">
+        Acceso privado
+      </h2>
+
+      <p id="textoAcceso" class="muted">
+        Para entrar a este panel necesitás iniciar sesión
+        con una cuenta de cliente.
+      </p>
+
+      <div style="display:grid;gap:10px;margin-top:22px;">
+
+        <a href="ingresar.html" class="btn btn-y">
+          INGRESAR
+        </a>
+
+        <a href="acceso.html" class="btn btn-dark">
+          CREAR CUENTA
+        </a>
+
+        <a href="index.html" class="btn btn-light">
+          Volver a AluConecta
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<header>
+
+  <div class="logo">
+    Alu<span>Conecta</span>
+  </div>
+
+  <button
+    class="hamb"
+    id="abrirMenu"
+    type="button"
+    aria-label="Abrir menú"
+  >
+    ☰
+  </button>
+
+</header>
+
+
+<div id="menu">
+
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:white;
+      font-weight:900;
+      font-size:20px;
+      margin-bottom:15px;
+    "
+  >
+
+    <span>
+      Alu<span style="color:#4fb0e2">Conecta</span>
+    </span>
+
+    <button
+      type="button"
+      id="cerrarMenu"
+      aria-label="Cerrar menú"
+      style="
+        width:auto;
+        border:0;
+        font-size:22px;
+        padding:8px;
+      "
+    >
+      ✕
+    </button>
+
+  </div>
+
+  <a href="panel-cliente.html">
+    Mi panel
+  </a>
+
+  <a href="aluminio.html">
+    Buscar carpinteros
+  </a>
+
+  <a href="#" id="menuMiPerfil">
+    Mi perfil
+  </a>
+
+  <a href="index.html">
+    Portada de AluConecta
+  </a>
+
+  <button type="button" id="cerrarSesion">
+    Cerrar sesión
+  </button>
+
+</div>
+
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <h1>
+      Tu espacio en
+      <i>AluConecta.</i>
+    </h1>
+
+    <p id="bienvenidaHero">
+      Administrá tus proyectos y encontrá profesionales
+      para llevar adelante tus aberturas.
+    </p>
+
+  </div>
+
+</section>
+
+
+<main class="wrap">
+
+  <section class="card">
+
+    <div class="perfil-cabecera">
+
+      <h2>
+        Mi cuenta
+      </h2>
+
+      <span class="pill pill-green">
+        CUENTA ACTIVA
+      </span>
+
+    </div>
+
+
+    <div
+      class="box-light"
+      style="margin-top:14px;"
+    >
+
+      <div class="label">
+        NOMBRE / EMPRESA
+      </div>
+
+      <div
+        class="value"
+        id="nombrePerfil"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid2"
+      style="margin-top:10px;"
+    >
+
+      <div class="box-light">
+
+        <div class="label">
+          LOCALIDAD
+        </div>
+
+        <div
+          class="value"
+          id="localidadPerfil"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="box-light">
+
+        <div class="label">
+          PROVINCIA
+        </div>
+
+        <div
+          class="value"
+          id="provinciaPerfil"
+        >
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="box-light"
+      style="margin-top:10px;"
+    >
+
+      <div class="label">
+        TIPO DE CUENTA
+      </div>
+
+      <div
+        class="value"
+        id="tipoPerfil"
+      >
+        Cliente AluConecta
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        flex-wrap:wrap;
+        gap:9px;
+        margin-top:14px;
+      "
+    >
+
+      <a
+        href="#"
+        id="verPerfil"
+        class="btn btn-dark"
+      >
+        VER MI PERFIL
+      </a>
+
+      <a
+        href="editar-perfil.html"
+        class="btn btn-light"
+      >
+        EDITAR MIS DATOS
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2 style="font-size:18px;margin:0;">
+      Mi actividad
+    </h2>
+
+    <p class="muted">
+      Resumen de tu actividad como cliente dentro de AluConecta.
+    </p>
+
+    <div class="resumen">
+
+      <div class="resumen-item">
+        <div
+          class="resumen-numero"
+          id="cantidadProyectos"
+        >
+          —
+        </div>
+        <div class="resumen-label">
+          PROYECTOS
+        </div>
+      </div>
+
+      <div class="resumen-item">
+        <div
+          class="resumen-numero"
+          id="cantidadIntereses"
+        >
+          —
+        </div>
+        <div class="resumen-label">
+          INTERESADOS
+        </div>
+      </div>
+
+      <div class="resumen-item">
+        <div
+          class="resumen-numero"
+          id="cantidadCotizaciones"
+        >
+          —
+        </div>
+        <div class="resumen-label">
+          COTIZACIONES
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2 style="font-size:18px;margin:0;">
+      ¿Qué querés hacer?
+    </h2>
+
+    <p class="muted">
+      Gestioná tus necesidades de aberturas desde un solo lugar.
+    </p>
+
+
+    <div class="acciones">
+
+      <article class="accion accion-principal">
+
+        <div>
+          <div class="accion-icono">
+            🏗️
+          </div>
+
+          <h3>
+            Publicar una obra
+          </h3>
+
+          <p>
+            Contanos qué aberturas necesitás para que
+            carpinteros puedan conocer tu proyecto.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-y"
+          type="button"
+          id="publicarObra"
+        >
+          PUBLICAR OBRA
+        </button>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+          <div class="accion-icono">
+            📋
+          </div>
+
+          <h3>
+            Mis proyectos
+          </h3>
+
+          <p>
+            Consultá las obras y necesidades que
+            publicaste desde tu cuenta.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-dark"
+          type="button"
+          id="misProyectos"
+        >
+          VER MIS PROYECTOS
+        </button>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+          <div class="accion-icono">
+            🤝
+          </div>
+
+          <h3>
+            Carpinteros interesados
+          </h3>
+
+          <p>
+            Revisá qué profesionales manifestaron
+            interés en tus proyectos.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-disabled"
+          type="button"
+          disabled
+        >
+          PRÓXIMAMENTE
+        </button>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+          <div class="accion-icono">
+            💰
+          </div>
+
+          <h3>
+            Cotizaciones
+          </h3>
+
+          <p>
+            Administrá las cotizaciones que recibas
+            para tus proyectos.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-disabled"
+          type="button"
+          disabled
+        >
+          PRÓXIMAMENTE
+        </button>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+          <div class="accion-icono">
+            🔎
+          </div>
+
+          <h3>
+            Buscar carpinteros
+          </h3>
+
+          <p>
+            Explorá profesionales y talleres de
+            carpintería de aluminio.
+          </p>
+        </div>
+
+        <a
+          href="aluminio.html"
+          class="btn btn-dark"
+        >
+          BUSCAR
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+          <div class="accion-icono">
+            👤
+          </div>
+
+          <h3>
+            Mi perfil
+          </h3>
+
+          <p>
+            Administrá tus datos de contacto,
+            presentación y redes sociales.
+          </p>
+        </div>
+
+        <a
+          href="editar-perfil.html"
+          class="btn btn-dark"
+        >
+          EDITAR PERFIL
+        </a>
+
+      </article>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2 style="font-size:18px;margin:0;">
+      Mis proyectos recientes
+    </h2>
+
+    <p class="muted">
+      Acá aparecerán las últimas necesidades que publiques.
+    </p>
+
+    <div
+      id="listaProyectos"
+      class="estado-vacio"
+    >
+
+      <strong>
+        Cargando tus proyectos...
+      </strong>
+
+      <span class="muted">
+        Estamos consultando tu actividad.
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <div class="seguridad">
+      <strong>Tu espacio privado</strong><br>
+      Este panel utiliza tu sesión autenticada de AluConecta.
+      Los proyectos mostrados acá se consultan utilizando
+      el identificador de tu cuenta.
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer class="footer">
+
+  © 2026 AluConecta<br>
+  Donde los proyectos encuentran sus aberturas.
+
+</footer>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+let usuarioActual = null;
+let perfilActual = null;
+
+
+const cargando =
+  document.getElementById("cargando");
+
+const accesoDenegado =
+  document.getElementById("accesoDenegado");
+
+const tituloAcceso =
+  document.getElementById("tituloAcceso");
+
+const textoAcceso =
+  document.getElementById("textoAcceso");
+
+const menu =
+  document.getElementById("menu");
+
+
+function mostrarPanel() {
+
+  cargando.style.display = "none";
+  accesoDenegado.style.display = "none";
+
+  document.body.classList.remove("bloqueado");
+
+}
+
+
+function negarAcceso(titulo, texto) {
+
+  cargando.style.display = "none";
+
+  tituloAcceso.textContent = titulo;
+  textoAcceso.textContent = texto;
+
+  accesoDenegado.style.display = "flex";
+
+}
+
+
+function textoSeguro(valor, fallback = "No informado") {
+
+  if (
+    valor === null ||
+    valor === undefined ||
+    String(valor).trim() === ""
+  ) {
+    return fallback;
+  }
+
+  return String(valor).trim();
+
+}
+
+
+function escaparHTML(valor) {
+
+  return String(valor ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function nombreTipoUsuario(tipo) {
+
+  if (tipo === "cliente_profesional") {
+    return "Cliente / Profesional";
+  }
+
+  if (tipo === "cliente") {
+    return "Cliente";
+  }
+
+  if (tipo === "profesional") {
+    return "Profesional";
+  }
+
+  if (tipo === "empresa") {
+    return "Empresa";
+  }
+
+  return "Cliente AluConecta";
+
+}
+
+
+function formatearFecha(fecha) {
+
+  if (!fecha) {
+    return "";
+  }
+
+  const valor = new Date(fecha);
+
+  if (Number.isNaN(valor.getTime())) {
+    return "";
+  }
+
+  return valor.toLocaleDateString(
+    "es-AR",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+async function cargarProyectos() {
+
+  const contenedor =
+    document.getElementById("listaProyectos");
+
+  const cantidad =
+    document.getElementById("cantidadProyectos");
+
+  try {
+
+    const {
+      data,
+      error,
+      count
+    } =
+      await sb
+        .from("proyectos")
+        .select(
+          "id,created_at,Tipo,Localidad,Proyecto",
+          {
+            count: "exact"
+          }
+        )
+        .eq(
+          "publicado_por",
+          usuarioActual.id
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(3);
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    cantidad.textContent =
+      String(count ?? data?.length ?? 0);
+
+
+    if (!data || data.length === 0) {
+
+      contenedor.innerHTML = `
+        <strong>
+          Todavía no publicaste proyectos
+        </strong>
+
+        <span class="muted">
+          Cuando publiques una necesidad,
+          aparecerá acá.
+        </span>
+      `;
+
+      return;
+
+    }
+
+
+    contenedor.className = "";
+
+    contenedor.innerHTML =
+      data.map(function(proyecto) {
+
+        const titulo =
+          escaparHTML(
+            textoSeguro(
+              proyecto.Proyecto,
+              "Proyecto de aberturas"
+            )
+          );
+
+        const localidad =
+          escaparHTML(
+            textoSeguro(
+              proyecto.Localidad,
+              "Localidad no informada"
+            )
+          );
+
+        const tipo =
+          escaparHTML(
+            textoSeguro(
+              proyecto.Tipo,
+              "Proyecto"
+            )
+          );
+
+        const fecha =
+          escaparHTML(
+            formatearFecha(
+              proyecto.created_at
+            )
+          );
+
+
+        return `
+          <article
+            class="box-light"
+            style="
+              margin-top:10px;
+              text-align:left;
+            "
+          >
+
+            <div
+              class="label"
+              style="margin-bottom:7px;"
+            >
+              ${tipo}
+            </div>
+
+            <div class="value">
+              ${titulo}
+            </div>
+
+            <div
+              class="muted"
+              style="margin-top:8px;"
+            >
+              📍 ${localidad}
+              ${
+                fecha
+                  ? " · " + fecha
+                  : ""
+              }
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando proyectos:",
+      error
+    );
+
+    cantidad.textContent = "—";
+
+    contenedor.innerHTML = `
+      <strong>
+        No pudimos cargar tus proyectos
+      </strong>
+
+      <span class="muted">
+        Tu cuenta sigue activa.
+        Intentá nuevamente más tarde.
+      </span>
+    `;
+
+  }
+
+}
+
+
+async function cargarResumenRelacionado() {
+
+  /*
+    Los contadores de interesados y cotizaciones
+    se activarán cuando terminemos las políticas
+    de lectura para el propietario del proyecto.
+
+    No mostramos números inventados.
+  */
+
+  document.getElementById(
+    "cantidadIntereses"
+  ).textContent = "—";
+
+  document.getElementById(
+    "cantidadCotizaciones"
+  ).textContent = "—";
+
+}
+
+
+async function iniciarPanel() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await sb.auth.getSession();
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    const session =
+      data.session;
+
+
+    if (
+      !session ||
+      !session.user
+    ) {
+
+      negarAcceso(
+        "Iniciá sesión",
+        "Para entrar a tu panel necesitás iniciar sesión con tu cuenta de AluConecta."
+      );
+
+      return;
+
+    }
+
+
+    usuarioActual =
+      session.user;
+
+
+    const {
+      data: perfil,
+      error: errorPerfil
+    } =
+      await sb
+        .from("perfiles")
+        .select(
+          "id,nombre,tipo_usuario,localidad,provincia,telefono,descripcion,instagram,facebook,tiktok,web"
+        )
+        .eq(
+          "id",
+          usuarioActual.id
+        )
+        .single();
+
+
+    if (errorPerfil) {
+
+      console.error(
+        "Error cargando perfil:",
+        errorPerfil
+      );
+
+      negarAcceso(
+        "No pudimos cargar tu perfil",
+        "Tu sesión está iniciada, pero no pudimos encontrar correctamente tu perfil de AluConecta."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      perfil.tipo_usuario ===
+      "carpintero"
+    ) {
+
+      window.location.href =
+        "panel-carpintero.html";
+
+      return;
+
+    }
+
+
+    perfilActual =
+      perfil;
+
+
+    document.getElementById(
+      "nombrePerfil"
+    ).textContent =
+      textoSeguro(
+        perfil.nombre,
+        "Usuario de AluConecta"
+      );
+
+
+    document.getElementById(
+      "localidadPerfil"
+    ).textContent =
+      textoSeguro(
+        perfil.localidad
+      );
+
+
+    document.getElementById(
+      "provinciaPerfil"
+    ).textContent =
+      textoSeguro(
+        perfil.provincia
+      );
+
+
+    document.getElementById(
+      "tipoPerfil"
+    ).textContent =
+      nombreTipoUsuario(
+        perfil.tipo_usuario
+      );
+
+
+    const nombre =
+      textoSeguro(
+        perfil.nombre,
+        "Usuario"
+      );
+
+
+    document.getElementById(
+      "bienvenidaHero"
+    ).textContent =
+      "Hola, " +
+      nombre +
+      ". Administrá tus proyectos y encontrá profesionales para llevar adelante tus aberturas.";
+
+
+    const urlPerfil =
+      "perfil.html?id=" +
+      encodeURIComponent(
+        usuarioActual.id
+      );
+
+
+    document.getElementById(
+      "verPerfil"
+    ).href =
+      urlPerfil;
+
+
+    document.getElementById(
+      "menuMiPerfil"
+    ).href =
+      urlPerfil;
+
+
+    mostrarPanel();
+
+
+    await Promise.all([
+      cargarProyectos(),
+      cargarResumenRelacionado()
+    ]);
+
+  } catch (error) {
+
+    console.error(
+      "Error iniciando panel:",
+      error
+    );
+
+    negarAcceso(
+      "No pudimos abrir tu panel",
+      "Ocurrió un problema al comprobar tu cuenta. Volvé a iniciar sesión e intentá nuevamente."
+    );
+
+  }
+
+}
+
+
+document.getElementById(
+  "abrirMenu"
+).addEventListener(
+  "click",
+  function() {
+
+    menu.style.display =
+      "block";
+
+    document.body.classList.add(
+      "bloqueado"
+    );
+
+  }
+);
+
+
+document.getElementById(
+  "cerrarMenu"
+).addEventListener(
+  "click",
+  function() {
+
+    menu.style.display =
+      "none";
+
+    document.body.classList.remove(
+      "bloqueado"
+    );
+
+  }
+);
+
+
+document.getElementById(
+  "cerrarSesion"
+).addEventListener(
+  "click",
+  async function() {
+
+    try {
+
+      await sb.auth.signOut();
+
+    } finally {
+
+      window.location.href =
+        "ingresar.html";
+
+    }
+
+  }
+);
+
+
+document.getElementById(
+  "publicarObra"
+).addEventListener(
+  "click",
+  function() {
+
+    /*
+      Esta navegación se activará en el próximo paso,
+      cuando construyamos publicar-proyecto.html.
+    */
+
+    alert(
+      "La publicación de obras se habilitará en el próximo paso de construcción de AluConecta."
+    );
+
+  }
+);
+
+
+document.getElementById(
+  "misProyectos"
+).addEventListener(
+  "click",
+  function() {
+
+    /*
+      Esta navegación se activará cuando construyamos
+      mis-proyectos.html.
+    */
+
+    alert(
+      "La administración completa de tus proyectos se habilitará en el próximo paso."
+    );
+
+  }
+);
+
+
+iniciarPanel();
+
+</script>
+
+</body>
+</html>
