@@ -1343,18 +1343,28 @@ async function cargarProyectos() {
     }
 
 
-    data.forEach(
-      proyecto => {
+    
+proyectosVisibles =
+  new Map();
 
-        contenedor.appendChild(
-          crearProyectoElemento(
-            proyecto
-          )
-        );
+data.forEach(
+  proyecto => {
 
-      }
+    proyectosVisibles.set(
+      String(proyecto.id),
+      proyecto
     );
 
+    contenedor.appendChild(
+      crearProyectoElemento(
+        proyecto
+      )
+    );
+
+  }
+);
+
+renderizarMisIntereses();
 
   } catch (error) {
 
