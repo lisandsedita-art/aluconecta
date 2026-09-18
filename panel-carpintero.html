@@ -1288,7 +1288,30 @@ if (interes.estado === 'autorizado') {
     interes.proyecto_id,
     documentos
   );
+const botonCotizar =
+  document.createElement('a');
 
+botonCotizar.className =
+  'btn btn-y';
+
+botonCotizar.style.width =
+  '100%';
+
+botonCotizar.style.marginTop =
+  '12px';
+
+botonCotizar.textContent =
+  'COTIZAR';
+
+botonCotizar.href =
+  'cotizar.html?proyecto=' +
+  encodeURIComponent(
+    interes.proyecto_id
+  );
+
+tarjeta.appendChild(
+  botonCotizar
+);
 }
     contenedor.appendChild(tarjeta);
 
