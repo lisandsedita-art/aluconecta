@@ -55,6 +55,11 @@
       margin-top: 0;
     }
 
+    h2 {
+      font-size: 18px;
+      margin-top: 24px;
+    }
+
     .muted {
       color: #64748b;
       font-size: 13px;
@@ -66,6 +71,14 @@
       border: 1px solid #e2e8f0;
       border-radius: 14px;
       padding: 14px;
+      margin: 18px 0;
+    }
+
+    .bloque-archivo {
+      background: #fffbea;
+      border: 1px solid #f5d94e;
+      border-radius: 14px;
+      padding: 16px;
       margin: 18px 0;
     }
 
@@ -85,6 +98,10 @@
       font: inherit;
     }
 
+    input[type="file"] {
+      background: white;
+    }
+
     textarea {
       min-height: 90px;
       resize: vertical;
@@ -94,6 +111,18 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+    }
+
+    details {
+      margin-top: 18px;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .btn {
@@ -108,6 +137,7 @@
       font-weight: bold;
       text-decoration: none;
       cursor: pointer;
+      font-family: inherit;
     }
 
     .btn-yellow {
@@ -145,9 +175,50 @@
       color: #b91c1c;
     }
 
+    .archivo-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .archivo-item:last-child {
+      border-bottom: 0;
+    }
+
+    .archivo-nombre {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    .archivo-boton {
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 20px;
+      background: #132e4f;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 11px;
+    }
+
+    #archivosGuardados {
+      margin-top: 18px;
+      padding-top: 4px;
+    }
+
     @media (max-width: 550px) {
       .grid2 {
         grid-template-columns: 1fr;
+      }
+
+      .archivo-item {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
   </style>
@@ -168,8 +239,9 @@
     <h1>Cotizar proyecto</h1>
 
     <p class="muted">
-      Completá tu propuesta comercial para este proyecto.
-      Solo los carpinteros autorizados pueden enviar una cotización.
+      Presentá tu propuesta para este proyecto.
+      No es necesario volver a cargar abertura por abertura en AluConecta:
+      podés adjuntar el presupuesto que ya confeccionaste con tu sistema habitual.
     </p>
 
     <div
@@ -179,13 +251,38 @@
       Verificando proyecto y autorización...
     </div>
 
+
     <form
       id="formCotizacion"
       style="display:none;"
     >
 
+      <div class="bloque-archivo">
+
+        <strong>
+          Presupuesto adjunto
+        </strong>
+
+        <p class="muted">
+          Podés adjuntar tu presupuesto detallado en PDF o Excel.
+          Se permiten hasta 5 archivos de 10 MB cada uno.
+        </p>
+
+        <input
+          id="archivos"
+          type="file"
+          multiple
+          accept=".pdf,.xls,.xlsx,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        >
+
+      </div>
+
+
       <label for="precio">
-        Precio total *
+        Precio total
+        <span class="muted">
+          (opcional)
+        </span>
       </label>
 
       <input
@@ -193,68 +290,15 @@
         type="number"
         min="0.01"
         step="0.01"
-        required
         placeholder="Ej.: 2500000"
       >
 
 
-      <div class="grid2">
-
-        <div>
-
-          <label for="marcaPerfil">
-            Marca de perfilería
-          </label>
-
-          <input
-            id="marcaPerfil"
-            type="text"
-            maxlength="120"
-          >
-
-        </div>
-
-
-        <div>
-
-          <label for="marcaHerrajes">
-            Marca de herrajes
-          </label>
-
-          <input
-            id="marcaHerrajes"
-            type="text"
-            maxlength="120"
-          >
-
-        </div>
-
-      </div>
-
-
-      <label for="detallePerfileria">
-        Detalle de perfilería
-      </label>
-
-      <textarea
-        id="detallePerfileria"
-        maxlength="2000"
-        placeholder="Sistema, línea, terminación u otras especificaciones."
-      ></textarea>
-
-
-      <label for="detalleHerrajes">
-        Detalle de herrajes
-      </label>
-
-      <textarea
-        id="detalleHerrajes"
-        maxlength="2000"
-      ></textarea>
-
-
       <label for="plazoEntrega">
-        Plazo de entrega
+        Plazo estimado
+        <span class="muted">
+          (opcional)
+        </span>
       </label>
 
       <input
@@ -267,13 +311,93 @@
 
       <label for="comentario">
         Observaciones
+        <span class="muted">
+          (opcional)
+        </span>
       </label>
 
       <textarea
         id="comentario"
         maxlength="2000"
-        placeholder="Condiciones, aclaraciones o alcance de la propuesta."
+        placeholder="Condiciones, aclaraciones, alcance u otra información útil."
       ></textarea>
+
+
+      <details>
+
+        <summary>
+          Información adicional (opcional)
+        </summary>
+
+
+        <div class="grid2">
+
+          <div>
+
+            <label for="marcaPerfil">
+              Marca / sistema de perfilería
+            </label>
+
+            <input
+              id="marcaPerfil"
+              type="text"
+              maxlength="120"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="marcaHerrajes">
+              Marca de herrajes
+            </label>
+
+            <input
+              id="marcaHerrajes"
+              type="text"
+              maxlength="120"
+            >
+
+          </div>
+
+        </div>
+
+
+        <label for="detallePerfileria">
+          Detalle de perfilería
+        </label>
+
+        <textarea
+          id="detallePerfileria"
+          maxlength="2000"
+        ></textarea>
+
+
+        <label for="detalleHerrajes">
+          Detalle de herrajes
+        </label>
+
+        <textarea
+          id="detalleHerrajes"
+          maxlength="2000"
+        ></textarea>
+
+      </details>
+
+
+      <div
+        id="archivosGuardados"
+        style="display:none;"
+      >
+
+        <h2>
+          Archivos adjuntos
+        </h2>
+
+        <div id="listaArchivos"></div>
+
+      </div>
 
 
       <button
@@ -317,6 +441,20 @@ const sb =
   );
 
 
+const MAX_ARCHIVOS = 5;
+
+const MAX_TAMANO =
+  10 * 1024 * 1024;
+
+
+const extensionesPermitidas =
+  [
+    'pdf',
+    'xls',
+    'xlsx'
+  ];
+
+
 const parametros =
   new URLSearchParams(
     window.location.search
@@ -346,6 +484,21 @@ const guardarCotizacion =
 const mensaje =
   document.getElementById(
     'mensaje'
+  );
+
+const inputArchivos =
+  document.getElementById(
+    'archivos'
+  );
+
+const archivosGuardados =
+  document.getElementById(
+    'archivosGuardados'
+  );
+
+const listaArchivos =
+  document.getElementById(
+    'listaArchivos'
   );
 
 
@@ -383,12 +536,447 @@ function valorOpcional(id) {
 }
 
 
+function obtenerExtension(nombre) {
+
+  const partes =
+    nombre
+      .toLowerCase()
+      .split('.');
+
+  if (partes.length < 2) {
+    return '';
+  }
+
+  return partes.pop();
+
+}
+
+
+function limpiarNombreArchivo(nombre) {
+
+  return nombre
+    .normalize('NFD')
+    .replace(
+      /[\u0300-\u036f]/g,
+      ''
+    )
+    .replace(
+      /[^a-zA-Z0-9._-]/g,
+      '-'
+    )
+    .replace(
+      /-+/g,
+      '-'
+    )
+    .replace(
+      /^-+|-+$/g,
+      ''
+    );
+
+}
+
+
+function validarArchivos(
+  archivos
+) {
+
+  if (
+    archivos.length >
+    MAX_ARCHIVOS
+  ) {
+
+    throw new Error(
+      'Podés adjuntar como máximo 5 archivos.'
+    );
+
+  }
+
+
+  for (
+    const archivo
+    of archivos
+  ) {
+
+    if (
+      archivo.size >
+      MAX_TAMANO
+    ) {
+
+      throw new Error(
+        'El archivo "' +
+        archivo.name +
+        '" supera los 10 MB.'
+      );
+
+    }
+
+
+    const extension =
+      obtenerExtension(
+        archivo.name
+      );
+
+
+    if (
+      !extensionesPermitidas
+        .includes(extension)
+    ) {
+
+      throw new Error(
+        'El archivo "' +
+        archivo.name +
+        '" no es PDF ni Excel.'
+      );
+
+    }
+
+  }
+
+}
+
+
+async function abrirArchivo(
+  ruta
+) {
+
+  const ventana =
+    window.open(
+      '',
+      '_blank'
+    );
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await sb.storage
+        .from(
+          'cotizaciones-archivos'
+        )
+        .createSignedUrl(
+          ruta,
+          60
+        );
+
+
+    if (
+      error ||
+      !data ||
+      !data.signedUrl
+    ) {
+
+      throw (
+        error ||
+        new Error(
+          'No pudimos generar el acceso.'
+        )
+      );
+
+    }
+
+
+    if (ventana) {
+
+      ventana.location.href =
+        data.signedUrl;
+
+    } else {
+
+      window.location.href =
+        data.signedUrl;
+
+    }
+
+
+  } catch (error) {
+
+    if (ventana) {
+      ventana.close();
+    }
+
+
+    mostrarMensaje(
+      'No pudimos abrir el archivo: ' +
+      (
+        error.message ||
+        'error desconocido'
+      ),
+      'error'
+    );
+
+  }
+
+}
+
+
+async function cargarArchivosCotizacion() {
+
+  if (
+    !cotizacionExistente ||
+    !cotizacionExistente.id
+  ) {
+
+    archivosGuardados.style.display =
+      'none';
+
+    return;
+
+  }
+
+
+  archivosGuardados.style.display =
+    'block';
+
+  listaArchivos.innerHTML =
+    '<span class="muted">Consultando archivos...</span>';
+
+
+  const {
+    data,
+    error
+  } =
+    await sb
+      .from(
+        'archivos_cotizacion'
+      )
+      .select(
+        'id,nombre_archivo,ruta_storage,tipo_mime,tamano_bytes,created_at'
+      )
+      .eq(
+        'cotizacion_id',
+        cotizacionExistente.id
+      )
+      .order(
+        'created_at',
+        {
+          ascending: true
+        }
+      );
+
+
+  if (error) {
+
+    listaArchivos.textContent =
+      'No pudimos consultar los archivos.';
+
+    return;
+
+  }
+
+
+  listaArchivos.innerHTML =
+    '';
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    listaArchivos.innerHTML =
+      '<span class="muted">Todavía no hay archivos adjuntos.</span>';
+
+    return;
+
+  }
+
+
+  for (
+    const archivo
+    of data
+  ) {
+
+    const fila =
+      document.createElement(
+        'div'
+      );
+
+    fila.className =
+      'archivo-item';
+
+
+    const nombre =
+      document.createElement(
+        'div'
+      );
+
+    nombre.className =
+      'archivo-nombre';
+
+    nombre.textContent =
+      archivo.nombre_archivo;
+
+
+    const boton =
+      document.createElement(
+        'button'
+      );
+
+    boton.type =
+      'button';
+
+    boton.className =
+      'archivo-boton';
+
+    boton.textContent =
+      'VER / DESCARGAR';
+
+
+    boton.addEventListener(
+      'click',
+      function() {
+
+        abrirArchivo(
+          archivo.ruta_storage
+        );
+
+      }
+    );
+
+
+    fila.appendChild(
+      nombre
+    );
+
+    fila.appendChild(
+      boton
+    );
+
+    listaArchivos.appendChild(
+      fila
+    );
+
+  }
+
+}
+
+
+async function subirArchivos(
+  cotizacionId,
+  archivos
+) {
+
+  for (
+    const archivo
+    of archivos
+  ) {
+
+    const nombreSeguro =
+      limpiarNombreArchivo(
+        archivo.name
+      ) ||
+      'archivo';
+
+
+    const identificador =
+      (
+        window.crypto &&
+        crypto.randomUUID
+      )
+        ? crypto.randomUUID()
+        : (
+            Date.now() +
+            '-' +
+            Math.random()
+              .toString(16)
+              .slice(2)
+          );
+
+
+    const ruta =
+      cotizacionId +
+      '/' +
+      identificador +
+      '-' +
+      nombreSeguro;
+
+
+    const {
+      error: uploadError
+    } =
+      await sb.storage
+        .from(
+          'cotizaciones-archivos'
+        )
+        .upload(
+          ruta,
+          archivo,
+          {
+            upsert: false,
+            contentType:
+              archivo.type ||
+              undefined
+          }
+        );
+
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+
+    const {
+      error: metadataError
+    } =
+      await sb
+        .from(
+          'archivos_cotizacion'
+        )
+        .insert({
+
+          cotizacion_id:
+            cotizacionId,
+
+          subido_por:
+            usuarioActual.id,
+
+          nombre_archivo:
+            archivo.name,
+
+          ruta_storage:
+            ruta,
+
+          tipo_mime:
+            archivo.type ||
+            null,
+
+          tamano_bytes:
+            archivo.size
+
+        });
+
+
+    if (metadataError) {
+
+      await sb.storage
+        .from(
+          'cotizaciones-archivos'
+        )
+        .remove([
+          ruta
+        ]);
+
+
+      throw metadataError;
+
+    }
+
+  }
+
+}
+
+
 async function iniciarPagina() {
 
   try {
 
     if (
-      !Number.isInteger(proyectoId) ||
+      !Number.isInteger(
+        proyectoId
+      ) ||
       proyectoId <= 0
     ) {
 
@@ -542,8 +1130,10 @@ async function iniciarPagina() {
     titulo.textContent =
       proyecto.Proyecto ||
       proyecto.Tipo ||
-      'Proyecto #' +
-        proyecto.id;
+      (
+        'Proyecto #' +
+        proyecto.id
+      );
 
 
     const ubicacion =
@@ -580,7 +1170,9 @@ async function iniciarPagina() {
       error: cotizacionError
     } =
       await sb
-        .from('cotizaciones')
+        .from(
+          'cotizaciones'
+        )
         .select(
           'id,precio,detalle_perfileria,detalle_herrajes,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada'
         )
@@ -609,7 +1201,8 @@ async function iniciarPagina() {
       document.getElementById(
         'precio'
       ).value =
-        cotizacion.precio ?? '';
+        cotizacion.precio ??
+        '';
 
 
       document.getElementById(
@@ -664,12 +1257,16 @@ async function iniciarPagina() {
       'block';
 
 
+    await cargarArchivosCotizacion();
+
+
   } catch (error) {
 
     console.error(
       'Error al abrir cotización:',
       error
     );
+
 
     resumenProyecto.textContent =
       error.message ||
@@ -687,21 +1284,27 @@ formCotizacion.addEventListener(
     event.preventDefault();
 
 
-    const precio =
-      Number(
-        document.getElementById(
-          'precio'
-        ).value
+    mensaje.style.display =
+      'none';
+
+
+    const archivos =
+      Array.from(
+        inputArchivos.files ||
+        []
       );
 
 
-    if (
-      !Number.isFinite(precio) ||
-      precio <= 0
-    ) {
+    try {
+
+      validarArchivos(
+        archivos
+      );
+
+    } catch (error) {
 
       mostrarMensaje(
-        'Ingresá un precio mayor que cero.',
+        error.message,
         'error'
       );
 
@@ -710,9 +1313,49 @@ formCotizacion.addEventListener(
     }
 
 
+    const precioTexto =
+      document
+        .getElementById(
+          'precio'
+        )
+        .value
+        .trim();
+
+
+    let precio = null;
+
+
+    if (precioTexto) {
+
+      precio =
+        Number(
+          precioTexto
+        );
+
+
+      if (
+        !Number.isFinite(
+          precio
+        ) ||
+        precio <= 0
+      ) {
+
+        mostrarMensaje(
+          'Si indicás un precio, debe ser mayor que cero.',
+          'error'
+        );
+
+        return;
+
+      }
+
+    }
+
+
     const datosComerciales = {
 
-      precio: precio,
+      precio:
+        precio,
 
       detalle_perfileria:
         valorOpcional(
@@ -747,6 +1390,37 @@ formCotizacion.addEventListener(
     };
 
 
+    const tieneDatos =
+      Object.values(
+        datosComerciales
+      ).some(
+        function(valor) {
+
+          return (
+            valor !== null &&
+            valor !== ''
+          );
+
+        }
+      );
+
+
+    if (
+      !tieneDatos &&
+      archivos.length === 0 &&
+      !cotizacionExistente
+    ) {
+
+      mostrarMensaje(
+        'Adjuntá un presupuesto o completá algún dato de la cotización.',
+        'error'
+      );
+
+      return;
+
+    }
+
+
     guardarCotizacion.disabled =
       true;
 
@@ -756,13 +1430,17 @@ formCotizacion.addEventListener(
 
     try {
 
-      if (cotizacionExistente) {
+      if (
+        cotizacionExistente
+      ) {
 
         const {
           error
         } =
           await sb
-            .from('cotizaciones')
+            .from(
+              'cotizaciones'
+            )
             .update(
               datosComerciales
             )
@@ -777,16 +1455,6 @@ formCotizacion.addEventListener(
         }
 
 
-        guardarCotizacion.textContent =
-          'ACTUALIZAR COTIZACIÓN';
-
-
-        mostrarMensaje(
-          'Cotización actualizada correctamente.',
-          'ok'
-        );
-
-
       } else {
 
         const {
@@ -794,7 +1462,9 @@ formCotizacion.addEventListener(
           error
         } =
           await sb
-            .from('cotizaciones')
+            .from(
+              'cotizaciones'
+            )
             .insert({
 
               obra_id:
@@ -819,17 +1489,73 @@ formCotizacion.addEventListener(
           id: data.id
         };
 
-
-        guardarCotizacion.textContent =
-          'ACTUALIZAR COTIZACIÓN';
+      }
 
 
-        mostrarMensaje(
-          'Cotización enviada correctamente.',
-          'ok'
-        );
+      if (
+        archivos.length > 0
+      ) {
+
+        try {
+
+          await subirArchivos(
+            cotizacionExistente.id,
+            archivos
+          );
+
+
+        } catch (
+          archivoError
+        ) {
+
+          console.error(
+            'Error al adjuntar archivo:',
+            archivoError
+          );
+
+
+          mostrarMensaje(
+            'La cotización quedó guardada, pero no pudimos adjuntar todos los archivos: ' +
+            (
+              archivoError.message ||
+              'error desconocido'
+            ),
+            'error'
+          );
+
+
+          guardarCotizacion.textContent =
+            'ACTUALIZAR COTIZACIÓN';
+
+          inputArchivos.value =
+            '';
+
+          await cargarArchivosCotizacion();
+
+          return;
+
+        }
 
       }
+
+
+      inputArchivos.value =
+        '';
+
+
+      guardarCotizacion.textContent =
+        'ACTUALIZAR COTIZACIÓN';
+
+
+      mostrarMensaje(
+        archivos.length > 0
+          ? 'Cotización y archivos guardados correctamente.'
+          : 'Cotización guardada correctamente.',
+        'ok'
+      );
+
+
+      await cargarArchivosCotizacion();
 
 
     } catch (error) {
