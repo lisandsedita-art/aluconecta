@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cotizar proyecto - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #132e4f;
+    }
+
+    header {
+      background: #132e4f;
+      color: white;
+      padding: 18px;
+    }
+
+    .logo {
+      max-width: 760px;
+      margin: auto;
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .logo span {
+      color: #4fb0e2;
+    }
+
+    main {
+      max-width: 760px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .resumen {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 99px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-yellow {
+      background: #ffcf00;
+      color: #132e4f;
+    }
+
+    .btn-dark {
+      background: #132e4f;
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    #mensaje {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .mensaje-ok {
+      display: block !important;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .mensaje-error {
+      display: block !important;
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    @media (max-width: 550px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    Alu<span>Conecta</span>
+  </div>
+</header>
+
+<main>
+
+  <section class="card">
+
+    <h1>Cotizar proyecto</h1>
+
+    <p class="muted">
+      Completá tu propuesta comercial para este proyecto.
+      Solo los carpinteros autorizados pueden enviar una cotización.
+    </p>
+
+    <div
+      id="resumenProyecto"
+      class="resumen"
+    >
+      Verificando proyecto y autorización...
+    </div>
+
+    <form
+      id="formCotizacion"
+      style="display:none;"
+    >
+
+      <label for="precio">
+        Precio total *
+      </label>
+
+      <input
+        id="precio"
+        type="number"
+        min="0.01"
+        step="0.01"
+        required
+        placeholder="Ej.: 2500000"
+      >
+
+
+      <div class="grid2">
+
+        <div>
+
+          <label for="marcaPerfil">
+            Marca de perfilería
+          </label>
+
+          <input
+            id="marcaPerfil"
+            type="text"
+            maxlength="120"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="marcaHerrajes">
+            Marca de herrajes
+          </label>
+
+          <input
+            id="marcaHerrajes"
+            type="text"
+            maxlength="120"
+          >
+
+        </div>
+
+      </div>
+
+
+      <label for="detallePerfileria">
+        Detalle de perfilería
+      </label>
+
+      <textarea
+        id="detallePerfileria"
+        maxlength="2000"
+        placeholder="Sistema, línea, terminación u otras especificaciones."
+      ></textarea>
+
+
+      <label for="detalleHerrajes">
+        Detalle de herrajes
+      </label>
+
+      <textarea
+        id="detalleHerrajes"
+        maxlength="2000"
+      ></textarea>
+
+
+      <label for="plazoEntrega">
+        Plazo de entrega
+      </label>
+
+      <input
+        id="plazoEntrega"
+        type="text"
+        maxlength="200"
+        placeholder="Ej.: 45 días desde la aprobación"
+      >
+
+
+      <label for="comentario">
+        Observaciones
+      </label>
+
+      <textarea
+        id="comentario"
+        maxlength="2000"
+        placeholder="Condiciones, aclaraciones o alcance de la propuesta."
+      ></textarea>
+
+
+      <button
+        id="guardarCotizacion"
+        class="btn btn-yellow"
+        type="submit"
+      >
+        ENVIAR COTIZACIÓN
+      </button>
+
+
+      <a
+        href="panel-carpintero.html"
+        class="btn btn-dark"
+      >
+        VOLVER AL PANEL
+      </a>
+
+
+      <div id="mensaje"></div>
+
+    </form>
+
+  </section>
+
+</main>
+
+
+<script>
+
+const SUPABASE_URL =
+  'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const proyectoId =
+  Number(
+    parametros.get('proyecto')
+  );
+
+
+const resumenProyecto =
+  document.getElementById(
+    'resumenProyecto'
+  );
+
+const formCotizacion =
+  document.getElementById(
+    'formCotizacion'
+  );
+
+const guardarCotizacion =
+  document.getElementById(
+    'guardarCotizacion'
+  );
+
+const mensaje =
+  document.getElementById(
+    'mensaje'
+  );
+
+
+let usuarioActual = null;
+
+let cotizacionExistente = null;
+
+
+function mostrarMensaje(
+  texto,
+  tipo
+) {
+
+  mensaje.textContent =
+    texto;
+
+  mensaje.className =
+    tipo === 'ok'
+      ? 'mensaje-ok'
+      : 'mensaje-error';
+
+}
+
+
+function valorOpcional(id) {
+
+  const valor =
+    document
+      .getElementById(id)
+      .value
+      .trim();
+
+  return valor || null;
+
+}
+
+
+async function iniciarPagina() {
+
+  try {
+
+    if (
+      !Number.isInteger(proyectoId) ||
+      proyectoId <= 0
+    ) {
+
+      throw new Error(
+        'El proyecto indicado no es válido.'
+      );
+
+    }
+
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await sb.auth.getUser();
+
+
+    if (
+      userError ||
+      !user
+    ) {
+
+      window.location.href =
+        'ingresar.html';
+
+      return;
+
+    }
+
+
+    usuarioActual =
+      user;
+
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await sb
+        .from('perfiles')
+        .select(
+          'id,tipo_usuario'
+        )
+        .eq(
+          'id',
+          usuarioActual.id
+        )
+        .maybeSingle();
+
+
+    if (perfilError) {
+      throw perfilError;
+    }
+
+
+    if (
+      !perfil ||
+      perfil.tipo_usuario !==
+        'carpintero'
+    ) {
+
+      throw new Error(
+        'Esta página está disponible únicamente para carpinteros.'
+      );
+
+    }
+
+
+    const {
+      data: interes,
+      error: interesError
+    } =
+      await sb
+        .from(
+          'intereses_proyectos'
+        )
+        .select(
+          'proyecto_id,estado'
+        )
+        .eq(
+          'proyecto_id',
+          proyectoId
+        )
+        .eq(
+          'carpintero_id',
+          usuarioActual.id
+        )
+        .maybeSingle();
+
+
+    if (interesError) {
+      throw interesError;
+    }
+
+
+    if (
+      !interes ||
+      interes.estado !==
+        'autorizado'
+    ) {
+
+      throw new Error(
+        'No estás autorizado para cotizar este proyecto.'
+      );
+
+    }
+
+
+    const {
+      data: proyecto,
+      error: proyectoError
+    } =
+      await sb
+        .from('proyectos')
+        .select(
+          'id,Proyecto,Tipo,Localidad'
+        )
+        .eq(
+          'id',
+          proyectoId
+        )
+        .maybeSingle();
+
+
+    if (proyectoError) {
+      throw proyectoError;
+    }
+
+
+    if (!proyecto) {
+
+      throw new Error(
+        'No encontramos el proyecto.'
+      );
+
+    }
+
+
+    resumenProyecto.innerHTML =
+      '';
+
+
+    const titulo =
+      document.createElement(
+        'strong'
+      );
+
+
+    titulo.textContent =
+      proyecto.Proyecto ||
+      proyecto.Tipo ||
+      'Proyecto #' +
+        proyecto.id;
+
+
+    const ubicacion =
+      document.createElement(
+        'div'
+      );
+
+
+    ubicacion.className =
+      'muted';
+
+    ubicacion.style.marginTop =
+      '6px';
+
+    ubicacion.textContent =
+      '📍 ' +
+      (
+        proyecto.Localidad ||
+        'Localidad no informada'
+      );
+
+
+    resumenProyecto.appendChild(
+      titulo
+    );
+
+    resumenProyecto.appendChild(
+      ubicacion
+    );
+
+
+    const {
+      data: cotizacion,
+      error: cotizacionError
+    } =
+      await sb
+        .from('cotizaciones')
+        .select(
+          'id,precio,detalle_perfileria,detalle_herrajes,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada'
+        )
+        .eq(
+          'obra_id',
+          proyectoId
+        )
+        .eq(
+          'fabricante_id',
+          usuarioActual.id
+        )
+        .maybeSingle();
+
+
+    if (cotizacionError) {
+      throw cotizacionError;
+    }
+
+
+    if (cotizacion) {
+
+      cotizacionExistente =
+        cotizacion;
+
+
+      document.getElementById(
+        'precio'
+      ).value =
+        cotizacion.precio ?? '';
+
+
+      document.getElementById(
+        'detallePerfileria'
+      ).value =
+        cotizacion.detalle_perfileria ??
+        '';
+
+
+      document.getElementById(
+        'detalleHerrajes'
+      ).value =
+        cotizacion.detalle_herrajes ??
+        '';
+
+
+      document.getElementById(
+        'plazoEntrega'
+      ).value =
+        cotizacion.plazo_entrega ??
+        '';
+
+
+      document.getElementById(
+        'comentario'
+      ).value =
+        cotizacion.comentario_calidad ??
+        '';
+
+
+      document.getElementById(
+        'marcaPerfil'
+      ).value =
+        cotizacion.marca_perfil_cotizada ??
+        '';
+
+
+      document.getElementById(
+        'marcaHerrajes'
+      ).value =
+        cotizacion.marca_herrajes_cotizada ??
+        '';
+
+
+      guardarCotizacion.textContent =
+        'ACTUALIZAR COTIZACIÓN';
+
+    }
+
+
+    formCotizacion.style.display =
+      'block';
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al abrir cotización:',
+      error
+    );
+
+    resumenProyecto.textContent =
+      error.message ||
+      'No pudimos abrir la cotización.';
+
+  }
+
+}
+
+
+formCotizacion.addEventListener(
+  'submit',
+  async function(event) {
+
+    event.preventDefault();
+
+
+    const precio =
+      Number(
+        document.getElementById(
+          'precio'
+        ).value
+      );
+
+
+    if (
+      !Number.isFinite(precio) ||
+      precio <= 0
+    ) {
+
+      mostrarMensaje(
+        'Ingresá un precio mayor que cero.',
+        'error'
+      );
+
+      return;
+
+    }
+
+
+    const datosComerciales = {
+
+      precio: precio,
+
+      detalle_perfileria:
+        valorOpcional(
+          'detallePerfileria'
+        ),
+
+      detalle_herrajes:
+        valorOpcional(
+          'detalleHerrajes'
+        ),
+
+      plazo_entrega:
+        valorOpcional(
+          'plazoEntrega'
+        ),
+
+      comentario_calidad:
+        valorOpcional(
+          'comentario'
+        ),
+
+      marca_perfil_cotizada:
+        valorOpcional(
+          'marcaPerfil'
+        ),
+
+      marca_herrajes_cotizada:
+        valorOpcional(
+          'marcaHerrajes'
+        )
+
+    };
+
+
+    guardarCotizacion.disabled =
+      true;
+
+    guardarCotizacion.textContent =
+      'GUARDANDO...';
+
+
+    try {
+
+      if (cotizacionExistente) {
+
+        const {
+          error
+        } =
+          await sb
+            .from('cotizaciones')
+            .update(
+              datosComerciales
+            )
+            .eq(
+              'id',
+              cotizacionExistente.id
+            );
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        guardarCotizacion.textContent =
+          'ACTUALIZAR COTIZACIÓN';
+
+
+        mostrarMensaje(
+          'Cotización actualizada correctamente.',
+          'ok'
+        );
+
+
+      } else {
+
+        const {
+          data,
+          error
+        } =
+          await sb
+            .from('cotizaciones')
+            .insert({
+
+              obra_id:
+                proyectoId,
+
+              fabricante_id:
+                usuarioActual.id,
+
+              ...datosComerciales
+
+            })
+            .select('id')
+            .single();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        cotizacionExistente = {
+          id: data.id
+        };
+
+
+        guardarCotizacion.textContent =
+          'ACTUALIZAR COTIZACIÓN';
+
+
+        mostrarMensaje(
+          'Cotización enviada correctamente.',
+          'ok'
+        );
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        'Error al guardar cotización:',
+        error
+      );
+
+
+      mostrarMensaje(
+        'No pudimos guardar la cotización: ' +
+        (
+          error.message ||
+          'error desconocido'
+        ),
+        'error'
+      );
+
+
+      guardarCotizacion.textContent =
+        cotizacionExistente
+          ? 'ACTUALIZAR COTIZACIÓN'
+          : 'ENVIAR COTIZACIÓN';
+
+
+    } finally {
+
+      guardarCotizacion.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+iniciarPagina();
+
+</script>
+
+</body>
+</html>
