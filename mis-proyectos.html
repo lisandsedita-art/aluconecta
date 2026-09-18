@@ -21,6 +21,290 @@ async function intereses(pid,c){
  if(error||!data?.length){const a=document.createElement('div');a.className='aviso';a.textContent=error?'No pudimos cargar los intereses.':'Todavía no hay carpinterías interesadas.';c.append(a);return}
  for(const i of data){const p=await pub(i.carpintero_id),x=document.createElement('div');x.className='interes';const top=document.createElement('div');top.className='itop';const d=document.createElement('div'),n=document.createElement('div'),inf=document.createElement('div');n.className='nombre';n.textContent='Carpintería interesada';inf.className='info';inf.textContent=(p?.localidad?'📍 '+p.localidad+' · ':'')+(p?.actividades?'Actividad: '+p.actividades+' · ':'')+(p?.servicios?'Servicios: '+p.servicios+' · ':'')+'Interés: '+f(i.created_at);d.append(n,inf);const es=document.createElement('span');es.className='estado '+i.estado;es.textContent=i.estado==='autorizado'?'Autorizado':i.estado==='no_autorizado'?'No autorizado':'Interesado';top.append(d,es);const ac=document.createElement('div');ac.className='acciones';const si=document.createElement('button'),no=document.createElement('button');si.className='si';no.className='no';si.textContent=i.estado==='autorizado'?'AUTORIZADO':'AUTORIZAR';no.textContent=i.estado==='no_autorizado'?'NO AUTORIZADO':'NO AUTORIZAR';si.disabled=i.estado==='autorizado';no.disabled=i.estado==='no_autorizado';si.onclick=()=>estado(i.id,'autorizado');no.onclick=()=>estado(i.id,'no_autorizado');ac.append(si,no);x.append(top,ac);c.append(x)}
 }
+ async function abrirArchivoCotizacion(ruta){
+
+  const ventana=window.open('','_blank');
+
+  try{
+
+    const{data,error}=await sb.storage
+      .from('cotizaciones-archivos')
+      .createSignedUrl(ruta,60);
+
+    if(error||!data?.signedUrl){
+      throw error||new Error('No pudimos generar el acceso.');
+    }
+
+    if(ventana){
+      ventana.location.href=data.signedUrl;
+    }else{
+      window.location.href=data.signedUrl;
+    }
+
+  }catch(e){
+
+    if(ventana){
+      ventana.close();
+    }
+
+    msg(
+      'No pudimos abrir el presupuesto: '+
+      (e.message||'error desconocido'),
+      'error'
+    );
+
+  }
+
+}
+
+
+async function cotizaciones(pid,c){
+
+  const bloque=document.createElement('div');
+
+  bloque.style.marginTop='18px';
+
+  const titulo=document.createElement('h4');
+
+  titulo.textContent='Cotizaciones recibidas';
+
+  bloque.appendChild(titulo);
+
+  const cargando=document.createElement('div');
+
+  cargando.className='muted';
+
+  cargando.textContent='Consultando cotizaciones...';
+
+  bloque.appendChild(cargando);
+
+  c.appendChild(bloque);
+
+
+  const{data,error}=await sb
+    .from('cotizaciones')
+    .select(
+      'id,precio,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada,created_at'
+    )
+    .eq('obra_id',pid)
+    .order('created_at',{ascending:false});
+
+
+  cargando.remove();
+
+
+  if(error){
+
+    const aviso=document.createElement('div');
+
+    aviso.className='muted';
+
+    aviso.textContent=
+      'No pudimos consultar las cotizaciones.';
+
+    bloque.appendChild(aviso);
+
+    return;
+
+  }
+
+
+  if(!data||data.length===0){
+
+    const vacio=document.createElement('div');
+
+    vacio.className='muted';
+
+    vacio.textContent=
+      'Todavía no recibiste cotizaciones para este proyecto.';
+
+    bloque.appendChild(vacio);
+
+    return;
+
+  }
+
+
+  for(const cotizacion of data){
+
+    const caja=document.createElement('div');
+
+    caja.style.marginTop='12px';
+    caja.style.padding='14px';
+    caja.style.border='1px solid #e2e8f0';
+    caja.style.borderRadius='14px';
+    caja.style.background='#f8fafc';
+
+
+    const encabezado=document.createElement('strong');
+
+    encabezado.textContent='Cotización recibida';
+
+    caja.appendChild(encabezado);
+
+
+    if(cotizacion.precio!==null){
+
+      const precio=document.createElement('div');
+
+      precio.style.marginTop='8px';
+
+      precio.textContent=
+        'Precio informado: '+
+        cotizacion.precio;
+
+      caja.appendChild(precio);
+
+    }
+
+
+    if(cotizacion.plazo_entrega){
+
+      const plazo=document.createElement('div');
+
+      plazo.style.marginTop='6px';
+
+      plazo.textContent=
+        'Plazo: '+
+        cotizacion.plazo_entrega;
+
+      caja.appendChild(plazo);
+
+    }
+
+
+    if(cotizacion.marca_perfil_cotizada){
+
+      const perfil=document.createElement('div');
+
+      perfil.style.marginTop='6px';
+
+      perfil.textContent=
+        'Perfilería: '+
+        cotizacion.marca_perfil_cotizada;
+
+      caja.appendChild(perfil);
+
+    }
+
+
+    if(cotizacion.marca_herrajes_cotizada){
+
+      const herrajes=document.createElement('div');
+
+      herrajes.style.marginTop='6px';
+
+      herrajes.textContent=
+        'Herrajes: '+
+        cotizacion.marca_herrajes_cotizada;
+
+      caja.appendChild(herrajes);
+
+    }
+
+
+    if(cotizacion.comentario_calidad){
+
+      const comentario=document.createElement('div');
+
+      comentario.style.marginTop='8px';
+
+      comentario.className='muted';
+
+      comentario.textContent=
+        cotizacion.comentario_calidad;
+
+      caja.appendChild(comentario);
+
+    }
+
+
+    const documentos=document.createElement('div');
+
+    documentos.style.marginTop='10px';
+
+    documentos.innerHTML=
+      '<span class="muted">Consultando archivos adjuntos...</span>';
+
+    caja.appendChild(documentos);
+
+    bloque.appendChild(caja);
+
+
+    const{
+      data:archivos,
+      error:archivosError
+    }=await sb
+      .from('archivos_cotizacion')
+      .select(
+        'id,nombre_archivo,ruta_storage'
+      )
+      .eq(
+        'cotizacion_id',
+        cotizacion.id
+      )
+      .order(
+        'created_at',
+        {ascending:true}
+      );
+
+
+    documentos.innerHTML='';
+
+
+    if(archivosError){
+
+      documentos.textContent=
+        'No pudimos consultar los archivos de esta cotización.';
+
+      continue;
+
+    }
+
+
+    if(!archivos||archivos.length===0){
+
+      documentos.innerHTML=
+        '<span class="muted">Esta cotización no tiene archivos adjuntos.</span>';
+
+      continue;
+
+    }
+
+
+    for(const archivo of archivos){
+
+      const boton=document.createElement('button');
+
+      boton.type='button';
+      boton.className='btn';
+      boton.style.width='100%';
+      boton.style.marginTop='8px';
+
+      boton.textContent=
+        'VER / DESCARGAR · '+
+        archivo.nombre_archivo;
+
+
+      boton.addEventListener(
+        'click',
+        function(){
+
+          abrirArchivoCotizacion(
+            archivo.ruta_storage
+          );
+
+        }
+      );
+
+
+      documentos.appendChild(boton);
+
+    }
+
+  }
+
+}
 async function proyectos(){
  lista.innerHTML='';const{data,error,count}=await sb.from('proyectos').select('id,created_at,Nombre,Tipo,Localidad,Proyecto',{count:'exact'}).eq('publicado_por',user.id).order('created_at',{ascending:false});
  if(error){resumen.textContent='No disponible';const a=document.createElement('div');a.className='aviso';a.textContent='No pudimos cargar tus proyectos.';lista.append(a);return}
