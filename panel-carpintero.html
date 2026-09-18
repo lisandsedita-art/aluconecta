@@ -1826,30 +1826,7 @@ document.getElementById(
   }
 );
 
-async function probarAccesoDocumentacion() {
 
-  const {
-    data,
-    error
-  } = await sb
-    .from('archivos_proyecto')
-    .select(
-      'id,proyecto_id,nombre_archivo,ruta_storage'
-    )
-    .eq('proyecto_id', 4);
-
-  console.log(
-    'PRUEBA DOCUMENTACION:',
-    {
-      data,
-      error
-    }
-  );
-
-}
-
-window.probarAccesoDocumentacion =
-  probarAccesoDocumentacion;
 iniciarPanel();
 
 </script>
