@@ -1272,7 +1272,24 @@ function renderizarMisIntereses() {
     tarjeta.appendChild(titulo);
     tarjeta.appendChild(ubicacion);
     tarjeta.appendChild(estado);
+if (interes.estado === 'autorizado') {
 
+  const documentos =
+    document.createElement('div');
+
+  documentos.style.marginTop = '12px';
+
+  documentos.innerHTML =
+    '<span class="muted">Consultando documentación técnica...</span>';
+
+  tarjeta.appendChild(documentos);
+
+  cargarDocumentacionProyecto(
+    interes.proyecto_id,
+    documentos
+  );
+
+}
     contenedor.appendChild(tarjeta);
 
   });
