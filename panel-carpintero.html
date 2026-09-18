@@ -1295,6 +1295,199 @@ if (interes.estado === 'autorizado') {
   });
 
 }
+  async function cargarDocumentacionProyecto(
+  proyectoId,
+  contenedor
+) {
+
+  try {
+
+    const {
+      data: archivos,
+      error
+    } = await sb
+      .from('archivos_proyecto')
+      .select(
+        'id,nombre_archivo,ruta_storage,tipo_mime'
+      )
+      .eq('proyecto_id', proyectoId)
+      .order('created_at', {
+        ascending: true
+      });
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    contenedor.innerHTML = '';
+
+
+    if (!archivos || archivos.length === 0) {
+
+      const mensaje =
+        document.createElement('span');
+
+      mensaje.className =
+        'muted';
+
+      mensaje.textContent =
+        'Este proyecto no tiene documentación adjunta.';
+
+      contenedor.appendChild(mensaje);
+
+      return;
+    }
+
+
+    archivos.forEach(archivo => {
+
+      const boton =
+        document.createElement('button');
+
+      boton.type =
+        'button';
+
+      boton.className =
+        'btn btn-dark';
+
+      boton.style.width =
+        '100%';
+
+      boton.style.marginTop =
+        '8px';
+
+      boton.textContent =
+        'VER DOCUMENTACIÓN TÉCNICA';
+
+
+      boton.addEventListener(
+        'click',
+        async function() {
+
+          const textoOriginal =
+            boton.textContent;
+
+          boton.disabled =
+            true;
+
+          boton.textContent =
+            'ABRIENDO...';
+
+
+          try {
+
+            const {
+              data,
+              error: urlError
+            } = await sb.storage
+              .from(
+                'proyectos-documentacion'
+              )
+              .createSignedUrl(
+                archivo.ruta_storage,
+                60
+              );
+
+
+            if (urlError) {
+              throw urlError;
+            }
+
+
+            if (
+              !data ||
+              !data.signedUrl
+            ) {
+              throw new Error(
+                'No se pudo generar el acceso al archivo.'
+              );
+            }
+
+
+            window.open(
+              data.signedUrl,
+              '_blank',
+              'noopener,noreferrer'
+            );
+
+
+          } catch (error) {
+
+            console.error(
+              'Error al abrir documentación:',
+              error
+            );
+
+            alert(
+              'No pudimos abrir la documentación técnica.'
+            );
+
+          } finally {
+
+            boton.disabled =
+              false;
+
+            boton.textContent =
+              textoOriginal;
+
+          }
+
+        }
+      );
+
+
+      const nombre =
+        document.createElement('div');
+
+      nombre.className =
+        'muted';
+
+      nombre.style.marginTop =
+        '6px';
+
+      nombre.textContent =
+        archivo.nombre_archivo;
+
+
+      contenedor.appendChild(
+        boton
+      );
+
+      contenedor.appendChild(
+        nombre
+      );
+
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al consultar documentación:',
+      error
+    );
+
+    contenedor.innerHTML =
+      '';
+
+    const mensaje =
+      document.createElement('span');
+
+    mensaje.className =
+      'muted';
+
+    mensaje.textContent =
+      'No se pudo acceder a la documentación.';
+
+    contenedor.appendChild(
+      mensaje
+    );
+
+  }
+
+  }
 async function cargarProyectos() {
 
   const contenedor =
