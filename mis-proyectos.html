@@ -445,8 +445,8 @@ async function cotizaciones(pid,c){
   const{data,error}=await sb
     .from('cotizaciones')
     .select(
-      'id,precio,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada,created_at'
-    )
+  'id,fabricante_id,precio,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada,created_at'
+)
     .eq('obra_id',pid)
     .order('created_at',{ascending:false});
 
