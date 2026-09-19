@@ -36,9 +36,351 @@ async function pub(id){
 }
 async function estado(id,e){const{error}=await sb.from('intereses_proyectos').update({estado:e}).eq('id',id);if(error){msg('No pudimos actualizar: '+error.message,'error');return}msg(e==='autorizado'?'Carpintería autorizada correctamente.':'Carpintería marcada como no autorizada.','ok');await proyectos()}
 async function intereses(pid,c){
- const{data,error}=await sb.from('intereses_proyectos').select('id,created_at,carpintero_id,estado').eq('proyecto_id',pid).order('created_at',{ascending:false});
- if(error||!data?.length){const a=document.createElement('div');a.className='aviso';a.textContent=error?'No pudimos cargar los intereses.':'Todavía no hay carpinterías interesadas.';c.append(a);return}
- for(const i of data){const p=await pub(i.carpintero_id),x=document.createElement('div');x.className='interes';const top=document.createElement('div');top.className='itop';const d=document.createElement('div'),n=document.createElement('div'),inf=document.createElement('div');n.className='nombre';n.textContent='Carpintería interesada';inf.className='info';inf.textContent=(p?.localidad?'📍 '+p.localidad+' · ':'')+(p?.actividades?'Actividad: '+p.actividades+' · ':'')+(p?.servicios?'Servicios: '+p.servicios+' · ':'')+'Interés: '+f(i.created_at);d.append(n,inf);const es=document.createElement('span');es.className='estado '+i.estado;es.textContent=i.estado==='autorizado'?'Autorizado':i.estado==='no_autorizado'?'No autorizado':'Interesado';top.append(d,es);const ac=document.createElement('div');ac.className='acciones';const si=document.createElement('button'),no=document.createElement('button');si.className='si';no.className='no';si.textContent=i.estado==='autorizado'?'AUTORIZADO':'AUTORIZAR';no.textContent=i.estado==='no_autorizado'?'NO AUTORIZADO':'NO AUTORIZAR';si.disabled=i.estado==='autorizado';no.disabled=i.estado==='no_autorizado';si.onclick=()=>estado(i.id,'autorizado');no.onclick=()=>estado(i.id,'no_autorizado');ac.append(si,no);x.append(top,ac);c.append(x)}
+
+  const {data,error}=await sb
+    .from('intereses_proyectos')
+    .select('id,created_at,carpintero_id,estado')
+    .eq('proyecto_id',pid)
+    .order('created_at',{ascending:false});
+
+
+  if(error || !data?.length){
+
+    const a=document.createElement('div');
+
+    a.className='aviso';
+
+    a.textContent=
+      error
+        ? 'No pudimos cargar los intereses.'
+        : 'Todavía no hay carpinterías interesadas.';
+
+    c.append(a);
+
+    return;
+  }
+
+
+  for(const i of data){
+
+    const p=
+      await pub(i.carpintero_id);
+
+
+    const x=
+      document.createElement('div');
+
+    x.className='interes';
+
+
+    const top=
+      document.createElement('div');
+
+    top.className='itop';
+
+
+    const d=
+      document.createElement('div');
+
+
+    const n=
+      document.createElement('div');
+
+    n.className='nombre';
+
+    n.textContent=
+      p?.nombre ||
+      'Carpintería registrada';
+
+
+    const inf=
+      document.createElement('div');
+
+    inf.className='info';
+
+
+    let datos=[];
+
+
+    if(p?.localidad || p?.provincia){
+
+      let ubicacion='📍 ';
+
+      if(p?.localidad){
+        ubicacion+=p.localidad;
+      }
+
+      if(p?.provincia){
+        ubicacion+=
+          (p?.localidad ? ', ' : '')+
+          p.provincia;
+      }
+
+      datos.push(ubicacion);
+    }
+
+
+    if(p?.actividades){
+
+      datos.push(
+        p.actividades
+      );
+    }
+
+
+    if(p?.servicios){
+
+      datos.push(
+        'Servicios: '+p.servicios
+      );
+    }
+
+
+    datos.push(
+      'Interés: '+f(i.created_at)
+    );
+
+
+    inf.textContent=
+      datos.join(' · ');
+
+
+    d.append(
+      n,
+      inf
+    );
+
+
+    if(p?.descripcion){
+
+      const descripcion=
+        document.createElement('div');
+
+      descripcion.className='info';
+
+      descripcion.style.marginTop='6px';
+
+      descripcion.textContent=
+        p.descripcion;
+
+      d.appendChild(
+        descripcion
+      );
+    }
+
+
+    if(p?.created_at){
+
+      const antiguedad=
+        document.createElement('div');
+
+      antiguedad.className='info';
+
+      antiguedad.style.marginTop='6px';
+
+      antiguedad.textContent=
+        'Miembro de AluConecta desde '+
+        f(p.created_at);
+
+      d.appendChild(
+        antiguedad
+      );
+    }
+
+
+    const redes=
+      document.createElement('div');
+
+    redes.style.marginTop='8px';
+
+
+    function agregarRed(
+      texto,
+      valor,
+      base
+    ){
+
+      if(!valor){
+        return;
+      }
+
+
+      let url=
+        valor.trim();
+
+
+      if(
+        !/^https?:\/\//i.test(url)
+      ){
+
+        if(base){
+
+          url=
+            base+
+            url
+              .replace(/^@/,'')
+              .replace(/^\/+/,'');
+
+        }else{
+
+          url=
+            'https://'+
+            url.replace(/^\/+/,'');
+
+        }
+
+      }
+
+
+      const enlace=
+        document.createElement('a');
+
+      enlace.href=url;
+
+      enlace.target='_blank';
+
+      enlace.rel=
+        'noopener noreferrer';
+
+      enlace.textContent=
+        texto;
+
+      enlace.style.marginRight=
+        '12px';
+
+      enlace.style.fontWeight=
+        '700';
+
+      redes.appendChild(
+        enlace
+      );
+    }
+
+
+    agregarRed(
+      'Instagram',
+      p?.instagram,
+      'https://instagram.com/'
+    );
+
+    agregarRed(
+      'Facebook',
+      p?.facebook,
+      'https://facebook.com/'
+    );
+
+    agregarRed(
+      'TikTok',
+      p?.tiktok,
+      'https://tiktok.com/@'
+    );
+
+    agregarRed(
+      'Sitio web',
+      p?.web,
+      null
+    );
+
+
+    if(
+      redes.children.length>0
+    ){
+
+      d.appendChild(
+        redes
+      );
+    }
+
+
+    const es=
+      document.createElement('span');
+
+    es.className=
+      'estado '+i.estado;
+
+    es.textContent=
+      i.estado==='autorizado'
+        ? 'Autorizado'
+        : i.estado==='no_autorizado'
+          ? 'No autorizado'
+          : 'Interesado';
+
+
+    top.append(
+      d,
+      es
+    );
+
+
+    const ac=
+      document.createElement('div');
+
+    ac.className='acciones';
+
+
+    const si=
+      document.createElement('button');
+
+    const no=
+      document.createElement('button');
+
+
+    si.className='si';
+
+    no.className='no';
+
+
+    si.textContent=
+      i.estado==='autorizado'
+        ? 'AUTORIZADO'
+        : 'AUTORIZAR';
+
+
+    no.textContent=
+      i.estado==='no_autorizado'
+        ? 'NO AUTORIZADO'
+        : 'NO AUTORIZAR';
+
+
+    si.disabled=
+      i.estado==='autorizado';
+
+    no.disabled=
+      i.estado==='no_autorizado';
+
+
+    si.onclick=
+      ()=>estado(
+        i.id,
+        'autorizado'
+      );
+
+
+    no.onclick=
+      ()=>estado(
+        i.id,
+        'no_autorizado'
+      );
+
+
+    ac.append(
+      si,
+      no
+    );
+
+
+    x.append(
+      top,
+      ac
+    );
+
+
+    c.append(
+      x
+    );
+
+  }
+
 }
  async function abrirArchivoCotizacion(ruta){
 
