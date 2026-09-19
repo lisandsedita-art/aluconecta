@@ -497,11 +497,37 @@ async function cotizaciones(pid,c){
     caja.style.background='#f8fafc';
 
 
-    const encabezado=document.createElement('strong');
+const carpintero=
+  await pub(
+    cotizacion.fabricante_id
+  );
 
-    encabezado.textContent='Cotización recibida';
 
-    caja.appendChild(encabezado);
+const encabezado=
+  document.createElement('strong');
+
+encabezado.textContent=
+  carpintero?.nombre ||
+  'Carpintería registrada';
+
+caja.appendChild(
+  encabezado
+);
+
+
+const tipoCotizacion=
+  document.createElement('div');
+
+tipoCotizacion.className='muted';
+
+tipoCotizacion.style.marginTop='4px';
+
+tipoCotizacion.textContent=
+  'Cotización recibida';
+
+caja.appendChild(
+  tipoCotizacion
+);
 
 
     if(cotizacion.precio!==null){
