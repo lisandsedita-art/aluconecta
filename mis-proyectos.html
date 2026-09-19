@@ -14,7 +14,26 @@ const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co'
 let user=null;const lista=document.querySelector('#lista'),resumen=document.querySelector('#resumen'),mensaje=document.querySelector('#mensaje');
 const f=v=>v?new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(v)):'';
 function msg(t,c){mensaje.className='msg '+c;mensaje.textContent=t}
-async function pub(id){const{data,error}=await sb.from('perfiles_publicos').select('id,actividades,localidad,servicios').eq('id',id).maybeSingle();return error?null:data}
+async function pub(id){
+
+ const{data,error}=await sb
+   .from('carpinteros_visibles')
+   .select(
+     'id,created_at,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web'
+   )
+   .eq('id',id)
+   .maybeSingle();
+
+ if(error){
+   console.error(
+     'Error al consultar carpintería:',
+     error
+   );
+   return null;
+ }
+
+ return data;
+}
 async function estado(id,e){const{error}=await sb.from('intereses_proyectos').update({estado:e}).eq('id',id);if(error){msg('No pudimos actualizar: '+error.message,'error');return}msg(e==='autorizado'?'Carpintería autorizada correctamente.':'Carpintería marcada como no autorizada.','ok');await proyectos()}
 async function intereses(pid,c){
  const{data,error}=await sb.from('intereses_proyectos').select('id,created_at,carpintero_id,estado').eq('proyecto_id',pid).order('created_at',{ascending:false});
