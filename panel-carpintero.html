@@ -1333,6 +1333,286 @@ tarjeta.appendChild(
   });
 
 }
+  async function cargarContactoPublicador(
+  proyectoId,
+  contenedor
+) {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await sb.rpc(
+        'contacto_publicador_autorizado',
+        {
+          p_proyecto_id:
+            proyectoId
+        }
+      );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    const perfil =
+      Array.isArray(data)
+        ? data[0]
+        : null;
+
+
+    contenedor.innerHTML =
+      '';
+
+
+    if (!perfil) {
+
+      const aviso =
+        document.createElement('span');
+
+      aviso.className =
+        'muted';
+
+      aviso.textContent =
+        'Los datos de contacto todavía no están disponibles.';
+
+      contenedor.appendChild(
+        aviso
+      );
+
+      return;
+    }
+
+
+    const titulo =
+      document.createElement('strong');
+
+    titulo.textContent =
+      'CONTACTO HABILITADO';
+
+    contenedor.appendChild(
+      titulo
+    );
+
+
+    const nombre =
+      document.createElement('div');
+
+    nombre.style.marginTop =
+      '8px';
+
+    nombre.textContent =
+      perfil.nombre ||
+      'Profesional / Empresa';
+
+    contenedor.appendChild(
+      nombre
+    );
+
+
+    if (perfil.actividades) {
+
+      const actividad =
+        document.createElement('div');
+
+      actividad.className =
+        'muted';
+
+      actividad.textContent =
+        perfil.actividades;
+
+      contenedor.appendChild(
+        actividad
+      );
+
+    }
+
+
+    if (
+      perfil.localidad ||
+      perfil.provincia
+    ) {
+
+      const ubicacion =
+        document.createElement('div');
+
+      ubicacion.className =
+        'muted';
+
+      ubicacion.textContent =
+        '📍 ' +
+        [
+          perfil.localidad,
+          perfil.provincia
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+      contenedor.appendChild(
+        ubicacion
+      );
+
+    }
+
+
+    if (perfil.telefono) {
+
+      const telefono =
+        document.createElement('a');
+
+      telefono.href =
+        'https://wa.me/54' +
+        String(
+          perfil.telefono
+        ).replace(/\D/g,'');
+
+      telefono.target =
+        '_blank';
+
+      telefono.rel =
+        'noopener noreferrer';
+
+      telefono.textContent =
+        'WHATSAPP / CONTACTAR';
+
+      telefono.className =
+        'btn btn-y';
+
+      telefono.style.width =
+        '100%';
+
+      telefono.style.marginTop =
+        '10px';
+
+      contenedor.appendChild(
+        telefono
+      );
+
+    }
+
+
+    const redes =
+      [
+        ['Instagram', perfil.instagram],
+        ['Facebook', perfil.facebook],
+        ['TikTok', perfil.tiktok],
+        ['Sitio web', perfil.web]
+      ];
+
+
+    for (
+      const [
+        texto,
+        valor
+      ]
+      of redes
+    ) {
+
+      if (!valor) {
+        continue;
+      }
+
+
+      const enlace =
+        document.createElement('a');
+
+      let url =
+        valor.trim();
+
+
+      if (
+        !/^https?:\/\//i.test(url)
+      ) {
+
+        if (texto === 'Instagram') {
+
+          url =
+            'https://instagram.com/' +
+            url.replace(/^@/,'');
+
+        } else if (
+          texto === 'Facebook'
+        ) {
+
+          url =
+            'https://facebook.com/' +
+            url.replace(/^@/,'');
+
+        } else if (
+          texto === 'TikTok'
+        ) {
+
+          url =
+            'https://tiktok.com/@' +
+            url.replace(/^@/,'');
+
+        } else {
+
+          url =
+            'https://' + url;
+
+        }
+
+      }
+
+
+      enlace.href =
+        url;
+
+      enlace.target =
+        '_blank';
+
+      enlace.rel =
+        'noopener noreferrer';
+
+      enlace.textContent =
+        texto;
+
+      enlace.style.display =
+        'inline-block';
+
+      enlace.style.marginTop =
+        '8px';
+
+      enlace.style.marginRight =
+        '12px';
+
+      contenedor.appendChild(
+        enlace
+      );
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      'Error cargando contacto:',
+      error
+    );
+
+    contenedor.innerHTML =
+      '';
+
+    const aviso =
+      document.createElement('span');
+
+    aviso.className =
+      'muted';
+
+    aviso.textContent =
+      'No pudimos cargar los datos de contacto.';
+
+    contenedor.appendChild(
+      aviso
+    );
+
+  }
+
+  }
   async function cargarDocumentacionProyecto(
   proyectoId,
   contenedor
