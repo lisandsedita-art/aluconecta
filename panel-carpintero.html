@@ -1531,15 +1531,17 @@ async function cargarProyectos() {
       error
     } =
       await sb
-        .from('proyectos')
-        .select('*')
-        .order(
-          'created_at',
-          {
-            ascending: false
-          }
-        )
-        .limit(20);
+        .from('proyectos_publicos')
+.select(
+  'id,created_at,Tipo,Localidad,Proyecto'
+)
+.order(
+  'created_at',
+  {
+    ascending: false
+  }
+)
+.limit(20);
 
 
     if (error) {
