@@ -389,7 +389,27 @@ async function intereses(pid,c){
         redes
       );
     }
+if(i.estado==='autorizado'){
 
+  const contacto=
+    document.createElement('div');
+
+  contacto.style.marginTop='10px';
+
+  contacto.innerHTML=
+    '<span class="info">Consultando datos de contacto...</span>';
+
+  d.appendChild(
+    contacto
+  );
+
+  cargarContactoCarpintero(
+    pid,
+    i.carpintero_id,
+    contacto
+  );
+
+}
 
     const es=
       document.createElement('span');
