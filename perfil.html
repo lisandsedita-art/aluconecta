@@ -320,599 +320,420 @@
 
 
 
-    async function cargarPerfil() {
+   async function cargarPerfil() {
+
+  if (!id) {
+
+    mostrarError(
+      "No se indicó qué perfil queremos mostrar."
+    );
+
+    return;
+
+  }
 
 
-      if (!id) {
+  try {
 
-        mostrarError(
-          "No se indicó qué perfil queremos mostrar."
-        );
+    const {
+      data: sesionData
+    } =
+      await supabaseClient.auth.getSession();
 
-        return;
 
+    const session =
+      sesionData.session;
+
+
+    const usuarioActual =
+      session
+        ? session.user
+        : null;
+
+
+    const esPropietario =
+      usuarioActual &&
+      usuarioActual.id === id;
+
+
+    let profesional = null;
+
+
+    /*
+      SI ES SU PROPIO PERFIL:
+      puede consultar sus propios datos completos.
+    */
+
+    if (esPropietario) {
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+
+          .from("perfiles")
+
+          .select(
+            "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,descripcion,telefono,instagram,facebook,tiktok,web"
+          )
+
+          .eq("id", id)
+
+          .single();
+
+
+      if (error) {
+        throw error;
       }
 
 
-      try {
+      profesional = data;
 
+    }
 
-        /*
-          Comprobamos si existe una sesión activa.
-        */
 
-        const {
-          data: sesionData
-        } =
-          await supabaseClient.auth.getSession();
+    /*
+      SI ES EL PERFIL DE OTRA PERSONA:
+      nunca consultamos la tabla privada completa.
+    */
 
+    else {
 
-        const session =
-          sesionData.session;
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
 
+          .from("carpinteros_visibles")
 
-        const usuarioActual =
-          session
-            ? session.user
-            : null;
+          .select(
+            "id,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web"
+          )
 
+          .eq("id", id)
 
+          .maybeSingle();
 
-        /*
-          Comprobamos si el perfil pertenece
-          al usuario que está conectado.
-        */
 
-        const esPropietario =
-          usuarioActual &&
-          usuarioActual.id === id;
+      if (error) {
+        throw error;
+      }
 
 
+      profesional = data;
 
-        let profesional;
+    }
 
 
+    if (!profesional) {
 
-        /*
-          PERFIL PROPIO
-          o
-          USUARIO REGISTRADO
+      mostrarError(
+        "No encontramos este perfil."
+      );
 
-          En estos casos podemos consultar
-          el perfil completo.
-        */
+      return;
 
-        if (usuarioActual) {
+    }
 
 
-          const {
-            data,
-            error
-          } =
-            await supabaseClient
+    const actividades =
+      profesional.actividades ||
+      "Carpintería de aluminio";
 
-              .from("perfiles")
 
-              .select("*")
+    const localidad =
+      profesional.localidad ||
+      "Localidad no indicada";
 
-              .eq("id", id)
 
-              .single();
+    const provincia =
+      profesional.provincia ||
+      "";
 
 
-          if (error) {
+    const servicios =
+      profesional.servicios ||
+      "No especificados";
 
-            throw error;
 
-          }
+    const descripcion =
+      profesional.descripcion ||
+      "Sin presentación";
 
 
-          profesional = data;
+    const nombre =
+      profesional.nombre ||
+      "Profesional de AluConecta";
 
 
-        } else {
+    const inicial =
+      nombre
+        .charAt(0)
+        .toUpperCase();
 
 
-          /*
-            VISITANTE NO REGISTRADO.
+    let ubicacion =
+      localidad;
 
-            Solamente consultamos la vista
-            pública segura.
-          */
 
-          const {
-            data,
-            error
-          } =
-            await supabaseClient
+    if (
+      provincia &&
+      provincia !== localidad
+    ) {
 
-              .from("perfiles_publicos")
+      ubicacion +=
+        ", " + provincia;
 
-              .select("*")
+    }
 
-              .eq("id", id)
 
-              .single();
+    let contenido = `
 
+      <div class="avatar">
+        ${inicial}
+      </div>
 
-          if (error) {
+      <h1 class="nombre">
+        ${nombre}
+      </h1>
 
-            throw error;
+      <p class="ubicacion">
+        📍 ${ubicacion}
+      </p>
 
-          }
+      <p class="rubro">
+        🏷️ ${actividades}
+      </p>
 
+      <div class="seccion">
 
-          profesional = data;
+        <h2>
+          Servicios
+        </h2>
 
-        }
+        <p class="dato">
+          ${servicios}
+        </p>
 
+      </div>
 
+      <div class="seccion">
 
-        if (!profesional) {
+        <h2>
+          Sobre el profesional
+        </h2>
 
-          mostrarError(
-            "No encontramos este perfil."
-          );
+        <p class="dato">
+          ${descripcion}
+        </p>
 
-          return;
+      </div>
 
-        }
+    `;
 
 
+    /*
+      PERFIL PROPIO
+    */
 
-        /*
-          Datos públicos.
-        */
+    if (esPropietario) {
 
-        const actividades =
-          profesional.actividades ||
-          "Servicios profesionales";
+      contenido += `
 
+        <div class="aviso">
 
-        const localidad =
-          profesional.localidad ||
-          "Localidad no indicada";
+          <strong>
+            Este es tu perfil.
+          </strong>
 
-
-        const servicios =
-          profesional.servicios ||
-          "No especificados";
-
-
-        const descripcion =
-          profesional.descripcion ||
-          "Sin presentación";
-
-
-
-        /*
-          El nombre solamente existe
-          cuando el usuario está registrado.
-        */
-
-        const nombre =
-          profesional.nombre ||
-          "Profesional de AluConecta";
-
-
-        const inicial =
-          nombre
-            .charAt(0)
-            .toUpperCase();
-
-
-
-        /*
-          Comenzamos a construir el perfil.
-        */
-
-        let contenido = `
-
-
-          <div class="avatar">
-
-            ${inicial}
-
-          </div>
-
-
-
-          <h1 class="nombre">
-
-            ${nombre}
-
-          </h1>
-
-
-
-          <p class="ubicacion">
-
-            📍 ${localidad}
-
+          <p>
+            Podés modificar tus datos
+            cuando quieras.
           </p>
 
+        </div>
+
+        <div class="botones">
+
+          <a
+            href="editar-perfil.html"
+            class="boton editar"
+          >
+            ✏️ Editar mi perfil
+          </a>
+
+        </div>
+
+      `;
+
+    }
 
 
-          <p class="rubro">
+    /*
+      PERFIL DE OTRA CARPINTERÍA
 
-            🏷️ ${actividades}
+      Se permite mostrar información comercial,
+      pero NO teléfono, WhatsApp ni llamada directa.
+    */
 
-          </p>
+    else {
+
+      const instagram =
+        profesional.instagram || "";
 
 
+      const facebook =
+        profesional.facebook || "";
+
+
+      const tiktok =
+        profesional.tiktok || "";
+
+
+      const web =
+        profesional.web || "";
+
+
+      if (
+        instagram ||
+        facebook ||
+        tiktok ||
+        web
+      ) {
+
+        contenido += `
 
           <div class="seccion">
 
             <h2>
-              Servicios
+              Presencia profesional
             </h2>
-
-            <p class="dato">
-
-              ${servicios}
-
-            </p>
-
-          </div>
-
-
-
-          <div class="seccion">
-
-            <h2>
-              Sobre el profesional
-            </h2>
-
-            <p class="dato">
-
-              ${descripcion}
-
-            </p>
-
-          </div>
-
-
-        `;
-
-
-
-        /*
-          PROPIETARIO
-        */
-
-        if (esPropietario) {
-
-
-          contenido += `
-
-
-            <div class="aviso">
-
-              <strong>
-                Este es tu perfil.
-              </strong>
-
-              <p>
-                Podés modificar tus datos
-                cuando quieras.
-              </p>
-
-            </div>
-
-
 
             <div class="botones">
 
-              <a
-                href="editar-perfil.html"
-                class="boton editar">
+              ${
+                instagram
+                ? `
 
-                ✏️ Editar mi perfil
+                  <a
+                    href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="boton instagram"
+                  >
+                    📸 Ver Instagram
+                  </a>
 
-              </a>
+                `
+                : ""
+              }
 
-            </div>
+              ${
+                facebook
+                ? `
 
+                  <a
+                    href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="boton facebook"
+                  >
+                    📘 Ver Facebook
+                  </a>
 
-          `;
+                `
+                : ""
+              }
 
+              ${
+                tiktok
+                ? `
 
-        }
+                  <a
+                    href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="boton tiktok"
+                  >
+                    🎵 Ver TikTok
+                  </a>
 
+                `
+                : ""
+              }
 
+              ${
+                web
+                ? `
 
-        /*
-          USUARIO REGISTRADO VISITANDO
-          EL PERFIL DE OTRA PERSONA
-        */
+                  <a
+                    href="${
+                      web.startsWith("http")
+                        ? web
+                        : "https://" + web
+                    }"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="boton web"
+                  >
+                    🌐 Visitar sitio web
+                  </a>
 
-        else if (usuarioActual) {
-
-
-          const telefonoOriginal =
-            profesional.telefono || "";
-
-
-          let telefonoWhatsApp =
-            telefonoOriginal
-              .replace(/\D/g, "");
-
-
-          if (
-            telefonoWhatsApp.length === 10
-          ) {
-
-            telefonoWhatsApp =
-              "54" + telefonoWhatsApp;
-
-          }
-
-
-          const whatsapp =
-            telefonoWhatsApp
-              ? "https://wa.me/" +
-                telefonoWhatsApp
-              : "";
-
-
-          const instagram =
-            profesional.instagram || "";
-
-
-          const facebook =
-            profesional.facebook || "";
-
-
-          const tiktok =
-            profesional.tiktok || "";
-
-
-          const web =
-            profesional.web || "";
-
-
-
-          contenido += `
-
-
-            <div class="seccion">
-
-              <h2>
-                Contacto
-              </h2>
-
-
-              <p class="dato">
-
-                📱 ${
-                  telefonoOriginal ||
-                  "No indicado"
-                }
-
-              </p>
-
-
-              <div class="botones">
-
-
-                ${
-                  whatsapp
-                  ? `
-
-                    <a
-                      href="${whatsapp}?text=${encodeURIComponent(
-                        `Hola ${nombre}, vi tu perfil en AluConecta y quisiera consultar por un trabajo.`
-                      )}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="boton whatsapp">
-
-                      💬 Contactar por WhatsApp
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-                ${
-                  telefonoOriginal
-                  ? `
-
-                    <a
-                      href="tel:${telefonoOriginal}"
-                      class="boton llamar">
-
-                      📞 Llamar
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-              </div>
+                `
+                : ""
+              }
 
             </div>
 
+          </div>
 
-
-            <div class="seccion">
-
-              <h2>
-                Presencia profesional
-              </h2>
-
-
-              <div class="botones">
-
-
-                ${
-                  instagram
-                  ? `
-
-                    <a
-                      href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="boton instagram">
-
-                      📸 Ver Instagram
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-                ${
-                  facebook
-                  ? `
-
-                    <a
-                      href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="boton facebook">
-
-                      📘 Ver Facebook
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-                ${
-                  tiktok
-                  ? `
-
-                    <a
-                      href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="boton tiktok">
-
-                      🎵 Ver TikTok
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-                ${
-                  web
-                  ? `
-
-                    <a
-                      href="${
-                        web.startsWith("http")
-                          ? web
-                          : "https://" + web
-                      }"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="boton web">
-
-                      🌐 Visitar sitio web
-
-                    </a>
-
-                  `
-                  : ""
-                }
-
-
-              </div>
-
-            </div>
-
-
-          `;
-
-
-        }
-
-
-
-        /*
-          VISITANTE NO REGISTRADO
-        */
-
-        else {
-
-
-          contenido += `
-
-
-            <div class="aviso">
-
-              <strong>
-                ¿Querés conocer al profesional?
-              </strong>
-
-              <p>
-                Registrate gratis en AluConecta
-                para conocer su nombre y acceder
-                a sus datos de contacto.
-              </p>
-
-
-              <div class="botones">
-
-                <a
-                  href="registro.html"
-                  class="boton registro">
-
-                  Crear mi cuenta
-
-                </a>
-
-                <a
-                  href="acceso.html"
-                  class="boton editar">
-
-                  Iniciar sesión
-
-                </a>
-
-              </div>
-
-            </div>
-
-
-          `;
-
-        }
-
-
-
-        perfil.innerHTML =
-          contenido;
-
-
-      } catch (error) {
-
-
-        console.error(
-          "Error al cargar perfil:",
-          error
-        );
-
-
-        mostrarError(
-          "No pudimos cargar este perfil."
-        );
+        `;
 
       }
 
+
+      contenido += `
+
+        <div class="aviso">
+
+          <strong>
+            Perfil profesional
+          </strong>
+
+          <p>
+            Los datos de contacto directo se habilitan
+            únicamente cuando existe una autorización
+            dentro de un proyecto de AluConecta.
+          </p>
+
+        </div>
+
+      `;
+
     }
+
+
+    perfil.innerHTML =
+      contenido;
+
+
+  } catch (error) {
+
+    console.error(
+      "Error al cargar perfil:",
+      error
+    );
+
+
+    mostrarError(
+      "No pudimos cargar este perfil."
+    );
+
+  }
+
+}
 
 
 
