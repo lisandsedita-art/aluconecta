@@ -411,18 +411,20 @@
         */
 
         const {
-          data,
-          error
-        } =
-          await supabaseClient
+  data,
+  error
+} =
+  await supabaseClient
 
-            .from("perfiles")
+    .from("carpinteros_visibles")
 
-            .select("*")
+    .select(
+      "id,created_at,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web"
+    )
 
-            .order("created_at", {
-              ascending: false
-            });
+    .order("created_at", {
+      ascending: false
+    });
 
 
 
