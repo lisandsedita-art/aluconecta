@@ -414,17 +414,9 @@
   data,
   error
 } =
-  await supabaseClient
-
-    .from("carpinteros_visibles")
-
-    .select(
-      "id,created_at,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web"
-    )
-
-    .order("created_at", {
-      ascending: false
-    });
+  await supabaseClient.rpc(
+    "buscar_carpinteros_visibles"
+  );
 
 
 
