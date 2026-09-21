@@ -1816,6 +1816,288 @@ tarjeta.appendChild(
   }
 
   }
+  async function cargarMisCotizaciones() {
+
+  const contenedor =
+    document.getElementById(
+      'listaCotizaciones'
+    );
+
+
+  if (
+    !contenedor ||
+    !usuarioActual
+  ) {
+    return;
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from('cotizaciones')
+        .select(
+          'id,obra_id,precio,plazo_entrega,created_at'
+        )
+        .eq(
+          'fabricante_id',
+          usuarioActual.id
+        )
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    contenedor.innerHTML =
+      '';
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      const strong =
+        document.createElement(
+          'strong'
+        );
+
+      strong.textContent =
+        'Todavía no enviaste cotizaciones.';
+
+
+      const texto =
+        document.createElement(
+          'span'
+        );
+
+      texto.className =
+        'muted';
+
+      texto.textContent =
+        'Cuando cotices un proyecto autorizado aparecerá acá.';
+
+
+      contenedor.appendChild(
+        strong
+      );
+
+      contenedor.appendChild(
+        texto
+      );
+
+      return;
+
+    }
+
+
+    for (
+      const cotizacion
+      of data
+    ) {
+
+      const proyecto =
+        proyectosVisibles.get(
+          String(
+            cotizacion.obra_id
+          )
+        );
+
+
+      const tarjeta =
+        document.createElement(
+          'div'
+        );
+
+      tarjeta.className =
+        'box-light';
+
+      tarjeta.style.marginTop =
+        '10px';
+
+
+      const titulo =
+        document.createElement(
+          'div'
+        );
+
+      titulo.className =
+        'value';
+
+      titulo.textContent =
+        proyecto
+          ? textoSeguro(
+              proyecto.Proyecto ||
+              proyecto.Tipo
+            )
+          : 'Proyecto #' +
+            cotizacion.obra_id;
+
+
+      tarjeta.appendChild(
+        titulo
+      );
+
+
+      if (
+        cotizacion.created_at
+      ) {
+
+        const fecha =
+          document.createElement(
+            'div'
+          );
+
+        fecha.className =
+          'muted';
+
+        fecha.style.marginTop =
+          '5px';
+
+        fecha.textContent =
+          'Cotización enviada: ' +
+          new Date(
+            cotizacion.created_at
+          ).toLocaleDateString(
+            'es-AR'
+          );
+
+        tarjeta.appendChild(
+          fecha
+        );
+
+      }
+
+
+      if (
+        cotizacion.precio !== null
+      ) {
+
+        const precio =
+          document.createElement(
+            'div'
+          );
+
+        precio.className =
+          'muted';
+
+        precio.style.marginTop =
+          '5px';
+
+        precio.textContent =
+          'Precio informado: ' +
+          cotizacion.precio;
+
+        tarjeta.appendChild(
+          precio
+        );
+
+      }
+
+
+      if (
+        cotizacion.plazo_entrega
+      ) {
+
+        const plazo =
+          document.createElement(
+            'div'
+          );
+
+        plazo.className =
+          'muted';
+
+        plazo.style.marginTop =
+          '5px';
+
+        plazo.textContent =
+          'Plazo: ' +
+          cotizacion.plazo_entrega;
+
+        tarjeta.appendChild(
+          plazo
+        );
+
+      }
+
+
+      const boton =
+        document.createElement(
+          'a'
+        );
+
+      boton.className =
+        'btn btn-dark';
+
+      boton.style.width =
+        '100%';
+
+      boton.style.marginTop =
+        '10px';
+
+      boton.textContent =
+        'VER / EDITAR COTIZACIÓN';
+
+      boton.href =
+        'cotizar.html?proyecto=' +
+        encodeURIComponent(
+          cotizacion.obra_id
+        );
+
+
+      tarjeta.appendChild(
+        boton
+      );
+
+      contenedor.appendChild(
+        tarjeta
+      );
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      'Error al cargar cotizaciones:',
+      error
+    );
+
+
+    contenedor.innerHTML =
+      '';
+
+
+    const aviso =
+      document.createElement(
+        'span'
+      );
+
+    aviso.className =
+      'muted';
+
+    aviso.textContent =
+      'No pudimos cargar tus cotizaciones.';
+
+    contenedor.appendChild(
+      aviso
+    );
+
+  }
+
+  }
 async function cargarProyectos() {
 
   const contenedor =
