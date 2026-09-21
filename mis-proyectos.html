@@ -104,9 +104,18 @@ async function estado(id,e){const{error}=await sb.from('intereses_proyectos').up
       boton.textContent=
         'WHATSAPP / CONTACTAR';
 
-      boton.style.display='inline-block';
-      boton.style.marginTop='8px';
-      boton.style.fontWeight='800';
+      boton.style.display='inline-flex';
+boton.style.alignItems='center';
+boton.style.justifyContent='center';
+boton.style.width='100%';
+boton.style.marginTop='10px';
+boton.style.padding='10px';
+boton.style.borderRadius='999px';
+boton.style.background='var(--y)';
+boton.style.color='var(--a)';
+boton.style.textDecoration='none';
+boton.style.fontSize='10px';
+boton.style.fontWeight='900';
 
       contenedor.appendChild(boton);
 
