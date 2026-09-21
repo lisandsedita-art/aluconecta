@@ -1281,21 +1281,142 @@ async function cargarProyectos() {
 
 async function cargarResumenRelacionado() {
 
-  /*
-    Los contadores de interesados y cotizaciones
-    se activarán cuando terminemos las políticas
-    de lectura para el propietario del proyecto.
+  const cantidadIntereses =
+    document.getElementById(
+      "cantidadIntereses"
+    );
 
-    No mostramos números inventados.
-  */
+  const cantidadCotizaciones =
+    document.getElementById(
+      "cantidadCotizaciones"
+    );
 
-  document.getElementById(
-    "cantidadIntereses"
-  ).textContent = "—";
 
-  document.getElementById(
-    "cantidadCotizaciones"
-  ).textContent = "—";
+  try {
+
+    const {
+      data: proyectos,
+      error: proyectosError
+    } =
+      await sb
+        .from("proyectos")
+        .select("id")
+        .eq(
+          "publicado_por",
+          usuarioActual.id
+        );
+
+
+    if (proyectosError) {
+      throw proyectosError;
+    }
+
+
+    const idsProyectos =
+      (proyectos || [])
+        .map(function(proyecto) {
+          return proyecto.id;
+        });
+
+
+    if (
+      idsProyectos.length === 0
+    ) {
+
+      cantidadIntereses.textContent =
+        "0";
+
+      cantidadCotizaciones.textContent =
+        "0";
+
+      return;
+
+    }
+
+
+    const [
+      interesesResultado,
+      cotizacionesResultado
+    ] =
+      await Promise.all([
+
+        sb
+          .from(
+            "intereses_proyectos"
+          )
+          .select(
+            "id",
+            {
+              count: "exact",
+              head: true
+            }
+          )
+          .in(
+            "proyecto_id",
+            idsProyectos
+          ),
+
+        sb
+          .from(
+            "cotizaciones"
+          )
+          .select(
+            "id",
+            {
+              count: "exact",
+              head: true
+            }
+          )
+          .in(
+            "obra_id",
+            idsProyectos
+          )
+
+      ]);
+
+
+    if (
+      interesesResultado.error
+    ) {
+      throw interesesResultado.error;
+    }
+
+
+    if (
+      cotizacionesResultado.error
+    ) {
+      throw cotizacionesResultado.error;
+    }
+
+
+    cantidadIntereses.textContent =
+      String(
+        interesesResultado.count ?? 0
+      );
+
+
+    cantidadCotizaciones.textContent =
+      String(
+        cotizacionesResultado.count ?? 0
+      );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando resumen relacionado:",
+      error
+    );
+
+
+    cantidadIntereses.textContent =
+      "—";
+
+
+    cantidadCotizaciones.textContent =
+      "—";
+
+  }
 
 }
 
