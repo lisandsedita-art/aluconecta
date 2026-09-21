@@ -35,6 +35,105 @@ async function pub(id){
  return data;
 }
 async function estado(id,e){const{error}=await sb.from('intereses_proyectos').update({estado:e}).eq('id',id);if(error){msg('No pudimos actualizar: '+error.message,'error');return}msg(e==='autorizado'?'Carpintería autorizada correctamente.':'Carpintería marcada como no autorizada.','ok');await proyectos()}
+ async function cargarContactoCarpintero(
+  proyectoId,
+  carpinteroId,
+  contenedor
+){
+
+  try{
+
+    const {data,error}=await sb.rpc(
+      'contacto_carpintero_autorizado',
+      {
+        p_proyecto_id: proyectoId,
+        p_carpintero_id: carpinteroId
+      }
+    );
+
+    if(error){
+      throw error;
+    }
+
+    const perfil=
+      Array.isArray(data)
+        ? data[0]
+        : null;
+
+    contenedor.innerHTML='';
+
+    if(!perfil){
+
+      const aviso=
+        document.createElement('div');
+
+      aviso.className='info';
+
+      aviso.textContent=
+        'Los datos de contacto todavía no están disponibles.';
+
+      contenedor.appendChild(aviso);
+
+      return;
+    }
+
+    const titulo=
+      document.createElement('strong');
+
+    titulo.textContent=
+      'CONTACTO HABILITADO';
+
+    contenedor.appendChild(titulo);
+
+
+    if(perfil.telefono){
+
+      const boton=
+        document.createElement('a');
+
+      boton.href=
+        'https://wa.me/54'+
+        String(perfil.telefono)
+          .replace(/\D/g,'');
+
+      boton.target='_blank';
+
+      boton.rel=
+        'noopener noreferrer';
+
+      boton.textContent=
+        'WHATSAPP / CONTACTAR';
+
+      boton.style.display='inline-block';
+      boton.style.marginTop='8px';
+      boton.style.fontWeight='800';
+
+      contenedor.appendChild(boton);
+
+    }
+
+  }catch(error){
+
+    console.error(
+      'Error cargando contacto del carpintero:',
+      error
+    );
+
+    contenedor.innerHTML='';
+
+    const aviso=
+      document.createElement('div');
+
+    aviso.className='info';
+
+    aviso.textContent=
+      'No pudimos cargar los datos de contacto.';
+
+    contenedor.appendChild(aviso);
+
+  }
+
+ }
 async function intereses(pid,c){
 
   const {data,error}=await sb
