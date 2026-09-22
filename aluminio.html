@@ -9,7 +9,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-  <title>Carpintería de aluminio - AluConecta</title>
+  <title>Carpinterías de aluminio - AluConecta</title>
 
 
   <style>
@@ -283,16 +283,11 @@
 
     <section class="mensaje">
 
-      
-        <p>
-  AluConecta crea vínculos entre profesionales,
-  empresas y carpinterías de aluminio para facilitar
-  la búsqueda de calidad, confianza y competencia leal.
-</p>
-
-
-   
-
+      <p>
+        AluConecta crea vínculos entre profesionales,
+        empresas y carpinterías de aluminio para facilitar
+        la búsqueda de calidad, confianza y competencia leal.
+      </p>
 
     </section>
 
@@ -320,7 +315,7 @@
 
 
     <p>
-      Conectando personas, trabajos y oportunidades.
+      Donde los proyectos encuentran sus aberturas.
     </p>
 
 
@@ -352,6 +347,24 @@
 
 
 
+    /*
+      Protege los datos recibidos desde Supabase
+      antes de mostrarlos dentro del HTML.
+    */
+
+    function escaparHTML(valor) {
+
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+
     async function buscarProfesionales() {
 
 
@@ -378,14 +391,15 @@
 
 
       /*
-        Mostramos que estamos buscando.
+        Mostramos el estado de carga.
       */
 
       resultados.innerHTML = `
 
         <div class="cargando">
 
-         Buscando carpinterías...
+          Buscando carpinterías...
+
         </div>
 
       `;
@@ -396,17 +410,18 @@
 
 
         /*
-          Obtenemos los perfiles
-          directamente desde Supabase.
+          Obtenemos únicamente los perfiles
+          de carpinterías que el usuario
+          tiene permitido consultar.
         */
 
         const {
-  data,
-  error
-} =
-  await supabaseClient.rpc(
-    "buscar_carpinteros_visibles"
-  );
+          data,
+          error
+        } =
+          await supabaseClient.rpc(
+            "buscar_carpinteros_visibles"
+          );
 
 
 
@@ -424,7 +439,7 @@
 
 
         /*
-          Si no hay profesionales.
+          Si no hay carpinterías disponibles.
         */
 
         if (
@@ -439,16 +454,9 @@
             </h3>
 
             <p>
-              Sé el primero en formar parte de AluConecta.
+              Cuando haya carpinterías disponibles,
+              aparecerán en esta sección.
             </p>
-
-            <a
-              href="registro.html"
-              class="boton">
-
-              Registrarme
-
-            </a>
 
           `;
 
@@ -460,7 +468,8 @@
 
 
         /*
-          Filtramos los profesionales.
+          Filtramos las carpinterías
+          según la búsqueda ingresada.
         */
 
         const encontrados =
@@ -501,10 +510,10 @@
 
               /*
                 Buscamos el texto en:
-                nombre
-                servicios
+                nombre,
+                servicios,
                 actividades
-                descripción
+                y descripción.
               */
 
               const coincideTexto =
@@ -537,7 +546,7 @@
 
 
         /*
-          Si no encontramos resultados.
+          Si la búsqueda no encuentra coincidencias.
         */
 
         if (
@@ -552,8 +561,8 @@
             </h3>
 
             <p>
-             Probá con otra localidad o con
-             otros términos de búsqueda.
+              Probá con otra localidad o con
+              otros términos de búsqueda.
             </p>
 
           `;
@@ -576,30 +585,53 @@
             ${encontrados.length}
 
             ${
-              encontrados.length === 
-              ? "carpintería encontrada"
-               : "carpinterías encontradas"
-             }
+              encontrados.length === 1
+                ? "carpintería encontrada"
+                : "carpinterías encontradas"
+            }
 
           </h3>
 
 
           ${
 
-
             encontrados
               .map(
                 function(profesional) {
 
 
+                  const nombre =
+                    escaparHTML(
+                      profesional.nombre ||
+                      "Carpintería de aluminio"
+                    );
+
+
                   const actividades =
-                    profesional.actividades ||
-                    "Carpintería de aluminio";
+                    escaparHTML(
+                      profesional.actividades ||
+                      "Carpintería de aluminio"
+                    );
 
 
                   const servicios =
-                    profesional.servicios ||
-                   "Servicios de carpintería";
+                    escaparHTML(
+                      profesional.servicios ||
+                      "Servicios de carpintería"
+                    );
+
+
+                  const localidadPerfil =
+                    escaparHTML(
+                      profesional.localidad ||
+                      "Localidad no indicada"
+                    );
+
+
+                  const idPerfil =
+                    encodeURIComponent(
+                      profesional.id
+                    );
 
 
 
@@ -612,10 +644,7 @@
                       <h3>
 
                         🪟
-                        ${
-                          profesional.nombre ||
-                          "Profesional de aluminio"
-                        }
+                        ${nombre}
 
                       </h3>
 
@@ -624,10 +653,7 @@
                       <p>
 
                         📍
-                        ${
-                          profesional.localidad ||
-                          "Localidad no indicada"
-                        }
+                        ${localidadPerfil}
 
                       </p>
 
@@ -662,9 +688,7 @@
 
 
                       <a
-                        href="perfil.html?id=${encodeURIComponent(
-                          profesional.id
-                        )}"
+                        href="perfil.html?id=${idPerfil}"
                         class="boton">
 
                         Ver perfil
@@ -681,7 +705,6 @@
               )
               .join("")
 
-
           }
 
         `;
@@ -691,7 +714,7 @@
 
 
         console.error(
-          "Error al buscar profesionales:",
+          "Error al buscar carpinterías:",
           error
         );
 
@@ -706,7 +729,7 @@
 
             <p>
               Ocurrió un problema al consultar
-              los profesionales.
+              las carpinterías.
             </p>
 
           </div>
