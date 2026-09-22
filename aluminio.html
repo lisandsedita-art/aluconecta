@@ -19,56 +19,140 @@
     }
 
 
+    :root {
+      --azul: #0f2e4d;
+      --azul-secundario: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --fondo: #f4f6f8;
+      --texto: #24313d;
+      --texto-suave: #66727d;
+      --borde: #dfe5ea;
+      --blanco: #ffffff;
+    }
+
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #222;
+      background: var(--fondo);
+      color: var(--texto);
     }
 
 
     header {
-      background: #1f2937;
+      position: relative;
+      overflow: hidden;
+      background: var(--azul);
       color: white;
       text-align: center;
-      padding: 35px 20px;
+      padding: 48px 20px 46px;
+    }
+
+
+    header::after {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      right: -55px;
+      top: -65px;
+      border-radius: 38px;
+      background: rgba(91, 192, 222, 0.18);
+      transform: rotate(8deg);
+    }
+
+
+    .marca {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      color: #dbeaf5;
+    }
+
+
+    .marca-icono {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #c8c8c8;
+      border-radius: 8px;
+      position: relative;
+    }
+
+
+    .marca-icono::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      right: -10px;
+      top: -10px;
+      border-radius: 6px;
+      background: var(--celeste);
     }
 
 
     header h1 {
-      margin: 0 0 10px;
+      position: relative;
+      z-index: 1;
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.15;
     }
 
 
     header p {
-      margin: 0;
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      color: #dbe5ee;
+      font-size: 17px;
+      line-height: 1.5;
     }
 
 
     .contenedor {
+      width: calc(100% - 32px);
       max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
+      margin: 32px auto;
     }
 
 
     .busqueda {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      background: var(--blanco);
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px rgba(15, 46, 77, 0.08);
       margin-bottom: 30px;
+      border: 1px solid rgba(15, 46, 77, 0.06);
     }
 
 
     .busqueda h2 {
-      margin-top: 0;
+      margin: 0 0 7px;
+      color: var(--azul);
+      font-size: 23px;
+    }
+
+
+    .ayuda-busqueda {
+      margin: 0 0 20px;
+      color: var(--texto-suave);
+      line-height: 1.5;
     }
 
 
     .buscador {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
@@ -77,80 +161,151 @@
     .buscador select {
       flex: 1;
       min-width: 220px;
-      padding: 13px;
-      border: 1px solid #ccc;
-      border-radius: 7px;
+      padding: 14px;
+      border: 1px solid #cfd7de;
+      border-radius: 8px;
+      background: white;
+      color: var(--texto);
       font-size: 16px;
+      outline: none;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+
+    .buscador input:focus,
+    .buscador select:focus {
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91, 192, 222, 0.18);
     }
 
 
     .boton {
-      display: inline-block;
-      padding: 13px 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
       border: none;
-      border-radius: 7px;
-      background: #2563eb;
-      color: white;
+      border-radius: 8px;
+      background: var(--amarillo);
+      color: #17212b;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       text-decoration: none;
+      transition:
+        transform 0.15s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
 
     .boton:hover {
-      opacity: 0.9;
+      background: var(--amarillo-hover);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+      transform: translateY(-1px);
     }
 
 
     .resultados h2 {
-      margin-bottom: 15px;
+      margin: 0 0 16px;
+      color: var(--azul);
+      font-size: 23px;
     }
 
 
     .mensaje {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
+      background: var(--blanco);
+      padding: 28px;
+      border-radius: 14px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(15, 46, 77, 0.06);
+      margin-bottom: 22px;
+      border: 1px solid rgba(15, 46, 77, 0.06);
+    }
+
+
+    .mensaje h3 {
+      margin-top: 0;
+      color: var(--azul);
+    }
+
+
+    .mensaje p {
+      color: var(--texto-suave);
+      line-height: 1.6;
     }
 
 
     .profesional {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      background: var(--blanco);
+      padding: 26px 26px 24px;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px rgba(15, 46, 77, 0.08);
+      margin-bottom: 18px;
       text-align: left;
+      border: 1px solid rgba(15, 46, 77, 0.07);
+    }
+
+
+    .profesional::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--celeste);
     }
 
 
     .profesional h3 {
-      margin-top: 0;
+      margin: 0 0 17px;
+      color: var(--azul);
+      font-size: 21px;
     }
 
 
     .profesional p {
-      line-height: 1.6;
+      margin: 9px 0;
+      line-height: 1.55;
+    }
+
+
+    .estado-perfil {
+      display: inline-block;
+      margin: 8px 0 18px;
+      padding: 7px 11px;
+      border-radius: 20px;
+      background: #edf8fb;
+      color: #28657a;
+      font-size: 13px;
+      font-weight: bold;
     }
 
 
     .volver {
       display: block;
-      text-align: center;
-      margin: 30px 0 10px;
-      color: #2563eb;
+      width: fit-content;
+      margin: 32px auto 12px;
+      color: var(--azul);
       text-decoration: none;
       font-weight: bold;
     }
 
 
+    .volver:hover {
+      text-decoration: underline;
+    }
+
+
     .cargando {
       text-align: center;
-      padding: 25px;
+      padding: 12px;
+      color: var(--texto-suave);
     }
 
 
@@ -159,10 +314,85 @@
     }
 
 
+    .institucional {
+      border-top: 4px solid var(--celeste);
+    }
+
+
     footer {
+      margin-top: 45px;
+      padding: 30px 20px;
+      background: var(--azul);
+      color: #dbe5ee;
       text-align: center;
-      padding: 25px;
-      color: #666;
+    }
+
+
+    footer p {
+      margin: 7px 0;
+    }
+
+
+    footer p:last-child {
+      font-size: 14px;
+    }
+
+
+    @media (max-width: 650px) {
+
+      header {
+        padding: 38px 18px 36px;
+      }
+
+
+      header h1 {
+        font-size: 28px;
+      }
+
+
+      header p {
+        font-size: 16px;
+      }
+
+
+      .contenedor {
+        width: calc(100% - 24px);
+        margin-top: 22px;
+      }
+
+
+      .busqueda,
+      .mensaje,
+      .profesional {
+        padding: 21px;
+        border-radius: 12px;
+      }
+
+
+      .buscador {
+        display: block;
+      }
+
+
+      .buscador input,
+      .buscador select,
+      .buscador .boton {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 11px;
+      }
+
+
+      .buscador .boton {
+        margin-bottom: 0;
+      }
+
+
+      .profesional .boton {
+        width: 100%;
+        margin-top: 4px;
+      }
+
     }
 
   </style>
@@ -174,6 +404,18 @@
 
 
   <header>
+
+    <div class="marca">
+
+      <span
+        class="marca-icono"
+        aria-hidden="true">
+      </span>
+
+      AluConecta
+
+    </div>
+
 
     <h1>
       Carpintería de aluminio
@@ -196,6 +438,10 @@
         ¿Qué necesitás?
       </h2>
 
+      <p class="ayuda-busqueda">
+        Buscá por tipo de abertura, servicio o localidad.
+      </p>
+
 
       <div class="buscador">
 
@@ -203,12 +449,15 @@
         <input
           type="text"
           id="necesidad"
+          aria-label="Qué necesitás"
           placeholder="Ej.: ventanas, DVH, puertas, cerramientos..."
         >
 
 
 
-        <select id="localidad">
+        <select
+          id="localidad"
+          aria-label="Localidad">
 
           <option value="">
             Todas las localidades
@@ -281,7 +530,7 @@
 
 
 
-    <section class="mensaje">
+    <section class="mensaje institucional">
 
       <p>
         AluConecta crea vínculos entre profesionales,
@@ -308,16 +557,13 @@
 
   <footer>
 
-
     <p>
       © 2026 AluConecta
     </p>
 
-
     <p>
       Donde los proyectos encuentran sus aberturas.
     </p>
-
 
   </footer>
 
@@ -390,10 +636,6 @@
 
 
 
-      /*
-        Mostramos el estado de carga.
-      */
-
       resultados.innerHTML = `
 
         <div class="cargando">
@@ -408,12 +650,6 @@
 
       try {
 
-
-        /*
-          Obtenemos únicamente los perfiles
-          de carpinterías que el usuario
-          tiene permitido consultar.
-        */
 
         const {
           data,
@@ -437,10 +673,6 @@
           data || [];
 
 
-
-        /*
-          Si no hay carpinterías disponibles.
-        */
 
         if (
           profesionales.length === 0
@@ -466,11 +698,6 @@
         }
 
 
-
-        /*
-          Filtramos las carpinterías
-          según la búsqueda ingresada.
-        */
 
         const encontrados =
           profesionales.filter(
@@ -508,14 +735,6 @@
 
 
 
-              /*
-                Buscamos el texto en:
-                nombre,
-                servicios,
-                actividades
-                y descripción.
-              */
-
               const coincideTexto =
                 texto === "" ||
                 nombre.includes(texto) ||
@@ -524,10 +743,6 @@
                 descripcion.includes(texto);
 
 
-
-              /*
-                Filtramos por localidad.
-              */
 
               const coincideLocalidad =
                 localidad === "" ||
@@ -544,10 +759,6 @@
           );
 
 
-
-        /*
-          Si la búsqueda no encuentra coincidencias.
-        */
 
         if (
           encontrados.length === 0
@@ -573,10 +784,6 @@
         }
 
 
-
-        /*
-          Mostramos los resultados.
-        */
 
         resultados.innerHTML = `
 
@@ -642,49 +849,31 @@
 
 
                       <h3>
-
-                        🪟
-                        ${nombre}
-
+                        🪟 ${nombre}
                       </h3>
 
 
-
                       <p>
-
-                        📍
-                        ${localidadPerfil}
-
+                        📍 ${localidadPerfil}
                       </p>
 
 
-
                       <p>
-
-                        🏷️
-                        ${actividades}
-
+                        🏷️ ${actividades}
                       </p>
 
 
-
                       <p>
-
-                        🔧
-                        ${servicios}
-
+                        🔧 ${servicios}
                       </p>
 
 
+                      <div class="estado-perfil">
+                        Carpintería registrada en AluConecta
+                      </div>
 
-                      <p>
 
-                        ⭐
-                        Carpintería registrada en
-                        AluConecta
-
-                      </p>
-
+                      <br>
 
 
                       <a
