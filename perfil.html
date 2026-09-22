@@ -9,7 +9,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-  <title>Perfil profesional - AluConecta</title>
+  <title>Perfil de carpintería - AluConecta</title>
 
 
   <style>
@@ -19,204 +19,399 @@
     }
 
 
+    :root {
+      --azul: #0f2e4d;
+      --azul-secundario: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --fondo: #f4f6f8;
+      --texto: #24313d;
+      --texto-suave: #66727d;
+      --blanco: #ffffff;
+      --borde: #dfe5ea;
+      --verde-suave: #edf8f1;
+      --verde-texto: #25613a;
+      --rojo-suave: #fff0f0;
+      --rojo-texto: #991b1b;
+    }
+
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #222;
+      background: var(--fondo);
+      color: var(--texto);
     }
 
 
     header {
-      background: #1f2937;
+      position: relative;
+      overflow: hidden;
+      background: var(--azul);
       color: white;
       text-align: center;
-      padding: 30px 20px;
+      padding: 42px 20px 40px;
+    }
+
+
+    header::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -55px;
+      top: -65px;
+      border-radius: 38px;
+      background: rgba(91, 192, 222, 0.18);
+      transform: rotate(8deg);
+    }
+
+
+    .marca {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      color: #dbeaf5;
+    }
+
+
+    .marca-icono {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #c8c8c8;
+      border-radius: 8px;
+      position: relative;
+    }
+
+
+    .marca-icono::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      right: -10px;
+      top: -10px;
+      border-radius: 6px;
+      background: var(--celeste);
     }
 
 
     header h1 {
+      position: relative;
+      z-index: 1;
       margin: 0 0 10px;
+      font-size: 31px;
     }
 
 
     header p {
-      margin: 0;
+      position: relative;
+      z-index: 1;
+      margin: 0 auto;
+      max-width: 600px;
+      color: #dbe5ee;
+      font-size: 16px;
+      line-height: 1.5;
     }
 
 
     .contenedor {
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 20px;
+      width: calc(100% - 32px);
+      max-width: 760px;
+      margin: 32px auto;
     }
 
 
     .perfil {
-      background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      background: var(--blanco);
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 6px 22px rgba(15, 46, 77, 0.09);
+      border: 1px solid rgba(15, 46, 77, 0.06);
     }
 
 
     .avatar {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto 20px;
-      border-radius: 50%;
-      background: #2563eb;
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 18px;
+      border-radius: 22px;
+      background: var(--azul);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
+      font-size: 38px;
       font-weight: bold;
+      box-shadow: 0 7px 18px rgba(15, 46, 77, 0.18);
+      border: 4px solid #edf5fa;
     }
 
 
     .nombre {
       text-align: center;
       margin: 0;
+      color: var(--azul);
+      font-size: 28px;
+      line-height: 1.2;
     }
 
 
     .ubicacion {
       text-align: center;
-      color: #666;
-      margin-top: 8px;
+      color: var(--texto-suave);
+      margin: 10px 0 0;
+      line-height: 1.5;
     }
 
 
     .rubro {
       text-align: center;
       font-weight: bold;
-      margin-top: 10px;
+      margin: 12px 0 0;
+      color: var(--azul-secundario);
+    }
+
+
+    .estado {
+      width: fit-content;
+      max-width: 100%;
+      margin: 16px auto 0;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: #edf8fb;
+      color: #28657a;
+      font-size: 13px;
+      font-weight: bold;
+      text-align: center;
     }
 
 
     .seccion {
       margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid #ddd;
+      padding-top: 23px;
+      border-top: 1px solid var(--borde);
     }
 
 
     .seccion h2 {
+      color: var(--azul);
       font-size: 20px;
-      margin-top: 0;
+      margin: 0 0 12px;
     }
 
 
     .dato {
-      line-height: 1.6;
-      margin-bottom: 12px;
+      line-height: 1.7;
+      margin: 0;
+      color: #3f4c57;
+      white-space: pre-line;
     }
 
 
     .botones {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
+      display: grid;
+      gap: 11px;
+      margin-top: 18px;
     }
 
 
     .boton {
-      display: block;
-      padding: 14px;
-      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 9px;
       text-align: center;
       text-decoration: none;
+      font-size: 15px;
       font-weight: bold;
-      color: white;
-      border: none;
       cursor: pointer;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
     }
 
 
-    .whatsapp {
-      background: #16a34a;
+    .boton:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
     }
 
 
-    .llamar {
-      background: #2563eb;
+    .principal {
+      background: var(--amarillo);
+      color: #17212b;
     }
 
 
-    .editar {
-      background: #7c3aed;
+    .principal:hover {
+      background: var(--amarillo-hover);
     }
 
 
     .instagram {
       background: #c13584;
+      color: white;
     }
 
 
     .facebook {
       background: #1877f2;
+      color: white;
     }
 
 
     .tiktok {
       background: #111827;
+      color: white;
     }
 
 
     .web {
-      background: #475569;
+      background: var(--azul-secundario);
+      color: white;
     }
 
 
-    .registro {
-      background: #2563eb;
+    .aviso {
+      background: #edf5fa;
+      border-left: 4px solid var(--celeste);
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 28px;
+      line-height: 1.55;
+      color: #40505e;
+    }
+
+
+    .aviso strong {
+      color: var(--azul);
+    }
+
+
+    .aviso p {
+      margin: 7px 0 0;
     }
 
 
     .volver {
       display: block;
-      text-align: center;
-      margin: 25px 0;
-      color: #2563eb;
+      width: fit-content;
+      margin: 30px auto 12px;
+      color: var(--azul);
       text-decoration: none;
       font-weight: bold;
     }
 
 
-    .sin-datos {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-
-    .aviso {
-      background: #eef2ff;
-      border-radius: 10px;
-      padding: 18px;
-      margin-top: 25px;
-      text-align: center;
-      line-height: 1.5;
+    .volver:hover {
+      text-decoration: underline;
     }
 
 
     .cargando {
       text-align: center;
-      padding: 40px 20px;
+      padding: 50px 20px;
+      color: var(--texto-suave);
+    }
+
+
+    .sin-datos {
+      text-align: center;
+      padding: 42px 22px;
+    }
+
+
+    .sin-datos h2 {
+      color: var(--azul);
+      margin-top: 0;
+    }
+
+
+    .sin-datos p {
+      color: var(--texto-suave);
+      line-height: 1.6;
     }
 
 
     .error {
-      color: #991b1b;
-      text-align: center;
+      background: var(--rojo-suave);
+      border-radius: 12px;
+      color: var(--rojo-texto);
+    }
+
+
+    .error h2,
+    .error p {
+      color: var(--rojo-texto);
     }
 
 
     footer {
+      margin-top: 44px;
+      padding: 30px 20px;
+      background: var(--azul);
+      color: #dbe5ee;
       text-align: center;
-      padding: 25px;
-      color: #666;
+    }
+
+
+    footer p {
+      margin: 7px 0;
+    }
+
+
+    footer p:last-child {
+      font-size: 14px;
+    }
+
+
+    @media (max-width: 650px) {
+
+      header {
+        padding: 36px 18px 34px;
+      }
+
+
+      header h1 {
+        font-size: 27px;
+      }
+
+
+      .contenedor {
+        width: calc(100% - 24px);
+        margin-top: 22px;
+      }
+
+
+      .perfil {
+        padding: 23px 20px;
+        border-radius: 13px;
+      }
+
+
+      .nombre {
+        font-size: 25px;
+      }
+
+
+      .avatar {
+        width: 82px;
+        height: 82px;
+        font-size: 34px;
+      }
+
     }
 
   </style>
@@ -229,12 +424,25 @@
 
   <header>
 
-    <h1>
+    <div class="marca">
+
+      <span
+        class="marca-icono"
+        aria-hidden="true">
+      </span>
+
       AluConecta
+
+    </div>
+
+
+    <h1>
+      Perfil de carpintería
     </h1>
 
     <p>
-      Conectando personas con profesionales.
+      Información profesional y comercial de una
+      carpintería registrada en AluConecta.
     </p>
 
   </header>
@@ -259,9 +467,10 @@
 
     <a
       href="aluminio.html"
-      class="volver">
+      class="volver"
+      id="volver">
 
-      ← Volver a profesionales
+      ← Volver a carpinterías
 
     </a>
 
@@ -277,7 +486,7 @@
     </p>
 
     <p>
-      Conectando personas, trabajos y oportunidades.
+      Donde los proyectos encuentran sus aberturas.
     </p>
 
   </footer>
@@ -306,7 +515,15 @@
 
 
     const perfil =
-      document.getElementById("perfil");
+      document.getElementById(
+        "perfil"
+      );
+
+
+    const volver =
+      document.getElementById(
+        "volver"
+      );
 
 
     const parametros =
@@ -315,254 +532,129 @@
       );
 
 
-    const id =
+    const idSolicitado =
       parametros.get("id");
 
 
 
-   async function cargarPerfil() {
+    function escaparHTML(valor) {
 
-  if (!id) {
-
-    mostrarError(
-      "No se indicó qué perfil queremos mostrar."
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    const {
-      data: sesionData
-    } =
-      await supabaseClient.auth.getSession();
-
-
-    const session =
-      sesionData.session;
-
-
-    const usuarioActual =
-      session
-        ? session.user
-        : null;
-
-
-    const esPropietario =
-      usuarioActual &&
-      usuarioActual.id === id;
-
-
-    let profesional = null;
-
-
-    /*
-      SI ES SU PROPIO PERFIL:
-      puede consultar sus propios datos completos.
-    */
-
-    if (esPropietario) {
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-
-          .from("perfiles")
-
-          .select(
-            "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,descripcion,telefono,instagram,facebook,tiktok,web"
-          )
-
-          .eq("id", id)
-
-          .single();
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      profesional = data;
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
     }
 
 
-    /*
-      SI ES EL PERFIL DE OTRA PERSONA:
-      nunca consultamos la tabla privada completa.
-    */
 
-    else {
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-
-          .from("carpinteros_visibles")
-
-          .select(
-            "id,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web"
-          )
-
-          .eq("id", id)
-
-          .maybeSingle();
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      profesional = data;
-
-    }
-
-
-    if (!profesional) {
-
-      mostrarError(
-        "No encontramos este perfil."
-      );
-
-      return;
-
-    }
-
-
-    const actividades =
-      profesional.actividades ||
-      "Carpintería de aluminio";
-
-
-    const localidad =
-      profesional.localidad ||
-      "Localidad no indicada";
-
-
-    const provincia =
-      profesional.provincia ||
-      "";
-
-
-    const servicios =
-      profesional.servicios ||
-      "No especificados";
-
-
-    const descripcion =
-      profesional.descripcion ||
-      "Sin presentación";
-
-
-    const nombre =
-      profesional.nombre ||
-      "Profesional de AluConecta";
-
-
-    const inicial =
-      nombre
-        .charAt(0)
-        .toUpperCase();
-
-
-    let ubicacion =
-      localidad;
-
-
-    if (
-      provincia &&
-      provincia !== localidad
+    function normalizarTexto(
+      valor,
+      fallback
     ) {
 
-      ubicacion +=
-        ", " + provincia;
+      const texto =
+        String(valor ?? "").trim();
+
+
+      return texto || fallback;
 
     }
 
 
-    let contenido = `
 
-      <div class="avatar">
-        ${inicial}
-      </div>
+    function esRolProfesional(
+      tipoUsuario
+    ) {
 
-      <h1 class="nombre">
-        ${nombre}
-      </h1>
+      return [
+        "cliente_profesional",
+        "profesional",
+        "empresa",
+        "cliente"
+      ].includes(
+        tipoUsuario
+      );
 
-      <p class="ubicacion">
-        📍 ${ubicacion}
-      </p>
-
-      <p class="rubro">
-        🏷️ ${actividades}
-      </p>
-
-      <div class="seccion">
-
-        <h2>
-          Servicios
-        </h2>
-
-        <p class="dato">
-          ${servicios}
-        </p>
-
-      </div>
-
-      <div class="seccion">
-
-        <h2>
-          Sobre el profesional
-        </h2>
-
-        <p class="dato">
-          ${descripcion}
-        </p>
-
-      </div>
-
-    `;
+    }
 
 
-    /*
-      PERFIL PROPIO
-    */
 
-    if (esPropietario) {
+    function usuarioRed(valor) {
 
-      contenido += `
+      return String(valor ?? "")
+        .trim()
+        .replace(/^@/, "")
+        .replace(
+          /[^a-zA-Z0-9._-]/g,
+          ""
+        );
 
-        <div class="aviso">
+    }
 
-          <strong>
-            Este es tu perfil.
-          </strong>
+
+
+    function urlWebSegura(valor) {
+
+      const texto =
+        String(valor ?? "").trim();
+
+
+      if (!texto) {
+        return "";
+      }
+
+
+      try {
+
+        const url =
+          new URL(
+            /^https?:\/\//i.test(texto)
+              ? texto
+              : "https://" + texto
+          );
+
+
+        if (
+          url.protocol !== "http:" &&
+          url.protocol !== "https:"
+        ) {
+
+          return "";
+
+        }
+
+
+        return url.href;
+
+      } catch {
+
+        return "";
+
+      }
+
+    }
+
+
+
+    function mostrarError(
+      titulo,
+      mensaje
+    ) {
+
+      perfil.innerHTML = `
+
+        <div class="sin-datos error">
+
+          <h2>
+            ${escaparHTML(titulo)}
+          </h2>
 
           <p>
-            Podés modificar tus datos
-            cuando quieras.
+            ${escaparHTML(mensaje)}
           </p>
-
-        </div>
-
-        <div class="botones">
-
-          <a
-            href="editar-perfil.html"
-            class="boton editar"
-          >
-            ✏️ Editar mi perfil
-          </a>
 
         </div>
 
@@ -571,29 +663,172 @@
     }
 
 
-    /*
-      PERFIL DE OTRA CARPINTERÍA
 
-      Se permite mostrar información comercial,
-      pero NO teléfono, WhatsApp ni llamada directa.
-    */
+    function construirUbicacion(
+      localidad,
+      provincia
+    ) {
 
-    else {
+      const loc =
+        normalizarTexto(
+          localidad,
+          "Localidad no indicada"
+        );
+
+
+      const prov =
+        String(
+          provincia ?? ""
+        ).trim();
+
+
+      if (
+        prov &&
+        prov.toLowerCase() !==
+        loc.toLowerCase()
+      ) {
+
+        return (
+          loc + ", " + prov
+        );
+
+      }
+
+
+      return loc;
+
+    }
+
+
+
+    function mostrarPerfil(
+      profesional,
+      esPropietario
+    ) {
+
+
+      const nombre =
+        normalizarTexto(
+          profesional.nombre,
+          "Carpintería de aluminio"
+        );
+
+
+      const actividades =
+        normalizarTexto(
+          profesional.actividades,
+          "Carpintería de aluminio"
+        );
+
+
+      const servicios =
+        normalizarTexto(
+          profesional.servicios,
+          "Servicios de carpintería"
+        );
+
+
+      const descripcion =
+        normalizarTexto(
+          profesional.descripcion,
+          "La carpintería todavía no agregó una presentación."
+        );
+
+
+      const ubicacion =
+        construirUbicacion(
+          profesional.localidad,
+          profesional.provincia
+        );
+
+
+      const inicial =
+        nombre
+          .charAt(0)
+          .toUpperCase() || "A";
+
 
       const instagram =
-        profesional.instagram || "";
+        usuarioRed(
+          profesional.instagram
+        );
 
 
       const facebook =
-        profesional.facebook || "";
+        usuarioRed(
+          profesional.facebook
+        );
 
 
       const tiktok =
-        profesional.tiktok || "";
+        usuarioRed(
+          profesional.tiktok
+        );
 
 
       const web =
-        profesional.web || "";
+        urlWebSegura(
+          profesional.web
+        );
+
+
+
+      let contenido = `
+
+        <div class="avatar">
+          ${escaparHTML(inicial)}
+        </div>
+
+
+        <h1 class="nombre">
+          ${escaparHTML(nombre)}
+        </h1>
+
+
+        <p class="ubicacion">
+          📍 ${escaparHTML(ubicacion)}
+        </p>
+
+
+        <p class="rubro">
+          🏷️ ${escaparHTML(actividades)}
+        </p>
+
+
+        <div class="estado">
+          Carpintería registrada en AluConecta
+        </div>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Servicios
+          </h2>
+
+          <p class="dato">
+            ${escaparHTML(servicios)}
+          </p>
+
+        </div>
+
+
+
+        <div class="seccion">
+
+          <h2>
+            Sobre la carpintería
+          </h2>
+
+          <p class="dato">
+            ${escaparHTML(descripcion)}
+          </p>
+
+        </div>
+
+      `;
+
 
 
       if (
@@ -602,6 +837,7 @@
         tiktok ||
         web
       ) {
+
 
         contenido += `
 
@@ -613,77 +849,82 @@
 
             <div class="botones">
 
-              ${
-                instagram
-                ? `
+        `;
 
-                  <a
-                    href="https://www.instagram.com/${instagram.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton instagram"
-                  >
-                    📸 Ver Instagram
-                  </a>
 
-                `
-                : ""
-              }
+        if (instagram) {
 
-              ${
-                facebook
-                ? `
+          contenido += `
 
-                  <a
-                    href="https://www.facebook.com/${facebook.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton facebook"
-                  >
-                    📘 Ver Facebook
-                  </a>
+            <a
+              href="https://www.instagram.com/${encodeURIComponent(instagram)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="boton instagram"
+            >
+              📸 Ver Instagram
+            </a>
 
-                `
-                : ""
-              }
+          `;
 
-              ${
-                tiktok
-                ? `
+        }
 
-                  <a
-                    href="https://www.tiktok.com/@${tiktok.replace(/^@/, "")}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton tiktok"
-                  >
-                    🎵 Ver TikTok
-                  </a>
 
-                `
-                : ""
-              }
+        if (facebook) {
 
-              ${
-                web
-                ? `
+          contenido += `
 
-                  <a
-                    href="${
-                      web.startsWith("http")
-                        ? web
-                        : "https://" + web
-                    }"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton web"
-                  >
-                    🌐 Visitar sitio web
-                  </a>
+            <a
+              href="https://www.facebook.com/${encodeURIComponent(facebook)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="boton facebook"
+            >
+              📘 Ver Facebook
+            </a>
 
-                `
-                : ""
-              }
+          `;
+
+        }
+
+
+        if (tiktok) {
+
+          contenido += `
+
+            <a
+              href="https://www.tiktok.com/@${encodeURIComponent(tiktok)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="boton tiktok"
+            >
+              🎵 Ver TikTok
+            </a>
+
+          `;
+
+        }
+
+
+        if (web) {
+
+          contenido += `
+
+            <a
+              href="${escaparHTML(web)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="boton web"
+            >
+              🌐 Visitar sitio web
+            </a>
+
+          `;
+
+        }
+
+
+        contenido += `
 
             </div>
 
@@ -694,68 +935,428 @@
       }
 
 
-      contenido += `
 
-        <div class="aviso">
+      if (esPropietario) {
 
-          <strong>
-            Perfil profesional
-          </strong>
 
-          <p>
-            Los datos de contacto directo se habilitan
-            únicamente cuando existe una autorización
-            dentro de un proyecto de AluConecta.
-          </p>
+        contenido += `
 
-        </div>
+          <div class="aviso">
 
-      `;
+            <strong>
+              Este es tu perfil comercial.
+            </strong>
+
+            <p>
+              Así se presenta tu carpintería dentro
+              de AluConecta.
+            </p>
+
+          </div>
+
+
+          <div class="botones">
+
+            <a
+              href="editar-perfil.html"
+              class="boton principal"
+            >
+              ✏️ Editar mi perfil
+            </a>
+
+          </div>
+
+        `;
+
+
+      } else {
+
+
+        contenido += `
+
+          <div class="aviso">
+
+            <strong>
+              Perfil comercial
+            </strong>
+
+            <p>
+              Los datos de contacto directo se habilitan
+              únicamente cuando existe una autorización
+              dentro de un proyecto de AluConecta.
+            </p>
+
+          </div>
+
+        `;
+
+      }
+
+
+
+      perfil.innerHTML =
+        contenido;
 
     }
 
 
-    perfil.innerHTML =
-      contenido;
+
+    async function cargarPerfil() {
 
 
-  } catch (error) {
-
-    console.error(
-      "Error al cargar perfil:",
-      error
-    );
+      try {
 
 
-    mostrarError(
-      "No pudimos cargar este perfil."
-    );
+        /*
+          Primero verificamos que exista
+          una sesión autenticada.
+        */
 
-  }
+        const {
+          data: sesionData,
+          error: sesionError
+        } =
+          await supabaseClient.auth
+            .getSession();
 
-}
+
+        if (sesionError) {
+          throw sesionError;
+        }
+
+
+        const session =
+          sesionData.session;
+
+
+        if (
+          !session ||
+          !session.user
+        ) {
+
+
+          mostrarError(
+            "Iniciá sesión",
+            "Para consultar perfiles de carpinterías necesitás ingresar a tu cuenta de AluConecta."
+          );
+
+
+          volver.href =
+            "ingresar.html";
+
+
+          volver.textContent =
+            "← Ir a Ingresar";
+
+
+          return;
+
+        }
 
 
 
-    function mostrarError(
-      mensaje
-    ) {
+        const usuarioActual =
+          session.user;
 
-      perfil.innerHTML = `
 
-        <div class="sin-datos error">
 
-          <h2>
-            Perfil no disponible
-          </h2>
+        /*
+          Consultamos solamente el perfil
+          del usuario que inició sesión.
 
-          <p>
-            ${mensaje}
-          </p>
+          Esto nos permite saber qué rol
+          tiene dentro de AluConecta.
+        */
 
-        </div>
+        const {
+          data: miPerfil,
+          error: errorMiPerfil
+        } =
+          await supabaseClient
 
-      `;
+            .from("perfiles")
+
+            .select(
+              "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,descripcion,instagram,facebook,tiktok,web"
+            )
+
+            .eq(
+              "id",
+              usuarioActual.id
+            )
+
+            .single();
+
+
+
+        if (errorMiPerfil) {
+          throw errorMiPerfil;
+        }
+
+
+
+        if (!miPerfil) {
+
+
+          mostrarError(
+            "Perfil no disponible",
+            "No encontramos tu perfil de AluConecta."
+          );
+
+
+          return;
+
+        }
+
+
+
+        const esCarpintero =
+          miPerfil.tipo_usuario ===
+          "carpintero";
+
+
+        const esProfesional =
+          esRolProfesional(
+            miPerfil.tipo_usuario
+          );
+
+
+
+        /*
+          Si no viene un ID:
+          solamente un carpintero puede
+          utilizar esta página para ver
+          su propio perfil.
+        */
+
+        const idPerfil =
+          idSolicitado ||
+          (
+            esCarpintero
+              ? usuarioActual.id
+              : null
+          );
+
+
+
+        if (!idPerfil) {
+
+
+          mostrarError(
+            "Perfil no disponible",
+            "Esta página está destinada a perfiles comerciales de carpinterías."
+          );
+
+
+          volver.href =
+            "panel-cliente.html";
+
+
+          volver.textContent =
+            "← Volver a mi panel";
+
+
+          return;
+
+        }
+
+
+
+        const esPropietario =
+          usuarioActual.id ===
+          idPerfil;
+
+
+
+        /*
+          CARPINTERO:
+          puede ver únicamente
+          su propio perfil.
+        */
+
+        if (esCarpintero) {
+
+
+          volver.href =
+            "panel-carpintero.html";
+
+
+          volver.textContent =
+            "← Volver a mi panel";
+
+
+          if (!esPropietario) {
+
+
+            mostrarError(
+              "Perfil no disponible",
+              "Las cuentas de carpintería no pueden consultar perfiles de otras carpinterías."
+            );
+
+
+            return;
+
+          }
+
+
+
+          mostrarPerfil(
+            miPerfil,
+            true
+          );
+
+
+          return;
+
+        }
+
+
+
+        /*
+          Solo profesionales / empresas
+          pueden explorar perfiles de
+          carpinterías.
+        */
+
+        if (!esProfesional) {
+
+
+          mostrarError(
+            "Acceso no disponible",
+            "Tu tipo de cuenta no tiene acceso a este perfil."
+          );
+
+
+          return;
+
+        }
+
+
+
+        volver.href =
+          "aluminio.html";
+
+
+        volver.textContent =
+          "← Volver a carpinterías";
+
+
+
+        /*
+          Un profesional no utiliza
+          perfil.html para ver su propio
+          perfil.
+
+          Su información se administra
+          desde su panel privado.
+        */
+
+        if (esPropietario) {
+
+
+          mostrarError(
+            "Perfil de carpintería",
+            "Esta página muestra perfiles comerciales de carpinterías. Tus datos profesionales se administran desde tu panel."
+          );
+
+
+          volver.href =
+            "panel-cliente.html";
+
+
+          volver.textContent =
+            "← Volver a mi panel";
+
+
+          return;
+
+        }
+
+
+
+        /*
+          Para consultar una carpintería
+          ajena NO accedemos directamente
+          a carpinteros_visibles.
+
+          Usamos el RPC que controla que
+          quien consulta sea un profesional
+          o empresa autorizado.
+        */
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.rpc(
+            "buscar_carpinteros_visibles"
+          );
+
+
+
+        if (error) {
+          throw error;
+        }
+
+
+
+        const carpinterias =
+          Array.isArray(data)
+            ? data
+            : [];
+
+
+
+        const profesional =
+          carpinterias.find(
+            function(item) {
+
+              return (
+                String(item.id) ===
+                String(idPerfil)
+              );
+
+            }
+          );
+
+
+
+        if (!profesional) {
+
+
+          mostrarError(
+            "Perfil no disponible",
+            "No encontramos esta carpintería o tu cuenta no tiene permiso para consultarla."
+          );
+
+
+          return;
+
+        }
+
+
+
+        mostrarPerfil(
+          profesional,
+          false
+        );
+
+
+      } catch (error) {
+
+
+        console.error(
+          "Error al cargar perfil:",
+          error
+        );
+
+
+        mostrarError(
+          "No pudimos cargar el perfil",
+          "Ocurrió un problema al verificar esta carpintería. Intentá nuevamente."
+        );
+
+      }
 
     }
 
