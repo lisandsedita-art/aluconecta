@@ -814,7 +814,16 @@ function habilitarPagina() {
 
 }
 
+function esRolProfesional(tipo) {
 
+  return [
+    'cliente_profesional',
+    'profesional',
+    'empresa',
+    'cliente'
+  ].includes(tipo);
+
+}
 async function verificarAcceso() {
 
   try {
