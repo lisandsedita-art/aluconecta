@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Panel Cliente - AluConecta</title>
+  <title>Panel profesional - AluConecta</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -13,9 +13,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
 
     :root {
-      --azul: #132e4f;
-      --azul2: #1a3a5f;
-      --amarillo: #ffcf00;
+      --azul: #0f2e4d;
+      --azul2: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
       --gris: #f8fafc;
       --borde: #e2e8f0;
       --texto2: #64748b;
@@ -57,7 +58,7 @@
     }
 
     .logo span {
-      color: #4fb0e2;
+      color: var(--celeste);
     }
 
     .hamb {
@@ -77,7 +78,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(19,46,79,.98);
+      background: rgba(15,46,77,.98);
       z-index: 50;
       padding: 18px;
     }
@@ -278,12 +279,6 @@
       color: var(--azul);
     }
 
-    .btn-disabled {
-      background: #eef2f7;
-      color: #94a3b8;
-      cursor: default;
-    }
-
     .seguridad {
       background: #eff6ff;
       border: 1px solid #bfdbfe;
@@ -378,7 +373,7 @@
     }
 
     .gate-logo span {
-      color: #4fb0e2;
+      color: var(--celeste);
     }
 
     .gate-card {
@@ -434,6 +429,7 @@
 
 <div id="cargando">
   <div class="gate-box">
+
     <div class="spinner"></div>
 
     <div style="color:white;font-weight:800;font-size:18px;">
@@ -441,8 +437,9 @@
     </div>
 
     <p style="color:#9eb0c2;font-size:13px;">
-      Estamos cargando tu espacio en AluConecta.
+      Estamos cargando tu espacio profesional en AluConecta.
     </p>
+
   </div>
 </div>
 
@@ -462,7 +459,7 @@
 
       <p id="textoAcceso" class="muted">
         Para entrar a este panel necesitás iniciar sesión
-        con una cuenta de cliente.
+        con una cuenta profesional o de empresa.
       </p>
 
       <div style="display:grid;gap:10px;margin-top:22px;">
@@ -519,7 +516,7 @@
   >
 
     <span>
-      Alu<span style="color:#4fb0e2">Conecta</span>
+      Alu<span style="color:#5bc0de">Conecta</span>
     </span>
 
     <button
@@ -543,11 +540,11 @@
   </a>
 
   <a href="aluminio.html">
-    Buscar carpinteros
+    Buscar carpinterías
   </a>
 
-  <a href="#" id="menuMiPerfil">
-    Mi perfil
+  <a href="editar-perfil.html">
+    Mis datos
   </a>
 
   <a href="index.html">
@@ -571,8 +568,8 @@
     </h1>
 
     <p id="bienvenidaHero">
-      Administrá tus proyectos y encontrá profesionales
-      para llevar adelante tus aberturas.
+      Administrá tus proyectos y encontrá carpinterías
+      de aluminio para llevarlos adelante.
     </p>
 
   </div>
@@ -668,7 +665,7 @@
         class="value"
         id="tipoPerfil"
       >
-        Cliente AluConecta
+        Profesional / Empresa
       </div>
 
     </div>
@@ -682,14 +679,6 @@
         margin-top:14px;
       "
     >
-
-      <a
-        href="#"
-        id="verPerfil"
-        class="btn btn-dark"
-      >
-        VER MI PERFIL
-      </a>
 
       <a
         href="editar-perfil.html"
@@ -710,45 +699,56 @@
     </h2>
 
     <p class="muted">
-     Resumen de tu actividad profesional dentro de AluConecta.
+      Resumen de tu actividad profesional dentro de AluConecta.
     </p>
 
     <div class="resumen">
 
       <div class="resumen-item">
+
         <div
           class="resumen-numero"
           id="cantidadProyectos"
         >
           —
         </div>
+
         <div class="resumen-label">
           PROYECTOS
         </div>
+
       </div>
 
+
       <div class="resumen-item">
+
         <div
           class="resumen-numero"
           id="cantidadIntereses"
         >
           —
         </div>
+
         <div class="resumen-label">
           INTERESADOS
         </div>
+
       </div>
 
+
       <div class="resumen-item">
+
         <div
           class="resumen-numero"
           id="cantidadCotizaciones"
         >
           —
         </div>
+
         <div class="resumen-label">
           COTIZACIONES
         </div>
+
       </div>
 
     </div>
@@ -763,175 +763,190 @@
     </h2>
 
     <p class="muted">
-      Gestioná tus necesidades de aberturas desde un solo lugar.
+      Gestioná tus proyectos y vínculos profesionales
+      desde un solo lugar.
     </p>
 
 
-   <div class="acciones">
+    <div class="acciones">
 
-  <article class="accion accion-principal">
 
-    <div>
-      <div class="accion-icono">
-        🏗️
-      </div>
+      <article class="accion accion-principal">
 
-      <h3>
-        Publicar una obra
-      </h3>
+        <div>
 
-      <p>
-        Contanos qué aberturas necesitás para que
-        carpinteros puedan conocer tu proyecto.
-      </p>
+          <div class="accion-icono">
+            🏗️
+          </div>
+
+          <h3>
+            Publicar una obra
+          </h3>
+
+          <p>
+            Publicá tu necesidad de aberturas para que
+            carpinterías puedan conocer el proyecto.
+          </p>
+
+        </div>
+
+        <a
+          class="btn btn-y"
+          href="publicar-proyecto.html"
+        >
+          PUBLICAR PROYECTO
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+
+          <div class="accion-icono">
+            📋
+          </div>
+
+          <h3>
+            Mis proyectos
+          </h3>
+
+          <p>
+            Consultá y administrá los proyectos
+            publicados desde tu cuenta.
+          </p>
+
+        </div>
+
+        <a
+          class="btn btn-dark"
+          href="mis-proyectos.html"
+        >
+          VER MIS PROYECTOS
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+
+          <div class="accion-icono">
+            🤝
+          </div>
+
+          <h3>
+            Carpinterías interesadas
+          </h3>
+
+          <p>
+            Revisá qué carpinterías manifestaron
+            interés en tus proyectos y administrá
+            sus autorizaciones.
+          </p>
+
+        </div>
+
+        <a
+          class="btn btn-dark"
+          href="mis-proyectos.html"
+        >
+          VER INTERESADOS
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+
+          <div class="accion-icono">
+            💰
+          </div>
+
+          <h3>
+            Cotizaciones
+          </h3>
+
+          <p>
+            Consultá las cotizaciones recibidas
+            para tus proyectos.
+          </p>
+
+        </div>
+
+        <a
+          class="btn btn-dark"
+          href="mis-proyectos.html"
+        >
+          VER COTIZACIONES
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+
+          <div class="accion-icono">
+            🔎
+          </div>
+
+          <h3>
+            Buscar carpinterías
+          </h3>
+
+          <p>
+            Explorá carpinterías de aluminio
+            registradas en AluConecta.
+          </p>
+
+        </div>
+
+        <a
+          href="aluminio.html"
+          class="btn btn-dark"
+        >
+          BUSCAR
+        </a>
+
+      </article>
+
+
+      <article class="accion">
+
+        <div>
+
+          <div class="accion-icono">
+            👤
+          </div>
+
+          <h3>
+            Mis datos
+          </h3>
+
+          <p>
+            Administrá tus datos de contacto,
+            presentación y redes sociales.
+          </p>
+
+        </div>
+
+        <a
+          href="editar-perfil.html"
+          class="btn btn-dark"
+        >
+          EDITAR MIS DATOS
+        </a>
+
+      </article>
+
+
     </div>
-
-    <a
-      class="btn btn-y"
-      href="publicar-proyecto.html"
-    >
-      PUBLICAR PROYECTO
-    </a>
-
-  </article>
-
-
-  <article class="accion">
-
-    <div>
-      <div class="accion-icono">
-        📋
-      </div>
-
-      <h3>
-        Mis proyectos
-      </h3>
-
-      <p>
-        Consultá los proyectos que publicaste
-        desde tu cuenta.
-      </p>
-    </div>
-
-    <a
-      class="btn btn-dark"
-      href="mis-proyectos.html"
-    >
-      VER MIS PROYECTOS
-    </a>
-
-  </article>
-
-
-  <article class="accion">
-
-    <div>
-      <div class="accion-icono">
-        🤝
-      </div>
-
-      <h3>
-        Carpinteros interesados
-      </h3>
-
-      <p>
-        Revisá qué carpinterías manifestaron
-        interés en tus proyectos y administrá
-        sus autorizaciones.
-      </p>
-    </div>
-
-    <a
-      class="btn btn-dark"
-      href="mis-proyectos.html"
-    >
-      VER INTERESADOS
-    </a>
-
-  </article>
-
-
-  <article class="accion">
-
-    <div>
-      <div class="accion-icono">
-        💰
-      </div>
-
-      <h3>
-        Cotizaciones
-      </h3>
-
-      <p>
-        Consultá las cotizaciones y presupuestos
-        recibidos para tus proyectos.
-      </p>
-    </div>
-
-    <a
-      class="btn btn-dark"
-      href="mis-proyectos.html"
-    >
-      VER COTIZACIONES
-    </a>
-
-  </article>
-
-
-  <article class="accion">
-
-    <div>
-      <div class="accion-icono">
-        🔎
-      </div>
-
-      <h3>
-        Buscar carpinteros
-      </h3>
-
-      <p>
-        Explorá profesionales y talleres de
-        carpintería de aluminio.
-      </p>
-    </div>
-
-    <a
-      href="aluminio.html"
-      class="btn btn-dark"
-    >
-      BUSCAR
-    </a>
-
-  </article>
-
-
-  <article class="accion">
-
-    <div>
-      <div class="accion-icono">
-        👤
-      </div>
-
-      <h3>
-        Mi perfil
-      </h3>
-
-      <p>
-        Administrá tus datos de contacto,
-        presentación y redes sociales.
-      </p>
-    </div>
-
-    <a
-      href="editar-perfil.html"
-      class="btn btn-dark"
-    >
-      EDITAR PERFIL
-    </a>
-
-  </article>
-
-</div>
 
   </section>
 
@@ -943,7 +958,7 @@
     </h2>
 
     <p class="muted">
-      Acá aparecerán las últimas necesidades que publiques.
+      Acá aparecen las últimas necesidades que publicaste.
     </p>
 
     <div
@@ -967,10 +982,17 @@
   <section class="card">
 
     <div class="seguridad">
-      <strong>Tu espacio privado</strong><br>
+
+      <strong>
+        Tu espacio privado
+      </strong>
+
+      <br>
+
       Este panel utiliza tu sesión autenticada de AluConecta.
-      Los proyectos mostrados acá se consultan utilizando
-      el identificador de tu cuenta.
+      Los proyectos y datos mostrados acá corresponden
+      únicamente a tu cuenta.
+
     </div>
 
   </section>
@@ -1026,31 +1048,45 @@ function mostrarPanel() {
   cargando.style.display = "none";
   accesoDenegado.style.display = "none";
 
-  document.body.classList.remove("bloqueado");
+  document.body.classList.remove(
+    "bloqueado"
+  );
 
 }
 
 
-function negarAcceso(titulo, texto) {
+function negarAcceso(
+  titulo,
+  texto
+) {
 
   cargando.style.display = "none";
 
-  tituloAcceso.textContent = titulo;
-  textoAcceso.textContent = texto;
+  tituloAcceso.textContent =
+    titulo;
 
-  accesoDenegado.style.display = "flex";
+  textoAcceso.textContent =
+    texto;
+
+  accesoDenegado.style.display =
+    "flex";
 
 }
 
 
-function textoSeguro(valor, fallback = "No informado") {
+function textoSeguro(
+  valor,
+  fallback = "No informado"
+) {
 
   if (
     valor === null ||
     valor === undefined ||
     String(valor).trim() === ""
   ) {
+
     return fallback;
+
   }
 
   return String(valor).trim();
@@ -1070,40 +1106,90 @@ function escaparHTML(valor) {
 }
 
 
-function nombreTipoUsuario(tipo) {
+function esRolProfesional(
+  tipo
+) {
 
- if (tipo === "cliente_profesional") {
-  return "Profesional / Empresa";
+  return [
+    "cliente_profesional",
+    "profesional",
+    "empresa",
+    "cliente"
+  ].includes(
+    tipo
+  );
+
 }
 
-  if (tipo === "cliente") {
-    return "Cliente";
+
+function nombreTipoUsuario(
+  tipo
+) {
+
+  if (
+    tipo === "cliente_profesional"
+  ) {
+
+    return "Profesional / Empresa";
+
   }
 
-  if (tipo === "profesional") {
+
+  if (
+    tipo === "profesional"
+  ) {
+
     return "Profesional";
+
   }
 
-  if (tipo === "empresa") {
+
+  if (
+    tipo === "empresa"
+  ) {
+
     return "Empresa";
+
   }
 
-  return "Cliente AluConecta";
+
+  if (
+    tipo === "cliente"
+  ) {
+
+    return "Profesional / Empresa";
+
+  }
+
+
+  return "Profesional / Empresa";
 
 }
 
 
-function formatearFecha(fecha) {
+function formatearFecha(
+  fecha
+) {
 
   if (!fecha) {
     return "";
   }
 
-  const valor = new Date(fecha);
 
-  if (Number.isNaN(valor.getTime())) {
+  const valor =
+    new Date(fecha);
+
+
+  if (
+    Number.isNaN(
+      valor.getTime()
+    )
+  ) {
+
     return "";
+
   }
+
 
   return valor.toLocaleDateString(
     "es-AR",
@@ -1120,10 +1206,16 @@ function formatearFecha(fecha) {
 async function cargarProyectos() {
 
   const contenedor =
-    document.getElementById("listaProyectos");
+    document.getElementById(
+      "listaProyectos"
+    );
+
 
   const cantidad =
-    document.getElementById("cantidadProyectos");
+    document.getElementById(
+      "cantidadProyectos"
+    );
+
 
   try {
 
@@ -1133,23 +1225,28 @@ async function cargarProyectos() {
       count
     } =
       await sb
+
         .from("proyectos")
+
         .select(
           "id,created_at,Tipo,Localidad,Proyecto",
           {
             count: "exact"
           }
         )
+
         .eq(
           "publicado_por",
           usuarioActual.id
         )
+
         .order(
           "created_at",
           {
             ascending: false
           }
         )
+
         .limit(3);
 
 
@@ -1159,12 +1256,20 @@ async function cargarProyectos() {
 
 
     cantidad.textContent =
-      String(count ?? data?.length ?? 0);
+      String(
+        count ??
+        data?.length ??
+        0
+      );
 
 
-    if (!data || data.length === 0) {
+    if (
+      !data ||
+      data.length === 0
+    ) {
 
       contenedor.innerHTML = `
+
         <strong>
           Todavía no publicaste proyectos
         </strong>
@@ -1173,7 +1278,9 @@ async function cargarProyectos() {
           Cuando publiques una necesidad,
           aparecerá acá.
         </span>
+
       `;
+
 
       return;
 
@@ -1182,88 +1289,106 @@ async function cargarProyectos() {
 
     contenedor.className = "";
 
+
     contenedor.innerHTML =
-      data.map(function(proyecto) {
-
-        const titulo =
-          escaparHTML(
-            textoSeguro(
-              proyecto.Proyecto,
-              "Proyecto de aberturas"
-            )
-          );
-
-        const localidad =
-          escaparHTML(
-            textoSeguro(
-              proyecto.Localidad,
-              "Localidad no informada"
-            )
-          );
-
-        const tipo =
-          escaparHTML(
-            textoSeguro(
-              proyecto.Tipo,
-              "Proyecto"
-            )
-          );
-
-        const fecha =
-          escaparHTML(
-            formatearFecha(
-              proyecto.created_at
-            )
-          );
+      data.map(
+        function(proyecto) {
 
 
-        return `
-          <article
-            class="box-light"
-            style="
-              margin-top:10px;
-              text-align:left;
-            "
-          >
+          const titulo =
+            escaparHTML(
+              textoSeguro(
+                proyecto.Proyecto,
+                "Proyecto de aberturas"
+              )
+            );
 
-            <div
-              class="label"
-              style="margin-bottom:7px;"
+
+          const localidad =
+            escaparHTML(
+              textoSeguro(
+                proyecto.Localidad,
+                "Localidad no informada"
+              )
+            );
+
+
+          const tipo =
+            escaparHTML(
+              textoSeguro(
+                proyecto.Tipo,
+                "Proyecto"
+              )
+            );
+
+
+          const fecha =
+            escaparHTML(
+              formatearFecha(
+                proyecto.created_at
+              )
+            );
+
+
+          return `
+
+            <article
+              class="box-light"
+              style="
+                margin-top:10px;
+                text-align:left;
+              "
             >
-              ${tipo}
-            </div>
 
-            <div class="value">
-              ${titulo}
-            </div>
+              <div
+                class="label"
+                style="margin-bottom:7px;"
+              >
+                ${tipo}
+              </div>
 
-            <div
-              class="muted"
-              style="margin-top:8px;"
-            >
-              📍 ${localidad}
-              ${
-                fecha
-                  ? " · " + fecha
-                  : ""
-              }
-            </div>
+              <div class="value">
+                ${titulo}
+              </div>
 
-          </article>
-        `;
+              <div
+                class="muted"
+                style="margin-top:8px;"
+              >
 
-      }).join("");
+                📍 ${localidad}
+
+                ${
+                  fecha
+                    ? " · " + fecha
+                    : ""
+                }
+
+              </div>
+
+            </article>
+
+          `;
+
+        }
+      ).join("");
+
 
   } catch (error) {
+
 
     console.error(
       "Error cargando proyectos:",
       error
     );
 
-    cantidad.textContent = "—";
+
+    cantidad.textContent =
+      "—";
+
 
     contenedor.innerHTML = `
+
       <strong>
         No pudimos cargar tus proyectos
       </strong>
@@ -1272,6 +1397,7 @@ async function cargarProyectos() {
         Tu cuenta sigue activa.
         Intentá nuevamente más tarde.
       </span>
+
     `;
 
   }
@@ -1286,6 +1412,7 @@ async function cargarResumenRelacionado() {
       "cantidadIntereses"
     );
 
+
   const cantidadCotizaciones =
     document.getElementById(
       "cantidadCotizaciones"
@@ -1299,8 +1426,11 @@ async function cargarResumenRelacionado() {
       error: proyectosError
     } =
       await sb
+
         .from("proyectos")
+
         .select("id")
+
         .eq(
           "publicado_por",
           usuarioActual.id
@@ -1314,9 +1444,13 @@ async function cargarResumenRelacionado() {
 
     const idsProyectos =
       (proyectos || [])
-        .map(function(proyecto) {
-          return proyecto.id;
-        });
+        .map(
+          function(proyecto) {
+
+            return proyecto.id;
+
+          }
+        );
 
 
     if (
@@ -1341,9 +1475,11 @@ async function cargarResumenRelacionado() {
       await Promise.all([
 
         sb
+
           .from(
             "intereses_proyectos"
           )
+
           .select(
             "id",
             {
@@ -1351,15 +1487,19 @@ async function cargarResumenRelacionado() {
               head: true
             }
           )
+
           .in(
             "proyecto_id",
             idsProyectos
           ),
 
+
         sb
+
           .from(
             "cotizaciones"
           )
+
           .select(
             "id",
             {
@@ -1367,6 +1507,7 @@ async function cargarResumenRelacionado() {
               head: true
             }
           )
+
           .in(
             "obra_id",
             idsProyectos
@@ -1378,30 +1519,37 @@ async function cargarResumenRelacionado() {
     if (
       interesesResultado.error
     ) {
+
       throw interesesResultado.error;
+
     }
 
 
     if (
       cotizacionesResultado.error
     ) {
+
       throw cotizacionesResultado.error;
+
     }
 
 
     cantidadIntereses.textContent =
       String(
-        interesesResultado.count ?? 0
+        interesesResultado.count ??
+        0
       );
 
 
     cantidadCotizaciones.textContent =
       String(
-        cotizacionesResultado.count ?? 0
+        cotizacionesResultado.count ??
+        0
       );
 
 
   } catch (error) {
+
 
     console.error(
       "Error cargando resumen relacionado:",
@@ -1429,7 +1577,8 @@ async function iniciarPanel() {
       data,
       error
     } =
-      await sb.auth.getSession();
+      await sb.auth
+        .getSession();
 
 
     if (error) {
@@ -1465,14 +1614,18 @@ async function iniciarPanel() {
       error: errorPerfil
     } =
       await sb
+
         .from("perfiles")
+
         .select(
           "id,nombre,tipo_usuario,localidad,provincia,telefono,descripcion,instagram,facebook,tiktok,web"
         )
+
         .eq(
           "id",
           usuarioActual.id
         )
+
         .single();
 
 
@@ -1483,10 +1636,12 @@ async function iniciarPanel() {
         errorPerfil
       );
 
+
       negarAcceso(
-        "No pudimos cargar tu perfil",
-        "Tu sesión está iniciada, pero no pudimos encontrar correctamente tu perfil de AluConecta."
+        "No pudimos cargar tu cuenta",
+        "Tu sesión está iniciada, pero no pudimos encontrar correctamente tus datos de AluConecta."
       );
+
 
       return;
 
@@ -1500,6 +1655,22 @@ async function iniciarPanel() {
 
       window.location.href =
         "panel-carpintero.html";
+
+      return;
+
+    }
+
+
+    if (
+      !esRolProfesional(
+        perfil.tipo_usuario
+      )
+    ) {
+
+      negarAcceso(
+        "Acceso no disponible",
+        "Esta cuenta no corresponde a un profesional o empresa habilitado para utilizar este panel."
+      );
 
       return;
 
@@ -1555,26 +1726,7 @@ async function iniciarPanel() {
     ).textContent =
       "Hola, " +
       nombre +
-      ". Administrá tus proyectos y encontrá profesionales para llevar adelante tus aberturas.";
-
-
-    const urlPerfil =
-      "perfil.html?id=" +
-      encodeURIComponent(
-        usuarioActual.id
-      );
-
-
-    document.getElementById(
-      "verPerfil"
-    ).href =
-      urlPerfil;
-
-
-    document.getElementById(
-      "menuMiPerfil"
-    ).href =
-      urlPerfil;
+      ". Administrá tus proyectos y encontrá carpinterías de aluminio para llevarlos adelante.";
 
 
     mostrarPanel();
@@ -1585,12 +1737,15 @@ async function iniciarPanel() {
       cargarResumenRelacionado()
     ]);
 
+
   } catch (error) {
+
 
     console.error(
       "Error iniciando panel:",
       error
     );
+
 
     negarAcceso(
       "No pudimos abrir tu panel",
@@ -1604,62 +1759,63 @@ async function iniciarPanel() {
 
 document.getElementById(
   "abrirMenu"
-).addEventListener(
-  "click",
-  function() {
+)
+  .addEventListener(
+    "click",
+    function() {
 
-    menu.style.display =
-      "block";
+      menu.style.display =
+        "block";
 
-    document.body.classList.add(
-      "bloqueado"
-    );
 
-  }
-);
+      document.body.classList.add(
+        "bloqueado"
+      );
+
+    }
+  );
 
 
 document.getElementById(
   "cerrarMenu"
-).addEventListener(
-  "click",
-  function() {
+)
+  .addEventListener(
+    "click",
+    function() {
 
-    menu.style.display =
-      "none";
+      menu.style.display =
+        "none";
 
-    document.body.classList.remove(
-      "bloqueado"
-    );
 
-  }
-);
+      document.body.classList.remove(
+        "bloqueado"
+      );
+
+    }
+  );
 
 
 document.getElementById(
   "cerrarSesion"
-).addEventListener(
-  "click",
-  async function() {
+)
+  .addEventListener(
+    "click",
+    async function() {
 
-    try {
+      try {
 
-      await sb.auth.signOut();
+        await sb.auth
+          .signOut();
 
-    } finally {
+      } finally {
 
-      window.location.href =
-        "ingresar.html";
+        window.location.href =
+          "ingresar.html";
+
+      }
 
     }
-
-  }
-);
-
-
-
-
-
+  );
 
 
 iniciarPanel();
@@ -1667,4 +1823,5 @@ iniciarPanel();
 </script>
 
 </body>
+
 </html>
