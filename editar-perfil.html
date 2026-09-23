@@ -1,173 +1,1172 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Editar perfil - AluConecta</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
-body{background:#f5f7fa;padding:16px;padding-bottom:90px}
-.card{background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-h2{color:#0F2E4D;margin-bottom:12px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin:6px 0 12px;font-size:15px}
-.btn{background:#0F2E4D;color:white;border:none;padding:14px;border-radius:12px;width:100%;font-weight:700;font-size:16px;cursor:pointer}
-.btn-sec{background:#E6F6FF;color:#0F2E4D;margin-top:8px}
-small{color:#666}
-.mensaje{margin:12px 0;padding:12px;border-radius:10px;display:none;line-height:1.4}
-.mensaje.error{display:block;background:#fee2e2;color:#991b1b}
-.mensaje.ok{display:block;background:#dcfce7;color:#166534}
-</style>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <title>Editar mis datos - AluConecta</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    :root {
+      --azul: #0f2e4d;
+      --azul2: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --fondo: #f4f6f8;
+      --blanco: #ffffff;
+      --texto: #24313d;
+      --texto-suave: #64748b;
+      --borde: #dfe5ea;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+    }
+
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 35px 20px;
+      text-align: center;
+    }
+
+
+    .marca {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+
+    .marca span {
+      color: var(--celeste);
+    }
+
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+
+    header p {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #c8d5e1;
+      line-height: 1.5;
+    }
+
+
+    .contenedor {
+      width: calc(100% - 32px);
+      max-width: 700px;
+      margin: 30px auto;
+    }
+
+
+    .card {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 26px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(15,46,77,.07);
+      box-shadow: 0 5px 18px rgba(15,46,77,.07);
+    }
+
+
+    .card h2 {
+      margin: 0 0 8px;
+      color: var(--azul);
+      font-size: 21px;
+    }
+
+
+    .descripcion-seccion {
+      margin: 0 0 22px;
+      color: var(--texto-suave);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+
+    .grupo {
+      margin-bottom: 18px;
+    }
+
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--azul);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .03em;
+    }
+
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #ccd5dd;
+      border-radius: 10px;
+      padding: 13px;
+      background: white;
+      color: var(--texto);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+    }
+
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91,192,222,.16);
+    }
+
+
+    textarea {
+      min-height: 125px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+
+    .ayuda {
+      display: block;
+      margin-top: 6px;
+      color: var(--texto-suave);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+
+    .acciones {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+
+    .btn-principal {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+
+    .btn-principal:hover {
+      background: var(--amarillo-hover);
+    }
+
+
+    .btn-secundario {
+      background: var(--azul);
+      color: white;
+    }
+
+
+    .btn-suave {
+      background: #edf2f6;
+      color: var(--azul);
+    }
+
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+
+    .mensaje {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px;
+      border-radius: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+
+    .mensaje.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+
+    .mensaje.ok {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+
+    .estado-cuenta {
+      padding: 13px;
+      margin-bottom: 18px;
+      border-radius: 10px;
+      background: #edf8fb;
+      border-left: 4px solid var(--celeste);
+      color: #355366;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+
+    footer {
+      margin-top: 40px;
+      padding: 28px 20px;
+      background: var(--azul);
+      color: #c8d5e1;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 30px 18px;
+      }
+
+
+      header h1 {
+        font-size: 27px;
+      }
+
+
+      .contenedor {
+        width: calc(100% - 24px);
+        margin-top: 22px;
+      }
+
+
+      .card {
+        padding: 21px;
+      }
+
+    }
+
+  </style>
+
 </head>
+
+
 <body>
-<h2>✏️ Editar mi perfil profesional</h2>
-<div id="mensaje" class="mensaje"></div>
 
-<div class="card">
-<h3>Datos básicos</h3>
-<input id="nombre" placeholder="Nombre / Empresa ej: Aluminio HS">
-<input id="zona" placeholder="Zona ej: Capitán Bermúdez">
-<input id="tel" placeholder="Teléfono">
-<textarea id="bio" placeholder="Descripción de tu trabajo..."></textarea>
-</div>
 
-<div class="card">
-<h3>🌐 Redes sociales y web (opcional)</h3>
-<small>Si las completás, se muestran en tu perfil público. Podés poner solo las que quieras.</small>
-<input id="wpp" placeholder="WhatsApp ej: 3411234567">
-<input id="ig" placeholder="Instagram ej: https://instagram.com/aluminio_hs o @aluminio_hs">
-<input id="fb" placeholder="Facebook ej: https://facebook.com/tu.pagina">
-<input id="tk" placeholder="TikTok ej: @aluminio.hs">
-<input id="yt" placeholder="YouTube link">
-<input id="web" placeholder="Página web https://...">
-<label style="display:flex;gap:8px;align-items:center;margin-top:8px">
-<input type="checkbox" id="mostrarRedes" checked style="width:auto">
-Mostrar mis redes en perfil público
-</label>
-</div>
+<header>
 
-<div class="card">
-<h3>Verificación</h3>
-<small>La carga de documentación para verificación se implementará en la etapa de verificación. Estos campos quedan preparados por ahora.</small>
-</div>
+  <div class="marca">
+    Alu<span>Conecta</span>
+  </div>
 
-<button class="btn" id="guardarBtn" type="button">Guardar perfil</button>
-<button class="btn btn-sec" id="verPerfilBtn" type="button">Ver mi perfil público</button>
+  <h1 id="tituloPagina">
+    Editar mis datos
+  </h1>
+
+  <p id="subtituloPagina">
+    Administrá la información vinculada a tu cuenta de AluConecta.
+  </p>
+
+</header>
+
+
+<main class="contenedor">
+
+
+  <div
+    id="mensaje"
+    class="mensaje">
+  </div>
+
+
+  <div
+    id="estadoCuenta"
+    class="estado-cuenta">
+
+    Cargando los datos de tu cuenta...
+
+  </div>
+
+
+  <section class="card">
+
+    <h2>
+      Datos principales
+    </h2>
+
+    <p
+      class="descripcion-seccion"
+      id="descripcionDatos">
+
+      Esta información identifica tu actividad
+      dentro de AluConecta.
+
+    </p>
+
+
+    <div class="grupo">
+
+      <label for="nombre">
+        NOMBRE / EMPRESA / TALLER
+      </label>
+
+      <input
+        id="nombre"
+        autocomplete="name"
+        placeholder="Nombre profesional, empresa o taller">
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="zona">
+        LOCALIDAD / ZONA
+      </label>
+
+      <input
+        id="zona"
+        autocomplete="address-level2"
+        placeholder="Ej.: Rosario">
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="telefono">
+        TELÉFONO / WHATSAPP
+      </label>
+
+      <input
+        id="telefono"
+        type="tel"
+        autocomplete="tel"
+        placeholder="Ej.: 3416123456">
+
+      <span class="ayuda">
+        Este dato se mantiene protegido y se utiliza
+        según las reglas de contacto de AluConecta.
+      </span>
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="bio">
+        PRESENTACIÓN
+      </label>
+
+      <textarea
+        id="bio"
+        placeholder="Contá brevemente sobre tu actividad, experiencia o servicios."></textarea>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="card">
+
+    <h2>
+      Redes sociales y sitio web
+    </h2>
+
+    <p
+      class="descripcion-seccion"
+      id="textoRedes">
+
+      Podés completar solamente los canales que utilices.
+
+    </p>
+
+
+    <div class="grupo">
+
+      <label for="ig">
+        INSTAGRAM
+      </label>
+
+      <input
+        id="ig"
+        placeholder="@usuario o enlace de Instagram">
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="fb">
+        FACEBOOK
+      </label>
+
+      <input
+        id="fb"
+        placeholder="@usuario o página de Facebook">
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="tk">
+        TIKTOK
+      </label>
+
+      <input
+        id="tk"
+        placeholder="@usuario de TikTok">
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="web">
+        SITIO WEB
+      </label>
+
+      <input
+        id="web"
+        type="url"
+        placeholder="https://...">
+
+    </div>
+
+  </section>
+
+
+
+  <section class="card">
+
+    <h2>
+      Guardar cambios
+    </h2>
+
+    <p class="descripcion-seccion">
+      Los cambios se aplicarán únicamente
+      a tu propia cuenta de AluConecta.
+    </p>
+
+
+    <div class="acciones">
+
+      <button
+        class="btn btn-principal"
+        id="guardarBtn"
+        type="button">
+
+        GUARDAR CAMBIOS
+
+      </button>
+
+
+      <a
+        href="#"
+        class="btn btn-secundario"
+        id="verPerfilBtn"
+        style="display:none;">
+
+        VER MI PERFIL COMERCIAL
+
+      </a>
+
+
+      <a
+        href="#"
+        class="btn btn-suave"
+        id="volverPanel">
+
+        VOLVER A MI PANEL
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+
+<footer>
+
+  © 2026 AluConecta<br>
+  Donde los proyectos encuentran sus aberturas.
+
+</footer>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
-const SUPABASE_URL="https://wroaxwjyjrxzwctfkyoo.supabase.co";
-const SUPABASE_KEY="sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const mensaje=document.getElementById("mensaje");
-let usuarioId=null;
 
-function mostrarMensaje(texto,tipo){
-  mensaje.textContent=texto;
-  mensaje.className="mensaje "+tipo;
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const mensaje =
+  document.getElementById(
+    "mensaje"
+  );
+
+
+const estadoCuenta =
+  document.getElementById(
+    "estadoCuenta"
+  );
+
+
+const verPerfilBtn =
+  document.getElementById(
+    "verPerfilBtn"
+  );
+
+
+const volverPanel =
+  document.getElementById(
+    "volverPanel"
+  );
+
+
+let usuarioId =
+  null;
+
+
+let tipoUsuario =
+  null;
+
+
+
+function mostrarMensaje(
+  texto,
+  tipo
+) {
+
+  mensaje.textContent =
+    texto;
+
+
+  mensaje.className =
+    "mensaje " + tipo;
+
+
+  mensaje.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
 }
 
-async function cargarPerfil(){
-  try{
-    const {data:userData,error:userError}=await supabaseClient.auth.getUser();
-    if(userError) throw userError;
-    const usuario=userData.user;
 
-    if(!usuario){
-      window.location.href="ingresar.html";
+
+function limpiarTelefono(
+  valor
+) {
+
+  return String(
+    valor || ""
+  )
+    .replace(/\D/g, "");
+
+}
+
+
+
+function esCarpintero() {
+
+  return (
+    tipoUsuario ===
+    "carpintero"
+  );
+
+}
+
+
+
+function esRolProfesional(
+  tipo
+) {
+
+  return [
+    "cliente_profesional",
+    "profesional",
+    "empresa",
+    "cliente"
+  ].includes(
+    tipo
+  );
+
+}
+
+
+
+function configurarInterfaz() {
+
+
+  if (esCarpintero()) {
+
+
+    document.getElementById(
+      "tituloPagina"
+    ).textContent =
+      "Editar mi perfil de carpintería";
+
+
+    document.getElementById(
+      "subtituloPagina"
+    ).textContent =
+      "Administrá la información profesional y comercial de tu carpintería.";
+
+
+    document.getElementById(
+      "descripcionDatos"
+    ).textContent =
+      "Estos datos forman parte de tu cuenta y de la presentación de tu carpintería dentro de AluConecta.";
+
+
+    document.getElementById(
+      "textoRedes"
+    ).textContent =
+      "Las redes y el sitio web que completes pueden mostrarse en tu perfil comercial.";
+
+
+    estadoCuenta.textContent =
+      "Cuenta de carpintería activa.";
+
+
+    verPerfilBtn.style.display =
+      "flex";
+
+
+    verPerfilBtn.href =
+      "perfil.html?id=" +
+      encodeURIComponent(
+        usuarioId
+      );
+
+
+    volverPanel.href =
+      "panel-carpintero.html";
+
+
+    return;
+
+  }
+
+
+
+  if (
+    esRolProfesional(
+      tipoUsuario
+    )
+  ) {
+
+
+    document.getElementById(
+      "tituloPagina"
+    ).textContent =
+      "Editar mis datos profesionales";
+
+
+    document.getElementById(
+      "subtituloPagina"
+    ).textContent =
+      "Administrá la información vinculada a tu cuenta profesional o de empresa.";
+
+
+    document.getElementById(
+      "descripcionDatos"
+    ).textContent =
+      "Estos datos identifican tu cuenta profesional dentro de AluConecta.";
+
+
+    document.getElementById(
+      "textoRedes"
+    ).textContent =
+      "Estos datos pueden utilizarse cuando corresponda dentro de una relación autorizada en AluConecta.";
+
+
+    estadoCuenta.textContent =
+      "Cuenta profesional / empresa activa.";
+
+
+    verPerfilBtn.style.display =
+      "none";
+
+
+    volverPanel.href =
+      "panel-cliente.html";
+
+
+    return;
+
+  }
+
+
+
+  estadoCuenta.textContent =
+    "No pudimos identificar correctamente el tipo de cuenta.";
+
+
+  volverPanel.href =
+    "index.html";
+
+}
+
+
+
+async function cargarPerfil() {
+
+
+  try {
+
+
+    const {
+      data: userData,
+      error: userError
+    } =
+      await supabaseClient.auth
+        .getUser();
+
+
+    if (userError) {
+      throw userError;
+    }
+
+
+    const usuario =
+      userData.user;
+
+
+    if (!usuario) {
+
+      window.location.href =
+        "ingresar.html";
+
       return;
+
     }
 
-    usuarioId=usuario.id;
 
-    const {data,error}=await supabaseClient
-      .from("perfiles")
-      .select("id,nombre,tipo_usuario,localidad,telefono,descripcion,instagram,facebook,tiktok,web")
-      .eq("id",usuarioId)
-      .single();
+    usuarioId =
+      usuario.id;
 
-    if(error && error.code!=="PGRST116") throw error;
 
-    if(data){
-      document.getElementById("nombre").value=data.nombre||"";
-      document.getElementById("zona").value=data.localidad||"";
-      document.getElementById("tel").value=data.telefono||"";
-      document.getElementById("bio").value=data.descripcion||"";
-      document.getElementById("wpp").value=data.telefono||"";
-      document.getElementById("ig").value=data.instagram||"";
-      document.getElementById("fb").value=data.facebook||"";
-      document.getElementById("tk").value=data.tiktok||"";
-      document.getElementById("web").value=data.web||"";
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .select(
+          "id,nombre,tipo_usuario,localidad,telefono,descripcion,instagram,facebook,tiktok,web"
+        )
+
+        .eq(
+          "id",
+          usuarioId
+        )
+
+        .single();
+
+
+
+    if (error) {
+      throw error;
     }
-  }catch(error){
-    console.error("Error cargando perfil:",error);
-    mostrarMensaje("No pudimos cargar tu perfil. Volvé a iniciar sesión e intentá nuevamente.","error");
+
+
+
+    if (!data) {
+
+      throw new Error(
+        "No encontramos el perfil asociado a tu cuenta."
+      );
+
+    }
+
+
+
+    tipoUsuario =
+      data.tipo_usuario;
+
+
+
+    if (
+      tipoUsuario !== "carpintero" &&
+      !esRolProfesional(
+        tipoUsuario
+      )
+    ) {
+
+      throw new Error(
+        "Tu cuenta tiene un tipo de usuario que no podemos administrar desde esta página."
+      );
+
+    }
+
+
+
+    document.getElementById(
+      "nombre"
+    ).value =
+      data.nombre || "";
+
+
+    document.getElementById(
+      "zona"
+    ).value =
+      data.localidad || "";
+
+
+    document.getElementById(
+      "telefono"
+    ).value =
+      data.telefono || "";
+
+
+    document.getElementById(
+      "bio"
+    ).value =
+      data.descripcion || "";
+
+
+    document.getElementById(
+      "ig"
+    ).value =
+      data.instagram || "";
+
+
+    document.getElementById(
+      "fb"
+    ).value =
+      data.facebook || "";
+
+
+    document.getElementById(
+      "tk"
+    ).value =
+      data.tiktok || "";
+
+
+    document.getElementById(
+      "web"
+    ).value =
+      data.web || "";
+
+
+    configurarInterfaz();
+
+
+  } catch (error) {
+
+
+    console.error(
+      "Error cargando perfil:",
+      error
+    );
+
+
+    estadoCuenta.textContent =
+      "No pudimos cargar correctamente tu cuenta.";
+
+
+    mostrarMensaje(
+      "No pudimos cargar tus datos. Volvé a iniciar sesión e intentá nuevamente.",
+      "error"
+    );
+
   }
+
 }
 
-async function guardar(){
-  if(!usuarioId){
-    mostrarMensaje("Tu sesión no está disponible. Volvé a iniciar sesión.","error");
+
+
+async function guardar() {
+
+
+  if (
+    !usuarioId ||
+    !tipoUsuario
+  ) {
+
+    mostrarMensaje(
+      "Tu sesión no está disponible. Volvé a iniciar sesión.",
+      "error"
+    );
+
     return;
+
   }
 
-  const nombre=document.getElementById("nombre").value.trim();
-  const zona=document.getElementById("zona").value.trim();
-  const tel=document.getElementById("tel").value.trim();
-  const bio=document.getElementById("bio").value.trim();
-  const wpp=document.getElementById("wpp").value.trim();
-  const ig=document.getElementById("ig").value.trim();
-  const fb=document.getElementById("fb").value.trim();
-  const tk=document.getElementById("tk").value.trim();
-  const web=document.getElementById("web").value.trim();
 
-  if(!nombre){
-    mostrarMensaje("El nombre o nombre de empresa es obligatorio.","error");
+
+  const nombre =
+    document
+      .getElementById("nombre")
+      .value
+      .trim();
+
+
+  const zona =
+    document
+      .getElementById("zona")
+      .value
+      .trim();
+
+
+  const telefono =
+    limpiarTelefono(
+      document
+        .getElementById("telefono")
+        .value
+    );
+
+
+  const bio =
+    document
+      .getElementById("bio")
+      .value
+      .trim();
+
+
+  const instagram =
+    document
+      .getElementById("ig")
+      .value
+      .trim();
+
+
+  const facebook =
+    document
+      .getElementById("fb")
+      .value
+      .trim();
+
+
+  const tiktok =
+    document
+      .getElementById("tk")
+      .value
+      .trim();
+
+
+  const web =
+    document
+      .getElementById("web")
+      .value
+      .trim();
+
+
+
+  if (!nombre) {
+
+    mostrarMensaje(
+      "El nombre, empresa o taller es obligatorio.",
+      "error"
+    );
+
     return;
+
   }
 
-  const datos={
-    nombre:nombre,
-    localidad:zona,
-    telefono:wpp||tel,
-    descripcion:bio,
-    instagram:ig,
-    facebook:fb,
-    tiktok:tk,
-    web:web
+
+
+  if (!zona) {
+
+    mostrarMensaje(
+      "Ingresá tu localidad o zona.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+
+  const datos = {
+
+    nombre:
+      nombre,
+
+    localidad:
+      zona,
+
+    telefono:
+      telefono,
+
+    descripcion:
+      bio,
+
+    instagram:
+      instagram,
+
+    facebook:
+      facebook,
+
+    tiktok:
+      tiktok,
+
+    web:
+      web
+
   };
 
-  const boton=document.getElementById("guardarBtn");
-  boton.disabled=true;
-  boton.textContent="Guardando...";
 
-  try{
-    const {error}=await supabaseClient
-      .from("perfiles")
-      .update(datos)
-      .eq("id",usuarioId);
 
-    if(error) throw error;
+  const boton =
+    document.getElementById(
+      "guardarBtn"
+    );
 
-    mostrarMensaje("Perfil guardado correctamente.","ok");
-  }catch(error){
-    console.error("Error guardando perfil:",error);
-    mostrarMensaje("No pudimos guardar los cambios. Revisá que tu sesión siga activa y que el perfil exista.","error");
-  }finally{
-    boton.disabled=false;
-    boton.textContent="Guardar perfil";
+
+  boton.disabled =
+    true;
+
+
+  boton.textContent =
+    "GUARDANDO...";
+
+
+
+  try {
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .update(
+          datos
+        )
+
+        .eq(
+          "id",
+          usuarioId
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+
+    mostrarMensaje(
+      "Tus datos se guardaron correctamente.",
+      "ok"
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+      "Error guardando perfil:",
+      error
+    );
+
+
+    mostrarMensaje(
+      "No pudimos guardar los cambios. Revisá que tu sesión siga activa e intentá nuevamente.",
+      "error"
+    );
+
+
+  } finally {
+
+
+    boton.disabled =
+      false;
+
+
+    boton.textContent =
+      "GUARDAR CAMBIOS";
+
   }
+
 }
 
-document.getElementById("guardarBtn").addEventListener("click",guardar);
-document.getElementById("verPerfilBtn").addEventListener("click",function(){
-  if(!usuarioId){
-    window.location.href="ingresar.html";
-    return;
-  }
-  window.location.href="perfil.html?id="+encodeURIComponent(usuarioId);
-});
+
+
+document.getElementById(
+  "guardarBtn"
+)
+  .addEventListener(
+    "click",
+    guardar
+  );
+
+
 
 cargarPerfil();
+
+
 </script>
+
 </body>
+
 </html>
