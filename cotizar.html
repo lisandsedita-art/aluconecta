@@ -1092,7 +1092,7 @@ async function iniciarPagina() {
       error: proyectoError
     } =
       await sb
-        .from('proyectos')
+        .from('proyectos_publicos')
         .select(
           'id,Proyecto,Tipo,Localidad'
         )
