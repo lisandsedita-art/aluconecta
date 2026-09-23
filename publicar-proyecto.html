@@ -889,16 +889,17 @@ async function verificarAcceso() {
 
 
     if (
-      perfil.tipo_usuario ===
-      'carpintero'
-    ) {
+  !esRolProfesional(
+    perfil.tipo_usuario
+  )
+) {
 
-      mostrarAccesoDenegado(
-        'Acceso para profesionales y empresas',
-        'Las cuentas de carpintería utilizan el panel de oportunidades.'
-      );
+  mostrarAccesoDenegado(
+    'Acceso para profesionales y empresas',
+    'Esta cuenta no está habilitada para publicar proyectos.'
+  );
 
-      return;
+  return;
     }
 
 
