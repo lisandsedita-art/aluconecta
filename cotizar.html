@@ -1163,7 +1163,125 @@ async function iniciarPagina() {
     resumenProyecto.appendChild(
       ubicacion
     );
+const {
+  data: contactoPublicador,
+  error: contactoError
+} =
+  await sb.rpc(
+    'contacto_publicador_autorizado',
+    {
+      p_proyecto_id:
+        proyectoId
+    }
+  );
 
+
+if (contactoError) {
+  throw contactoError;
+}
+
+
+const publicador =
+  Array.isArray(contactoPublicador)
+    ? contactoPublicador[0]
+    : contactoPublicador;
+
+
+if (!publicador) {
+
+  throw new Error(
+    'No pudimos identificar al profesional o empresa responsable del proyecto.'
+  );
+
+}
+
+
+const destinatario =
+  document.createElement(
+    'div'
+  );
+
+
+destinatario.style.marginTop =
+  '12px';
+
+destinatario.style.paddingTop =
+  '12px';
+
+destinatario.style.borderTop =
+  '1px solid #e2e8f0';
+
+
+const etiquetaDestinatario =
+  document.createElement(
+    'div'
+  );
+
+
+etiquetaDestinatario.className =
+  'muted';
+
+etiquetaDestinatario.textContent =
+  'PROFESIONAL / EMPRESA';
+
+
+const nombreDestinatario =
+  document.createElement(
+    'strong'
+  );
+
+
+nombreDestinatario.textContent =
+  publicador.nombre ||
+  'Profesional / Empresa';
+
+
+destinatario.appendChild(
+  etiquetaDestinatario
+);
+
+destinatario.appendChild(
+  nombreDestinatario
+);
+
+
+if (
+  publicador.localidad ||
+  publicador.provincia
+) {
+
+  const ubicacionDestinatario =
+    document.createElement(
+      'div'
+    );
+
+
+  ubicacionDestinatario.className =
+    'muted';
+
+  ubicacionDestinatario.style.marginTop =
+    '5px';
+
+
+  ubicacionDestinatario.textContent =
+    [
+      publicador.localidad,
+      publicador.provincia
+    ]
+      .filter(Boolean)
+      .join(', ');
+
+
+  destinatario.appendChild(
+    ubicacionDestinatario
+  );
+
+}
+
+
+resumenProyecto.appendChild(
+  destinatario
+);
 
     const {
       data: cotizacion,
