@@ -1,545 +1,1728 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mis proyectos - AluConecta</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--a:#132e4f;--y:#ffcf00;--f:#f5f7fa;--b:#e2e8f0;--g:#64748b;--v:#166534;--r:#991b1b}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--f);color:var(--a)}header,.hero{background:var(--a);color:#fff}.head,main,.hero>div{max-width:900px;margin:auto}.head{padding:15px 18px;display:flex;justify-content:space-between}.logo{font-size:26px;font-weight:900}.logo span{color:#4fb0e2}a{color:inherit}.volver{color:#fff;text-decoration:none;font-size:13px}.hero{padding:25px 18px 32px}.hero h1{margin:0 0 8px;font-size:36px}.hero h1 span{color:var(--y)}.hero p{margin:0;color:#b9c7d6;font-size:13px}main{padding:20px 16px 40px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.top h2{margin:0}.sub,.meta,.info{color:var(--g);font-size:11px;line-height:1.6}.nuevo{background:var(--y);text-decoration:none;padding:11px 15px;border-radius:999px;font-size:11px;font-weight:900}.proyecto{background:#fff;border:1px solid var(--b);border-radius:18px;padding:18px;margin-bottom:16px}.proyecto h3{margin:0 0 7px}.desc{margin:14px 0;color:#475569;font-size:13px;line-height:1.6;white-space:pre-wrap}.ti{border-top:1px solid var(--b);padding-top:14px;margin-top:14px;font-size:13px;font-weight:900}.interes{margin-top:10px;border:1px solid var(--b);background:#fafbfc;border-radius:13px;padding:13px}.itop{display:flex;justify-content:space-between;gap:10px}.nombre{font-size:13px;font-weight:900}.estado{height:max-content;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;text-transform:uppercase}.interesado{background:#fef3c7;color:#92400e}.autorizado{background:#dcfce7;color:var(--v)}.no_autorizado{background:#fee2e2;color:var(--r)}.acciones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}button{border:0;border-radius:999px;padding:10px;font-size:10px;font-weight:900}.si{background:var(--y);color:var(--a)}.no{background:#e2e8f0;color:#475569}button:disabled{opacity:.5}.aviso{padding:14px;background:#f1f5f9;color:var(--g);border-radius:12px;font-size:12px}.msg{display:none;padding:13px;border-radius:12px;margin-bottom:15px;font-size:12px}.msg.ok{display:block;background:#dcfce7;color:var(--v)}.msg.error{display:block;background:#fee2e2;color:var(--r)}#cargando{position:fixed;inset:0;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;z-index:100}footer{text-align:center;color:#94a3b8;border-top:1px solid var(--b);padding:22px;font-size:10px}@media(max-width:600px){.itop{flex-direction:column}.acciones{grid-template-columns:1fr}}
-</style></head><body>
-<div id="cargando"><strong>Verificando tu cuenta...</strong></div>
-<header><div class="head"><div class="logo">Alu<span>Conecta</span></div><a class="volver" href="panel-cliente.html">← Mi panel</a></div></header>
-<section class="hero"><div><h1>Mis <span>proyectos.</span></h1><p>Administrá tus proyectos y decidí qué carpinterías pueden acceder a la documentación técnica privada.</p></div></section>
-<main><div class="top"><div><h2>Proyectos publicados</h2><div id="resumen" class="sub">Cargando...</div></div><a class="nuevo" href="publicar-proyecto.html">+ NUEVO PROYECTO</a></div><div id="mensaje" class="msg"></div><div id="lista"></div></main>
-<footer>© 2026 AluConecta<br>Donde los proyectos encuentran sus aberturas.</footer>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <title>Mis proyectos - AluConecta</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <style>
+
+    :root {
+      --azul: #0f2e4d;
+      --azul2: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --fondo: #f4f6f8;
+      --blanco: #ffffff;
+      --borde: #e2e8f0;
+      --gris: #64748b;
+      --verde: #166534;
+      --rojo: #991b1b;
+    }
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--fondo);
+      color: var(--azul);
+    }
+
+
+    header {
+      background: var(--azul);
+      color: white;
+    }
+
+
+    .head {
+      max-width: 900px;
+      margin: auto;
+      padding: 15px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+
+    .logo span {
+      color: var(--celeste);
+    }
+
+
+    .volver {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 26px 18px 34px;
+    }
+
+
+    .hero > div {
+      max-width: 900px;
+      margin: auto;
+    }
+
+
+    .hero h1 {
+      margin: 0 0 9px;
+      font-size: 36px;
+    }
+
+
+    .hero h1 span {
+      color: var(--amarillo);
+    }
+
+
+    .hero p {
+      max-width: 700px;
+      margin: 0;
+      color: #b9c7d6;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 22px 16px 45px;
+    }
+
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+
+    .top h2 {
+      margin: 0;
+    }
+
+
+    .sub,
+    .meta,
+    .info,
+    .muted {
+      color: var(--gris);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+
+    .nuevo {
+      background: var(--amarillo);
+      color: var(--azul);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+
+    .proyecto {
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 17px;
+      box-shadow: 0 4px 14px rgba(15,46,77,.05);
+    }
+
+
+    .proyecto h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+
+    .desc {
+      margin: 14px 0;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+
+    .titulo-seccion {
+      border-top: 1px solid var(--borde);
+      padding-top: 16px;
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+
+    .interes {
+      margin-top: 11px;
+      border: 1px solid var(--borde);
+      background: #fafbfc;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+
+    .itop {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+
+    .nombre {
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+
+    .estado {
+      height: max-content;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+
+    .interesado {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+
+    .autorizado {
+      background: #dcfce7;
+      color: var(--verde);
+    }
+
+
+    .no_autorizado {
+      background: #fee2e2;
+      color: var(--rojo);
+    }
+
+
+    .acciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+
+    button,
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font-size: 10px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+    }
+
+
+    .si {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+
+    .no {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+
+    button:disabled {
+      opacity: .5;
+      cursor: default;
+    }
+
+
+    .aviso {
+      padding: 14px;
+      background: #f1f5f9;
+      color: var(--gris);
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+
+
+    .msg {
+      display: none;
+      padding: 13px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+
+    .msg.ok {
+      display: block;
+      background: #dcfce7;
+      color: var(--verde);
+    }
+
+
+    .msg.error {
+      display: block;
+      background: #fee2e2;
+      color: var(--rojo);
+    }
+
+
+    .contacto {
+      margin-top: 11px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #edf8fb;
+      border-left: 4px solid var(--celeste);
+    }
+
+
+    .contacto strong {
+      font-size: 11px;
+      color: var(--azul);
+    }
+
+
+    .whatsapp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px;
+      border-radius: 999px;
+      background: var(--amarillo);
+      color: var(--azul);
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+
+    .redes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+
+    .redes a {
+      color: var(--azul2);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+
+    .cotizaciones {
+      margin-top: 20px;
+      padding-top: 17px;
+      border-top: 1px solid var(--borde);
+    }
+
+
+    .cotizaciones h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+
+    .cotizacion {
+      margin-top: 12px;
+      padding: 15px;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      background: #f8fafc;
+    }
+
+
+    .archivo {
+      width: 100%;
+      margin-top: 8px;
+      background: var(--azul);
+      color: white;
+    }
+
+
+    #cargando {
+      position: fixed;
+      inset: 0;
+      background: var(--azul);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      text-align: center;
+      padding: 20px;
+    }
+
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      border-top: 1px solid var(--borde);
+      padding: 25px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+
+    @media(max-width: 600px) {
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+
+      .nuevo {
+        width: 100%;
+        text-align: center;
+      }
+
+
+      .itop {
+        flex-direction: column;
+      }
+
+
+      .acciones {
+        grid-template-columns: 1fr;
+      }
+
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div id="cargando">
+
+  <strong>
+    Verificando tu cuenta...
+  </strong>
+
+</div>
+
+
+
+<header>
+
+  <div class="head">
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <a
+      class="volver"
+      href="panel-cliente.html">
+      ← Mi panel
+    </a>
+
+  </div>
+
+</header>
+
+
+
+<section class="hero">
+
+  <div>
+
+    <h1>
+      Mis <span>proyectos.</span>
+    </h1>
+
+    <p>
+      Administrá tus proyectos, revisá las carpinterías
+      interesadas y decidí cuándo habilitar el contacto.
+    </p>
+
+  </div>
+
+</section>
+
+
+
+<main>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        Proyectos publicados
+      </h2>
+
+      <div
+        id="resumen"
+        class="sub">
+        Cargando...
+      </div>
+
+    </div>
+
+
+    <a
+      class="nuevo"
+      href="publicar-proyecto.html">
+
+      + NUEVO PROYECTO
+
+    </a>
+
+  </div>
+
+
+  <div
+    id="mensaje"
+    class="msg">
+  </div>
+
+
+  <div id="lista"></div>
+
+</main>
+
+
+
+<footer>
+
+  © 2026 AluConecta<br>
+  Donde los proyectos encuentran sus aberturas.
+
+</footer>
+
+
+
 <script>
-const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
-let user=null;const lista=document.querySelector('#lista'),resumen=document.querySelector('#resumen'),mensaje=document.querySelector('#mensaje');
-const f=v=>v?new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(v)):'';
-function msg(t,c){mensaje.className='msg '+c;mensaje.textContent=t}
-async function pub(id){
 
- const{data,error}=await sb
-   .from('carpinteros_visibles')
-   .select(
-     'id,created_at,nombre,provincia,localidad,actividades,servicios,descripcion,instagram,facebook,tiktok,web'
-   )
-   .eq('id',id)
-   .maybeSingle();
 
- if(error){
-   console.error(
-     'Error al consultar carpintería:',
-     error
-   );
-   return null;
- }
+const sb =
+  window.supabase.createClient(
+    "https://wroaxwjyjrxzwctfkyoo.supabase.co",
+    "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3"
+  );
 
- return data;
+
+let user =
+  null;
+
+
+let carpinteriasPorId =
+  new Map();
+
+
+const lista =
+  document.getElementById(
+    "lista"
+  );
+
+
+const resumen =
+  document.getElementById(
+    "resumen"
+  );
+
+
+const mensaje =
+  document.getElementById(
+    "mensaje"
+  );
+
+
+
+function fecha(valor) {
+
+  if (!valor) {
+    return "";
+  }
+
+
+  const d =
+    new Date(valor);
+
+
+  if (
+    Number.isNaN(
+      d.getTime()
+    )
+  ) {
+    return "";
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "es-AR",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }
+  ).format(d);
+
 }
-async function estado(id,e){const{error}=await sb.from('intereses_proyectos').update({estado:e}).eq('id',id);if(error){msg('No pudimos actualizar: '+error.message,'error');return}msg(e==='autorizado'?'Carpintería autorizada correctamente.':'Carpintería marcada como no autorizada.','ok');await proyectos()}
- async function cargarContactoCarpintero(
+
+
+
+function mostrarMensaje(
+  texto,
+  tipo
+) {
+
+  mensaje.className =
+    "msg " + tipo;
+
+
+  mensaje.textContent =
+    texto;
+
+}
+
+
+
+function esRolProfesional(
+  tipo
+) {
+
+  return [
+    "cliente_profesional",
+    "profesional",
+    "empresa",
+    "cliente"
+  ].includes(
+    tipo
+  );
+
+}
+
+
+
+function normalizarUrlRed(
+  valor,
+  base
+) {
+
+  const texto =
+    String(valor || "")
+      .trim();
+
+
+  if (!texto) {
+    return "";
+  }
+
+
+  if (
+    /^https?:\/\//i.test(texto)
+  ) {
+
+    try {
+
+      const url =
+        new URL(texto);
+
+
+      if (
+        url.protocol === "http:" ||
+        url.protocol === "https:"
+      ) {
+
+        return url.href;
+
+      }
+
+    } catch {
+
+      return "";
+
+    }
+
+  }
+
+
+  if (!base) {
+
+    try {
+
+      const url =
+        new URL(
+          "https://" +
+          texto.replace(/^\/+/, "")
+        );
+
+
+      return url.href;
+
+    } catch {
+
+      return "";
+
+    }
+
+  }
+
+
+  const usuario =
+    texto
+      .replace(/^@/, "")
+      .replace(/^\/+/, "")
+      .replace(
+        /[^a-zA-Z0-9._-]/g,
+        ""
+      );
+
+
+  if (!usuario) {
+    return "";
+  }
+
+
+  return base + usuario;
+
+}
+
+
+
+async function cargarCarpinteriasVisibles() {
+
+
+  const {
+    data,
+    error
+  } =
+    await sb.rpc(
+      "buscar_carpinteros_visibles"
+    );
+
+
+  if (error) {
+    throw error;
+  }
+
+
+  const perfiles =
+    Array.isArray(data)
+      ? data
+      : [];
+
+
+  carpinteriasPorId =
+    new Map();
+
+
+  perfiles.forEach(
+    function(perfil) {
+
+      carpinteriasPorId.set(
+        String(perfil.id),
+        perfil
+      );
+
+    }
+  );
+
+}
+
+
+
+function obtenerCarpinteria(
+  id
+) {
+
+  return (
+    carpinteriasPorId.get(
+      String(id)
+    ) || null
+  );
+
+}
+
+
+
+async function actualizarEstado(
+  interesId,
+  nuevoEstado
+) {
+
+
+  const {
+    error
+  } =
+    await sb
+
+      .from(
+        "intereses_proyectos"
+      )
+
+      .update({
+        estado:
+          nuevoEstado
+      })
+
+      .eq(
+        "id",
+        interesId
+      );
+
+
+  if (error) {
+
+    mostrarMensaje(
+      "No pudimos actualizar la autorización: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  mostrarMensaje(
+    nuevoEstado ===
+    "autorizado"
+
+      ? "Carpintería autorizada correctamente."
+
+      : "Carpintería marcada como no autorizada.",
+
+    "ok"
+  );
+
+
+  await cargarProyectos();
+
+}
+
+
+
+async function cargarContactoCarpintero(
   proyectoId,
   carpinteroId,
   contenedor
-){
+) {
 
-  try{
 
-    const {data,error}=await sb.rpc(
-      'contacto_carpintero_autorizado',
-      {
-        p_proyecto_id: proyectoId,
-        p_carpintero_id: carpinteroId
-      }
-    );
+  try {
 
-    if(error){
+
+    const {
+      data,
+      error
+    } =
+      await sb.rpc(
+        "contacto_carpintero_autorizado",
+        {
+          p_proyecto_id:
+            proyectoId,
+
+          p_carpintero_id:
+            carpinteroId
+        }
+      );
+
+
+    if (error) {
       throw error;
     }
 
-    const perfil=
+
+    const perfil =
       Array.isArray(data)
         ? data[0]
         : null;
 
-    contenedor.innerHTML='';
 
-    if(!perfil){
+    contenedor.innerHTML =
+      "";
 
-      const aviso=
-        document.createElement('div');
 
-      aviso.className='info';
+    if (!perfil) {
 
-      aviso.textContent=
-        'Los datos de contacto todavía no están disponibles.';
 
-      contenedor.appendChild(aviso);
+      const aviso =
+        document.createElement(
+          "div"
+        );
+
+
+      aviso.className =
+        "info";
+
+
+      aviso.textContent =
+        "Los datos de contacto todavía no están disponibles.";
+
+
+      contenedor.appendChild(
+        aviso
+      );
+
 
       return;
-    }
-
-    const titulo=
-      document.createElement('strong');
-
-    titulo.textContent=
-      'CONTACTO HABILITADO';
-
-    contenedor.appendChild(titulo);
-
-
-    if(perfil.telefono){
-
-      const boton=
-        document.createElement('a');
-
-      boton.href=
-        'https://wa.me/54'+
-        String(perfil.telefono)
-          .replace(/\D/g,'');
-
-      boton.target='_blank';
-
-      boton.rel=
-        'noopener noreferrer';
-
-      boton.textContent=
-        'WHATSAPP / CONTACTAR';
-
-      boton.style.display='inline-flex';
-boton.style.alignItems='center';
-boton.style.justifyContent='center';
-boton.style.width='100%';
-boton.style.marginTop='10px';
-boton.style.padding='10px';
-boton.style.borderRadius='999px';
-boton.style.background='var(--y)';
-boton.style.color='var(--a)';
-boton.style.textDecoration='none';
-boton.style.fontSize='10px';
-boton.style.fontWeight='900';
-
-      contenedor.appendChild(boton);
 
     }
 
-  }catch(error){
+
+
+    const titulo =
+      document.createElement(
+        "strong"
+      );
+
+
+    titulo.textContent =
+      "CONTACTO HABILITADO";
+
+
+    contenedor.appendChild(
+      titulo
+    );
+
+
+
+    if (
+      perfil.nombre
+    ) {
+
+
+      const nombre =
+        document.createElement(
+          "div"
+        );
+
+
+      nombre.className =
+        "info";
+
+
+      nombre.style.marginTop =
+        "7px";
+
+
+      nombre.textContent =
+        perfil.nombre;
+
+
+      contenedor.appendChild(
+        nombre
+      );
+
+    }
+
+
+
+    if (
+      perfil.telefono
+    ) {
+
+
+      const numero =
+        String(
+          perfil.telefono
+        )
+          .replace(/\D/g, "");
+
+
+      const boton =
+        document.createElement(
+          "a"
+        );
+
+
+      boton.href =
+        "https://wa.me/54" +
+        numero;
+
+
+      boton.target =
+        "_blank";
+
+
+      boton.rel =
+        "noopener noreferrer";
+
+
+      boton.textContent =
+        "WHATSAPP / CONTACTAR";
+
+
+      boton.className =
+        "whatsapp";
+
+
+      contenedor.appendChild(
+        boton
+      );
+
+    }
+
+  } catch (error) {
+
 
     console.error(
-      'Error cargando contacto del carpintero:',
+      "Error cargando contacto del carpintero:",
       error
     );
 
-    contenedor.innerHTML='';
 
-    const aviso=
-      document.createElement('div');
+    contenedor.innerHTML =
+      "";
 
-    aviso.className='info';
 
-    aviso.textContent=
-      'No pudimos cargar los datos de contacto.';
+    const aviso =
+      document.createElement(
+        "div"
+      );
 
-    contenedor.appendChild(aviso);
+
+    aviso.className =
+      "info";
+
+
+    aviso.textContent =
+      "No pudimos cargar los datos de contacto.";
+
+
+    contenedor.appendChild(
+      aviso
+    );
 
   }
 
- }
-async function intereses(pid,c){
-
-  const {data,error}=await sb
-    .from('intereses_proyectos')
-    .select('id,created_at,carpintero_id,estado')
-    .eq('proyecto_id',pid)
-    .order('created_at',{ascending:false});
+}
 
 
-  if(error || !data?.length){
 
-    const a=document.createElement('div');
+function agregarRed(
+  contenedor,
+  texto,
+  valor,
+  base
+) {
 
-    a.className='aviso';
 
-    a.textContent=
-      error
-        ? 'No pudimos cargar los intereses.'
-        : 'Todavía no hay carpinterías interesadas.';
+  const url =
+    normalizarUrlRed(
+      valor,
+      base
+    );
 
-    c.append(a);
 
+  if (!url) {
     return;
   }
 
 
-  for(const i of data){
-
-    const p=
-      await pub(i.carpintero_id);
-
-
-    const x=
-      document.createElement('div');
-
-    x.className='interes';
+  const enlace =
+    document.createElement(
+      "a"
+    );
 
 
-    const top=
-      document.createElement('div');
-
-    top.className='itop';
+  enlace.href =
+    url;
 
 
-    const d=
-      document.createElement('div');
+  enlace.target =
+    "_blank";
 
 
-    const n=
-      document.createElement('div');
-
-    n.className='nombre';
-
-    n.textContent=
-      p?.nombre ||
-      'Carpintería registrada';
+  enlace.rel =
+    "noopener noreferrer";
 
 
-    const inf=
-      document.createElement('div');
-
-    inf.className='info';
+  enlace.textContent =
+    texto;
 
 
-    let datos=[];
+  contenedor.appendChild(
+    enlace
+  );
+
+}
 
 
-    if(p?.localidad || p?.provincia){
 
-      let ubicacion='📍 ';
+async function cargarIntereses(
+  proyectoId,
+  contenedor
+) {
 
-      if(p?.localidad){
-        ubicacion+=p.localidad;
+
+  const {
+    data,
+    error
+  } =
+    await sb
+
+      .from(
+        "intereses_proyectos"
+      )
+
+      .select(
+        "id,created_at,carpintero_id,estado"
+      )
+
+      .eq(
+        "proyecto_id",
+        proyectoId
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (
+    error ||
+    !data?.length
+  ) {
+
+
+    const aviso =
+      document.createElement(
+        "div"
+      );
+
+
+    aviso.className =
+      "aviso";
+
+
+    aviso.textContent =
+      error
+        ? "No pudimos cargar los intereses."
+        : "Todavía no hay carpinterías interesadas.";
+
+
+    contenedor.appendChild(
+      aviso
+    );
+
+
+    return;
+
+  }
+
+
+
+  for (
+    const interes of data
+  ) {
+
+
+    const carpinteria =
+      obtenerCarpinteria(
+        interes.carpintero_id
+      );
+
+
+    const caja =
+      document.createElement(
+        "div"
+      );
+
+
+    caja.className =
+      "interes";
+
+
+
+    const superior =
+      document.createElement(
+        "div"
+      );
+
+
+    superior.className =
+      "itop";
+
+
+
+    const informacion =
+      document.createElement(
+        "div"
+      );
+
+
+
+    const nombre =
+      document.createElement(
+        "div"
+      );
+
+
+    nombre.className =
+      "nombre";
+
+
+    nombre.textContent =
+      carpinteria?.nombre ||
+      "Carpintería registrada";
+
+
+    informacion.appendChild(
+      nombre
+    );
+
+
+
+    const detalle =
+      document.createElement(
+        "div"
+      );
+
+
+    detalle.className =
+      "info";
+
+
+    const datos =
+      [];
+
+
+
+    if (
+      carpinteria?.localidad ||
+      carpinteria?.provincia
+    ) {
+
+
+      let ubicacion =
+        "📍 ";
+
+
+      if (
+        carpinteria?.localidad
+      ) {
+
+        ubicacion +=
+          carpinteria.localidad;
+
       }
 
-      if(p?.provincia){
-        ubicacion+=
-          (p?.localidad ? ', ' : '')+
-          p.provincia;
+
+      if (
+        carpinteria?.provincia
+      ) {
+
+        ubicacion +=
+          (
+            carpinteria?.localidad
+              ? ", "
+              : ""
+          ) +
+          carpinteria.provincia;
+
       }
 
-      datos.push(ubicacion);
-    }
-
-
-    if(p?.actividades){
 
       datos.push(
-        p.actividades
+        ubicacion
       );
+
     }
 
 
-    if(p?.servicios){
+
+    if (
+      carpinteria?.actividades
+    ) {
 
       datos.push(
-        'Servicios: '+p.servicios
+        carpinteria.actividades
       );
+
     }
+
+
+
+    if (
+      carpinteria?.servicios
+    ) {
+
+      datos.push(
+        "Servicios: " +
+        carpinteria.servicios
+      );
+
+    }
+
 
 
     datos.push(
-      'Interés: '+f(i.created_at)
+      "Interés: " +
+      fecha(
+        interes.created_at
+      )
     );
 
 
-    inf.textContent=
-      datos.join(' · ');
+    detalle.textContent =
+      datos.join(" · ");
 
 
-    d.append(
-      n,
-      inf
+    informacion.appendChild(
+      detalle
     );
 
 
-    if(p?.descripcion){
 
-      const descripcion=
-        document.createElement('div');
+    if (
+      carpinteria?.descripcion
+    ) {
 
-      descripcion.className='info';
 
-      descripcion.style.marginTop='6px';
+      const descripcion =
+        document.createElement(
+          "div"
+        );
 
-      descripcion.textContent=
-        p.descripcion;
 
-      d.appendChild(
+      descripcion.className =
+        "info";
+
+
+      descripcion.style.marginTop =
+        "6px";
+
+
+      descripcion.textContent =
+        carpinteria.descripcion;
+
+
+      informacion.appendChild(
         descripcion
       );
+
     }
 
 
-    if(p?.created_at){
 
-      const antiguedad=
-        document.createElement('div');
+    if (
+      carpinteria?.created_at
+    ) {
 
-      antiguedad.className='info';
 
-      antiguedad.style.marginTop='6px';
+      const antiguedad =
+        document.createElement(
+          "div"
+        );
 
-      antiguedad.textContent=
-        'Miembro de AluConecta desde '+
-        f(p.created_at);
 
-      d.appendChild(
+      antiguedad.className =
+        "info";
+
+
+      antiguedad.style.marginTop =
+        "6px";
+
+
+      antiguedad.textContent =
+        "Miembro de AluConecta desde " +
+        fecha(
+          carpinteria.created_at
+        );
+
+
+      informacion.appendChild(
         antiguedad
       );
+
     }
 
 
-    const redes=
-      document.createElement('div');
 
-    redes.style.marginTop='8px';
-
-
-    function agregarRed(
-      texto,
-      valor,
-      base
-    ){
-
-      if(!valor){
-        return;
-      }
-
-
-      let url=
-        valor.trim();
-
-
-      if(
-        !/^https?:\/\//i.test(url)
-      ){
-
-        if(base){
-
-          url=
-            base+
-            url
-              .replace(/^@/,'')
-              .replace(/^\/+/,'');
-
-        }else{
-
-          url=
-            'https://'+
-            url.replace(/^\/+/,'');
-
-        }
-
-      }
-
-
-      const enlace=
-        document.createElement('a');
-
-      enlace.href=url;
-
-      enlace.target='_blank';
-
-      enlace.rel=
-        'noopener noreferrer';
-
-      enlace.textContent=
-        texto;
-
-      enlace.style.marginRight=
-        '12px';
-
-      enlace.style.fontWeight=
-        '700';
-
-      redes.appendChild(
-        enlace
+    const redes =
+      document.createElement(
+        "div"
       );
-    }
+
+
+    redes.className =
+      "redes";
 
 
     agregarRed(
-      'Instagram',
-      p?.instagram,
-      'https://instagram.com/'
+      redes,
+      "Instagram",
+      carpinteria?.instagram,
+      "https://instagram.com/"
     );
 
-    agregarRed(
-      'Facebook',
-      p?.facebook,
-      'https://facebook.com/'
-    );
 
     agregarRed(
-      'TikTok',
-      p?.tiktok,
-      'https://tiktok.com/@'
+      redes,
+      "Facebook",
+      carpinteria?.facebook,
+      "https://facebook.com/"
     );
 
+
     agregarRed(
-      'Sitio web',
-      p?.web,
+      redes,
+      "TikTok",
+      carpinteria?.tiktok,
+      "https://tiktok.com/@"
+    );
+
+
+    agregarRed(
+      redes,
+      "Sitio web",
+      carpinteria?.web,
       null
     );
 
 
-    if(
-      redes.children.length>0
-    ){
+    if (
+      redes.children.length > 0
+    ) {
 
-      d.appendChild(
+      informacion.appendChild(
         redes
       );
+
     }
-if(i.estado==='autorizado'){
-
-  const contacto=
-    document.createElement('div');
-
-  contacto.style.marginTop='10px';
-
-  contacto.innerHTML=
-    '<span class="info">Consultando datos de contacto...</span>';
-
-  d.appendChild(
-    contacto
-  );
-
-  cargarContactoCarpintero(
-    pid,
-    i.carpintero_id,
-    contacto
-  );
-
-}
-
-    const es=
-      document.createElement('span');
-
-    es.className=
-      'estado '+i.estado;
-
-    es.textContent=
-      i.estado==='autorizado'
-        ? 'Autorizado'
-        : i.estado==='no_autorizado'
-          ? 'No autorizado'
-          : 'Interesado';
 
 
-    top.append(
-      d,
-      es
-    );
+
+    if (
+      interes.estado ===
+      "autorizado"
+    ) {
 
 
-    const ac=
-      document.createElement('div');
-
-    ac.className='acciones';
-
-
-    const si=
-      document.createElement('button');
-
-    const no=
-      document.createElement('button');
+      const contacto =
+        document.createElement(
+          "div"
+        );
 
 
-    si.className='si';
-
-    no.className='no';
-
-
-    si.textContent=
-      i.estado==='autorizado'
-        ? 'AUTORIZADO'
-        : 'AUTORIZAR';
+      contacto.className =
+        "contacto";
 
 
-    no.textContent=
-      i.estado==='no_autorizado'
-        ? 'NO AUTORIZADO'
-        : 'NO AUTORIZAR';
+      const cargandoContacto =
+        document.createElement(
+          "span"
+        );
 
 
-    si.disabled=
-      i.estado==='autorizado';
-
-    no.disabled=
-      i.estado==='no_autorizado';
+      cargandoContacto.className =
+        "info";
 
 
-    si.onclick=
-      ()=>estado(
-        i.id,
-        'autorizado'
+      cargandoContacto.textContent =
+        "Consultando datos de contacto...";
+
+
+      contacto.appendChild(
+        cargandoContacto
       );
 
 
-    no.onclick=
-      ()=>estado(
-        i.id,
-        'no_autorizado'
+      informacion.appendChild(
+        contacto
       );
 
 
-    ac.append(
-      si,
-      no
+      cargarContactoCarpintero(
+        proyectoId,
+        interes.carpintero_id,
+        contacto
+      );
+
+    }
+
+
+
+    const estado =
+      document.createElement(
+        "span"
+      );
+
+
+    estado.className =
+      "estado " +
+      interes.estado;
+
+
+    estado.textContent =
+
+      interes.estado ===
+      "autorizado"
+
+        ? "Autorizado"
+
+        : interes.estado ===
+          "no_autorizado"
+
+          ? "No autorizado"
+
+          : "Interesado";
+
+
+    superior.append(
+      informacion,
+      estado
     );
 
 
-    x.append(
-      top,
-      ac
+
+    const acciones =
+      document.createElement(
+        "div"
+      );
+
+
+    acciones.className =
+      "acciones";
+
+
+
+    const autorizar =
+      document.createElement(
+        "button"
+      );
+
+
+    autorizar.type =
+      "button";
+
+
+    autorizar.className =
+      "si";
+
+
+    autorizar.textContent =
+      interes.estado ===
+      "autorizado"
+
+        ? "AUTORIZADO"
+
+        : "AUTORIZAR";
+
+
+    autorizar.disabled =
+      interes.estado ===
+      "autorizado";
+
+
+    autorizar.addEventListener(
+      "click",
+      function() {
+
+        actualizarEstado(
+          interes.id,
+          "autorizado"
+        );
+
+      }
     );
 
 
-    c.append(
-      x
+
+    const rechazar =
+      document.createElement(
+        "button"
+      );
+
+
+    rechazar.type =
+      "button";
+
+
+    rechazar.className =
+      "no";
+
+
+    rechazar.textContent =
+      interes.estado ===
+      "no_autorizado"
+
+        ? "NO AUTORIZADO"
+
+        : "NO AUTORIZAR";
+
+
+    rechazar.disabled =
+      interes.estado ===
+      "no_autorizado";
+
+
+    rechazar.addEventListener(
+      "click",
+      function() {
+
+        actualizarEstado(
+          interes.id,
+          "no_autorizado"
+        );
+
+      }
+    );
+
+
+    acciones.append(
+      autorizar,
+      rechazar
+    );
+
+
+    caja.append(
+      superior,
+      acciones
+    );
+
+
+    contenedor.appendChild(
+      caja
     );
 
   }
 
 }
- async function abrirArchivoCotizacion(ruta){
 
-  const ventana=window.open('','_blank');
 
-  try{
 
-    const{data,error}=await sb.storage
-      .from('cotizaciones-archivos')
-      .createSignedUrl(ruta,60);
+async function abrirArchivoCotizacion(
+  ruta
+) {
 
-    if(error||!data?.signedUrl){
-      throw error||new Error('No pudimos generar el acceso.');
+
+  const ventana =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  try {
+
+
+    const {
+      data,
+      error
+    } =
+      await sb.storage
+
+        .from(
+          "cotizaciones-archivos"
+        )
+
+        .createSignedUrl(
+          ruta,
+          60
+        );
+
+
+    if (
+      error ||
+      !data?.signedUrl
+    ) {
+
+      throw (
+        error ||
+        new Error(
+          "No pudimos generar el acceso."
+        )
+      );
+
     }
 
-    if(ventana){
-      ventana.location.href=data.signedUrl;
-    }else{
-      window.location.href=data.signedUrl;
+
+    if (ventana) {
+
+      ventana.location.href =
+        data.signedUrl;
+
+    } else {
+
+      window.location.href =
+        data.signedUrl;
+
     }
 
-  }catch(e){
 
-    if(ventana){
+  } catch (error) {
+
+
+    if (ventana) {
       ventana.close();
     }
 
-    msg(
-      'No pudimos abrir el presupuesto: '+
-      (e.message||'error desconocido'),
-      'error'
+
+    mostrarMensaje(
+      "No pudimos abrir el presupuesto: " +
+      (
+        error.message ||
+        "error desconocido"
+      ),
+      "error"
     );
 
   }
@@ -547,263 +1730,509 @@ if(i.estado==='autorizado'){
 }
 
 
-async function cotizaciones(pid,c){
 
-  const bloque=document.createElement('div');
-
-  bloque.style.marginTop='18px';
-
-  const titulo=document.createElement('h4');
-
-  titulo.textContent='Cotizaciones recibidas';
-
-  bloque.appendChild(titulo);
-
-  const cargando=document.createElement('div');
-
-  cargando.className='muted';
-
-  cargando.textContent='Consultando cotizaciones...';
-
-  bloque.appendChild(cargando);
-
-  c.appendChild(bloque);
+async function cargarCotizaciones(
+  proyectoId,
+  contenedor
+) {
 
 
-  const{data,error}=await sb
-    .from('cotizaciones')
-    .select(
-  'id,fabricante_id,precio,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada,created_at'
-)
-    .eq('obra_id',pid)
-    .order('created_at',{ascending:false});
+  const bloque =
+    document.createElement(
+      "div"
+    );
+
+
+  bloque.className =
+    "cotizaciones";
+
+
+  const titulo =
+    document.createElement(
+      "h4"
+    );
+
+
+  titulo.textContent =
+    "Cotizaciones recibidas";
+
+
+  bloque.appendChild(
+    titulo
+  );
+
+
+
+  const cargando =
+    document.createElement(
+      "div"
+    );
+
+
+  cargando.className =
+    "muted";
+
+
+  cargando.textContent =
+    "Consultando cotizaciones...";
+
+
+  bloque.appendChild(
+    cargando
+  );
+
+
+  contenedor.appendChild(
+    bloque
+  );
+
+
+
+  const {
+    data,
+    error
+  } =
+    await sb
+
+      .from(
+        "cotizaciones"
+      )
+
+      .select(
+        "id,fabricante_id,precio,plazo_entrega,comentario_calidad,marca_perfil_cotizada,marca_herrajes_cotizada,created_at"
+      )
+
+      .eq(
+        "obra_id",
+        proyectoId
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
 
 
   cargando.remove();
 
 
-  if(error){
 
-    const aviso=document.createElement('div');
+  if (error) {
 
-    aviso.className='muted';
 
-    aviso.textContent=
-      'No pudimos consultar las cotizaciones.';
-
-    bloque.appendChild(aviso);
-
-    return;
-
-  }
-
-
-  if(!data||data.length===0){
-
-    const vacio=document.createElement('div');
-
-    vacio.className='muted';
-
-    vacio.textContent=
-      'Todavía no recibiste cotizaciones para este proyecto.';
-
-    bloque.appendChild(vacio);
-
-    return;
-
-  }
-
-
-  for(const cotizacion of data){
-
-    const caja=document.createElement('div');
-
-    caja.style.marginTop='12px';
-    caja.style.padding='14px';
-    caja.style.border='1px solid #e2e8f0';
-    caja.style.borderRadius='14px';
-    caja.style.background='#f8fafc';
-
-
-const carpintero=
-  await pub(
-    cotizacion.fabricante_id
-  );
-
-
-const encabezado=
-  document.createElement('strong');
-
-encabezado.textContent=
-  carpintero?.nombre ||
-  'Carpintería registrada';
-
-caja.appendChild(
-  encabezado
-);
-
-
-const tipoCotizacion=
-  document.createElement('div');
-
-tipoCotizacion.className='muted';
-
-tipoCotizacion.style.marginTop='4px';
-
-tipoCotizacion.textContent=
-  'Cotización recibida';
-
-caja.appendChild(
-  tipoCotizacion
-);
-
-
-    if(cotizacion.precio!==null){
-
-      const precio=document.createElement('div');
-
-      precio.style.marginTop='8px';
-
-      precio.textContent=
-        'Precio informado: '+
-        cotizacion.precio;
-
-      caja.appendChild(precio);
-
-    }
-
-
-    if(cotizacion.plazo_entrega){
-
-      const plazo=document.createElement('div');
-
-      plazo.style.marginTop='6px';
-
-      plazo.textContent=
-        'Plazo: '+
-        cotizacion.plazo_entrega;
-
-      caja.appendChild(plazo);
-
-    }
-
-
-    if(cotizacion.marca_perfil_cotizada){
-
-      const perfil=document.createElement('div');
-
-      perfil.style.marginTop='6px';
-
-      perfil.textContent=
-        'Perfilería: '+
-        cotizacion.marca_perfil_cotizada;
-
-      caja.appendChild(perfil);
-
-    }
-
-
-    if(cotizacion.marca_herrajes_cotizada){
-
-      const herrajes=document.createElement('div');
-
-      herrajes.style.marginTop='6px';
-
-      herrajes.textContent=
-        'Herrajes: '+
-        cotizacion.marca_herrajes_cotizada;
-
-      caja.appendChild(herrajes);
-
-    }
-
-
-    if(cotizacion.comentario_calidad){
-
-      const comentario=document.createElement('div');
-
-      comentario.style.marginTop='8px';
-
-      comentario.className='muted';
-
-      comentario.textContent=
-        cotizacion.comentario_calidad;
-
-      caja.appendChild(comentario);
-
-    }
-
-
-    const documentos=document.createElement('div');
-
-    documentos.style.marginTop='10px';
-
-    documentos.innerHTML=
-      '<span class="muted">Consultando archivos adjuntos...</span>';
-
-    caja.appendChild(documentos);
-
-    bloque.appendChild(caja);
-
-
-    const{
-      data:archivos,
-      error:archivosError
-    }=await sb
-      .from('archivos_cotizacion')
-      .select(
-        'id,nombre_archivo,ruta_storage'
-      )
-      .eq(
-        'cotizacion_id',
-        cotizacion.id
-      )
-      .order(
-        'created_at',
-        {ascending:true}
+    const aviso =
+      document.createElement(
+        "div"
       );
 
 
-    documentos.innerHTML='';
+    aviso.className =
+      "muted";
 
 
-    if(archivosError){
+    aviso.textContent =
+      "No pudimos consultar las cotizaciones.";
 
-      documentos.textContent=
-        'No pudimos consultar los archivos de esta cotización.';
+
+    bloque.appendChild(
+      aviso
+    );
+
+
+    return;
+
+  }
+
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+
+    const vacio =
+      document.createElement(
+        "div"
+      );
+
+
+    vacio.className =
+      "muted";
+
+
+    vacio.textContent =
+      "Todavía no recibiste cotizaciones para este proyecto.";
+
+
+    bloque.appendChild(
+      vacio
+    );
+
+
+    return;
+
+  }
+
+
+
+  for (
+    const cotizacion
+    of data
+  ) {
+
+
+    const caja =
+      document.createElement(
+        "div"
+      );
+
+
+    caja.className =
+      "cotizacion";
+
+
+
+    const carpinteria =
+      obtenerCarpinteria(
+        cotizacion.fabricante_id
+      );
+
+
+
+    const encabezado =
+      document.createElement(
+        "strong"
+      );
+
+
+    encabezado.textContent =
+      carpinteria?.nombre ||
+      "Carpintería registrada";
+
+
+    caja.appendChild(
+      encabezado
+    );
+
+
+
+    const tipoCotizacion =
+      document.createElement(
+        "div"
+      );
+
+
+    tipoCotizacion.className =
+      "muted";
+
+
+    tipoCotizacion.style.marginTop =
+      "4px";
+
+
+    tipoCotizacion.textContent =
+      "Cotización recibida";
+
+
+    caja.appendChild(
+      tipoCotizacion
+    );
+
+
+
+    if (
+      cotizacion.precio !==
+      null
+    ) {
+
+
+      const precio =
+        document.createElement(
+          "div"
+        );
+
+
+      precio.style.marginTop =
+        "8px";
+
+
+      precio.textContent =
+        "Precio informado: " +
+        cotizacion.precio;
+
+
+      caja.appendChild(
+        precio
+      );
+
+    }
+
+
+
+    if (
+      cotizacion.plazo_entrega
+    ) {
+
+
+      const plazo =
+        document.createElement(
+          "div"
+        );
+
+
+      plazo.style.marginTop =
+        "6px";
+
+
+      plazo.textContent =
+        "Plazo: " +
+        cotizacion.plazo_entrega;
+
+
+      caja.appendChild(
+        plazo
+      );
+
+    }
+
+
+
+    if (
+      cotizacion.marca_perfil_cotizada
+    ) {
+
+
+      const perfileria =
+        document.createElement(
+          "div"
+        );
+
+
+      perfileria.style.marginTop =
+        "6px";
+
+
+      perfileria.textContent =
+        "Perfilería: " +
+        cotizacion.marca_perfil_cotizada;
+
+
+      caja.appendChild(
+        perfileria
+      );
+
+    }
+
+
+
+    if (
+      cotizacion.marca_herrajes_cotizada
+    ) {
+
+
+      const herrajes =
+        document.createElement(
+          "div"
+        );
+
+
+      herrajes.style.marginTop =
+        "6px";
+
+
+      herrajes.textContent =
+        "Herrajes: " +
+        cotizacion.marca_herrajes_cotizada;
+
+
+      caja.appendChild(
+        herrajes
+      );
+
+    }
+
+
+
+    if (
+      cotizacion.comentario_calidad
+    ) {
+
+
+      const comentario =
+        document.createElement(
+          "div"
+        );
+
+
+      comentario.style.marginTop =
+        "8px";
+
+
+      comentario.className =
+        "muted";
+
+
+      comentario.textContent =
+        cotizacion.comentario_calidad;
+
+
+      caja.appendChild(
+        comentario
+      );
+
+    }
+
+
+
+    const documentos =
+      document.createElement(
+        "div"
+      );
+
+
+    documentos.style.marginTop =
+      "10px";
+
+
+    const cargandoArchivos =
+      document.createElement(
+        "span"
+      );
+
+
+    cargandoArchivos.className =
+      "muted";
+
+
+    cargandoArchivos.textContent =
+      "Consultando archivos adjuntos...";
+
+
+    documentos.appendChild(
+      cargandoArchivos
+    );
+
+
+    caja.appendChild(
+      documentos
+    );
+
+
+    bloque.appendChild(
+      caja
+    );
+
+
+
+    const {
+      data: archivos,
+      error: archivosError
+    } =
+      await sb
+
+        .from(
+          "archivos_cotizacion"
+        )
+
+        .select(
+          "id,nombre_archivo,ruta_storage"
+        )
+
+        .eq(
+          "cotizacion_id",
+          cotizacion.id
+        )
+
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
+
+
+    documentos.innerHTML =
+      "";
+
+
+
+    if (
+      archivosError
+    ) {
+
+
+      documentos.textContent =
+        "No pudimos consultar los archivos de esta cotización.";
+
 
       continue;
 
     }
 
 
-    if(!archivos||archivos.length===0){
 
-      documentos.innerHTML=
-        '<span class="muted">Esta cotización no tiene archivos adjuntos.</span>';
+    if (
+      !archivos ||
+      archivos.length === 0
+    ) {
+
+
+      const sinArchivos =
+        document.createElement(
+          "span"
+        );
+
+
+      sinArchivos.className =
+        "muted";
+
+
+      sinArchivos.textContent =
+        "Esta cotización no tiene archivos adjuntos.";
+
+
+      documentos.appendChild(
+        sinArchivos
+      );
+
 
       continue;
 
     }
 
 
-    for(const archivo of archivos){
 
-      const boton=document.createElement('button');
+    for (
+      const archivo
+      of archivos
+    ) {
 
-      boton.type='button';
-      boton.className='btn';
-      boton.style.width='100%';
-      boton.style.marginTop='8px';
 
-      boton.textContent=
-        'VER / DESCARGAR · '+
+      const boton =
+        document.createElement(
+          "button"
+        );
+
+
+      boton.type =
+        "button";
+
+
+      boton.className =
+        "archivo";
+
+
+      boton.textContent =
+        "VER / DESCARGAR · " +
         archivo.nombre_archivo;
 
 
       boton.addEventListener(
-        'click',
-        function(){
+        "click",
+        function() {
 
           abrirArchivoCotizacion(
             archivo.ruta_storage
@@ -813,23 +2242,434 @@ caja.appendChild(
       );
 
 
-      documentos.appendChild(boton);
+      documentos.appendChild(
+        boton
+      );
 
     }
 
   }
 
 }
-async function proyectos(){
- lista.innerHTML='';const{data,error,count}=await sb.from('proyectos').select('id,created_at,Nombre,Tipo,Localidad,Proyecto',{count:'exact'}).eq('publicado_por',user.id).order('created_at',{ascending:false});
- if(error){resumen.textContent='No disponible';const a=document.createElement('div');a.className='aviso';a.textContent='No pudimos cargar tus proyectos.';lista.append(a);return}
- resumen.textContent=(count??data.length)+' proyecto'+((count??data.length)===1?'':'s')+' publicado'+((count??data.length)===1?'':'s');
- if(!data.length){const a=document.createElement('div');a.className='aviso';a.textContent='Todavía no publicaste proyectos.';lista.append(a);return}
- for(const p of data){const c=document.createElement('article');c.className='proyecto';const h=document.createElement('h3');h.textContent=p.Nombre||'Proyecto sin nombre';const m=document.createElement('div');m.className='meta';m.textContent='📍 '+(p.Localidad||'Localidad no indicada')+' · '+(p.Tipo||'Proyecto')+' · '+f(p.created_at);c.append(h,m);if(p.Proyecto){const d=document.createElement('div');d.className='desc';d.textContent=p.Proyecto;c.append(d)}const t=document.createElement('div'),ins=document.createElement('div');t.className='ti';t.textContent='Carpinterías interesadas';c.append(t,ins);lista.append(c);
-await intereses(p.id,ins);
-await cotizaciones(p.id,c);
+
+
+
+async function cargarProyectos() {
+
+
+  lista.innerHTML =
+    "";
+
+
+  const {
+    data,
+    error,
+    count
+  } =
+    await sb
+
+      .from(
+        "proyectos"
+      )
+
+      .select(
+        "id,created_at,Nombre,Tipo,Localidad,Proyecto",
+        {
+          count: "exact"
+        }
+      )
+
+      .eq(
+        "publicado_por",
+        user.id
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+
+  if (error) {
+
+
+    resumen.textContent =
+      "No disponible";
+
+
+    const aviso =
+      document.createElement(
+        "div"
+      );
+
+
+    aviso.className =
+      "aviso";
+
+
+    aviso.textContent =
+      "No pudimos cargar tus proyectos.";
+
+
+    lista.appendChild(
+      aviso
+    );
+
+
+    return;
+
+  }
+
+
+
+  const total =
+    count ??
+    data.length;
+
+
+  resumen.textContent =
+    total +
+    " proyecto" +
+    (
+      total === 1
+        ? ""
+        : "s"
+    ) +
+    " publicado" +
+    (
+      total === 1
+        ? ""
+        : "s"
+    );
+
+
+
+  if (
+    !data.length
+  ) {
+
+
+    const aviso =
+      document.createElement(
+        "div"
+      );
+
+
+    aviso.className =
+      "aviso";
+
+
+    aviso.textContent =
+      "Todavía no publicaste proyectos.";
+
+
+    lista.appendChild(
+      aviso
+    );
+
+
+    return;
+
+  }
+
+
+
+  for (
+    const proyecto
+    of data
+  ) {
+
+
+    const caja =
+      document.createElement(
+        "article"
+      );
+
+
+    caja.className =
+      "proyecto";
+
+
+
+    const titulo =
+      document.createElement(
+        "h3"
+      );
+
+
+    titulo.textContent =
+      proyecto.Nombre ||
+      "Proyecto sin nombre";
+
+
+
+    const meta =
+      document.createElement(
+        "div"
+      );
+
+
+    meta.className =
+      "meta";
+
+
+    meta.textContent =
+      "📍 " +
+      (
+        proyecto.Localidad ||
+        "Localidad no indicada"
+      ) +
+      " · " +
+      (
+        proyecto.Tipo ||
+        "Proyecto"
+      ) +
+      " · " +
+      fecha(
+        proyecto.created_at
+      );
+
+
+    caja.append(
+      titulo,
+      meta
+    );
+
+
+
+    if (
+      proyecto.Proyecto
+    ) {
+
+
+      const descripcion =
+        document.createElement(
+          "div"
+        );
+
+
+      descripcion.className =
+        "desc";
+
+
+      descripcion.textContent =
+        proyecto.Proyecto;
+
+
+      caja.appendChild(
+        descripcion
+      );
+
+    }
+
+
+
+    const tituloIntereses =
+      document.createElement(
+        "div"
+      );
+
+
+    tituloIntereses.className =
+      "titulo-seccion";
+
+
+    tituloIntereses.textContent =
+      "Carpinterías interesadas";
+
+
+
+    const contenedorIntereses =
+      document.createElement(
+        "div"
+      );
+
+
+    caja.append(
+      tituloIntereses,
+      contenedorIntereses
+    );
+
+
+    lista.appendChild(
+      caja
+    );
+
+
+
+    await cargarIntereses(
+      proyecto.id,
+      contenedorIntereses
+    );
+
+
+    await cargarCotizaciones(
+      proyecto.id,
+      caja
+    );
+
+  }
+
 }
+
+
+
+async function iniciarPagina() {
+
+
+  try {
+
+
+    const {
+      data: usuarioData,
+      error: usuarioError
+    } =
+      await sb.auth
+        .getUser();
+
+
+    const usuario =
+      usuarioData?.user;
+
+
+    if (
+      usuarioError ||
+      !usuario
+    ) {
+
+      window.location.href =
+        "ingresar.html";
+
+      return;
+
+    }
+
+
+    user =
+      usuario;
+
+
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await sb
+
+        .from(
+          "perfiles"
+        )
+
+        .select(
+          "id,tipo_usuario"
+        )
+
+        .eq(
+          "id",
+          user.id
+        )
+
+        .single();
+
+
+
+    if (
+      perfilError ||
+      !perfil
+    ) {
+
+      throw new Error(
+        "No pudimos verificar tu cuenta."
+      );
+
+    }
+
+
+
+    if (
+      perfil.tipo_usuario ===
+      "carpintero"
+    ) {
+
+      window.location.href =
+        "panel-carpintero.html";
+
+      return;
+
+    }
+
+
+
+    if (
+      !esRolProfesional(
+        perfil.tipo_usuario
+      )
+    ) {
+
+      throw new Error(
+        "Esta cuenta no tiene acceso al panel de proyectos."
+      );
+
+    }
+
+
+
+    /*
+      Cargamos una única vez los perfiles
+      comerciales permitidos de carpinterías.
+
+      Desde este punto no se consulta
+      directamente carpinteros_visibles.
+    */
+
+    await cargarCarpinteriasVisibles();
+
+
+
+    document.getElementById(
+      "cargando"
+    ).style.display =
+      "none";
+
+
+    await cargarProyectos();
+
+
+  } catch (error) {
+
+
+    console.error(
+      "Error al abrir Mis proyectos:",
+      error
+    );
+
+
+    document.getElementById(
+      "cargando"
+    ).style.display =
+      "none";
+
+
+    mostrarMensaje(
+      error.message ||
+      "No pudimos abrir tus proyectos.",
+      "error"
+    );
+
+  }
+
 }
-async function iniciarPagina(){try{const{data:{user:u},error:a}=await sb.auth.getUser();if(a||!u){location.href='ingresar.html';return}user=u;const{data:p,error:e}=await sb.from('perfiles').select('id,tipo_usuario').eq('id',u.id).single();if(e||!p)throw Error('No pudimos verificar tu perfil.');if(p.tipo_usuario==='carpintero'){location.href='panel-carpintero.html';return}document.querySelector('#cargando').style.display='none';await proyectos()}catch(e){document.querySelector('#cargando').style.display='none';msg(e.message||'No pudimos abrir tus proyectos.','error')}}
+
+
+
 iniciarPagina();
-</script></body></html>
+
+
+</script>
+
+</body>
+
+</html>
