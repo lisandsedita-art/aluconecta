@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Prueba de seguridad - AluConecta</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #24313d;
+    }
+
+    .contenedor {
+      max-width: 650px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #0f2e4d;
+    }
+
+    .resultado {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 16px 0;
+      box-shadow: 0 4px 14px rgba(15,46,77,.08);
+    }
+
+    .ok {
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .error {
+      color: #991b1b;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <h1>Prueba de seguridad AluConecta</h1>
+
+  <p>
+    Esta página realiza únicamente consultas de lectura.
+    No modifica ningún dato.
+  </p>
+
+  <div class="resultado">
+    <strong>Usuario conectado</strong>
+    <div id="usuario">Comprobando...</div>
+  </div>
+
+  <div class="resultado">
+    <strong>1. Lectura de mi propio perfil</strong>
+    <div id="propio">Comprobando...</div>
+  </div>
+
+  <div class="resultado">
+    <strong>2. Intento de lectura de un perfil ajeno</strong>
+    <div id="ajeno">Comprobando...</div>
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// Perfil profesional que Aluminio HS NO debe
+// poder consultar directamente.
+const PERFIL_AJENO =
+  "59bf3d9c-9498-408a-93c8-f22f17bfa3a6";
+
+
+async function probarSeguridad() {
+
+  const usuarioEl =
+    document.getElementById("usuario");
+
+  const propioEl =
+    document.getElementById("propio");
+
+  const ajenoEl =
+    document.getElementById("ajeno");
+
+
+  try {
+
+    const {
+      data: userData,
+      error: userError
+    } =
+      await sb.auth.getUser();
+
+
+    if (userError) {
+      throw userError;
+    }
+
+
+    const usuario =
+      userData.user;
+
+
+    if (!usuario) {
+
+      usuarioEl.innerHTML =
+        '<span class="error">NO HAY SESIÓN ACTIVA</span>';
+
+      propioEl.textContent =
+        "Prueba no realizada.";
+
+      ajenoEl.textContent =
+        "Prueba no realizada.";
+
+      return;
+    }
+
+
+    usuarioEl.innerHTML =
+      '<span class="ok">SESIÓN ACTIVA</span><br>' +
+      usuario.id;
+
+
+
+    // PRUEBA 1:
+    // El usuario debe poder leer su propio perfil.
+
+    const {
+      data: propio,
+      error: errorPropio
+    } =
+      await sb
+        .from("perfiles")
+        .select("id,nombre,tipo_usuario")
+        .eq("id", usuario.id);
+
+
+    if (errorPropio) {
+
+      propioEl.innerHTML =
+        '<span class="error">' +
+        'ERROR: ' +
+        errorPropio.message +
+        '</span>';
+
+    } else if (
+      propio &&
+      propio.length === 1
+    ) {
+
+      propioEl.innerHTML =
+        '<span class="ok">' +
+        'PERMITIDO ✓' +
+        '</span><br>' +
+        propio[0].nombre +
+        ' · ' +
+        propio[0].tipo_usuario;
+
+    } else {
+
+      propioEl.innerHTML =
+        '<span class="error">' +
+        'No se pudo leer el perfil propio.' +
+        '</span>';
+
+    }
+
+
+
+    // PRUEBA 2:
+    // Intentamos leer directamente otro perfil.
+    // RLS debe devolver cero registros.
+
+    const {
+      data: ajeno,
+      error: errorAjeno
+    } =
+      await sb
+        .from("perfiles")
+        .select("id,nombre,tipo_usuario,telefono")
+        .eq("id", PERFIL_AJENO);
+
+
+    if (errorAjeno) {
+
+      ajenoEl.innerHTML =
+        '<span class="ok">' +
+        'BLOQUEADO ✓' +
+        '</span><br>' +
+        'Supabase rechazó la consulta.';
+
+      return;
+    }
+
+
+    if (
+      !ajeno ||
+      ajeno.length === 0
+    ) {
+
+      ajenoEl.innerHTML =
+        '<span class="ok">' +
+        'BLOQUEADO ✓' +
+        '</span><br>' +
+        'RLS devolvió 0 registros.';
+
+      return;
+    }
+
+
+    ajenoEl.innerHTML =
+      '<span class="error">' +
+      'FALLÓ LA PRUEBA: ' +
+      'el perfil ajeno resultó visible.' +
+      '</span>';
+
+  } catch (error) {
+
+    usuarioEl.innerHTML =
+      '<span class="error">' +
+      'Error durante la prueba: ' +
+      error.message +
+      '</span>';
+
+  }
+
+}
+
+
+probarSeguridad();
+
+</script>
+
+</body>
+</html>
