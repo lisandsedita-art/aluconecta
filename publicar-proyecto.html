@@ -10,14 +10,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-
     :root {
-      --azul: #132e4f;
-      --azul2: #1a3a5f;
-      --amarillo: #ffcf00;
-      --gris: #f8fafc;
-      --borde: #e2e8f0;
+      --azul: #0f2e4d;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --gris: #f4f6f8;
+      --blanco: #ffffff;
+      --borde: #dfe5ea;
+      --texto: #24313d;
       --texto2: #64748b;
       --verde: #166534;
       --rojo: #991b1b;
@@ -29,9 +30,15 @@
 
     body {
       margin: 0;
-      font-family: Inter, system-ui, sans-serif;
+      font-family:
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Arial,
+        sans-serif;
       background: var(--gris);
-      color: var(--azul);
+      color: var(--texto);
     }
 
     body.bloqueado {
@@ -39,12 +46,12 @@
     }
 
     header {
-      background: var(--azul);
-      color: white;
-      padding: 14px 18px;
       position: sticky;
       top: 0;
       z-index: 20;
+      padding: 14px 18px;
+      background: var(--azul);
+      color: white;
     }
 
     .header-inner {
@@ -57,13 +64,13 @@
     }
 
     .logo {
-      font-weight: 900;
-      font-size: 26px;
-      letter-spacing: -.5px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -.4px;
     }
 
     .logo span {
-      color: #4fb0e2;
+      color: var(--celeste);
     }
 
     .volver {
@@ -73,10 +80,14 @@
       font-weight: 700;
     }
 
+    .volver:hover {
+      text-decoration: underline;
+    }
+
     .hero {
+      padding: 30px 18px 38px;
       background: var(--azul);
       color: white;
-      padding: 28px 18px 36px;
     }
 
     .hero-inner,
@@ -89,7 +100,7 @@
       margin: 0 0 12px;
       font-size: clamp(30px, 7vw, 42px);
       line-height: 1.08;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: -1px;
     }
 
@@ -98,40 +109,41 @@
     }
 
     .hero p {
-      margin: 0;
-      color: #b8c6d5;
-      line-height: 1.6;
-      font-size: 14px;
       max-width: 680px;
+      margin: 0;
+      color: #c8d5e1;
+      line-height: 1.65;
+      font-size: 14px;
     }
 
     .wrap {
-      padding: 18px 16px 40px;
+      padding: 20px 16px 42px;
     }
 
     .card {
+      margin-bottom: 16px;
+      padding: 22px;
       background: white;
       border: 1px solid var(--borde);
       border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+      box-shadow: 0 4px 14px rgba(15,46,77,.05);
     }
 
     .card h2 {
       margin: 0 0 8px;
+      color: var(--azul);
       font-size: 19px;
     }
 
     .card-intro {
-      margin: 0 0 20px;
+      margin: 0 0 21px;
       color: var(--texto2);
       font-size: 13px;
       line-height: 1.6;
     }
 
     .campo {
-      margin-bottom: 18px;
+      margin-bottom: 19px;
     }
 
     .campo:last-child {
@@ -140,10 +152,10 @@
 
     label {
       display: block;
-      font-size: 12px;
-      font-weight: 800;
       margin-bottom: 7px;
       color: var(--azul);
+      font-size: 12px;
+      font-weight: 800;
     }
 
     .opcional {
@@ -157,30 +169,33 @@
       width: 100%;
       padding: 13px 14px;
       border: 1px solid #cbd5e1;
-      border-radius: 12px;
+      border-radius: 11px;
+      outline: none;
       background: white;
-      color: #1e293b;
+      color: var(--texto);
       font-family: inherit;
       font-size: 14px;
-      outline: none;
+      transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
     }
 
     input:focus,
     select:focus,
     textarea:focus {
-      border-color: var(--azul);
-      box-shadow: 0 0 0 3px rgba(19, 46, 79, .08);
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91,192,222,.12);
     }
 
     textarea {
       min-height: 125px;
       resize: vertical;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .ayuda {
       margin-top: 6px;
-      color: #94a3b8;
+      color: #8492a6;
       font-size: 11px;
       line-height: 1.5;
     }
@@ -192,10 +207,48 @@
     }
 
     .documentos {
+      padding: 20px;
+      background: #f8fafc;
       border: 2px dashed #cbd5e1;
       border-radius: 16px;
-      padding: 18px;
-      background: #f8fafc;
+    }
+
+    .documentos-cabecera {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .documentos-icono {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #edf8fb;
+      border-radius: 11px;
+      color: var(--azul);
+    }
+
+    .documentos-icono svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .documentos-cabecera strong {
+      display: block;
+      margin: 2px 0 3px;
+      color: var(--azul);
+      font-size: 13px;
+    }
+
+    .documentos-cabecera span {
+      display: block;
+      color: var(--texto2);
+      font-size: 11px;
+      line-height: 1.45;
     }
 
     .documentos input {
@@ -209,24 +262,42 @@
     }
 
     .archivo {
+      padding: 10px 12px;
       background: white;
       border: 1px solid var(--borde);
       border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 12px;
       color: #475569;
+      font-size: 12px;
       overflow-wrap: anywhere;
     }
 
     .seguridad {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      margin-top: 16px;
+      padding: 15px;
+      background: #edf8fb;
+      border: 1px solid #cdebf3;
       border-radius: 14px;
-      padding: 14px;
-      color: #1e40af;
+      color: var(--azul);
       font-size: 12px;
       line-height: 1.6;
-      margin-top: 15px;
+    }
+
+    .seguridad-icono {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--azul);
+    }
+
+    .seguridad-icono svg {
+      width: 21px;
+      height: 21px;
     }
 
     .acciones {
@@ -236,12 +307,13 @@
 
     .btn {
       width: 100%;
+      min-height: 50px;
+      padding: 14px 20px;
       border: 0;
       border-radius: 999px;
-      padding: 15px 20px;
       font-family: inherit;
-      font-size: 14px;
-      font-weight: 900;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
       text-align: center;
       text-decoration: none;
@@ -252,22 +324,32 @@
       color: var(--azul);
     }
 
+    .btn-principal:hover {
+      background: var(--amarillo-hover);
+    }
+
     .btn-principal:disabled {
       opacity: .55;
       cursor: not-allowed;
     }
 
     .btn-secundario {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: #eef2f7;
       color: var(--azul);
     }
 
+    .btn-secundario:hover {
+      background: #e5eaf0;
+    }
+
     .mensaje {
       display: none;
-      border-radius: 14px;
-      padding: 14px;
       margin-bottom: 16px;
+      padding: 14px;
+      border-radius: 14px;
       font-size: 13px;
       line-height: 1.55;
     }
@@ -288,21 +370,21 @@
 
     .mensaje.info {
       display: block;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e40af;
+      background: #edf8fb;
+      border: 1px solid #cdebf3;
+      color: var(--azul);
     }
 
     #cargando,
     #accesoDenegado {
       position: fixed;
       inset: 0;
-      background: var(--azul);
       z-index: 100;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 25px;
+      background: var(--azul);
     }
 
     #accesoDenegado {
@@ -318,10 +400,10 @@
     .spinner {
       width: 42px;
       height: 42px;
+      margin: 0 auto 18px;
       border: 4px solid rgba(255,255,255,.25);
       border-top-color: white;
       border-radius: 50%;
-      margin: 0 auto 18px;
       animation: girar .8s linear infinite;
     }
 
@@ -331,25 +413,60 @@
       }
     }
 
+    .cargando-titulo {
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .cargando-texto {
+      margin-bottom: 0;
+      color: #aebdca;
+      font-size: 13px;
+    }
+
+    .gate-logo {
+      margin-bottom: 25px;
+      color: white;
+      font-size: 29px;
+      font-weight: 800;
+    }
+
+    .gate-logo span {
+      color: var(--celeste);
+    }
+
     .gate-card {
+      padding: 27px 21px;
       background: white;
-      padding: 26px 20px;
       border-radius: 20px;
     }
 
     .gate-card h2 {
-      margin-top: 0;
+      margin: 0 0 10px;
+      color: var(--azul);
+    }
+
+    .gate-card p {
+      margin: 0;
+      color: var(--texto2);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .gate-card .acciones {
+      margin-top: 20px;
     }
 
     footer {
       max-width: 850px;
       margin: 0 auto;
-      padding: 22px 16px 30px;
+      padding: 23px 16px 31px;
       border-top: 1px solid #e2e8f0;
-      text-align: center;
       color: #94a3b8;
+      text-align: center;
       font-size: 11px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     @media (max-width: 600px) {
@@ -358,34 +475,49 @@
       }
 
       .card {
-        padding: 17px;
+        padding: 18px;
+      }
+
+      .hero {
+        padding-top: 25px;
+      }
+
+      .documentos {
+        padding: 16px;
       }
     }
   </style>
 </head>
 
+
 <body class="bloqueado">
 
+
 <div id="cargando">
+
   <div class="gate">
+
     <div class="spinner"></div>
 
-    <div style="color:white;font-weight:800;font-size:18px;">
+    <div class="cargando-titulo">
       Verificando tu cuenta...
     </div>
 
-    <p style="color:#9eb0c2;font-size:13px;">
+    <p class="cargando-texto">
       Preparando la publicación de tu proyecto.
     </p>
+
   </div>
+
 </div>
 
 
 <div id="accesoDenegado">
+
   <div class="gate">
 
-    <div style="color:white;font-size:30px;font-weight:900;margin-bottom:25px;">
-      Alu<span style="color:#4fb0e2;">Conecta</span>
+    <div class="gate-logo">
+      Alu<span>Conecta</span>
     </div>
 
     <div class="gate-card">
@@ -394,41 +526,58 @@
         Acceso privado
       </h2>
 
-      <p id="textoAcceso" style="color:#64748b;line-height:1.6;">
-        Para publicar un proyecto necesitás ingresar con una cuenta habilitada.
+      <p id="textoAcceso">
+        Para publicar un proyecto necesitás ingresar
+        con una cuenta habilitada.
       </p>
 
-      <div class="acciones" style="margin-top:20px;">
-        <a href="ingresar.html" class="btn btn-principal">
+      <div class="acciones">
+
+        <a
+          href="ingresar.html"
+          class="btn btn-principal"
+        >
           INGRESAR
         </a>
 
-        <a href="panel-cliente.html" class="btn btn-secundario">
+        <a
+          href="panel-cliente.html"
+          class="btn btn-secundario"
+        >
           VOLVER
         </a>
+
       </div>
 
     </div>
+
   </div>
+
 </div>
 
 
 <header>
+
   <div class="header-inner">
 
     <div class="logo">
       Alu<span>Conecta</span>
     </div>
 
-    <a href="panel-cliente.html" class="volver">
+    <a
+      href="panel-cliente.html"
+      class="volver"
+    >
       ← Mi panel
     </a>
 
   </div>
+
 </header>
 
 
 <section class="hero">
+
   <div class="hero-inner">
 
     <h1>
@@ -436,29 +585,39 @@
     </h1>
 
     <p>
-      Compartí la información necesaria para que carpinterías de aluminio
-      puedan evaluar el trabajo. La documentación técnica permanece privada
-      hasta que autorices el acceso.
+      Compartí la información necesaria para que carpinterías
+      de aluminio puedan evaluar el trabajo. La documentación
+      técnica permanece privada hasta que autorices el acceso.
     </p>
 
   </div>
+
 </section>
 
 
 <main class="wrap">
 
-  <div id="mensaje" class="mensaje"></div>
+  <div
+    id="mensaje"
+    class="mensaje"
+  ></div>
+
 
   <form id="formProyecto">
 
+
     <section class="card">
 
-      <h2>1. Datos generales</h2>
+      <h2>
+        1. Datos generales
+      </h2>
 
       <p class="card-intro">
         Identificá el proyecto y su ubicación general.
-        No publiques teléfonos, correos ni datos personales en la descripción.
+        No publiques teléfonos, correos ni datos personales
+        en la descripción.
       </p>
+
 
       <div class="campo">
 
@@ -483,16 +642,47 @@
           Tipo de proyecto
         </label>
 
-        <select id="tipoProyecto" required>
-          <option value="">Seleccionar</option>
-          <option value="Obra nueva">Obra nueva</option>
-          <option value="Edificio">Edificio</option>
-          <option value="Desarrollo inmobiliario">Desarrollo inmobiliario</option>
-          <option value="Reforma / Remodelación">Reforma / Remodelación</option>
-          <option value="Local comercial">Local comercial</option>
-          <option value="Obra industrial">Obra industrial</option>
-          <option value="Institucional">Institucional</option>
-          <option value="Otro">Otro</option>
+        <select
+          id="tipoProyecto"
+          required
+        >
+
+          <option value="">
+            Seleccionar
+          </option>
+
+          <option value="Obra nueva">
+            Obra nueva
+          </option>
+
+          <option value="Edificio">
+            Edificio
+          </option>
+
+          <option value="Desarrollo inmobiliario">
+            Desarrollo inmobiliario
+          </option>
+
+          <option value="Reforma / Remodelación">
+            Reforma / Remodelación
+          </option>
+
+          <option value="Local comercial">
+            Local comercial
+          </option>
+
+          <option value="Obra industrial">
+            Obra industrial
+          </option>
+
+          <option value="Institucional">
+            Institucional
+          </option>
+
+          <option value="Otro">
+            Otro
+          </option>
+
         </select>
 
       </div>
@@ -521,7 +711,9 @@
 
           <label for="zona">
             Zona
-            <span class="opcional">(opcional)</span>
+            <span class="opcional">
+              (opcional)
+            </span>
           </label>
 
           <input
@@ -532,7 +724,8 @@
           >
 
           <div class="ayuda">
-            Evitá ingresar una dirección exacta si no querés hacerla visible.
+            Evitá ingresar una dirección exacta
+            si no querés hacerla visible.
           </div>
 
         </div>
@@ -544,11 +737,13 @@
 
     <section class="card">
 
-      <h2>2. Alcance técnico</h2>
+      <h2>
+        2. Alcance técnico
+      </h2>
 
       <p class="card-intro">
-        Describí lo necesario para que una carpintería pueda determinar
-        si el proyecto es de su interés.
+        Describí lo necesario para que una carpintería
+        pueda determinar si el proyecto es de su interés.
       </p>
 
 
@@ -572,7 +767,9 @@
 
         <label for="aberturas">
           Aberturas requeridas
-          <span class="opcional">(opcional)</span>
+          <span class="opcional">
+            (opcional)
+          </span>
         </label>
 
         <textarea
@@ -588,7 +785,9 @@
 
         <label for="perfileria">
           Sistema / perfilería solicitada
-          <span class="opcional">(opcional)</span>
+          <span class="opcional">
+            (opcional)
+          </span>
         </label>
 
         <input
@@ -599,7 +798,8 @@
         >
 
         <div class="ayuda">
-          Si todavía no está definido, podés dejar este campo vacío.
+          Si todavía no está definido,
+          podés dejar este campo vacío.
         </div>
 
       </div>
@@ -609,18 +809,60 @@
 
     <section class="card">
 
-      <h2>3. Documentación técnica</h2>
+      <h2>
+        3. Documentación técnica
+      </h2>
 
       <p class="card-intro">
-        Podés adjuntar documentación para facilitar el análisis del proyecto.
+        Podés adjuntar documentación para facilitar
+        el análisis del proyecto.
       </p>
 
 
       <div class="documentos">
 
+        <div class="documentos-cabecera">
+
+          <div class="documentos-icono">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+              <path d="M14 3v5h5"/>
+              <path d="M9 13h6"/>
+              <path d="M9 17h6"/>
+            </svg>
+
+          </div>
+
+          <div>
+
+            <strong>
+              Archivos del proyecto
+            </strong>
+
+            <span>
+              Planos, imágenes y documentación
+              necesaria para evaluar el trabajo.
+            </span>
+
+          </div>
+
+        </div>
+
+
         <label for="archivos">
           Adjuntar archivos
-          <span class="opcional">(opcional)</span>
+          <span class="opcional">
+            (opcional)
+          </span>
         </label>
 
         <input
@@ -631,21 +873,54 @@
         >
 
         <div class="ayuda">
-          Formatos habilitados en esta primera etapa:
-          PDF, JPG, PNG y WEBP.
+          Formatos habilitados: PDF, JPG, PNG y WEBP.
           Máximo 10 MB por archivo y 5 archivos por proyecto.
         </div>
 
-        <div id="listaArchivos" class="archivo-lista"></div>
+        <div
+          id="listaArchivos"
+          class="archivo-lista"
+        ></div>
 
       </div>
 
 
       <div class="seguridad">
-        🔒 <strong>Documentación privada.</strong>
-        Los carpinteros no acceden automáticamente a estos archivos.
-        Primero manifiestan interés y el propietario del proyecto debe
-        autorizar su acceso.
+
+        <div class="seguridad-icono">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect
+              x="5"
+              y="10"
+              width="14"
+              height="10"
+              rx="2"
+            />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            <path d="M12 14v2"/>
+          </svg>
+
+        </div>
+
+        <div>
+          <strong>
+            Documentación privada.
+          </strong>
+          Los carpinteros no acceden automáticamente
+          a estos archivos. Primero manifiestan interés
+          y el propietario del proyecto debe autorizar
+          su acceso.
+        </div>
+
       </div>
 
     </section>
@@ -653,13 +928,17 @@
 
     <section class="card">
 
-      <h2>4. Publicación</h2>
+      <h2>
+        4. Publicación
+      </h2>
 
       <p class="card-intro">
-        Al publicar, el proyecto quedará asociado internamente a tu cuenta.
-        Tu identidad y tus datos de contacto no se incluyen en la ficha
+        Al publicar, el proyecto quedará asociado
+        internamente a tu cuenta. Tu identidad y tus
+        datos de contacto no se incluyen en la ficha
         pública del proyecto.
       </p>
+
 
       <div class="acciones">
 
@@ -688,7 +967,8 @@
 
 
 <footer>
-  © 2026 AluConecta<br>
+  © 2026 AluConecta
+  <br>
   Donde los proyectos encuentran sus aberturas.
 </footer>
 
@@ -701,6 +981,7 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
+
 const sb =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -711,10 +992,14 @@ const sb =
 const BUCKET =
   'proyectos-documentacion';
 
-const MAX_ARCHIVOS = 5;
+
+const MAX_ARCHIVOS =
+  5;
+
 
 const MAX_BYTES =
   10 * 1024 * 1024;
+
 
 const TIPOS_PERMITIDOS = [
   'application/pdf',
@@ -724,24 +1009,42 @@ const TIPOS_PERMITIDOS = [
 ];
 
 
-let usuarioActual = null;
-let perfilActual = null;
+let usuarioActual =
+  null;
+
+
+let perfilActual =
+  null;
 
 
 const form =
-  document.getElementById('formProyecto');
+  document.getElementById(
+    'formProyecto'
+  );
+
 
 const inputArchivos =
-  document.getElementById('archivos');
+  document.getElementById(
+    'archivos'
+  );
+
 
 const listaArchivos =
-  document.getElementById('listaArchivos');
+  document.getElementById(
+    'listaArchivos'
+  );
+
 
 const mensaje =
-  document.getElementById('mensaje');
+  document.getElementById(
+    'mensaje'
+  );
+
 
 const btnPublicar =
-  document.getElementById('btnPublicar');
+  document.getElementById(
+    'btnPublicar'
+  );
 
 
 function mostrarMensaje(
@@ -752,8 +1055,10 @@ function mostrarMensaje(
   mensaje.className =
     'mensaje ' + tipo;
 
+
   mensaje.textContent =
     texto;
+
 
   mensaje.scrollIntoView({
     behavior: 'smooth',
@@ -768,6 +1073,7 @@ function ocultarMensaje() {
   mensaje.className =
     'mensaje';
 
+
   mensaje.textContent =
     '';
 
@@ -781,19 +1087,27 @@ function mostrarAccesoDenegado(
 
   document.getElementById(
     'tituloAcceso'
-  ).textContent = titulo;
+  ).textContent =
+    titulo;
+
 
   document.getElementById(
     'textoAcceso'
-  ).textContent = texto;
+  ).textContent =
+    texto;
+
 
   document.getElementById(
     'cargando'
-  ).style.display = 'none';
+  ).style.display =
+    'none';
+
 
   document.getElementById(
     'accesoDenegado'
-  ).style.display = 'flex';
+  ).style.display =
+    'flex';
+
 
   document.body.classList.add(
     'bloqueado'
@@ -806,13 +1120,16 @@ function habilitarPagina() {
 
   document.getElementById(
     'cargando'
-  ).style.display = 'none';
+  ).style.display =
+    'none';
+
 
   document.body.classList.remove(
     'bloqueado'
   );
 
 }
+
 
 function esRolProfesional(tipo) {
 
@@ -824,6 +1141,8 @@ function esRolProfesional(tipo) {
   ].includes(tipo);
 
 }
+
+
 async function verificarAcceso() {
 
   try {
@@ -846,6 +1165,7 @@ async function verificarAcceso() {
       );
 
       return;
+
     }
 
 
@@ -879,27 +1199,30 @@ async function verificarAcceso() {
         perfilError
       );
 
+
       mostrarAccesoDenegado(
         'Perfil requerido',
         'Tu cuenta necesita un perfil válido antes de publicar proyectos.'
       );
 
       return;
+
     }
 
 
     if (
-  !esRolProfesional(
-    perfil.tipo_usuario
-  )
-) {
+      !esRolProfesional(
+        perfil.tipo_usuario
+      )
+    ) {
 
-  mostrarAccesoDenegado(
-    'Acceso para profesionales y empresas',
-    'Esta cuenta no está habilitada para publicar proyectos.'
-  );
+      mostrarAccesoDenegado(
+        'Acceso para profesionales y empresas',
+        'Esta cuenta no está habilitada para publicar proyectos.'
+      );
 
-  return;
+      return;
+
     }
 
 
@@ -907,7 +1230,9 @@ async function verificarAcceso() {
       perfil;
 
 
-    if (perfil.localidad) {
+    if (
+      perfil.localidad
+    ) {
 
       document.getElementById(
         'localidad'
@@ -926,6 +1251,7 @@ async function verificarAcceso() {
       'Error verificando acceso:',
       error
     );
+
 
     mostrarAccesoDenegado(
       'No pudimos verificar tu cuenta',
@@ -1026,8 +1352,10 @@ function mostrarArchivosSeleccionados() {
           'div'
         );
 
+
       item.className =
         'archivo';
+
 
       item.textContent =
         archivo.name +
@@ -1038,6 +1366,7 @@ function mostrarArchivosSeleccionados() {
           1024
         ).toFixed(2) +
         ' MB';
+
 
       listaArchivos.appendChild(
         item
@@ -1056,15 +1385,18 @@ function limpiarNombreArchivo(
   const partes =
     nombre.split('.');
 
+
   const extension =
     partes.length > 1
-      ? partes.pop()
+      ? partes
+          .pop()
           .toLowerCase()
           .replace(
             /[^a-z0-9]/g,
             ''
           )
       : '';
+
 
   const base =
     partes
@@ -1083,9 +1415,9 @@ function limpiarNombreArchivo(
         '-'
       )
       .replace(
-  /^-+|-+$/g,
-  ''
-)
+        /^-+|-+$/g,
+        ''
+      )
       .slice(
         0,
         80
@@ -1211,15 +1543,21 @@ async function subirDocumentacion(
             ruta,
             archivo,
             {
-              cacheControl: '3600',
-              upsert: false,
+              cacheControl:
+                '3600',
+
+              upsert:
+                false,
+
               contentType:
                 archivo.type
             }
           );
 
 
-      if (uploadError) {
+      if (
+        uploadError
+      ) {
 
         throw new Error(
           'No se pudo subir "' +
@@ -1244,6 +1582,7 @@ async function subirDocumentacion(
             'archivos_proyecto'
           )
           .insert({
+
             proyecto_id:
               proyectoId,
 
@@ -1261,10 +1600,13 @@ async function subirDocumentacion(
 
             tamano_bytes:
               archivo.size
+
           });
 
 
-      if (metadataError) {
+      if (
+        metadataError
+      ) {
 
         throw new Error(
           'El archivo "' +
@@ -1286,6 +1628,7 @@ async function subirDocumentacion(
     error.rutasSubidas =
       rutasSubidas;
 
+
     throw error;
 
   }
@@ -1298,6 +1641,7 @@ async function publicarProyecto(
 ) {
 
   event.preventDefault();
+
 
   ocultarMensaje();
 
@@ -1342,30 +1686,36 @@ async function publicarProyecto(
       'nombreProyecto'
     ).value.trim();
 
+
   const tipo =
     document.getElementById(
       'tipoProyecto'
     ).value;
+
 
   const localidad =
     document.getElementById(
       'localidad'
     ).value.trim();
 
+
   const zona =
     document.getElementById(
       'zona'
     ).value.trim();
+
 
   const descripcion =
     document.getElementById(
       'descripcion'
     ).value.trim();
 
+
   const aberturas =
     document.getElementById(
       'aberturas'
     ).value.trim();
+
 
   const perfileria =
     document.getElementById(
@@ -1393,12 +1743,14 @@ async function publicarProyecto(
   btnPublicar.disabled =
     true;
 
+
   btnPublicar.textContent =
     'PUBLICANDO...';
 
 
   let proyectoId =
     null;
+
 
   let rutasSubidas =
     [];
@@ -1413,6 +1765,7 @@ async function publicarProyecto(
       await sb
         .from('proyectos')
         .insert({
+
           Nombre:
             nombre,
 
@@ -1439,12 +1792,15 @@ async function publicarProyecto(
 
           marcas_perfiles:
             perfileria || null
+
         })
         .select('id')
         .single();
 
 
-    if (proyectoError) {
+    if (
+      proyectoError
+    ) {
 
       throw new Error(
         'No se pudo crear el proyecto: ' +
@@ -1476,6 +1832,7 @@ async function publicarProyecto(
             proyectoId,
             archivos
           );
+
 
       } catch (
         archivoError
@@ -1516,6 +1873,7 @@ async function publicarProyecto(
 
     form.reset();
 
+
     listaArchivos.innerHTML =
       '';
 
@@ -1549,6 +1907,7 @@ async function publicarProyecto(
     btnPublicar.disabled =
       false;
 
+
     btnPublicar.textContent =
       'PUBLICAR PROYECTO';
 
@@ -1565,17 +1924,22 @@ inputArchivos.addEventListener(
 
       validarArchivos();
 
+
       mostrarArchivosSeleccionados();
 
+
       ocultarMensaje();
+
 
     } catch (error) {
 
       inputArchivos.value =
         '';
 
+
       listaArchivos.innerHTML =
         '';
+
 
       mostrarMensaje(
         error.message,
@@ -1597,6 +1961,7 @@ form.addEventListener(
 verificarAcceso();
 
 </script>
+
 
 </body>
 </html>
