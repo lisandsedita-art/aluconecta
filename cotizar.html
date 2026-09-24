@@ -10,92 +10,224 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    :root {
+      --azul: #0f2e4d;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --gris: #f4f6f8;
+      --blanco: #ffffff;
+      --borde: #dfe5ea;
+      --texto: #24313d;
+      --texto2: #64748b;
+      --verde: #166534;
+      --rojo: #b91c1c;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #132e4f;
+      font-family:
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Arial,
+        sans-serif;
+      background: var(--gris);
+      color: var(--texto);
     }
 
     header {
-      background: #132e4f;
+      background: var(--azul);
       color: white;
-      padding: 18px;
+      padding: 14px 18px;
+    }
+
+    .header-inner {
+      max-width: 760px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
     }
 
     .logo {
-      max-width: 760px;
-      margin: auto;
-      font-size: 26px;
-      font-weight: 900;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -.4px;
     }
 
     .logo span {
-      color: #4fb0e2;
+      color: var(--celeste);
+    }
+
+    .volver-header {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .volver-header:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background: var(--azul);
+      color: white;
+      padding: 28px 18px 36px;
+    }
+
+    .hero-inner {
+      max-width: 760px;
+      margin: auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(29px, 7vw, 40px);
+      line-height: 1.08;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: var(--amarillo);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0;
+      color: #c8d5e1;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     main {
       max-width: 760px;
       margin: auto;
-      padding: 18px;
+      padding: 20px 16px 40px;
     }
 
     .card {
       background: white;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--borde);
       border-radius: 20px;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-top: 0;
+      padding: 22px;
+      box-shadow: 0 4px 14px rgba(15,46,77,.05);
     }
 
     h2 {
+      margin: 25px 0 10px;
+      color: var(--azul);
       font-size: 18px;
-      margin-top: 24px;
     }
 
     .muted {
-      color: #64748b;
+      color: var(--texto2);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .resumen {
       background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 14px;
-      margin: 18px 0;
+      border: 1px solid var(--borde);
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .ubicacion-linea {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 7px;
+      color: var(--texto2);
+      font-size: 13px;
+    }
+
+    .ubicacion-linea svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      color: var(--celeste);
     }
 
     .bloque-archivo {
       background: #fffbea;
-      border: 1px solid #f5d94e;
-      border-radius: 14px;
-      padding: 16px;
-      margin: 18px 0;
+      border: 1px solid #ead472;
+      border-radius: 15px;
+      padding: 17px;
+      margin: 18px 0 21px;
+    }
+
+    .archivo-cabecera {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .archivo-icono {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 11px;
+      color: var(--azul);
+    }
+
+    .archivo-icono svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .archivo-cabecera strong {
+      display: block;
+      margin: 2px 0 3px;
+      color: var(--azul);
+      font-size: 14px;
+    }
+
+    .archivo-cabecera p {
+      margin: 0;
     }
 
     label {
       display: block;
-      margin: 15px 0 6px;
+      margin: 17px 0 7px;
+      color: var(--azul);
       font-size: 12px;
-      font-weight: bold;
+      font-weight: 800;
     }
 
     input,
     textarea {
       width: 100%;
-      padding: 12px;
+      padding: 13px 14px;
       border: 1px solid #cbd5e1;
-      border-radius: 10px;
+      border-radius: 11px;
+      background: white;
+      color: var(--texto);
       font: inherit;
+      font-size: 14px;
+      outline: none;
+      transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91,192,222,.12);
     }
 
     input[type="file"] {
@@ -103,8 +235,9 @@
     }
 
     textarea {
-      min-height: 90px;
+      min-height: 95px;
       resize: vertical;
+      line-height: 1.5;
     }
 
     .grid2 {
@@ -114,15 +247,18 @@
     }
 
     details {
-      margin-top: 18px;
-      border: 1px solid #e2e8f0;
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid var(--borde);
       border-radius: 14px;
-      padding: 14px;
+      background: #fafbfc;
     }
 
     summary {
+      color: var(--azul);
       cursor: pointer;
-      font-weight: bold;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .btn {
@@ -130,24 +266,34 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: 14px;
-      margin-top: 14px;
+      min-height: 50px;
+      padding: 14px 20px;
+      margin-top: 12px;
       border: 0;
-      border-radius: 99px;
-      font-weight: bold;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
       text-decoration: none;
       cursor: pointer;
-      font-family: inherit;
     }
 
     .btn-yellow {
-      background: #ffcf00;
-      color: #132e4f;
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-yellow:hover {
+      background: var(--amarillo-hover);
     }
 
     .btn-dark {
-      background: #132e4f;
+      background: var(--azul);
       color: white;
+    }
+
+    .btn-dark:hover {
+      opacity: .94;
     }
 
     .btn:disabled {
@@ -158,21 +304,24 @@
     #mensaje {
       display: none;
       margin-top: 15px;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 13px;
+      border-radius: 11px;
       font-size: 13px;
+      line-height: 1.5;
     }
 
     .mensaje-ok {
       display: block !important;
       background: #dcfce7;
-      color: #166534;
+      border: 1px solid #bbf7d0;
+      color: var(--verde);
     }
 
     .mensaje-error {
       display: block !important;
       background: #fef2f2;
-      color: #b91c1c;
+      border: 1px solid #fecaca;
+      color: var(--rojo);
     }
 
     .archivo-item {
@@ -180,8 +329,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--borde);
     }
 
     .archivo-item:last-child {
@@ -190,20 +339,22 @@
 
     .archivo-nombre {
       min-width: 0;
+      color: #475569;
       overflow-wrap: anywhere;
       font-size: 13px;
     }
 
     .archivo-boton {
       flex: 0 0 auto;
+      padding: 8px 12px;
       border: 0;
       border-radius: 20px;
-      background: #132e4f;
+      background: var(--azul);
       color: white;
-      padding: 8px 12px;
       cursor: pointer;
-      font-weight: bold;
+      font-family: inherit;
       font-size: 11px;
+      font-weight: 800;
     }
 
     #archivosGuardados {
@@ -211,38 +362,82 @@
       padding-top: 4px;
     }
 
+    footer {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 23px 16px 31px;
+      border-top: 1px solid #e2e8f0;
+      color: #94a3b8;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
     @media (max-width: 550px) {
       .grid2 {
         grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px;
       }
 
       .archivo-item {
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .archivo-cabecera {
+        gap: 10px;
+      }
     }
   </style>
 </head>
 
+
 <body>
 
 <header>
-  <div class="logo">
-    Alu<span>Conecta</span>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      Alu<span>Conecta</span>
+    </div>
+
+    <a
+      href="panel-carpintero.html"
+      class="volver-header"
+    >
+      ← Mi panel
+    </a>
+
   </div>
+
 </header>
+
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <h1>
+      Cotizá el <span>proyecto.</span>
+    </h1>
+
+    <p>
+      Presentá tu propuesta comercial y adjuntá el presupuesto
+      que ya confeccionaste con tu sistema habitual.
+    </p>
+
+  </div>
+
+</section>
+
 
 <main>
 
   <section class="card">
-
-    <h1>Cotizar proyecto</h1>
-
-    <p class="muted">
-      Presentá tu propuesta para este proyecto.
-      No es necesario volver a cargar abertura por abertura en AluConecta:
-      podés adjuntar el presupuesto que ya confeccionaste con tu sistema habitual.
-    </p>
 
     <div
       id="resumenProyecto"
@@ -259,14 +454,43 @@
 
       <div class="bloque-archivo">
 
-        <strong>
-          Presupuesto adjunto
-        </strong>
+        <div class="archivo-cabecera">
 
-        <p class="muted">
-          Podés adjuntar tu presupuesto detallado en PDF o Excel.
-          Se permiten hasta 5 archivos de 10 MB cada uno.
-        </p>
+          <div class="archivo-icono">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+              <path d="M14 3v5h5"/>
+              <path d="M9 13h6"/>
+              <path d="M9 17h4"/>
+            </svg>
+
+          </div>
+
+          <div>
+
+            <strong>
+              Presupuesto adjunto
+            </strong>
+
+            <p class="muted">
+              Podés adjuntar tu presupuesto detallado
+              en PDF o Excel. Se permiten hasta 5 archivos
+              de 10 MB cada uno.
+            </p>
+
+          </div>
+
+        </div>
+
 
         <input
           id="archivos"
@@ -426,6 +650,13 @@
 </main>
 
 
+<footer>
+  © 2026 AluConecta
+  <br>
+  Donde los proyectos encuentran sus aberturas.
+</footer>
+
+
 <script>
 
 const SUPABASE_URL =
@@ -434,6 +665,7 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
 
+
 const sb =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -441,24 +673,26 @@ const sb =
   );
 
 
-const MAX_ARCHIVOS = 5;
+const MAX_ARCHIVOS =
+  5;
+
 
 const MAX_TAMANO =
   10 * 1024 * 1024;
 
 
-const extensionesPermitidas =
-  [
-    'pdf',
-    'xls',
-    'xlsx'
-  ];
+const extensionesPermitidas = [
+  'pdf',
+  'xls',
+  'xlsx'
+];
 
 
 const parametros =
   new URLSearchParams(
     window.location.search
   );
+
 
 const proyectoId =
   Number(
@@ -471,30 +705,36 @@ const resumenProyecto =
     'resumenProyecto'
   );
 
+
 const formCotizacion =
   document.getElementById(
     'formCotizacion'
   );
+
 
 const guardarCotizacion =
   document.getElementById(
     'guardarCotizacion'
   );
 
+
 const mensaje =
   document.getElementById(
     'mensaje'
   );
+
 
 const inputArchivos =
   document.getElementById(
     'archivos'
   );
 
+
 const archivosGuardados =
   document.getElementById(
     'archivosGuardados'
   );
+
 
 const listaArchivos =
   document.getElementById(
@@ -502,9 +742,12 @@ const listaArchivos =
   );
 
 
-let usuarioActual = null;
+let usuarioActual =
+  null;
 
-let cotizacionExistente = null;
+
+let cotizacionExistente =
+  null;
 
 
 function mostrarMensaje(
@@ -514,6 +757,7 @@ function mostrarMensaje(
 
   mensaje.textContent =
     texto;
+
 
   mensaje.className =
     tipo === 'ok'
@@ -531,6 +775,7 @@ function valorOpcional(id) {
       .value
       .trim();
 
+
   return valor || null;
 
 }
@@ -543,9 +788,15 @@ function obtenerExtension(nombre) {
       .toLowerCase()
       .split('.');
 
-  if (partes.length < 2) {
+
+  if (
+    partes.length < 2
+  ) {
+
     return '';
+
   }
+
 
   return partes.pop();
 
@@ -678,7 +929,9 @@ async function abrirArchivo(
     }
 
 
-    if (ventana) {
+    if (
+      ventana
+    ) {
 
       ventana.location.href =
         data.signedUrl;
@@ -693,8 +946,12 @@ async function abrirArchivo(
 
   } catch (error) {
 
-    if (ventana) {
+    if (
+      ventana
+    ) {
+
       ventana.close();
+
     }
 
 
@@ -730,6 +987,7 @@ async function cargarArchivosCotizacion() {
   archivosGuardados.style.display =
     'block';
 
+
   listaArchivos.innerHTML =
     '<span class="muted">Consultando archivos...</span>';
 
@@ -757,7 +1015,9 @@ async function cargarArchivosCotizacion() {
       );
 
 
-  if (error) {
+  if (
+    error
+  ) {
 
     listaArchivos.textContent =
       'No pudimos consultar los archivos.';
@@ -794,6 +1054,7 @@ async function cargarArchivosCotizacion() {
         'div'
       );
 
+
     fila.className =
       'archivo-item';
 
@@ -803,8 +1064,10 @@ async function cargarArchivosCotizacion() {
         'div'
       );
 
+
     nombre.className =
       'archivo-nombre';
+
 
     nombre.textContent =
       archivo.nombre_archivo;
@@ -815,11 +1078,14 @@ async function cargarArchivosCotizacion() {
         'button'
       );
 
+
     boton.type =
       'button';
 
+
     boton.className =
       'archivo-boton';
+
 
     boton.textContent =
       'VER / DESCARGAR';
@@ -841,9 +1107,11 @@ async function cargarArchivosCotizacion() {
       nombre
     );
 
+
     fila.appendChild(
       boton
     );
+
 
     listaArchivos.appendChild(
       fila
@@ -905,7 +1173,9 @@ async function subirArchivos(
           ruta,
           archivo,
           {
-            upsert: false,
+            upsert:
+              false,
+
             contentType:
               archivo.type ||
               undefined
@@ -913,8 +1183,12 @@ async function subirArchivos(
         );
 
 
-    if (uploadError) {
+    if (
+      uploadError
+    ) {
+
       throw uploadError;
+
     }
 
 
@@ -949,7 +1223,9 @@ async function subirArchivos(
         });
 
 
-    if (metadataError) {
+    if (
+      metadataError
+    ) {
 
       await sb.storage
         .from(
@@ -965,6 +1241,26 @@ async function subirArchivos(
     }
 
   }
+
+}
+
+
+function crearIconoUbicacion() {
+
+  const contenedor =
+    document.createElement(
+      'span'
+    );
+
+
+  contenedor.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"/>' +
+      '<circle cx="12" cy="10" r="2.5"/>' +
+    '</svg>';
+
+
+  return contenedor.firstChild;
 
 }
 
@@ -1029,8 +1325,12 @@ async function iniciarPagina() {
         .maybeSingle();
 
 
-    if (perfilError) {
+    if (
+      perfilError
+    ) {
+
       throw perfilError;
+
     }
 
 
@@ -1069,8 +1369,12 @@ async function iniciarPagina() {
         .maybeSingle();
 
 
-    if (interesError) {
+    if (
+      interesError
+    ) {
+
       throw interesError;
+
     }
 
 
@@ -1092,7 +1396,9 @@ async function iniciarPagina() {
       error: proyectoError
     } =
       await sb
-        .from('proyectos_publicos')
+        .from(
+          'proyectos_publicos'
+        )
         .select(
           'id,Proyecto,Tipo,Localidad'
         )
@@ -1103,12 +1409,18 @@ async function iniciarPagina() {
         .maybeSingle();
 
 
-    if (proyectoError) {
+    if (
+      proyectoError
+    ) {
+
       throw proyectoError;
+
     }
 
 
-    if (!proyecto) {
+    if (
+      !proyecto
+    ) {
 
       throw new Error(
         'No encontramos el proyecto.'
@@ -1143,145 +1455,173 @@ async function iniciarPagina() {
 
 
     ubicacion.className =
-      'muted';
+      'ubicacion-linea';
 
-    ubicacion.style.marginTop =
-      '6px';
 
-    ubicacion.textContent =
-      '📍 ' +
-      (
-        proyecto.Localidad ||
-        'Localidad no informada'
+    ubicacion.appendChild(
+      crearIconoUbicacion()
+    );
+
+
+    const textoUbicacion =
+      document.createElement(
+        'span'
       );
+
+
+    textoUbicacion.textContent =
+      proyecto.Localidad ||
+      'Localidad no informada';
+
+
+    ubicacion.appendChild(
+      textoUbicacion
+    );
 
 
     resumenProyecto.appendChild(
       titulo
     );
 
+
     resumenProyecto.appendChild(
       ubicacion
     );
-const {
-  data: contactoPublicador,
-  error: contactoError
-} =
-  await sb.rpc(
-    'contacto_publicador_autorizado',
-    {
-      p_proyecto_id:
-        proyectoId
+
+
+    const {
+      data: contactoPublicador,
+      error: contactoError
+    } =
+      await sb.rpc(
+        'contacto_publicador_autorizado',
+        {
+          p_proyecto_id:
+            proyectoId
+        }
+      );
+
+
+    if (
+      contactoError
+    ) {
+
+      throw contactoError;
+
     }
-  );
 
 
-if (contactoError) {
-  throw contactoError;
-}
+    const publicador =
+      Array.isArray(
+        contactoPublicador
+      )
+        ? contactoPublicador[0]
+        : contactoPublicador;
 
 
-const publicador =
-  Array.isArray(contactoPublicador)
-    ? contactoPublicador[0]
-    : contactoPublicador;
+    if (
+      !publicador
+    ) {
+
+      throw new Error(
+        'No pudimos identificar al profesional o empresa responsable del proyecto.'
+      );
+
+    }
 
 
-if (!publicador) {
-
-  throw new Error(
-    'No pudimos identificar al profesional o empresa responsable del proyecto.'
-  );
-
-}
+    const destinatario =
+      document.createElement(
+        'div'
+      );
 
 
-const destinatario =
-  document.createElement(
-    'div'
-  );
+    destinatario.style.marginTop =
+      '12px';
 
 
-destinatario.style.marginTop =
-  '12px';
-
-destinatario.style.paddingTop =
-  '12px';
-
-destinatario.style.borderTop =
-  '1px solid #e2e8f0';
+    destinatario.style.paddingTop =
+      '12px';
 
 
-const etiquetaDestinatario =
-  document.createElement(
-    'div'
-  );
+    destinatario.style.borderTop =
+      '1px solid #e2e8f0';
 
 
-etiquetaDestinatario.className =
-  'muted';
-
-etiquetaDestinatario.textContent =
-  'PROFESIONAL / EMPRESA';
-
-
-const nombreDestinatario =
-  document.createElement(
-    'strong'
-  );
+    const etiquetaDestinatario =
+      document.createElement(
+        'div'
+      );
 
 
-nombreDestinatario.textContent =
-  publicador.nombre ||
-  'Profesional / Empresa';
+    etiquetaDestinatario.className =
+      'muted';
 
 
-destinatario.appendChild(
-  etiquetaDestinatario
-);
-
-destinatario.appendChild(
-  nombreDestinatario
-);
+    etiquetaDestinatario.textContent =
+      'PROFESIONAL / EMPRESA';
 
 
-if (
-  publicador.localidad ||
-  publicador.provincia
-) {
+    const nombreDestinatario =
+      document.createElement(
+        'strong'
+      );
 
-  const ubicacionDestinatario =
-    document.createElement(
-      'div'
+
+    nombreDestinatario.textContent =
+      publicador.nombre ||
+      'Profesional / Empresa';
+
+
+    destinatario.appendChild(
+      etiquetaDestinatario
     );
 
 
-  ubicacionDestinatario.className =
-    'muted';
-
-  ubicacionDestinatario.style.marginTop =
-    '5px';
+    destinatario.appendChild(
+      nombreDestinatario
+    );
 
 
-  ubicacionDestinatario.textContent =
-    [
-      publicador.localidad,
+    if (
+      publicador.localidad ||
       publicador.provincia
-    ]
-      .filter(Boolean)
-      .join(', ');
+    ) {
+
+      const ubicacionDestinatario =
+        document.createElement(
+          'div'
+        );
 
 
-  destinatario.appendChild(
-    ubicacionDestinatario
-  );
-
-}
+      ubicacionDestinatario.className =
+        'muted';
 
 
-resumenProyecto.appendChild(
-  destinatario
-);
+      ubicacionDestinatario.style.marginTop =
+        '5px';
+
+
+      ubicacionDestinatario.textContent =
+        [
+          publicador.localidad,
+          publicador.provincia
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+
+      destinatario.appendChild(
+        ubicacionDestinatario
+      );
+
+    }
+
+
+    resumenProyecto.appendChild(
+      destinatario
+    );
+
 
     const {
       data: cotizacion,
@@ -1305,12 +1645,18 @@ resumenProyecto.appendChild(
         .maybeSingle();
 
 
-    if (cotizacionError) {
+    if (
+      cotizacionError
+    ) {
+
       throw cotizacionError;
+
     }
 
 
-    if (cotizacion) {
+    if (
+      cotizacion
+    ) {
 
       cotizacionExistente =
         cotizacion;
@@ -1419,6 +1765,7 @@ formCotizacion.addEventListener(
         archivos
       );
 
+
     } catch (error) {
 
       mostrarMensaje(
@@ -1440,10 +1787,13 @@ formCotizacion.addEventListener(
         .trim();
 
 
-    let precio = null;
+    let precio =
+      null;
 
 
-    if (precioTexto) {
+    if (
+      precioTexto
+    ) {
 
       precio =
         Number(
@@ -1542,6 +1892,7 @@ formCotizacion.addEventListener(
     guardarCotizacion.disabled =
       true;
 
+
     guardarCotizacion.textContent =
       'GUARDANDO...';
 
@@ -1568,8 +1919,12 @@ formCotizacion.addEventListener(
             );
 
 
-        if (error) {
+        if (
+          error
+        ) {
+
           throw error;
+
         }
 
 
@@ -1598,13 +1953,18 @@ formCotizacion.addEventListener(
             .single();
 
 
-        if (error) {
+        if (
+          error
+        ) {
+
           throw error;
+
         }
 
 
         cotizacionExistente = {
-          id: data.id
+          id:
+            data.id
         };
 
       }
@@ -1645,10 +2005,13 @@ formCotizacion.addEventListener(
           guardarCotizacion.textContent =
             'ACTUALIZAR COTIZACIÓN';
 
+
           inputArchivos.value =
             '';
 
+
           await cargarArchivosCotizacion();
+
 
           return;
 
@@ -1714,6 +2077,7 @@ formCotizacion.addEventListener(
 iniciarPagina();
 
 </script>
+
 
 </body>
 </html>
