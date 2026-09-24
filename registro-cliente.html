@@ -6,65 +6,170 @@
 
   <meta
     name="viewport"
-    content="width=device-width,initial-scale=1"
+    content="width=device-width, initial-scale=1"
   >
 
-  <title>AluConecta — Crear cuenta</title>
+  <title>Registro profesional - AluConecta</title>
 
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
   ></script>
 
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --azul: #0f2e4d;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --fondo: #f4f6f8;
+      --blanco: #ffffff;
+      --texto: #24313d;
+      --suave: #64748b;
+      --borde: #dfe5ea;
+    }
+
     body {
       margin: 0;
+      min-height: 100vh;
       font-family:
         system-ui,
         -apple-system,
         Segoe UI,
         Roboto,
-        Arial;
-      background: #eef2f7;
-      color: #0f2e4a;
+        Arial,
+        sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
     }
 
-    .top {
-      background: #0f2e4a;
-      color: #fff;
-      padding: 20px;
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 34px 20px 46px;
+      text-align: center;
+    }
+
+    .marca {
+      margin-bottom: 22px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .marca span {
+      color: var(--celeste);
+    }
+
+    header h1 {
+      max-width: 650px;
+      margin: 0 auto 11px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    header h1 span {
+      color: var(--amarillo);
+    }
+
+    header p {
+      max-width: 610px;
+      margin: 0 auto;
+      color: #c8d5e1;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .contenedor {
+      width: calc(100% - 32px);
+      max-width: 540px;
+      margin: -22px auto 38px;
+      position: relative;
     }
 
     .card {
-      max-width: 430px;
-      margin: 30px auto;
-      background: #fff;
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 16px 40px #0f2e4a22;
+      background: white;
+      border: 1px solid rgba(15,46,77,.07);
+      border-radius: 20px;
+      padding: 29px;
+      box-shadow: 0 8px 25px rgba(15,46,77,.09);
+    }
+
+    .tipo-cuenta {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 25px;
+      padding: 14px;
+      border-radius: 13px;
+      background: #edf8fb;
+    }
+
+    .tipo-icono {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      background: white;
+      color: var(--azul);
+    }
+
+    .tipo-icono svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .tipo-texto strong {
+      display: block;
+      color: var(--azul);
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .tipo-texto span {
+      display: block;
+      color: var(--suave);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .grupo {
+      margin-bottom: 18px;
     }
 
     label {
       display: block;
+      margin: 0 0 7px;
+      color: var(--azul);
       font-size: 11px;
       font-weight: 800;
-      margin: 15px 0 7px;
+      letter-spacing: .02em;
     }
 
     .input,
     .select {
       width: 100%;
-      height: 50px;
-      border: 1px solid #e6eaf0;
-      border-radius: 13px;
-      padding: 0 12px;
-      box-sizing: border-box;
+      min-height: 50px;
+      padding: 11px 13px;
+      border: 1px solid var(--borde);
+      border-radius: 11px;
+      background: white;
+      color: var(--texto);
+      font-family: inherit;
       font-size: 15px;
     }
 
     .input:focus,
     .select:focus {
       outline: none;
-      border-color: #7ab8e6;
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91,192,222,.12);
     }
 
     .password-box {
@@ -72,43 +177,86 @@
     }
 
     .password-box .input {
-      padding-right: 48px;
+      padding-right: 50px;
     }
 
     .ver-password {
       position: absolute;
-      right: 10px;
+      right: 8px;
       top: 50%;
       transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 0;
+      border-radius: 8px;
       background: transparent;
+      color: var(--suave);
       cursor: pointer;
-      font-size: 19px;
+    }
+
+    .ver-password:hover {
+      background: #f1f5f9;
+      color: var(--azul);
+    }
+
+    .ver-password svg {
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
     }
 
     .ayuda {
-      font-size: 11px;
-      color: #64748b;
       margin: 6px 2px 0;
-      line-height: 1.4;
+      color: var(--suave);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .privacidad {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 5px 0 21px;
+      padding: 13px;
+      border-radius: 11px;
+      background: #f7f9fb;
+      color: var(--suave);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .privacidad svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      margin-top: 1px;
+      color: var(--azul);
     }
 
     .button {
       width: 100%;
-      min-height: 54px;
+      min-height: 52px;
+      margin-top: 3px;
+      padding: 13px 18px;
       border: 0;
-      border-radius: 15px;
-      background: #fbcf3d;
-      color: #0f2e4a;
+      border-radius: 11px;
+      background: var(--amarillo);
+      color: var(--azul);
+      font-size: 13px;
       font-weight: 800;
-      margin-top: 22px;
-      padding: 12px;
       cursor: pointer;
     }
 
+    .button:hover {
+      background: var(--amarillo-hover);
+    }
+
     .button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+      opacity: .6;
+      cursor: wait;
     }
 
     .hidden {
@@ -116,12 +264,12 @@
     }
 
     .notice {
-      padding: 13px;
-      border-radius: 12px;
+      margin: 0 0 20px;
+      padding: 14px;
+      border-radius: 11px;
       background: #f7f9fb;
+      color: var(--azul);
       font-size: 13px;
-      margin: 15px 0;
-      color: #0f2e4a;
       line-height: 1.5;
     }
 
@@ -137,289 +285,540 @@
 
     .link {
       display: block;
-      text-align: center;
       margin-top: 20px;
-      color: #2563eb;
+      text-align: center;
+      color: var(--azul);
       text-decoration: none;
+      font-size: 13px;
       font-weight: 700;
-      font-size: 14px;
     }
+
+    .link:hover,
+    .volver:hover {
+      text-decoration: underline;
+    }
+
+    .email-view {
+      text-align: center;
+    }
+
+    .email-icono {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      background: #edf8fb;
+      color: var(--azul);
+    }
+
+    .email-icono svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .email-view h2 {
+      margin: 0 0 10px;
+      color: var(--azul);
+      font-size: 23px;
+    }
+
+    #emailText {
+      color: var(--suave);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .volver {
+      display: block;
+      width: fit-content;
+      margin: 22px auto 0;
+      color: var(--azul);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 35px;
+      padding: 28px 20px;
+      background: var(--azul);
+      color: #c8d5e1;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 560px) {
+
+      header {
+        padding: 30px 18px 41px;
+      }
+
+      header h1 {
+        font-size: 27px;
+      }
+
+      .contenedor {
+        width: calc(100% - 24px);
+      }
+
+      .card {
+        padding: 23px 20px;
+      }
+
+    }
+
   </style>
 </head>
 
+
 <body>
 
-<header class="top">
 
-  <b>
-    Alu<span style="color:#7ab8e6">Conecta</span>
-  </b>
+<header>
 
-  <h1
-    style="
-      font-size:28px;
-      margin:28px 0 8px
-    "
-  >
-    Publicar Obra -
-    <span style="color:#fbcf3d">
-      Crear cuenta
-    </span>
+  <div class="marca">
+    Alu<span>Conecta</span>
+  </div>
+
+  <h1>
+    Creá tu cuenta
+    <span>profesional</span>
   </h1>
 
-  <p style="color:#9db0c0">
-    Registrate para publicar tu obra
-    y conectar con carpinteros de aluminio.
+  <p>
+    Publicá proyectos, encontrá carpinterías de aluminio
+    y generá nuevos vínculos profesionales.
   </p>
 
 </header>
 
 
-<main class="card">
+<main class="contenedor">
 
-  <div
-    id="msg"
-    class="notice hidden"
-  ></div>
+  <section class="card">
 
-
-  <div id="form">
-
-    <label for="nombre">
-      NOMBRE Y APELLIDO
-    </label>
-
-    <input
-      id="nombre"
-      class="input"
-      autocomplete="name"
-    >
+    <div
+      id="msg"
+      class="notice hidden"
+    ></div>
 
 
-    <label for="rol">
-      ROL EN LA OBRA
-    </label>
+    <div id="form">
 
-    <select
-      id="rol"
-      class="select"
-    >
-      <option value="">
-        Seleccioná tu rol
-      </option>
+      <div class="tipo-cuenta">
 
-      <option>Arquitecto</option>
-      <option>Ingeniero</option>
-      <option>Constructor</option>
-      <option>Desarrollador</option>
-      <option>Empresa constructora</option>
-      <option>MMO</option>
-    </select>
+        <div class="tipo-icono">
 
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 21v-9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9"/>
+            <path d="M8 10V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/>
+            <path d="M9 21v-4h6v4"/>
+            <path d="M8 14h.01"/>
+            <path d="M16 14h.01"/>
+          </svg>
 
-    <label for="wa">
-      WHATSAPP
-    </label>
+        </div>
 
-    <input
-      id="wa"
-      class="input"
-      inputmode="numeric"
-      autocomplete="tel"
-      placeholder="Ej: 1122334455"
-    >
+        <div class="tipo-texto">
+          <strong>PROFESIONAL / EMPRESA</strong>
+          <span>
+            Cuenta para quienes desarrollan,
+            proyectan o ejecutan obras.
+          </span>
+        </div>
 
-
-    <label for="email">
-      EMAIL
-    </label>
-
-    <input
-      id="email"
-      class="input"
-      type="email"
-      autocomplete="email"
-      placeholder="tu@email.com"
-    >
+      </div>
 
 
-    <label for="email2">
-      CONFIRMAR EMAIL
-    </label>
+      <div class="grupo">
 
-    <input
-      id="email2"
-      class="input"
-      type="email"
-      autocomplete="email"
-      placeholder="Volvé a escribir tu email"
-    >
+        <label for="nombre">
+          NOMBRE Y APELLIDO
+        </label>
 
+        <input
+          id="nombre"
+          class="input"
+          autocomplete="name"
+          placeholder="Ingresá tu nombre y apellido"
+        >
 
-    <label for="dni">
-      DNI
-    </label>
-
-    <input
-      id="dni"
-      class="input"
-      inputmode="numeric"
-      maxlength="8"
-    >
+      </div>
 
 
-    <label for="prov">
-      PROVINCIA
-    </label>
+      <div class="grupo">
 
-    <select
-      id="prov"
-      class="select"
-    >
-      <option value="">
-        Seleccioná tu provincia
-      </option>
+        <label for="rol">
+          ACTIVIDAD / ROL PROFESIONAL
+        </label>
 
-      <option>Buenos Aires</option>
-      <option>CABA</option>
-      <option>Catamarca</option>
-      <option>Chaco</option>
-      <option>Chubut</option>
-      <option>Córdoba</option>
-      <option>Corrientes</option>
-      <option>Entre Ríos</option>
-      <option>Formosa</option>
-      <option>Jujuy</option>
-      <option>La Pampa</option>
-      <option>La Rioja</option>
-      <option>Mendoza</option>
-      <option>Misiones</option>
-      <option>Neuquén</option>
-      <option>Río Negro</option>
-      <option>Salta</option>
-      <option>San Juan</option>
-      <option>San Luis</option>
-      <option>Santa Cruz</option>
-      <option>Santa Fe</option>
-      <option>Santiago del Estero</option>
-      <option>Tierra del Fuego</option>
-      <option>Tucumán</option>
-    </select>
+        <select
+          id="rol"
+          class="select"
+        >
+
+          <option value="">
+            Seleccioná tu actividad
+          </option>
+
+          <option>Arquitecto</option>
+          <option>Ingeniero</option>
+          <option>Constructor</option>
+          <option>Desarrollador</option>
+          <option>Empresa constructora</option>
+          <option>MMO</option>
+
+        </select>
+
+      </div>
 
 
-    <label for="loc">
-      LOCALIDAD / ZONA
-    </label>
+      <div class="grupo">
 
-    <input
-      id="loc"
-      class="input"
-      autocomplete="address-level2"
-    >
+        <label for="wa">
+          WHATSAPP
+        </label>
+
+        <input
+          id="wa"
+          class="input"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder="Ej: 1122334455"
+        >
+
+        <p class="ayuda">
+          Ingresalo sin espacios ni símbolos.
+        </p>
+
+      </div>
 
 
-    <label for="password">
-      CONTRASEÑA
-    </label>
+      <div class="grupo">
 
-    <div class="password-box">
+        <label for="email">
+          CORREO ELECTRÓNICO
+        </label>
 
-      <input
-        id="password"
-        class="input"
-        type="password"
-        autocomplete="new-password"
-        placeholder="Creá una contraseña"
-      >
+        <input
+          id="email"
+          class="input"
+          type="email"
+          autocomplete="email"
+          placeholder="tu@email.com"
+        >
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="email2">
+          CONFIRMAR CORREO ELECTRÓNICO
+        </label>
+
+        <input
+          id="email2"
+          class="input"
+          type="email"
+          autocomplete="email"
+          placeholder="Volvé a escribir tu correo"
+        >
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="dni">
+          DNI
+        </label>
+
+        <input
+          id="dni"
+          class="input"
+          inputmode="numeric"
+          maxlength="8"
+          placeholder="Sólo números"
+        >
+
+        <p class="ayuda">
+          Se utiliza como dato privado de registro.
+        </p>
+
+      </div>
+
+
+      <div class="privacidad">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="5" y="10" width="14" height="10" rx="2"/>
+          <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+        </svg>
+
+        <span>
+          Tu DNI es información privada de tu cuenta.
+          No forma parte de tu información pública
+          dentro de AluConecta.
+        </span>
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="prov">
+          PROVINCIA
+        </label>
+
+        <select
+          id="prov"
+          class="select"
+        >
+
+          <option value="">
+            Seleccioná tu provincia
+          </option>
+
+          <option>Buenos Aires</option>
+          <option>CABA</option>
+          <option>Catamarca</option>
+          <option>Chaco</option>
+          <option>Chubut</option>
+          <option>Córdoba</option>
+          <option>Corrientes</option>
+          <option>Entre Ríos</option>
+          <option>Formosa</option>
+          <option>Jujuy</option>
+          <option>La Pampa</option>
+          <option>La Rioja</option>
+          <option>Mendoza</option>
+          <option>Misiones</option>
+          <option>Neuquén</option>
+          <option>Río Negro</option>
+          <option>Salta</option>
+          <option>San Juan</option>
+          <option>San Luis</option>
+          <option>Santa Cruz</option>
+          <option>Santa Fe</option>
+          <option>Santiago del Estero</option>
+          <option>Tierra del Fuego</option>
+          <option>Tucumán</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="loc">
+          LOCALIDAD
+        </label>
+
+        <input
+          id="loc"
+          class="input"
+          autocomplete="address-level2"
+          placeholder="Ej: Rosario"
+        >
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="password">
+          CONTRASEÑA
+        </label>
+
+        <div class="password-box">
+
+          <input
+            id="password"
+            class="input"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Creá una contraseña"
+          >
+
+          <button
+            type="button"
+            class="ver-password"
+            onclick="togglePassword('password', this)"
+            aria-label="Mostrar contraseña"
+          >
+
+            <svg
+              class="icono-ojo"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/>
+              <circle cx="12" cy="12" r="2.5"/>
+            </svg>
+
+          </button>
+
+        </div>
+
+        <p class="ayuda">
+          Usá al menos 8 caracteres.
+        </p>
+
+      </div>
+
+
+      <div class="grupo">
+
+        <label for="password2">
+          CONFIRMAR CONTRASEÑA
+        </label>
+
+        <div class="password-box">
+
+          <input
+            id="password2"
+            class="input"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Volvé a escribir la contraseña"
+          >
+
+          <button
+            type="button"
+            class="ver-password"
+            onclick="togglePassword('password2', this)"
+            aria-label="Mostrar contraseña"
+          >
+
+            <svg
+              class="icono-ojo"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/>
+              <circle cx="12" cy="12" r="2.5"/>
+            </svg>
+
+          </button>
+
+        </div>
+
+      </div>
+
 
       <button
+        id="send"
         type="button"
-        class="ver-password"
-        onclick="togglePassword('password', this)"
-        aria-label="Mostrar contraseña"
+        class="button"
       >
-        👁️
+        CREAR CUENTA
       </button>
+
+
+      <a
+        href="ingresar.html"
+        class="link"
+      >
+        Ya tengo una cuenta — Ingresar
+      </a>
 
     </div>
 
-    <p class="ayuda">
-      Usá al menos 8 caracteres.
-    </p>
 
+    <div
+      id="emailView"
+      class="hidden email-view"
+    >
 
-    <label for="password2">
-      CONFIRMAR CONTRASEÑA
-    </label>
+      <div class="email-icono">
 
-    <div class="password-box">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m4 7 8 6 8-6"/>
+        </svg>
 
-      <input
-        id="password2"
-        class="input"
-        type="password"
-        autocomplete="new-password"
-        placeholder="Volvé a escribir la contraseña"
+      </div>
+
+      <h2>
+        Revisá tu correo
+      </h2>
+
+      <p id="emailText"></p>
+
+      <p class="notice">
+        Abrí el correo de AluConecta y utilizá
+        el enlace de verificación. Al confirmar
+        tu dirección terminaremos de crear tu
+        cuenta profesional.
+      </p>
+
+      <a
+        href="ingresar.html"
+        class="link"
       >
-
-      <button
-        type="button"
-        class="ver-password"
-        onclick="togglePassword('password2', this)"
-        aria-label="Mostrar contraseña"
-      >
-        👁️
-      </button>
+        Ir a Ingresar
+      </a>
 
     </div>
 
-
-    <button
-      id="send"
-      type="button"
-      class="button"
-    >
-      CREAR CUENTA
-    </button>
-
-    <a
-      href="ingresar.html"
-      class="link"
-    >
-      Ya tengo una cuenta — Ingresar
-    </a>
-
-  </div>
+  </section>
 
 
-  <div
-    id="emailView"
-    class="hidden"
+  <a
+    href="acceso.html"
+    class="volver"
   >
-
-    <h2>
-      Revisá tu email
-    </h2>
-
-    <p id="emailText"></p>
-
-    <p class="notice">
-      Abrí el correo de AluConecta y tocá el enlace
-      para verificar tu cuenta. Después vas a poder
-      ingresar con el email y la contraseña que
-      acabás de crear.
-    </p>
-
-    <a
-      href="ingresar.html"
-      class="link"
-    >
-      Ir a Ingresar
-    </a>
-
-  </div>
+    ← Volver a elegir tipo de cuenta
+  </a>
 
 </main>
+
+
+<footer>
+  © 2026 AluConecta
+  <br>
+  Donde los proyectos encuentran sus aberturas.
+</footer>
 
 
 <script>
@@ -429,6 +828,7 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
   'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+
 
 const sb =
   window.supabase.createClient(
@@ -441,36 +841,95 @@ const $ =
   id => document.getElementById(id);
 
 
-function showMessage(message, type = 'error') {
+const ICONO_OJO = `
+  <svg
+    class="icono-ojo"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/>
+    <circle cx="12" cy="12" r="2.5"/>
+  </svg>
+`;
 
-  const msg = $('msg');
 
-  msg.textContent = message;
+const ICONO_OJO_CERRADO = `
+  <svg
+    class="icono-ojo"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="m3 3 18 18"/>
+    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+    <path d="M9.9 5.2A10.5 10.5 0 0 1 12 5c6 0 9.5 7 9.5 7a15.5 15.5 0 0 1-2.1 2.8"/>
+    <path d="M6.2 6.2C3.8 8 2.5 12 2.5 12s3.5 7 9.5 7a9.8 9.8 0 0 0 3.1-.5"/>
+  </svg>
+`;
+
+
+function showMessage(
+  message,
+  type = 'error'
+) {
+
+  const msg =
+    $('msg');
+
+  msg.textContent =
+    message;
 
   msg.className =
     'notice ' + type;
 
-  msg.classList.remove('hidden');
+  msg.classList.remove(
+    'hidden'
+  );
+
+  msg.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
 
 }
 
 
 function hideMessage() {
 
-  $('msg').classList.add('hidden');
+  $('msg')
+    .classList
+    .add('hidden');
 
 }
 
 
-function togglePassword(id, button) {
+function togglePassword(
+  id,
+  button
+) {
 
-  const input = $(id);
+  const input =
+    $(id);
 
-  if (input.type === 'password') {
 
-    input.type = 'text';
+  if (
+    input.type === 'password'
+  ) {
 
-    button.textContent = '🙈';
+    input.type =
+      'text';
+
+    button.innerHTML =
+      ICONO_OJO_CERRADO;
 
     button.setAttribute(
       'aria-label',
@@ -479,9 +938,11 @@ function togglePassword(id, button) {
 
   } else {
 
-    input.type = 'password';
+    input.type =
+      'password';
 
-    button.textContent = '👁️';
+    button.innerHTML =
+      ICONO_OJO;
 
     button.setAttribute(
       'aria-label',
@@ -498,7 +959,9 @@ function getData() {
   return {
 
     nombre:
-      $('nombre').value.trim(),
+      $('nombre')
+        .value
+        .trim(),
 
     rol:
       $('rol').value,
@@ -529,7 +992,9 @@ function getData() {
       $('prov').value,
 
     localidad:
-      $('loc').value.trim(),
+      $('loc')
+        .value
+        .trim(),
 
     password:
       $('password').value,
@@ -544,33 +1009,41 @@ function getData() {
 
 function validate(d) {
 
-  if (d.nombre.length < 5) {
+  if (
+    d.nombre.length < 5
+  ) {
 
     showMessage(
       'Ingresá tu nombre y apellido.'
     );
 
     return false;
+
   }
 
 
   if (!d.rol) {
 
     showMessage(
-      'Seleccioná tu rol en la obra.'
+      'Seleccioná tu actividad o rol profesional.'
     );
 
     return false;
+
   }
 
 
-  if (!/^[0-9]{10}$/.test(d.whatsapp)) {
+  if (
+    !/^[0-9]{10}$/
+      .test(d.whatsapp)
+  ) {
 
     showMessage(
       'El WhatsApp debe tener 10 dígitos.'
     );
 
     return false;
+
   }
 
 
@@ -580,30 +1053,38 @@ function validate(d) {
   ) {
 
     showMessage(
-      'Ingresá un email válido.'
+      'Ingresá un correo electrónico válido.'
     );
 
     return false;
+
   }
 
 
-  if (d.email !== d.email2) {
+  if (
+    d.email !== d.email2
+  ) {
 
     showMessage(
-      'Los emails no coinciden.'
+      'Los correos electrónicos no coinciden.'
     );
 
     return false;
+
   }
 
 
-  if (!/^[0-9]{7,8}$/.test(d.dni)) {
+  if (
+    !/^[0-9]{7,8}$/
+      .test(d.dni)
+  ) {
 
     showMessage(
       'Ingresá un DNI válido de 7 u 8 dígitos.'
     );
 
     return false;
+
   }
 
 
@@ -614,36 +1095,47 @@ function validate(d) {
     );
 
     return false;
+
   }
 
 
-  if (d.localidad.length < 3) {
+  if (
+    d.localidad.length < 3
+  ) {
 
     showMessage(
-      'Ingresá tu localidad o zona.'
+      'Ingresá tu localidad.'
     );
 
     return false;
+
   }
 
 
-  if (d.password.length < 8) {
+  if (
+    d.password.length < 8
+  ) {
 
     showMessage(
       'La contraseña debe tener al menos 8 caracteres.'
     );
 
     return false;
+
   }
 
 
-  if (d.password !== d.password2) {
+  if (
+    d.password !==
+    d.password2
+  ) {
 
     showMessage(
       'Las contraseñas no coinciden.'
     );
 
     return false;
+
   }
 
 
@@ -670,9 +1162,11 @@ async function createAccount(d) {
   } =
     await sb.auth.signUp({
 
-      email: d.email,
+      email:
+        d.email,
 
-      password: d.password,
+      password:
+        d.password,
 
       options: {
 
@@ -723,14 +1217,10 @@ async function createAccount(d) {
   }
 
 
-  /*
-    Supabase puede devolver identidades vacías
-    cuando el email ya corresponde a una cuenta,
-    dependiendo de la configuración de seguridad.
-  */
-
   if (
-    Array.isArray(data.user.identities) &&
+    Array.isArray(
+      data.user.identities
+    ) &&
     data.user.identities.length === 0
   ) {
 
@@ -748,13 +1238,17 @@ async function createAccount(d) {
 
 async function send() {
 
-  const button = $('send');
+  const button =
+    $('send');
+
 
   try {
 
     hideMessage();
 
-    const d = getData();
+
+    const d =
+      getData();
 
 
     if (!validate(d)) {
@@ -762,7 +1256,8 @@ async function send() {
     }
 
 
-    button.disabled = true;
+    button.disabled =
+      true;
 
     button.textContent =
       'CREANDO CUENTA...';
@@ -805,9 +1300,15 @@ async function send() {
 
 
     if (
-      lower.includes('already registered') ||
-      lower.includes('already been registered') ||
-      lower.includes('user already registered')
+      lower.includes(
+        'already registered'
+      ) ||
+      lower.includes(
+        'already been registered'
+      ) ||
+      lower.includes(
+        'user already registered'
+      )
     ) {
 
       message =
@@ -817,8 +1318,12 @@ async function send() {
 
 
     if (
-      lower.includes('rate limit') ||
-      lower.includes('email rate')
+      lower.includes(
+        'rate limit'
+      ) ||
+      lower.includes(
+        'email rate'
+      )
     ) {
 
       message =
@@ -827,11 +1332,15 @@ async function send() {
     }
 
 
-    showMessage(message);
+    showMessage(
+      message
+    );
+
 
   } finally {
 
-    button.disabled = false;
+    button.disabled =
+      false;
 
     button.textContent =
       'CREAR CUENTA';
@@ -845,12 +1354,14 @@ document.addEventListener(
   'DOMContentLoaded',
   () => {
 
-    $('send').onclick = send;
+    $('send').onclick =
+      send;
 
   }
 );
 
 </script>
+
 
 </body>
 </html>
