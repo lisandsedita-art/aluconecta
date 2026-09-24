@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Proyectos y necesidades - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #0f2e4d;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .tarjeta h2 {
+      margin-top: 0;
+      color: #0f2e4d;
+    }
+
+    .proyecto {
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .proyecto:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .boton {
+      display: inline-block;
+      padding: 13px 20px;
+      background: #f5c400;
+      color: #0f2e4d;
+      text-decoration: none;
+      border-radius: 7px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+    .sin-resultados {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    .aviso-registro {
+      margin-top: 15px;
+      padding: 15px;
+      background: #eef2f5;
+      border-radius: 8px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .aviso-registro svg,
+    .dato-proyecto svg {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      vertical-align: middle;
+      color: #0f2e4d;
+    }
+
+    .dato-proyecto {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px 0;
+      color: #0f2e4d;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+
+    .cargando {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+
+    .error {
+      text-align: center;
+      padding: 25px;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 10px;
+    }
+
+    .registro {
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Proyectos y necesidades</h1>
+  <p>Encontrá oportunidades para tu carpintería de aluminio.</p>
+</header>
+
+<main class="contenedor">
+
+  <section class="tarjeta">
+
+    <h2>Oportunidades publicadas</h2>
+
+    <p>
+      Acá aparecen necesidades de personas y empresas que buscan
+      realizar proyectos de aberturas.
+    </p>
+
+    <div class="aviso-registro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      Para acceder a información sensible y contactar a quien
+      publicó un proyecto, necesitás tener un perfil registrado
+      en AluConecta.
+    </div>
+
+  </section>
+
+  <section id="listaProyectos" class="tarjeta">
+
+    <div class="cargando">
+      Cargando proyectos...
+    </div>
+
+  </section>
+
+  <a href="index.html" class="volver">
+    ← Volver a AluConecta
+  </a>
+
+</main>
+
+<footer>
+
+  <p>© 2026 AluConecta</p>
+
+  <p>
+    Conectando personas, trabajos y oportunidades.
+  </p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+const lista =
+  document.getElementById("listaProyectos");
+
+
+async function comprobarUsuario() {
+
+  const { data } =
+    await supabaseClient.auth.getUser();
+
+  return data.user || null;
+}
+
+
+async function cargarProyectos() {
+
+  try {
+
+    const usuario =
+      await comprobarUsuario();
+
+    const { data: proyectos, error } =
+      await supabaseClient
+        .from("proyectos_publicos")
+        .select(
+          "id, created_at, Tipo, Localidad, Proyecto"
+        )
+        .order(
+          "created_at",
+          { ascending: false }
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    if (!proyectos || proyectos.length === 0) {
+
+      lista.innerHTML = `
+        <div class="sin-resultados">
+
+          <h3>
+            Todavía no hay proyectos publicados
+          </h3>
+
+          <p>
+            Cuando alguien publique una necesidad,
+            aparecerá acá.
+          </p>
+
+          <br>
+
+          <a
+            href="index.html"
+            class="boton">
+            Publicar mi proyecto
+          </a>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    renderProyectos(
+      proyectos,
+      usuario
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando proyectos públicos:",
+      error
+    );
+
+
+    lista.innerHTML = `
+      <div class="error">
+
+        <h3>
+          No pudimos cargar los proyectos
+        </h3>
+
+        <p>
+          Intentá nuevamente más tarde.
+        </p>
+
+      </div>
+    `;
+
+  }
+
+}
+
+
+function renderProyectos(
+  proyectos,
+  usuario
+) {
+
+  lista.innerHTML = `
+
+    <h2>
+      Proyectos publicados
+      (${proyectos.length})
+    </h2>
+
+  `;
+
+
+  proyectos.forEach(
+    proyecto => {
+
+      const titulo =
+        proyecto.Proyecto ||
+        "Proyecto publicado";
+
+
+      const localidad =
+        proyecto.Localidad ||
+        "Localidad no indicada";
+
+
+      const tipo =
+        proyecto.Tipo ||
+        "Proyecto";
+
+
+      const elemento =
+        document.createElement("div");
+
+
+      elemento.className =
+        "proyecto";
+
+
+      elemento.innerHTML = `
+
+        <h3 class="dato-proyecto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V9l7-4 7 4v12M9 21v-7h6v7M9 10h.01M15 10h.01"/></svg>
+          ${escaparHTML(titulo)}
+        </h3>
+
+        <p class="dato-proyecto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          ${escaparHTML(localidad)}
+        </p>
+
+        <p class="dato-proyecto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>
+          ${escaparHTML(tipo)}
+        </p>
+
+        <p>
+          Los datos sensibles del proyecto
+          se muestran únicamente a usuarios
+          autorizados.
+        </p>
+
+        <div class="registro">
+
+          ${
+            usuario
+
+            ?
+
+            `
+              <button
+                type="button"
+                class="boton"
+                onclick="solicitarCotizacion(${proyecto.id})">
+
+                Estoy interesado
+
+              </button>
+            `
+
+            :
+
+            `
+              <a
+                href="registro.html"
+                class="boton">
+
+                QUIERO REGISTRARME
+
+              </a>
+            `
+          }
+
+        </div>
+
+      `;
+
+
+      lista.appendChild(
+        elemento
+      );
+
+    }
+  );
+
+}
+
+
+function escaparHTML(texto) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    texto ?? "";
+
+  return div.innerHTML;
+
+}
+
+
+function solicitarCotizacion(
+  proyectoId
+) {
+
+  alert(
+    "Tu cuenta está registrada. " +
+    "El siguiente paso será habilitar " +
+    "la solicitud de cotización para este proyecto."
+  );
+
+}
+
+
+cargarProyectos();
+
+</script>
+
+</body>
+</html>
