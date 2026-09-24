@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aberturas - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .titulo h2 {
+      margin-bottom: 10px;
+    }
+
+    .categorias {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .categoria {
+      display: block;
+      background: white;
+      padding: 25px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #222;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s;
+    }
+
+    .categoria:hover {
+      transform: translateY(-3px);
+    }
+
+    .principal {
+      border: 3px solid #2563eb;
+    }
+
+    .icono {
+      margin-bottom: 10px;
+      color: #0f2e4d;
+    }
+
+    .icono svg {
+      width: 38px;
+      height: 38px;
+      display: block;
+    }
+
+    .categoria h3 {
+      margin: 5px 0 10px;
+      font-size: 21px;
+    }
+
+    .categoria p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px 0 10px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>AluConecta</h1>
+    <p>Encontrá el profesional para tu proyecto.</p>
+  </header>
+
+  <main class="contenedor">
+
+    <div class="titulo">
+      <h2>¿Qué tipo de abertura necesitás?</h2>
+      <p>Elegí una especialidad para encontrar profesionales.</p>
+    </div>
+
+    <div class="categorias">
+
+      <a href="aluminio.html" class="categoria principal">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M3 12h18"/></svg></div>
+        <h3>Carpintería de aluminio</h3>
+        <p>
+          Encontrá carpinteros de aluminio, fabricantes,
+          instaladores y profesionales especializados.
+        </p>
+      </a>
+
+      <a href="#" class="categoria">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M3 12h18"/></svg></div>
+        <h3>PVC</h3>
+        <p>
+          Profesionales especializados en aberturas de PVC.
+        </p>
+      </a>
+
+      <a href="#" class="categoria">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="1"/><circle cx="15.5" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Madera</h3>
+        <p>
+          Aberturas y trabajos realizados en madera.
+        </p>
+      </a>
+
+      <a href="#" class="categoria">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6 4 4M13 7l-9 9a2 2 0 0 0 3 3l9-9M11 5l2-2 8 8-2 2"/></svg></div>
+        <h3>Reparación de aberturas</h3>
+        <p>
+          Reparación, mantenimiento y puesta a punto.
+        </p>
+      </a>
+
+      <a href="#" class="categoria">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5l7-3 7 3v16M5 10h14M12 3v18"/></svg></div>
+        <h3>Cerramientos</h3>
+        <p>
+          Cerramientos para hogares, comercios y proyectos.
+        </p>
+      </a>
+
+      <a href="#" class="categoria">
+        <div class="icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M3 12h18"/></svg></div>
+        <h3>Vidriería</h3>
+        <p>
+          Profesionales relacionados con vidrios y aberturas.
+        </p>
+      </a>
+
+    </div>
+
+    <a href="index.html" class="volver">
+      ← Volver a AluConecta
+    </a>
+
+  </main>
+
+  <footer>
+    <p>© 2026 AluConecta</p>
+    <p>Conectando personas, trabajos y oportunidades.</p>
+  </footer>
+
+</body>
+</html>
