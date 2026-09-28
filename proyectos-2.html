@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Proyectos y necesidades - AluConecta</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #0f2e4d;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .tarjeta h2 {
+      margin-top: 0;
+      color: #0f2e4d;
+    }
+
+    .proyecto {
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .proyecto:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .boton {
+      display: inline-block;
+      padding: 13px 20px;
+      background: #f5c400;
+      color: #0f2e4d;
+      text-decoration: none;
+      border-radius: 7px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+    .sin-resultados {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    .aviso-registro {
+      margin-top: 15px;
+      padding: 15px;
+      background: #eef2f5;
+      border-radius: 8px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .aviso-registro svg,
+    .dato-proyecto svg {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      vertical-align: middle;
+      color: #0f2e4d;
+    }
+
+    .dato-proyecto {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 30px 0;
+      color: #0f2e4d;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+
+    .cargando {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+
+    .error {
+      text-align: center;
+      padding: 25px;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 10px;
+    }
+
+    .registro {
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Proyectos y necesidades</h1>
+  <p>Encontrá oportunidades para tu carpintería de aluminio.</p>
+</header>
+
+<main class="contenedor">
+
+  <section class="tarjeta"><h2>Acceso a oportunidades</h2><p>Ingresá con tu cuenta de carpintería para consultar los proyectos desde tu panel.</p></section>
+
+  <section id="listaProyectos" class="tarjeta">
+
+    <div class="cargando">
+      Comprobando tu acceso...
+    </div>
+
+  </section>
+
+  <a href="index.html" class="volver">
+    ← Volver a AluConecta
+  </a>
+
+</main>
+
+<footer>
+
+  <p>© 2026 AluConecta</p>
+
+  <p>
+    Donde los proyectos encuentran sus aberturas.
+  </p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(() => {
+  const lista = document.getElementById('listaProyectos');
+  function message(title, text, links) {
+    lista.replaceChildren();
+    const box = document.createElement('div');box.className='sin-resultados';
+    const heading=document.createElement('h2');heading.textContent=title;box.appendChild(heading);
+    const body=document.createElement('p');body.textContent=text;box.appendChild(body);
+    for(const [label,href] of links){const a=document.createElement('a');a.className='boton';a.textContent=label;a.href=href;a.style.margin='12px 8px 0 0';box.appendChild(a)}
+    lista.appendChild(box);
+  }
+  async function enter(){
+    try {
+      if(!window.supabase?.createClient) throw new Error('SDK unavailable');
+      const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
+      const {data,error}=await sb.auth.getUser();
+      if(error && error.name !== 'AuthSessionMissingError') throw error;
+      if(!data?.user){message('Ingresá a tu cuenta','Las oportunidades de trabajo se consultan desde una cuenta de carpintería.',[['Iniciar sesión','ingresar.html'],['Volver al inicio','index.html']]);return}
+      const result=await sb.from('perfiles').select('tipo_usuario').eq('id',data.user.id).maybeSingle();
+      if(result.error)throw result.error;
+      if(result.data?.tipo_usuario==='carpintero'){location.replace('panel-carpintero.html');return}
+      const roles=['cliente_profesional','profesional','empresa','cliente'];
+      if(roles.includes(result.data?.tipo_usuario)){message('Tus proyectos','Desde tu espacio profesional podés publicar y administrar tus pedidos de aberturas.',[['Mis proyectos','mis-proyectos.html'],['Publicar proyecto','publicar-proyecto.html']]);return}
+      message('Revisá tu perfil','No pudimos determinar los accesos de tu cuenta.',[['Revisar mi perfil','editar-perfil.html'],['Volver al inicio','index.html']]);
+    }catch(_){message('No pudimos comprobar tu acceso','Revisá la conexión y volvé a intentarlo.',[['Reintentar','proyectos.html'],['Volver al inicio','index.html']])}
+  }
+  enter();
+})();
+</script>
+
+</body>
+</html>
