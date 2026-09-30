@@ -901,6 +901,46 @@
       <div class="wrap">
         <div class="label">CONTACTO</div>
         <a href="mailto:hola@aluconecta.com.ar">hola@aluconecta.com.ar</a>
+        <form id="contactForm">
+  <input
+    type="text"
+    id="contactNombre"
+    placeholder="Nombre"
+    required
+  />
+
+  <input
+    type="email"
+    id="contactEmail"
+    placeholder="Email"
+    required
+  />
+
+  <input
+    type="tel"
+    id="contactTelefono"
+    placeholder="Teléfono (opcional)"
+  />
+
+  <select id="contactMotivo" required>
+    <option value="">Motivo de la consulta</option>
+    <option value="consulta_general">Consulta general</option>
+    <option value="profesional">Profesional / Empresa</option>
+    <option value="carpintero">Carpintería / Taller</option>
+    <option value="soporte">Ayuda con AluConecta</option>
+  </select>
+
+  <textarea
+    id="contactMensaje"
+    placeholder="Escribí tu consulta"
+    rows="5"
+    required
+  ></textarea>
+
+  <button type="submit">ENVIAR CONSULTA</button>
+
+  <p id="contactStatus" role="status" aria-live="polite"></p>
+        </form>
         <p>
           AluConecta conecta a profesionales y empresas de la construcción con
           carpinterías de aluminio. No fabrica, no instala y no intermedia en
