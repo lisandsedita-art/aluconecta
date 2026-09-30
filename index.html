@@ -1277,6 +1277,51 @@
             render("error");
           }
         }
+        const contactForm = $("contactForm");
+const contactStatus = $("contactStatus");
+
+contactForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!client) {
+    contactStatus.textContent =
+      "No pudimos conectar con AluConecta. Intentá nuevamente.";
+    return;
+  }
+
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "ENVIANDO...";
+  contactStatus.textContent = "";
+
+  const consulta = {
+    nombre: $("contactNombre").value.trim(),
+    email: $("contactEmail").value.trim(),
+    telefono: $("contactTelefono").value.trim() || null,
+    motivo: $("contactMotivo").value,
+    mensaje: $("contactMensaje").value.trim(),
+    estado: "nuevo",
+    tipo_usuario: "visitante",
+  };
+
+  try {
+    const { error } = await client
+      .from("consultas_contacto")
+      .insert(consulta);
+
+    if (error) throw error;
+
+    contactForm.reset();
+    contactStatus.textContent =
+      "Consulta enviada correctamente. Gracias por contactarnos.";
+  } catch (_) {
+    contactStatus.textContent =
+      "No pudimos enviar tu consulta. Intentá nuevamente.";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "ENVIAR CONSULTA";
+  }
+});
         retry.addEventListener("click", () => {
           if (!booted && !window.supabase?.createClient) {
             location.reload();
