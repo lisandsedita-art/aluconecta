@@ -671,6 +671,52 @@
         line-height: 1.6;
         margin: 24px 0 0;
       }
+      /* Formulario de contacto */
+#contactForm {
+  display: grid;
+  gap: 14px;
+  max-width: 560px;
+  margin: 28px 0;
+}
+
+#contactForm input,
+#contactForm select,
+#contactForm textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--texto);
+  font: inherit;
+}
+
+#contactForm textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+#contactForm input:focus,
+#contactForm select:focus,
+#contactForm textarea:focus {
+  outline: 2px solid var(--celeste);
+  outline-offset: 2px;
+}
+
+#contactForm button {
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--amarillo);
+  color: var(--azul);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+#contactStatus {
+  margin: 0;
+  min-height: 24px;
+}
     </style>
   </head>
   <body>
