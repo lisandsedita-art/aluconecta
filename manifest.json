@@ -2,7 +2,7 @@
   "name": "AluConecta - Donde los proyectos encuentran sus aberturas",
   "short_name": "AluConecta",
   "description": "Conectamos tu obra con carpinteros de aluminio de confianza",
-  "start_url": "/aluconecta/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0f2e4d",
   "theme_color": "#0f2e4d",
