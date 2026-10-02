@@ -944,7 +944,7 @@ async function cargarPerfil() {
         .from("perfiles")
 
         .select(
-          "id,nombre,tipo_usuario,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,tiktok,web"
+          "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,tiktok,web"
         )
 
         .eq(
@@ -993,19 +993,37 @@ async function cargarPerfil() {
 
 
     document.getElementById(
-      "nombre"
-    ).value =
-      data.nombre || "";
+  "nombre"
+).value =
+  data.nombre || "";
 
 
-    document.getElementById(
-      "zona"
-    ).value =
-      data.localidad || "";
+if (
+  esRolProfesional(
+    tipoUsuario
+  )
+) {
+
+  document.getElementById(
+    "actividad"
+  ).value =
+    data.actividades || "";
+
+}
+
+
+document.getElementById(
+  "zona"
+).value =
+  data.localidad || "";
+
+
 document.getElementById(
   "provincia"
 ).value =
   data.provincia || "";
+
+
 if (esCarpintero()) {
 
   document.getElementById(
@@ -1014,11 +1032,12 @@ if (esCarpintero()) {
     data.servicios || "";
 
 }
-    document.getElementById(
-      "telefono"
-    ).value =
-      data.telefono || "";
 
+
+document.getElementById(
+  "telefono"
+).value =
+  data.telefono || "";
 
     document.getElementById(
       "bio"
