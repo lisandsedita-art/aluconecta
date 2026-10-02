@@ -1124,7 +1124,16 @@ const provincia =
     return;
 
   }
+if (!provincia) {
 
+  mostrarMensaje(
+    "Seleccioná tu provincia.",
+    "error"
+  );
+
+  return;
+
+}
 
 
   const datos = {
