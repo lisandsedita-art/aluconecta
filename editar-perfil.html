@@ -1141,7 +1141,19 @@ if (!provincia) {
   return;
 
 }
+if (
+  esCarpintero() &&
+  !zonas
+) {
 
+  mostrarMensaje(
+    "Indicá las zonas donde trabajás.",
+    "error"
+  );
+
+  return;
+
+}
 
   const datos = {
 
