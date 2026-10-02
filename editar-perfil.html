@@ -750,6 +750,14 @@ function configurarInterfaz() {
 
 
   if (esCarpintero()) {
+
+
+    document.getElementById(
+      "grupoActividad"
+    ).style.display =
+      "none";
+
+
     document.getElementById(
       "labelLocalidad"
     ).textContent =
@@ -760,6 +768,7 @@ function configurarInterfaz() {
       "grupoZonas"
     ).style.display =
       "block";
+
 
     document.getElementById(
       "tituloPagina"
@@ -815,6 +824,24 @@ function configurarInterfaz() {
       tipoUsuario
     )
   ) {
+
+
+    document.getElementById(
+      "grupoActividad"
+    ).style.display =
+      "block";
+
+
+    document.getElementById(
+      "labelLocalidad"
+    ).textContent =
+      "LOCALIDAD";
+
+
+    document.getElementById(
+      "grupoZonas"
+    ).style.display =
+      "none";
 
 
     document.getElementById(
