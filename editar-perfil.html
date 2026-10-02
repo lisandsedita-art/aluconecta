@@ -1110,27 +1110,30 @@ const provincia =
 
   if (!nombre) {
 
-    mostrarMensaje(
-      "El nombre, empresa o taller es obligatorio.",
-      "error"
-    );
+  mostrarMensaje(
+    "El nombre, empresa o taller es obligatorio.",
+    "error"
+  );
 
-    return;
+  return;
 
-  }
+}
 
 
+if (!zona) {
 
-  if (!zona) {
+  mostrarMensaje(
+    esCarpintero()
+      ? "Ingresá tu localidad base."
+      : "Ingresá tu localidad.",
+    "error"
+  );
 
-    mostrarMensaje(
-      "Ingresá tu localidad o zona.",
-      "error"
-    );
+  return;
 
-    return;
+}
 
-  }
+
 if (!provincia) {
 
   mostrarMensaje(
@@ -1141,6 +1144,8 @@ if (!provincia) {
   return;
 
 }
+
+
 if (
   esCarpintero() &&
   !zonas
@@ -1155,34 +1160,45 @@ if (
 
 }
 
-  const datos = {
 
-    nombre:
-      nombre,
+const datos = {
 
-    localidad:
-      zona,
-provincia:
-  provincia,
-    telefono:
-      telefono,
+  nombre:
+    nombre,
 
-    descripcion:
-      bio,
+  localidad:
+    zona,
 
-    instagram:
-      instagram,
+  provincia:
+    provincia,
 
-    facebook:
-      facebook,
+  telefono:
+    telefono,
 
-    tiktok:
-      tiktok,
+  descripcion:
+    bio,
 
-    web:
-      web
+  instagram:
+    instagram,
 
-  };
+  facebook:
+    facebook,
+
+  tiktok:
+    tiktok,
+
+  web:
+    web
+
+};
+
+
+if (esCarpintero()) {
+
+  datos.servicios =
+    zonas;
+
+}
 
 
 
