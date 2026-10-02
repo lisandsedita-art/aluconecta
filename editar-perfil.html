@@ -1116,78 +1116,111 @@ async function guardar() {
 
 
   const nombre =
-    document
-      .getElementById("nombre")
-      .value
-      .trim();
+  document
+    .getElementById("nombre")
+    .value
+    .trim();
 
 
-  const zona =
-    document
-      .getElementById("zona")
-      .value
-      .trim();
+const actividad =
+  esRolProfesional(
+    tipoUsuario
+  )
+    ? document
+        .getElementById("actividad")
+        .value
+        .trim()
+    : "";
+
+
+const zona =
+  document
+    .getElementById("zona")
+    .value
+    .trim();
+
 
 const provincia =
   document
     .getElementById("provincia")
     .value
     .trim();
-  const zonas =
+
+
+const zonas =
   esCarpintero()
     ? document
         .getElementById("zonas")
         .value
         .trim()
     : "";
-  const telefono =
-    limpiarTelefono(
-      document
-        .getElementById("telefono")
-        .value
-    );
 
 
-  const bio =
+const telefono =
+  limpiarTelefono(
     document
-      .getElementById("bio")
+      .getElementById("telefono")
       .value
-      .trim();
+  );
 
 
-  const instagram =
-    document
-      .getElementById("ig")
-      .value
-      .trim();
+const bio =
+  document
+    .getElementById("bio")
+    .value
+    .trim();
 
 
-  const facebook =
-    document
-      .getElementById("fb")
-      .value
-      .trim();
+const instagram =
+  document
+    .getElementById("ig")
+    .value
+    .trim();
 
 
-  const tiktok =
-    document
-      .getElementById("tk")
-      .value
-      .trim();
+const facebook =
+  document
+    .getElementById("fb")
+    .value
+    .trim();
 
 
-  const web =
-    document
-      .getElementById("web")
-      .value
-      .trim();
+const tiktok =
+  document
+    .getElementById("tk")
+    .value
+    .trim();
+
+
+const web =
+  document
+    .getElementById("web")
+    .value
+    .trim();
 
 
 
-  if (!nombre) {
+if (!nombre) {
 
   mostrarMensaje(
     "El nombre, empresa o taller es obligatorio.",
+    "error"
+  );
+
+  return;
+
+}
+
+
+if (
+  esRolProfesional(
+    tipoUsuario
+  ) &&
+  !actividad
+) {
+
+  mostrarMensaje(
+    "Seleccioná tu actividad o rol profesional.",
     "error"
   );
 
@@ -1273,6 +1306,18 @@ if (esCarpintero()) {
 
   datos.servicios =
     zonas;
+
+}
+
+
+if (
+  esRolProfesional(
+    tipoUsuario
+  )
+) {
+
+  datos.actividades =
+    actividad;
 
 }
 
