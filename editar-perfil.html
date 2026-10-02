@@ -720,7 +720,16 @@ function configurarInterfaz() {
 
 
   if (esCarpintero()) {
+    document.getElementById(
+      "labelLocalidad"
+    ).textContent =
+      "LOCALIDAD BASE";
 
+
+    document.getElementById(
+      "grupoZonas"
+    ).style.display =
+      "block";
 
     document.getElementById(
       "tituloPagina"
