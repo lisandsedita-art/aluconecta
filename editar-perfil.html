@@ -945,7 +945,10 @@ async function cargarPerfil() {
       "zona"
     ).value =
       data.localidad || "";
-
+document.getElementById(
+  "provincia"
+).value =
+  data.provincia || "";
 if (esCarpintero()) {
 
   document.getElementById(
