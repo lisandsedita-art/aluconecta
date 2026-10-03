@@ -1290,52 +1290,52 @@ async function send() {
     );
 
 
-    let message =
-      error.message ||
-      'No pudimos crear la cuenta.';
+    const detalleError =
+  String(
+    error.message || ""
+  ).toLowerCase();
 
 
-    const lower =
-      message.toLowerCase();
+let message =
+  'No pudimos crear la cuenta. Intentá nuevamente.';
 
 
-    if (
-      lower.includes(
-        'already registered'
-      ) ||
-      lower.includes(
-        'already been registered'
-      ) ||
-      lower.includes(
-        'user already registered'
-      )
-    ) {
+if (
+  detalleError.includes(
+    'already registered'
+  ) ||
+  detalleError.includes(
+    'already been registered'
+  ) ||
+  detalleError.includes(
+    'user already registered'
+  )
+) {
 
-      message =
-        'Este correo ya está registrado. Ingresá a tu cuenta.';
+  message =
+    'No pudimos completar el registro con esos datos. Si ya tenés una cuenta, ingresá o recuperá tu contraseña.';
 
-    }
-
-
-    if (
-      lower.includes(
-        'rate limit'
-      ) ||
-      lower.includes(
-        'email rate'
-      )
-    ) {
-
-      message =
-        'Se alcanzó temporalmente el límite de correos de verificación. Esperá unos minutos antes de volver a intentarlo.';
-
-    }
+}
 
 
-    showMessage(
-      message
-    );
+if (
+  detalleError.includes(
+    'rate limit'
+  ) ||
+  detalleError.includes(
+    'email rate'
+  )
+) {
 
+  message =
+    'Se alcanzó temporalmente el límite de correos de verificación. Esperá unos minutos antes de volver a intentarlo.';
+
+}
+
+
+showMessage(
+  message
+);
 
   } finally {
 
