@@ -827,11 +827,9 @@ async function actualizarEstado(
   if (error) {
 
     mostrarMensaje(
-      "No pudimos actualizar la autorización: " +
-      error.message,
-      "error"
-    );
-
+  "No pudimos actualizar la autorización. Intentá nuevamente.",
+  "error"
+);
     return;
 
   }
