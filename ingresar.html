@@ -720,39 +720,39 @@ formulario.addEventListener(
         error
       );
 
-
-      let texto =
-        error.message ||
-        'No pudimos iniciar sesión.';
-
-
-      if (
-        texto
-          .toLowerCase()
-          .includes(
-            'invalid login credentials'
-          )
-      ) {
-
-        texto =
-          'Correo o contraseña incorrectos.';
-
-      }
+const detalleError =
+  String(
+    error.message || ""
+  ).toLowerCase();
 
 
-      if (
-        texto
-          .toLowerCase()
-          .includes(
-            'email not confirmed'
-          )
-      ) {
+let texto =
+  'No pudimos iniciar sesión. Intentá nuevamente.';
 
-        texto =
-          'Primero tenés que verificar tu correo electrónico.';
 
-      }
+if (
+  detalleError.includes(
+    'invalid login credentials'
+  )
+) {
 
+  texto =
+    'Correo o contraseña incorrectos.';
+
+}
+
+
+if (
+  detalleError.includes(
+    'email not confirmed'
+  )
+) {
+
+  texto =
+    'Primero tenés que verificar tu correo electrónico.';
+
+}
+      
 
       mostrarMensaje(
         texto,
