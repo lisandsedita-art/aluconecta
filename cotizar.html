@@ -2042,13 +2042,9 @@ formCotizacion.addEventListener(
 
 
       mostrarMensaje(
-        'No pudimos guardar la cotización: ' +
-        (
-          error.message ||
-          'error desconocido'
-        ),
-        'error'
-      );
+  'No pudimos guardar la cotización. Intentá nuevamente.',
+  'error'
+);
 
 
       guardarCotizacion.textContent =
