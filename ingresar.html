@@ -681,8 +681,9 @@ formulario.addEventListener(
 
       if (!tipoUsuario) {
 
-        await sb.auth.signOut();
-
+        await sb.auth.signOut({
+  scope: 'local'
+});
         throw new Error(
           'Tu cuenta existe, pero no encontramos un perfil de AluConecta asociado.'
         );
