@@ -1225,7 +1225,100 @@ async function verificarAcceso() {
 
     }
 
+    const {
+      data: verificacion,
+      error: verificacionError
+    } =
+      await sb
+        .from(
+          'verificaciones_identidad'
+        )
+        .select(
+          'estado'
+        )
+        .eq(
+          'usuario_id',
+          usuarioActual.id
+        )
+        .maybeSingle();
 
+
+    if (
+      verificacionError
+    ) {
+
+      console.error(
+        'Error verificando identidad:',
+        verificacionError
+      );
+
+
+      mostrarAccesoDenegado(
+        'No pudimos verificar tu estado',
+        'Volvé a intentarlo en unos minutos.'
+      );
+
+      return;
+
+    }
+
+
+    if (
+      verificacion?.estado !==
+      'verificado'
+    ) {
+
+      const accionAcceso =
+        document.getElementById(
+          'accionAcceso'
+        );
+
+
+      accionAcceso.href =
+        'verificar-identidad.html';
+
+
+      if (
+        verificacion?.estado ===
+        'en_revision'
+      ) {
+
+        accionAcceso.textContent =
+          'VER ESTADO';
+
+        mostrarAccesoDenegado(
+          'Verificación en revisión',
+          'Recibimos tu documentación. Podrás publicar proyectos cuando AluConecta apruebe la verificación.'
+        );
+
+      } else if (
+        verificacion?.estado ===
+        'rechazado'
+      ) {
+
+        accionAcceso.textContent =
+          'REVISAR VERIFICACIÓN';
+
+        mostrarAccesoDenegado(
+          'Verificación pendiente de corrección',
+          'Necesitás corregir tu verificación antes de publicar proyectos.'
+        );
+
+      } else {
+
+        accionAcceso.textContent =
+          'VERIFICAR CUENTA';
+
+        mostrarAccesoDenegado(
+          'Verificación requerida',
+          'Para publicar proyectos necesitás verificar tu identidad o empresa.'
+        );
+
+      }
+
+      return;
+
+    }
     perfilActual =
       perfil;
 
