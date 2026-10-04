@@ -1843,7 +1843,9 @@ document.getElementById(
       try {
 
         await sb.auth
-          .signOut();
+  .signOut({
+    scope: "local"
+  });
 
       } finally {
 
