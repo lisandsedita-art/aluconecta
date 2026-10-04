@@ -1344,6 +1344,10 @@ contactForm.addEventListener("submit", async (event) => {
     contactStatus.textContent =
       "No pudimos enviar tu consulta. Intentá nuevamente.";
   } finally {
+    if (window.turnstile) {
+      window.turnstile.reset();
+    }
+
     submitButton.disabled = false;
     submitButton.textContent = "ENVIAR CONSULTA";
   }
