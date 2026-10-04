@@ -585,10 +585,116 @@
 
 
     const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+async function verificarAcceso() {
+
+  try {
+
+    const {
+      data: { user },
+      error: userError
+    } =
+      await supabaseClient.auth
+        .getUser();
+
+
+    if (
+      userError ||
+      !user
+    ) {
+
+      window.location.replace(
+        "ingresar.html"
       );
+
+      return;
+
+    }
+
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await supabaseClient
+        .from("perfiles")
+        .select("tipo_usuario")
+        .eq("id", user.id)
+        .maybeSingle();
+
+
+    if (
+      perfilError ||
+      !perfil
+    ) {
+
+      throw (
+        perfilError ||
+        new Error(
+          "Perfil no disponible."
+        )
+      );
+
+    }
+
+
+    if (
+      perfil.tipo_usuario ===
+      "carpintero"
+    ) {
+
+      window.location.replace(
+        "panel-carpintero.html"
+      );
+
+      return;
+
+    }
+
+
+    const rolesProfesionales = [
+      "cliente_profesional",
+      "profesional",
+      "empresa",
+      "cliente"
+    ];
+
+
+    if (
+      !rolesProfesionales.includes(
+        perfil.tipo_usuario
+      )
+    ) {
+
+      window.location.replace(
+        "editar-perfil.html"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Error verificando acceso:",
+      error
+    );
+
+
+    window.location.replace(
+      "ingresar.html"
+    );
+
+  }
+
+}
+
+
+verificarAcceso();
 
 
 
