@@ -1080,10 +1080,16 @@ document.getElementById(
       data.instagram || "";
 
 
-    document.getElementById(
+        document.getElementById(
       "fb"
     ).value =
       data.facebook || "";
+
+
+    document.getElementById(
+      "linkedin"
+    ).value =
+      data.linkedin || "";
 
 
     document.getElementById(
@@ -1206,10 +1212,16 @@ const instagram =
     .value
     .trim();
 
-
 const facebook =
   document
     .getElementById("fb")
+    .value
+    .trim();
+
+
+const linkedin =
+  document
+    .getElementById("linkedin")
     .value
     .trim();
 
@@ -1319,8 +1331,11 @@ const datos = {
   instagram:
     instagram,
 
-  facebook:
+    facebook:
     facebook,
+
+  linkedin:
+    linkedin,
 
   tiktok:
     tiktok,
