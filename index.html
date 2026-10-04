@@ -1303,22 +1303,39 @@ contactForm.addEventListener("submit", async (event) => {
   submitButton.textContent = "ENVIANDO...";
   contactStatus.textContent = "";
 
+    const turnstileToken =
+    contactForm.querySelector(
+      '[name="cf-turnstile-response"]'
+    )?.value || "";
+
+  if (!turnstileToken) {
+    contactStatus.textContent =
+      "Completá la verificación de seguridad.";
+    submitButton.disabled = false;
+    submitButton.textContent = "ENVIAR CONSULTA";
+    return;
+  }
+
   const consulta = {
     nombre: $("contactNombre").value.trim(),
     email: $("contactEmail").value.trim(),
-    telefono: $("contactTelefono").value.trim() || null,
+    telefono: $("contactTelefono").value.trim(),
     motivo: $("contactMotivo").value,
     mensaje: $("contactMensaje").value.trim(),
-    estado: "nuevo",
-    tipo_usuario: "visitante",
+    turnstileToken,
   };
 
   try {
-    const { error } = await client
-      .from("consultas_contacto")
-      .insert(consulta);
+    const { data, error } = await client.functions.invoke(
+      "enviar-consulta",
+      {
+        body: consulta,
+      }
+    );
 
-    if (error) throw error;
+    if (error || data?.ok !== true) {
+      throw error || new Error("No se pudo enviar la consulta.");
+    }
 
     contactForm.reset();
     contactStatus.textContent =
