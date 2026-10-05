@@ -665,74 +665,7 @@ function ocultarMensaje() {
 
 
 
-function extensionArchivo(archivo) {
 
-  const mapa = {
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "image/webp": "webp",
-    "application/pdf": "pdf"
-  };
-
-  return mapa[archivo.type] || null;
-
-}
-
-
-
-function validarArchivo(
-  archivo,
-  nombre
-) {
-
-  if (!archivo) {
-
-    throw new Error(
-      "Falta adjuntar " + nombre + "."
-    );
-
-  }
-
-
-  if (
-    !MIME_PERMITIDOS.includes(
-      archivo.type
-    )
-  ) {
-
-    throw new Error(
-      nombre +
-      " tiene un formato no permitido."
-    );
-
-  }
-
-
-  if (
-    archivo.size > MAX_ARCHIVO
-  ) {
-
-    throw new Error(
-      nombre +
-      " supera el máximo de 8 MB."
-    );
-
-  }
-
-
-  if (
-    !extensionArchivo(archivo)
-  ) {
-
-    throw new Error(
-      "No se pudo identificar el formato de " +
-      nombre +
-      "."
-    );
-
-  }
-
-}
 
 
 
