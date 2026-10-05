@@ -856,68 +856,6 @@ function actualizarEstado() {
 
 
 
-async function subirArchivo(
-  archivo,
-  etiqueta
-) {
-
-  const extension =
-    extensionArchivo(archivo);
-
-
-  const identificador =
-    Date.now() +
-    "-" +
-    Math.random()
-      .toString(36)
-      .slice(2, 9);
-
-
-  const ruta =
-    usuarioActual.id +
-    "/" +
-    etiqueta +
-    "-" +
-    identificador +
-    "." +
-    extension;
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .storage
-      .from(
-        "verificaciones-identidad"
-      )
-      .upload(
-        ruta,
-        archivo,
-        {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: archivo.type
-        }
-      );
-
-
-  if (error) {
-
-    throw new Error(
-      "No se pudo subir " +
-      etiqueta +
-      ": " +
-      error.message
-    );
-
-  }
-
-
-  return ruta;
-
-}
-
 
 
 async function cargarCuenta() {
