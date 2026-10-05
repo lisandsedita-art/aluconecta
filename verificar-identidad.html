@@ -483,66 +483,75 @@
 
 
         
+        <div class="grupo">
 
+          <label for="cuit">
+            CUIT
+          </label>
 
-        <div
-          id="datosEmpresa"
-          class="empresa"
-        >
+          <input
+            id="cuit"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="11"
+            placeholder="11 dígitos"
+          >
 
-
-          <div class="grupo">
-
-            <label for="cuit">
-              CUIT
-            </label>
-
-            <input
-              id="cuit"
-              inputmode="numeric"
-              autocomplete="off"
-              maxlength="11"
-              placeholder="11 dígitos"
-            >
-
-          </div>
-
-
-          <div class="grupo">
-
-            <label for="razonSocial">
-              RAZÓN SOCIAL
-            </label>
-
-            <input
-              id="razonSocial"
-              autocomplete="organization"
-              placeholder="Razón social registrada"
-            >
-
-          </div>
-
-
-          <div class="grupo">
-
-            <label for="constancia">
-              CONSTANCIA DE CUIT
-            </label>
-
-            <input
-              id="constancia"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,application/pdf"
-            >
-
-            <span class="ayuda">
-              JPG, PNG, WebP o PDF. Máximo 8 MB.
-            </span>
-
-          </div>
-
+          <span class="ayuda">
+            Se utilizará para comprobar tus datos profesionales o comerciales.
+          </span>
 
         </div>
+
+
+        <div class="grupo">
+
+          <label for="razonSocial">
+            NOMBRE FISCAL / RAZÓN SOCIAL
+          </label>
+
+          <input
+            id="razonSocial"
+            autocomplete="organization"
+            placeholder="Nombre o razón social registrada"
+          >
+
+        </div>
+
+
+        <div class="grupo">
+
+          <label for="matricula">
+            MATRÍCULA PROFESIONAL (OPCIONAL)
+          </label>
+
+          <input
+            id="matricula"
+            autocomplete="off"
+            placeholder="Número de matrícula"
+          >
+
+          <span class="ayuda">
+            Completala si tu actividad requiere matrícula profesional.
+          </span>
+
+        </div>
+
+
+        <div class="grupo">
+
+          <label for="entidadMatricula">
+            COLEGIO / CONSEJO / ENTIDAD (OPCIONAL)
+          </label>
+
+          <input
+            id="entidadMatricula"
+            autocomplete="organization"
+            placeholder="Ej: Colegio de Arquitectos de Santa Fe"
+          >
+
+        </div>
+
 
 
         <div
