@@ -1322,20 +1322,136 @@ async function enviarVerificacion(
 
 
     let constanciaPath =
-      null;
+async function enviarVerificacion(
+  evento
+) {
+
+  evento.preventDefault();
+
+  ocultarMensaje();
+
+
+  const boton =
+    document.getElementById(
+      "enviar"
+    );
+
+
+  try {
+
+    const tipo =
+      document
+        .getElementById("tipo")
+        .value;
+
+
+    const dni =
+      limpiarNumero(
+        document
+          .getElementById("dni")
+          .value
+      );
+
+
+    const cuit =
+      limpiarNumero(
+        document
+          .getElementById("cuit")
+          .value
+      );
+
+
+    const razonSocial =
+      document
+        .getElementById(
+          "razonSocial"
+        )
+        .value
+        .trim();
+
+
+    const matricula =
+      document
+        .getElementById(
+          "matricula"
+        )
+        .value
+        .trim();
+
+
+    const entidadMatricula =
+      document
+        .getElementById(
+          "entidadMatricula"
+        )
+        .value
+        .trim();
 
 
     if (
-      tipo === "empresa"
+      !["persona", "empresa"]
+        .includes(tipo)
     ) {
 
-      constanciaPath =
-        await subirArchivo(
-          constancia,
-          "constancia-cuit"
-        );
+      throw new Error(
+        "Seleccioná el tipo de verificación."
+      );
 
     }
+
+
+    if (
+      dni.length < 7 ||
+      dni.length > 8
+    ) {
+
+      throw new Error(
+        "Ingresá un DNI válido de 7 u 8 dígitos."
+      );
+
+    }
+
+
+    if (
+      cuit.length !== 11
+    ) {
+
+      throw new Error(
+        "El CUIT debe tener 11 dígitos."
+      );
+
+    }
+
+
+    if (
+      !razonSocial
+    ) {
+
+      throw new Error(
+        "Ingresá el nombre fiscal o razón social."
+      );
+
+    }
+
+
+    if (
+      (matricula && !entidadMatricula) ||
+      (!matricula && entidadMatricula)
+    ) {
+
+      throw new Error(
+        "Si informás matrícula, completá también el colegio, consejo o entidad."
+      );
+
+    }
+
+
+    boton.disabled =
+      true;
+
+
+    boton.textContent =
+      "ENVIANDO DATOS...";
 
 
     const {
@@ -1343,7 +1459,7 @@ async function enviarVerificacion(
     } =
       await supabaseClient
         .rpc(
-          "enviar_verificacion_identidad",
+          "enviar_verificacion_profesional",
           {
             p_tipo_verificacion:
               tipo,
@@ -1357,14 +1473,11 @@ async function enviarVerificacion(
             p_razon_social:
               razonSocial,
 
-            p_documento_frente_path:
-              frentePath,
+            p_matricula:
+              matricula || null,
 
-            p_documento_dorso_path:
-              dorsoPath,
-
-            p_constancia_cuit_path:
-              constanciaPath
+            p_entidad_matricula:
+              entidadMatricula || null
           }
         );
 
@@ -1382,7 +1495,7 @@ async function enviarVerificacion(
 
 
     mostrarMensaje(
-      "Documentación enviada correctamente. Tu cuenta quedó en revisión.",
+      "Datos enviados correctamente. Tu cuenta quedó en revisión.",
       "ok"
     );
 
@@ -1400,7 +1513,7 @@ async function enviarVerificacion(
 
     mostrarMensaje(
       error?.message ||
-      "No pudimos enviar la documentación.",
+      "No pudimos enviar los datos.",
       "error"
     );
 
@@ -1417,8 +1530,6 @@ async function enviarVerificacion(
   }
 
 }
-
-
 
 document
   .getElementById("tipo")
