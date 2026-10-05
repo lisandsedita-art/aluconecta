@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Verificar cuenta - AluConecta</title>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"
+  ></script>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    :root {
+      --azul: #0f2e4d;
+      --azul2: #163d63;
+      --celeste: #5bc0de;
+      --amarillo: #f5c542;
+      --amarillo-hover: #e5b632;
+      --fondo: #f4f6f8;
+      --blanco: #ffffff;
+      --texto: #24313d;
+      --texto-suave: #64748b;
+      --borde: #dfe5ea;
+      --verde: #166534;
+      --verde-fondo: #dcfce7;
+      --amarillo-oscuro: #854d0e;
+      --amarillo-fondo: #fef9c3;
+      --rojo: #991b1b;
+      --rojo-fondo: #fee2e2;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+    }
+
+
+    header {
+      background: var(--azul);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+
+    .marca {
+      font-weight: 800;
+      font-size: 21px;
+      margin-bottom: 16px;
+    }
+
+
+    .marca span {
+      color: var(--celeste);
+    }
+
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 29px;
+    }
+
+
+    header p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #c8d5e1;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+
+    .contenedor {
+      width: calc(100% - 32px);
+      max-width: 700px;
+      margin: 24px auto 40px;
+    }
+
+
+    .card {
+      background: var(--blanco);
+      border: 1px solid rgba(15,46,77,.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 5px 18px rgba(15,46,77,.06);
+    }
+
+
+    .card h2 {
+      margin: 0 0 8px;
+      color: var(--azul);
+      font-size: 21px;
+    }
+
+
+    .descripcion {
+      margin: 0 0 20px;
+      color: var(--texto-suave);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+
+    .estado {
+      display: none;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+
+    .estado.sin-verificar {
+      display: block;
+      background: #eef2f7;
+      color: var(--azul);
+      border: 1px solid #dbe3ea;
+    }
+
+
+    .estado.en-revision {
+      display: block;
+      background: var(--amarillo-fondo);
+      color: var(--amarillo-oscuro);
+      border: 1px solid #fde68a;
+    }
+
+
+    .estado.verificado {
+      display: block;
+      background: var(--verde-fondo);
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
+
+    .estado.rechazado {
+      display: block;
+      background: var(--rojo-fondo);
+      color: var(--rojo);
+      border: 1px solid #fecaca;
+    }
+
+
+    .grupo {
+      margin-bottom: 18px;
+    }
+
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--azul);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .03em;
+    }
+
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #ccd5dd;
+      border-radius: 10px;
+      padding: 13px;
+      background: white;
+      color: var(--texto);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+    }
+
+
+    input:focus,
+    select:focus {
+      border-color: var(--celeste);
+      box-shadow: 0 0 0 3px rgba(91,192,222,.16);
+    }
+
+
+    input[type="file"] {
+      padding: 10px;
+    }
+
+
+    .ayuda {
+      display: block;
+      margin-top: 6px;
+      color: var(--texto-suave);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+
+    .privacidad {
+      background: #f8fafc;
+      border: 1px solid #e4e9ee;
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--texto-suave);
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+
+    .empresa {
+      display: none;
+    }
+
+
+    .empresa.visible {
+      display: block;
+    }
+
+
+    .mensaje {
+      display: none;
+      border-radius: 10px;
+      padding: 13px;
+      margin: 14px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+
+    .mensaje.error {
+      display: block;
+      background: var(--rojo-fondo);
+      color: var(--rojo);
+      border: 1px solid #fecaca;
+    }
+
+
+    .mensaje.ok {
+      display: block;
+      background: var(--verde-fondo);
+      color: var(--verde);
+      border: 1px solid #bbf7d0;
+    }
+
+
+    .acciones {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+
+    .btn-principal {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+
+    .btn-principal:hover {
+      background: var(--amarillo-hover);
+    }
+
+
+    .btn-principal:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+
+    .btn-secundario {
+      background: white;
+      color: var(--azul);
+      border: 1px solid var(--borde);
+    }
+
+
+    .cargando {
+      text-align: center;
+      color: var(--texto-suave);
+      padding: 28px 10px;
+    }
+
+
+    footer {
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 12px;
+      padding: 10px 20px 30px;
+    }
+
+
+    @media (max-width: 520px) {
+
+      header {
+        padding: 26px 18px;
+      }
+
+      header h1 {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <div class="marca">
+    Alu<span>Conecta</span>
+  </div>
+
+    <h1>
+    Verificá tu cuenta
+  </h1>
+
+  <p>
+    Este proceso se aplica a todas las cuentas de AluConecta, tanto del lado
+    de las carpinterías como del lado de quienes publican proyectos.
+    AluConecta revisa datos profesionales y comerciales para brindar mayor
+    seguridad a ambas partes.
+  </p>
+
+</header>
+
+
+<main class="contenedor">
+
+
+  <div
+    id="cargando"
+    class="card cargando"
+  >
+    Comprobando tu cuenta...
+  </div>
+
+
+  <div
+    id="contenido"
+    style="display:none;"
+  >
+
+
+    <section class="card">
+
+      <h2>
+        Estado de verificación
+      </h2>
+
+            <p class="descripcion">
+        Crear una cuenta y verificar sus datos son procesos diferentes.
+        La verificación agrega una capa adicional de confianza dentro de AluConecta.
+      </p>
+
+      <div
+        id="estado"
+        class="estado"
+      ></div>
+
+      <div
+        id="observacion"
+        class="mensaje error"
+      ></div>
+
+    </section>
+
+
+    <section
+      id="formularioCard"
+      class="card"
+    >
+
+      <h2>
+        Datos del titular para verificar
+      </h2>
+
+      <p class="descripcion">
+        Completá los datos solicitados. AluConecta los revisará antes
+        de considerar la cuenta verificada.
+      </p>
+
+
+      <div class="privacidad">
+        Los datos utilizados para la verificación son privados.
+        No se muestran en el perfil público ni a otros usuarios de AluConecta.
+      </div>
+
+
+      <form id="formVerificacion">
+
+
+        <div class="grupo">
+
+          <label for="tipo">
+            TITULAR DE LA CUENTA
+          </label>
+
+          <select id="tipo">
+
+            <option value="">
+              Seleccioná una opción
+            </option>
+
+            <option value="persona">
+              Persona humana
+            </option>
+
+            <option value="empresa">
+              Empresa / persona jurídica
+            </option>
+
+          </select>
+
+          <span class="ayuda">
+            Esto no define tu actividad dentro de AluConecta.
+            Tanto una carpintería como quien publica proyectos pueden operar
+            como persona humana o como empresa / persona jurídica.
+          </span>
+
+        </div>
+
+
+        <div class="grupo">
+
+          <label
+            id="labelDni"
+            for="dni"
+          >
+            DNI DEL TITULAR / RESPONSABLE
+          </label>
+
+          <input
+            id="dni"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="8"
+            placeholder="Sólo números"
+          >
+
+          <span
+            id="ayudaDni"
+            class="ayuda"
+          >
+            Debe contener 7 u 8 dígitos.
+          </span>
+
+        </div>
+
+
+        
+        <div class="grupo">
+
+          <label
+            id="labelCuit"
+            for="cuit"
+          >
+            CUIT DEL TITULAR / EMPRESA
+          </label>
+
+          <input
+            id="cuit"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="11"
+            placeholder="11 dígitos"
+          >
+
+          <span
+            id="ayudaCuit"
+            class="ayuda"
+          >
+            Ingresá el CUIT correspondiente al titular legal o fiscal de la cuenta.
+          </span>
+
+        </div>
+
+
+        <div class="grupo">
+
+          <label
+            id="labelRazonSocial"
+            for="razonSocial"
+          >
+            NOMBRE FISCAL / RAZÓN SOCIAL
+          </label>
+
+          <input
+            id="razonSocial"
+            autocomplete="organization"
+            placeholder="Nombre o razón social registrada"
+          >
+
+        </div>
+
+
+        <div
+          id="grupoMatricula"
+          class="grupo"
+        >
+
+          <label for="matricula">
+            MATRÍCULA PROFESIONAL (OPCIONAL)
+          </label>
+
+          <input
+            id="matricula"
+            autocomplete="off"
+            placeholder="Número de matrícula"
+          >
+
+          <span class="ayuda">
+            Completala si tu actividad requiere matrícula profesional.
+          </span>
+
+        </div>
+
+
+        <div
+          id="grupoEntidadMatricula"
+          class="grupo"
+        >
+
+          <label for="entidadMatricula">
+            COLEGIO / CONSEJO / ENTIDAD (OPCIONAL)
+          </label>
+
+          <input
+            id="entidadMatricula"
+            autocomplete="organization"
+            placeholder="Ej: Colegio de Arquitectos de Santa Fe"
+          >
+
+        </div>
+
+
+
+        <div
+          id="mensaje"
+          class="mensaje"
+          aria-live="polite"
+        ></div>
+
+
+        <div class="acciones">
+
+          <button
+            id="enviar"
+            class="btn btn-principal"
+            type="submit"
+          >
+            ENVIAR A REVISIÓN
+          </button>
+
+          <a
+            id="volverPanel"
+            class="btn btn-secundario"
+            href="index.html"
+          >
+            VOLVER AL PANEL
+          </a>
+
+        </div>
+
+
+      </form>
+
+    </section>
+
+
+  </div>
+
+
+</main>
+
+
+<footer>
+  © 2026 AluConecta · Donde los proyectos encuentran sus aberturas.
+</footer>
+
+
+
+<script>
+
+
+const SUPABASE_URL =
+  "https://wroaxwjyjrxzwctfkyoo.supabase.co";
+
+
+const SUPABASE_KEY =
+  "sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+
+
+
+let usuarioActual = null;
+let perfilActual = null;
+let verificacionActual = null;
+
+
+
+function limpiarNumero(valor) {
+
+  return String(valor || "")
+    .replace(/\D/g, "");
+
+}
+
+
+
+function mostrarMensaje(texto, tipo) {
+
+  const elemento =
+    document.getElementById("mensaje");
+
+  elemento.textContent =
+    texto;
+
+  elemento.className =
+    "mensaje " + tipo;
+
+}
+
+
+
+function ocultarMensaje() {
+
+  const elemento =
+    document.getElementById("mensaje");
+
+  elemento.textContent =
+    "";
+
+  elemento.className =
+    "mensaje";
+
+}
+
+
+
+
+
+
+
+function actualizarCamposTitular() {
+
+  const tipo =
+    document
+      .getElementById("tipo")
+      .value;
+
+
+  const labelDni =
+    document
+      .getElementById("labelDni");
+
+  const ayudaDni =
+    document
+      .getElementById("ayudaDni");
+
+  const labelCuit =
+    document
+      .getElementById("labelCuit");
+
+  const ayudaCuit =
+    document
+      .getElementById("ayudaCuit");
+
+  const labelRazonSocial =
+    document
+      .getElementById(
+        "labelRazonSocial"
+      );
+
+  const razonSocial =
+    document
+      .getElementById(
+        "razonSocial"
+      );
+
+
+  if (tipo === "persona") {
+
+    labelDni.textContent =
+      "DNI DEL TITULAR";
+
+    ayudaDni.textContent =
+      "Debe contener 7 u 8 dígitos.";
+
+    labelCuit.textContent =
+      "CUIT DEL TITULAR";
+
+    ayudaCuit.textContent =
+      "Ingresá el CUIT de la persona titular de la cuenta.";
+
+    labelRazonSocial.textContent =
+      "NOMBRE FISCAL DEL TITULAR";
+
+    razonSocial.placeholder =
+      "Nombre y apellido registrados";
+
+    return;
+
+  }
+
+
+  if (tipo === "empresa") {
+
+    labelDni.textContent =
+      "DNI DEL RESPONSABLE DE LA CUENTA";
+
+    ayudaDni.textContent =
+      "Ingresá el DNI de la persona responsable de esta cuenta.";
+
+    labelCuit.textContent =
+      "CUIT DE LA EMPRESA / PERSONA JURÍDICA";
+
+    ayudaCuit.textContent =
+      "Ingresá el CUIT correspondiente a la razón social.";
+
+    labelRazonSocial.textContent =
+      "RAZÓN SOCIAL";
+
+    razonSocial.placeholder =
+      "Razón social registrada";
+
+    return;
+
+  }
+
+
+  labelDni.textContent =
+    "DNI DEL TITULAR / RESPONSABLE";
+
+  ayudaDni.textContent =
+    "Debe contener 7 u 8 dígitos.";
+
+  labelCuit.textContent =
+    "CUIT DEL TITULAR / EMPRESA";
+
+  ayudaCuit.textContent =
+    "Ingresá el CUIT correspondiente al titular legal o fiscal de la cuenta.";
+
+  labelRazonSocial.textContent =
+    "NOMBRE FISCAL / RAZÓN SOCIAL";
+
+  razonSocial.placeholder =
+    "Nombre o razón social registrada";
+
+}
+
+
+
+function actualizarCamposPorRol() {
+
+  const grupoMatricula =
+    document.getElementById(
+      "grupoMatricula"
+    );
+
+  const grupoEntidadMatricula =
+    document.getElementById(
+      "grupoEntidadMatricula"
+    );
+
+
+  const tipoTitular =
+    document
+      .getElementById("tipo")
+      .value;
+
+
+  const mostrarDatosProfesionales =
+    perfilActual?.tipo_usuario ===
+    "cliente_profesional" &&
+    tipoTitular ===
+    "persona";
+
+
+  grupoMatricula.style.display =
+    mostrarDatosProfesionales
+      ? "block"
+      : "none";
+
+
+  grupoEntidadMatricula.style.display =
+    mostrarDatosProfesionales
+      ? "block"
+      : "none";
+
+
+  if (
+    !mostrarDatosProfesionales
+  ) {
+
+    document
+      .getElementById("matricula")
+      .value =
+        "";
+
+    document
+      .getElementById(
+        "entidadMatricula"
+      )
+      .value =
+        "";
+
+  }
+
+}
+
+
+
+function configurarVolverPanel() {
+
+  const enlace =
+    document
+      .getElementById("volverPanel");
+
+
+  if (
+    perfilActual?.tipo_usuario ===
+    "carpintero"
+  ) {
+
+    enlace.href =
+      "panel-carpintero.html";
+
+    return;
+
+  }
+
+
+  if (
+    perfilActual?.tipo_usuario ===
+    "cliente_profesional"
+  ) {
+
+    enlace.href =
+      "panel-cliente.html";
+
+    return;
+
+  }
+
+
+  enlace.href =
+    "index.html";
+
+}
+
+
+
+function actualizarEstado() {
+
+  const estado =
+    verificacionActual?.estado ||
+    "sin_verificar";
+
+
+  const caja =
+    document.getElementById("estado");
+
+
+  const formulario =
+    document.getElementById(
+      "formularioCard"
+    );
+
+
+  const observacion =
+    document.getElementById(
+      "observacion"
+    );
+
+
+  caja.className =
+    "estado";
+
+
+  observacion.className =
+    "mensaje error";
+
+  observacion.style.display =
+    "none";
+
+
+  if (
+    estado === "sin_verificar"
+  ) {
+
+    caja.classList.add(
+      "sin-verificar"
+    );
+
+    caja.textContent =
+      "Sin verificar — Podés enviar tus datos para revisión.";
+
+    formulario.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  if (
+    estado === "en_revision"
+  ) {
+
+    caja.classList.add(
+      "en-revision"
+    );
+
+    caja.textContent =
+      "En revisión — Recibimos tus datos. AluConecta debe revisarlos antes de aprobar la cuenta.";
+
+    formulario.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  if (
+    estado === "verificado"
+  ) {
+
+    caja.classList.add(
+      "verificado"
+    );
+
+    caja.textContent =
+      "Cuenta verificada — Tus datos profesionales o comerciales fueron revisados por AluConecta.";
+
+    formulario.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  if (
+    estado === "rechazado"
+  ) {
+
+    caja.classList.add(
+      "rechazado"
+    );
+
+    caja.textContent =
+      "Verificación pendiente de corrección — Revisá la observación y volvé a enviar los datos.";
+
+    formulario.style.display =
+      "block";
+
+
+    if (
+      verificacionActual
+        ?.observacion_revision
+    ) {
+
+      observacion.textContent =
+        verificacionActual
+          .observacion_revision;
+
+      observacion.style.display =
+        "block";
+
+    }
+
+    return;
+
+  }
+
+
+  caja.classList.add(
+    "sin-verificar"
+  );
+
+  caja.textContent =
+    "Estado de verificación no reconocido.";
+
+  formulario.style.display =
+    "none";
+
+}
+
+
+
+
+
+async function cargarCuenta() {
+
+  try {
+
+    const {
+      data: usuarioData,
+      error: usuarioError
+    } =
+      await supabaseClient
+        .auth
+        .getUser();
+
+
+    if (
+      usuarioError ||
+      !usuarioData?.user
+    ) {
+
+      window.location.href =
+        "ingresar.html";
+
+      return;
+
+    }
+
+
+    usuarioActual =
+      usuarioData.user;
+
+
+    const {
+      data: perfil,
+      error: perfilError
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .select(
+          "id,nombre,tipo_usuario,dni"
+        )
+
+        .eq(
+          "id",
+          usuarioActual.id
+        )
+
+        .single();
+
+
+    if (perfilError) {
+      throw perfilError;
+    }
+
+
+    perfilActual =
+      perfil;
+
+
+    actualizarCamposPorRol();
+
+
+    const {
+      data: verificacion,
+      error: verificacionError
+    } =
+      await supabaseClient
+
+        .from(
+          "verificaciones_identidad"
+        )
+
+        .select(
+          "estado,tipo_verificacion,observacion_revision,enviado_en,verificado_en"
+        )
+
+        .eq(
+          "usuario_id",
+          usuarioActual.id
+        )
+
+        .single();
+
+
+    if (verificacionError) {
+      throw verificacionError;
+    }
+
+
+
+    verificacionActual =
+      verificacion;
+
+
+    if (
+      perfil.dni
+    ) {
+
+      document
+        .getElementById("dni")
+        .value =
+          limpiarNumero(
+            perfil.dni
+          );
+
+    }
+
+
+    if (
+      verificacion
+        ?.tipo_verificacion
+    ) {
+
+      document
+        .getElementById("tipo")
+        .value =
+          verificacion
+            .tipo_verificacion;
+
+      actualizarCamposTitular();
+      actualizarCamposPorRol();
+
+    }
+
+
+
+    configurarVolverPanel();
+
+    actualizarEstado();
+
+
+    document
+      .getElementById("cargando")
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById("contenido")
+      .style.display =
+        "block";
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando verificación:",
+      error
+    );
+
+
+    const cargando =
+      document.getElementById(
+        "cargando"
+      );
+
+
+
+    cargando.textContent =
+      "No pudimos cargar el estado de verificación. Volvé a intentarlo.";
+
+  }
+
+}
+
+
+
+
+async function enviarVerificacion(
+  evento
+) {
+
+  evento.preventDefault();
+
+  ocultarMensaje();
+
+
+  const boton =
+    document.getElementById(
+      "enviar"
+    );
+
+
+  try {
+
+    const tipo =
+      document
+        .getElementById("tipo")
+        .value;
+
+
+    const dni =
+      limpiarNumero(
+        document
+          .getElementById("dni")
+          .value
+      );
+
+
+    const cuit =
+      limpiarNumero(
+        document
+          .getElementById("cuit")
+          .value
+      );
+
+
+    const razonSocial =
+      document
+        .getElementById(
+          "razonSocial"
+        )
+        .value
+        .trim();
+
+
+    const matricula =
+      document
+        .getElementById(
+          "matricula"
+        )
+        .value
+        .trim();
+
+
+    const entidadMatricula =
+      document
+          .getElementById(
+          "entidadMatricula"
+        )
+        .value
+        .trim();
+
+
+    if (
+      !["persona", "empresa"]
+        .includes(tipo)
+    ) {
+
+      throw new Error(
+        "Seleccioná quién es el titular legal o fiscal de la cuenta."
+      );
+
+    }
+
+
+    if (
+      dni.length < 7 ||
+      dni.length > 8
+    ) {
+
+      throw new Error(
+        "Ingresá un DNI válido de 7 u 8 dígitos."
+      );
+
+    }
+
+
+
+    if (
+      cuit.length !== 11
+    ) {
+
+      throw new Error(
+        "El CUIT debe tener 11 dígitos."
+      );
+
+    }
+
+
+    if (
+      !razonSocial
+    ) {
+
+      throw new Error(
+        "Ingresá el nombre fiscal o razón social."
+      );
+
+    }
+
+
+
+    if (
+      (matricula && !entidadMatricula) ||
+      (!matricula && entidadMatricula)
+   ) {
+
+      throw new Error(
+        "Si informás matrícula, completá también el colegio, consejo o entidad."
+      );
+
+    }
+
+
+
+    boton.disabled =
+      true;
+
+
+    boton.textContent =
+      "ENVIANDO DATOS...";
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .rpc(
+          "enviar_verificacion_profesional",
+          {
+            p_tipo_verificacion:
+              tipo,
+
+            p_dni:
+              dni,
+
+            p_cuit:
+              cuit,
+
+            p_razon_social:
+              razonSocial,
+
+            p_matricula:
+              matricula || null,
+
+            p_entidad_matricula:
+              entidadMatricula || null
+          }
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+
+    verificacionActual = {
+      ...verificacionActual,
+      estado: "en_revision",
+      tipo_verificacion: tipo
+    };
+
+
+    mostrarMensaje(
+      "Datos enviados correctamente. Tu cuenta quedó en revisión.",
+      "ok"
+    );
+
+
+
+    actualizarEstado();
+
+  } catch (error) {
+
+    console.error(
+      "Error enviando verificación:",
+        error
+    );
+
+
+    mostrarMensaje(
+      error?.message ||
+      "No pudimos enviar los datos.",
+      "error"
+    );
+
+  } finally {
+
+    boton.disabled =
+      false;
+
+
+    boton.textContent =
+      "ENVIAR A REVISIÓN";
+
+  }
+
+}
+
+document
+  .getElementById("tipo")
+  .addEventListener(
+    "change",
+    function () {
+      actualizarCamposTitular();
+      actualizarCamposPorRol();
+    }
+  );
+
+
+document
+  .getElementById(
+    "formVerificacion"
+  )
+  .addEventListener(
+    "submit",
+    enviarVerificacion
+  );
+
+
+cargarCuenta();
+
+
+</script>
+
+
+</body>
+
+</html>
