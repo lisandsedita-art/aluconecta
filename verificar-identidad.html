@@ -1266,62 +1266,7 @@ async function enviarVerificacion(
           .getElementById(
             "constancia"
           )
-          .files[0];
 
-
-      if (
-        cuit.length !== 11
-      ) {
-
-        throw new Error(
-          "El CUIT debe tener 11 dígitos."
-        );
-
-      }
-
-
-      if (
-        !razonSocial
-      ) {
-
-        throw new Error(
-          "Ingresá la razón social."
-        );
-
-      }
-
-
-      validarArchivo(
-        constancia,
-        "la constancia de CUIT"
-      );
-
-    }
-
-
-    boton.disabled =
-      true;
-
-
-    boton.textContent =
-      "ENVIANDO DOCUMENTACIÓN...";
-
-
-    const frentePath =
-      await subirArchivo(
-        frente,
-        "dni-frente"
-      );
-
-
-    const dorsoPath =
-      await subirArchivo(
-        dorso,
-        "dni-dorso"
-      );
-
-
-    let constanciaPath =
 async function enviarVerificacion(
   evento
 ) {
