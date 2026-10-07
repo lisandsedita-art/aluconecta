@@ -548,9 +548,30 @@
     </h2>
 
     <p class="descripcion-seccion">
-      Ingresá tu CUIT para comprobar en ARCA que exista
-      y se encuentre activo.
+      Ingresá el titular o razón social y el CUIT.
+      AluConecta validará el CUIT únicamente cuando
+      los datos declarados coincidan con los registrados en ARCA.
     </p>
+
+
+    <div class="grupo">
+
+      <label for="titularRazonSocial">
+        TITULAR / RAZÓN SOCIAL
+      </label>
+
+      <input
+        id="titularRazonSocial"
+        autocomplete="name"
+        placeholder="Nombre y apellido o razón social">
+
+      <span class="ayuda">
+        Ingresá el nombre legal del titular del CUIT o la razón social.
+        No uses el nombre de fantasía del taller salvo que coincida
+        con la denominación registrada en ARCA.
+      </span>
+
+    </div>
 
 
     <div class="grupo">
@@ -569,8 +590,8 @@
 
       <span class="ayuda">
         Podés ingresarlo con o sin guiones.
-        La validación confirma la situación registral del CUIT
-        y no reemplaza otras verificaciones de identidad.
+        El CUIT se guarda como validado solamente si está activo
+        y el titular o razón social coincide con ARCA.
       </span>
 
     </div>
@@ -785,6 +806,12 @@ const volverPanel =
   );
 
 
+const titularInput =
+  document.getElementById(
+    "titularRazonSocial"
+  );
+
+
 const cuitInput =
   document.getElementById(
     "cuit"
@@ -809,6 +836,10 @@ let usuarioId =
 
 let tipoUsuario =
   null;
+
+
+let titularGuardado =
+  "";
 
 
 let cuitValidadoGuardado =
@@ -907,10 +938,24 @@ function actualizarEstadoCuit() {
     );
 
 
+  const titularActual =
+    titularInput.value
+      .trim();
+
+
+  const coincideTitular =
+    Boolean(
+      titularActual
+    ) &&
+    titularActual ===
+      titularGuardado;
+
+
   const coincideConValidado =
     cuitActual.length === 11 &&
     cuitActual ===
-      cuitValidadoGuardado;
+      cuitValidadoGuardado &&
+    coincideTitular;
 
 
   estadoCuit.replaceChildren();
@@ -978,6 +1023,15 @@ function actualizarEstadoCuit() {
 
 
   if (
+    cuitValidadoGuardado &&
+    titularActual !==
+      titularGuardado
+  ) {
+
+    estadoCuit.textContent =
+      "Modificaste el titular o razón social. Validá nuevamente el CUIT con ARCA.";
+
+  } else if (
     cuitActual
   ) {
 
@@ -987,7 +1041,7 @@ function actualizarEstadoCuit() {
   } else {
 
     estadoCuit.textContent =
-      "Ingresá un CUIT para validarlo con ARCA.";
+      "Completá el titular o razón social y el CUIT para validarlos con ARCA.";
 
   }
 
@@ -1000,7 +1054,6 @@ function actualizarEstadoCuit() {
     "VALIDAR CON ARCA";
 
 }
-
 
 
 function esCarpintero() {
@@ -1251,7 +1304,7 @@ async function cargarPerfil() {
         .from("perfiles")
 
         .select(
-          "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,linkedin,tiktok,web,cuit,cuit_validado,denominacion_arca,cuit_validado_at"
+          "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,linkedin,tiktok,web,titular_razon_social,cuit,cuit_validado,denominacion_arca,cuit_validado_at"
         )
 
         .eq(
@@ -1383,6 +1436,14 @@ async function cargarPerfil() {
       data.web || "";
 
 
+    titularInput.value =
+      data.titular_razon_social || "";
+
+
+    titularGuardado =
+      data.titular_razon_social || "";
+
+
     cuitInput.value =
       formatearCuit(
         data.cuit || ""
@@ -1446,6 +1507,32 @@ async function validarCuit() {
   }
 
 
+  const titular =
+    titularInput.value
+      .trim();
+
+
+  if (!titular) {
+
+    estadoCuit.className =
+      "estado-cuit error";
+
+
+    estadoCuit.textContent =
+      "Completá el titular o razón social antes de validar el CUIT.";
+
+
+    mostrarMensaje(
+      "Ingresá el titular o razón social correspondiente al CUIT.",
+      "error"
+    );
+
+
+    return;
+
+  }
+
+
   const cuit =
     limpiarCuit(
       cuitInput.value
@@ -1494,6 +1581,56 @@ async function validarCuit() {
 
 
   try {
+
+
+    /*
+     * La Edge Function compara contra el dato guardado
+     * en Supabase, no contra un valor enviado por el navegador.
+     * Si el usuario modificó el titular, lo guardamos primero.
+     */
+    if (
+      titular !==
+      titularGuardado
+    ) {
+
+      const {
+        error:
+          titularError
+      } =
+        await supabaseClient
+
+          .from("perfiles")
+
+          .update({
+            titular_razon_social:
+              titular
+          })
+
+          .eq(
+            "id",
+            usuarioId
+          );
+
+
+      if (
+        titularError
+      ) {
+        throw titularError;
+      }
+
+
+      titularGuardado =
+        titular;
+
+
+      cuitValidadoGuardado =
+        "";
+
+
+      denominacionArcaGuardada =
+        "";
+
+    }
 
 
     const {
@@ -1587,7 +1724,8 @@ async function validarCuit() {
 
 
       mostrarMensaje(
-        "El CUIT no pudo ser validado como activo en ARCA.",
+        data.motivo ||
+        "El CUIT no pudo ser validado con ARCA.",
         "error"
       );
 
@@ -1634,7 +1772,7 @@ async function validarCuit() {
         .from("perfiles")
 
         .select(
-          "cuit,cuit_validado,denominacion_arca,cuit_validado_at"
+          "titular_razon_social,cuit,cuit_validado,denominacion_arca,cuit_validado_at"
         )
 
         .eq(
@@ -1665,6 +1803,18 @@ async function validarCuit() {
       );
 
     }
+
+
+    titularInput.value =
+      perfilVerificado
+        .titular_razon_social ||
+      titular;
+
+
+    titularGuardado =
+      perfilVerificado
+        .titular_razon_social ||
+      titular;
 
 
     cuitInput.value =
@@ -1731,10 +1881,17 @@ async function validarCuit() {
       );
 
 
+    const titularActual =
+      titularInput.value
+        .trim();
+
+
     if (
       cuitActual ===
         cuitValidadoGuardado &&
-      cuitValidadoGuardado
+      cuitValidadoGuardado &&
+      titularActual ===
+        titularGuardado
     ) {
 
       actualizarEstadoCuit();
@@ -1822,6 +1979,11 @@ async function guardar() {
         .getElementById("telefono")
         .value
     );
+
+
+  const titular =
+    titularInput.value
+      .trim();
 
 
   const bio =
@@ -1952,6 +2114,9 @@ async function guardar() {
     telefono:
       telefono,
 
+    titular_razon_social:
+      titular || null,
+
     descripcion:
       bio,
 
@@ -2034,6 +2199,28 @@ async function guardar() {
     }
 
 
+    if (
+      titular !==
+      titularGuardado
+    ) {
+
+      titularGuardado =
+        titular;
+
+
+      cuitValidadoGuardado =
+        "";
+
+
+      denominacionArcaGuardada =
+        "";
+
+
+      actualizarEstadoCuit();
+
+    }
+
+
 
     mostrarMensaje(
       "Tus datos se guardaron correctamente.",
@@ -2070,6 +2257,13 @@ async function guardar() {
 
 }
 
+
+
+titularInput
+  .addEventListener(
+    "input",
+    actualizarEstadoCuit
+  );
 
 
 cuitInput
