@@ -185,7 +185,7 @@ function extractTag(
   const cleaned =
     value
       .replace(
-        /^<!CDATA\[([\s\S]*)\]>$/,
+        /^<!\[CDATA\[([\s\S]*)\]\]>$/,
         "$1",
       )
       .trim();
@@ -213,7 +213,7 @@ function extractTags(
         decodeXmlEntities(
           value
             .replace(
-              /^<!CDATA\[([\s\S]*)\]>$/,
+              /^<!\[CDATA\[([\s\S]*)\]\]>$/,
               "$1",
             )
             .trim(),
@@ -806,4 +806,842 @@ async function consultarPersona(
     `</soapenv:Envelope>`;
 
 
- 
+  const response =
+    await fetch(
+      PADRON_URL,
+      {
+
+        method:
+          "POST",
+
+        headers: {
+
+          "Content-Type":
+            "text/xml;charset=UTF-8",
+
+          SOAPAction:
+            "",
+
+        },
+
+        body:
+          soapRequest,
+
+      },
+    );
+
+
+  const responseText =
+    await response.text();
+
+
+  const fault =
+    extractTag(
+      responseText,
+      "faultstring",
+    );
+
+
+  if (
+    !response.ok ||
+    fault
+  ) {
+
+    throw new Error(
+      fault ??
+        "ARCA rechazó la consulta de CUIT",
+    );
+
+  }
+
+
+  return responseText;
+
+}
+
+
+
+function parseActividades(
+  xml: string,
+) {
+
+  const bloques = [
+
+    ...extractBlocks(
+      xml,
+      "actividad",
+    ),
+
+    ...extractBlocks(
+      xml,
+      "actividadMonotributista",
+    ),
+
+  ];
+
+
+  const actividades =
+    bloques.map(
+      (bloque) => ({
+
+        id:
+          extractTag(
+            bloque,
+            "idActividad",
+          ),
+
+        descripcion:
+          extractTag(
+            bloque,
+            "descripcionActividad",
+          ),
+
+        periodo:
+          extractTag(
+            bloque,
+            "periodo",
+          ),
+
+      }),
+    );
+
+
+  const unicas =
+    new Map();
+
+
+  for (
+    const actividad
+    of actividades
+  ) {
+
+    if (
+      !actividad.id &&
+      !actividad.descripcion
+    ) {
+
+      continue;
+
+    }
+
+
+    const key =
+      `${actividad.id ?? ""}|${actividad.descripcion ?? ""}`;
+
+
+    if (
+      !unicas.has(key)
+    ) {
+
+      unicas.set(
+        key,
+        actividad,
+      );
+
+    }
+
+  }
+
+
+  return [
+    ...unicas.values(),
+  ];
+
+}
+
+
+
+function parseImpuestos(
+  xml: string,
+) {
+
+  const impuestos =
+    extractBlocks(
+      xml,
+      "impuesto",
+    ).map(
+      (bloque) => ({
+
+        id:
+          extractTag(
+            bloque,
+            "idImpuesto",
+          ),
+
+        descripcion:
+          extractTag(
+            bloque,
+            "descripcionImpuesto",
+          ),
+
+        estado:
+          extractTag(
+            bloque,
+            "estadoImpuesto",
+          ),
+
+        periodo:
+          extractTag(
+            bloque,
+            "periodo",
+          ),
+
+      }),
+    );
+
+
+  const unicos =
+    new Map();
+
+
+  for (
+    const impuesto
+    of impuestos
+  ) {
+
+    if (
+      !impuesto.id &&
+      !impuesto.descripcion
+    ) {
+
+      continue;
+
+    }
+
+
+    const key =
+      `${impuesto.id ?? ""}|${impuesto.descripcion ?? ""}`;
+
+
+    if (
+      !unicos.has(key)
+    ) {
+
+      unicos.set(
+        key,
+        impuesto,
+      );
+
+    }
+
+  }
+
+
+  return [
+    ...unicos.values(),
+  ];
+
+}
+
+
+
+function interpretarPersona(
+  xml: string,
+  cuitSolicitado: string,
+) {
+
+  const persona =
+    extractBlock(
+      xml,
+      "personaReturn",
+    );
+
+
+  if (
+    !persona
+  ) {
+
+    throw new Error(
+      "ARCA respondió sin datos de persona",
+    );
+
+  }
+
+
+  const errorConstancia =
+    extractBlock(
+      persona,
+      "errorConstancia",
+    );
+
+
+  if (
+    errorConstancia
+  ) {
+
+    const errores =
+      extractTags(
+        errorConstancia,
+        "error",
+      );
+
+
+    return {
+
+      ok:
+        true,
+
+      verificado:
+        false,
+
+      fuente:
+        "ARCA",
+
+      cuit:
+        cuitSolicitado,
+
+      motivo:
+        errores.length > 0
+          ? errores.join(
+              " | ",
+            )
+          : "ARCA no devolvió una constancia válida para ese CUIT",
+
+    };
+
+  }
+
+
+  const generales =
+    extractBlock(
+      persona,
+      "datosGenerales",
+    );
+
+
+  if (
+    !generales
+  ) {
+
+    throw new Error(
+      "ARCA no devolvió datos generales del contribuyente",
+    );
+
+  }
+
+
+  const domicilio =
+    extractBlock(
+      generales,
+      "domicilioFiscal",
+    ) ?? "";
+
+
+  const regimenGeneral =
+    extractBlock(
+      persona,
+      "datosRegimenGeneral",
+    ) ?? "";
+
+
+  const monotributo =
+    extractBlock(
+      persona,
+      "datosMonotributo",
+    ) ?? "";
+
+
+  const categoriaMono =
+    extractBlock(
+      monotributo,
+      "categoriaMonotributo",
+    );
+
+
+  const razonSocial =
+    extractTag(
+      generales,
+      "razonSocial",
+    );
+
+
+  const nombre =
+    extractTag(
+      generales,
+      "nombre",
+    );
+
+
+  const apellido =
+    extractTag(
+      generales,
+      "apellido",
+    );
+
+
+  const denominacion =
+    razonSocial ||
+    [
+      nombre,
+      apellido,
+    ]
+      .filter(Boolean)
+      .join(" ") ||
+    null;
+
+
+  return {
+
+    ok:
+      true,
+
+    verificado:
+      true,
+
+    fuente:
+      "ARCA",
+
+
+    persona: {
+
+      cuit:
+        extractTag(
+          generales,
+          "idPersona",
+        ) ||
+        cuitSolicitado,
+
+
+      denominacion,
+
+
+      razon_social:
+        razonSocial,
+
+
+      nombre,
+
+
+      apellido,
+
+
+      tipo_persona:
+        extractTag(
+          generales,
+          "tipoPersona",
+        ),
+
+
+      tipo_clave:
+        extractTag(
+          generales,
+          "tipoClave",
+        ),
+
+
+      estado_clave:
+        extractTag(
+          generales,
+          "estadoClave",
+        ),
+
+
+      cuit_activo:
+        extractTag(
+          generales,
+          "estadoClave",
+        ) ===
+        "ACTIVO",
+
+
+      localidad:
+        extractTag(
+          domicilio,
+          "localidad",
+        ),
+
+
+      provincia:
+        extractTag(
+          domicilio,
+          "descripcionProvincia",
+        ),
+
+    },
+
+
+    situacion_fiscal: {
+
+      regimen_general:
+        Boolean(
+          regimenGeneral,
+        ),
+
+
+      monotributo:
+        Boolean(
+          monotributo,
+        ),
+
+
+      categoria_monotributo:
+        categoriaMono
+          ? {
+
+              id:
+                extractTag(
+                  categoriaMono,
+                  "idCategoria",
+                ),
+
+              descripcion:
+                extractTag(
+                  categoriaMono,
+                  "descripcionCategoria",
+                ),
+
+              periodo:
+                extractTag(
+                  categoriaMono,
+                  "periodo",
+                ),
+
+            }
+          : null,
+
+    },
+
+
+    actividades:
+      parseActividades(
+        persona,
+      ),
+
+
+    impuestos:
+      parseImpuestos(
+        persona,
+      ),
+
+  };
+
+}
+
+
+
+export default {
+
+  fetch:
+    withSupabase(
+
+      {
+
+        auth: [
+          "user",
+          "secret",
+        ],
+
+      },
+
+
+      async (
+        req,
+        ctx,
+      ) => {
+
+        try {
+
+          if (
+            req.method !==
+            "POST"
+          ) {
+
+            return Response.json(
+
+              {
+
+                ok:
+                  false,
+
+                error:
+                  "Método no permitido",
+
+              },
+
+              {
+                status:
+                  405,
+              },
+
+            );
+
+          }
+
+
+          let body: any;
+
+
+          try {
+
+            body =
+              await req.json();
+
+          } catch {
+
+            return Response.json(
+
+              {
+
+                ok:
+                  false,
+
+                error:
+                  "El cuerpo de la solicitud debe ser JSON",
+
+              },
+
+              {
+                status:
+                  400,
+              },
+
+            );
+
+          }
+
+
+          const cuit =
+            normalizeCuit(
+              body?.cuit,
+            );
+
+
+          if (
+            !/^\d{11}$/.test(
+              cuit,
+            )
+          ) {
+
+            return Response.json(
+
+              {
+
+                ok:
+                  false,
+
+                error:
+                  "El CUIT debe contener 11 dígitos",
+
+              },
+
+              {
+                status:
+                  400,
+              },
+
+            );
+
+          }
+
+
+          const cuitRepresentada =
+            normalizeCuit(
+              Deno.env.get(
+                "ARCA_CUIT",
+              ),
+            );
+
+
+          if (
+            !/^\d{11}$/.test(
+              cuitRepresentada,
+            )
+          ) {
+
+            throw new Error(
+              "ARCA_CUIT no está configurado correctamente",
+            );
+
+          }
+
+
+          const ticket =
+            await obtenerTicket(
+              ctx.supabaseAdmin,
+            );
+
+
+          const respuestaArca =
+            await consultarPersona(
+
+              cuit,
+
+              cuitRepresentada,
+
+              ticket.token,
+
+              ticket.sign,
+
+            );
+
+
+          const resultado =
+            interpretarPersona(
+              respuestaArca,
+              cuit,
+            );
+
+
+          const personaResultado =
+            "persona" in resultado
+              ? resultado.persona
+              : null;
+
+
+          /*
+           * Solamente asociamos el CUIT al perfil
+           * cuando:
+           *
+           * 1. La llamada pertenece a un usuario
+           *    autenticado de AluConecta.
+           *
+           * 2. ARCA encontró una constancia válida.
+           *
+           * 3. El CUIT está ACTIVO.
+           *
+           * Las llamadas realizadas con una secret key
+           * sirven para pruebas administrativas, pero
+           * nunca modifican un perfil.
+           */
+          if (
+            ctx.authMode ===
+              "user" &&
+            resultado.verificado ===
+              true &&
+            personaResultado
+              ?.cuit_activo ===
+              true
+          ) {
+
+            const perfilId =
+              ctx.userClaims?.id;
+
+
+            if (
+              !perfilId
+            ) {
+
+              throw new Error(
+                "No se pudo identificar al usuario autenticado",
+              );
+
+            }
+
+
+            const {
+              data:
+                perfilActualizado,
+              error:
+                guardarError,
+            } =
+              await ctx
+                .supabaseAdmin
+
+                .from(
+                  "perfiles",
+                )
+
+                .update({
+
+                  cuit:
+                    cuit,
+
+                  cuit_validado:
+                    true,
+
+                  denominacion_arca:
+                    personaResultado
+                      .denominacion ??
+                    null,
+
+                  cuit_validado_at:
+                    new Date()
+                      .toISOString(),
+
+                })
+
+                .eq(
+                  "id",
+                  perfilId,
+                )
+
+                .select(
+                  "id",
+                )
+
+                .maybeSingle();
+
+
+            if (
+              guardarError
+            ) {
+
+              throw new Error(
+                `ARCA validó el CUIT pero no se pudo guardar en el perfil: ${guardarError.message}`,
+              );
+
+            }
+
+
+            if (
+              !perfilActualizado
+            ) {
+
+              throw new Error(
+                "ARCA validó el CUIT pero no se encontró el perfil del usuario",
+              );
+
+            }
+
+          }
+
+
+          return Response.json(
+            resultado,
+          );
+
+        } catch (
+          error
+        ) {
+
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Error desconocido";
+
+
+          console.error(
+            "verificar-cuit-arca:",
+            message,
+          );
+
+
+          return Response.json(
+
+            {
+
+              ok:
+                false,
+
+              error:
+                "No fue posible completar la verificación con ARCA",
+
+              detalle:
+                message,
+
+            },
+
+            {
+              status:
+                502,
+            },
+
+          );
+
+        }
+
+      },
+
+    ),
+
+};
