@@ -250,6 +250,47 @@
     }
 
 
+    .estado-cuit {
+      padding: 14px;
+      margin-bottom: 18px;
+      border-radius: 10px;
+      border: 1px solid var(--borde);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+
+    .estado-cuit.pendiente {
+      background: #f8fafc;
+      color: #52606d;
+    }
+
+
+    .estado-cuit.validado {
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+
+
+    .estado-cuit.error {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
+
+    .estado-cuit strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+
+    .estado-cuit span {
+      display: block;
+    }
+
+
     footer {
       margin-top: 40px;
       padding: 28px 20px;
@@ -330,174 +371,232 @@
 
   <section class="card">
 
-  <h2>
-    Datos principales
-  </h2>
+    <h2>
+      Datos principales
+    </h2>
 
-  <p
-    class="descripcion-seccion"
-    id="descripcionDatos">
+    <p
+      class="descripcion-seccion"
+      id="descripcionDatos">
 
-    Esta información identifica tu actividad
-    dentro de AluConecta.
+      Esta información identifica tu actividad
+      dentro de AluConecta.
 
-  </p>
-
-
-  <div class="grupo">
-
-    <label
-  for="nombre"
-  id="labelNombre">
-  NOMBRE / EMPRESA
-    </label>
-
-    <input
-      id="nombre"
-      autocomplete="name"
-      placeholder="Nombre o empresa ">
-
-  </div>
+    </p>
 
 
-  <div
-    class="grupo"
-    id="grupoActividad"
-    style="display:none;">
+    <div class="grupo">
 
-    <label for="actividad">
-      ACTIVIDAD / ROL PROFESIONAL
-    </label>
+      <label
+        for="nombre"
+        id="labelNombre">
+        NOMBRE / EMPRESA
+      </label>
 
-    <select id="actividad">
+      <input
+        id="nombre"
+        autocomplete="name"
+        placeholder="Nombre o empresa">
 
-      <option value="">
-        Seleccioná tu actividad
-      </option>
-
-      <option>Arquitecto</option>
-      <option>Ingeniero</option>
-      <option>Constructor</option>
-      <option>Desarrollador</option>
-      <option>Empresa constructora</option>
-      <option>MMO</option>
-
-    </select>
-
-  </div>
+    </div>
 
 
-  <div class="grupo">
+    <div
+      class="grupo"
+      id="grupoActividad"
+      style="display:none;">
 
-    <label
-      for="zona"
-      id="labelLocalidad">
-      LOCALIDAD
-    </label>
+      <label for="actividad">
+        ACTIVIDAD / ROL PROFESIONAL
+      </label>
 
-    <input
-      id="zona"
-      autocomplete="address-level2"
-      placeholder="Ej.: Rosario">
+      <select id="actividad">
 
-  </div>
+        <option value="">
+          Seleccioná tu actividad
+        </option>
 
+        <option>Arquitecto</option>
+        <option>Ingeniero</option>
+        <option>Constructor</option>
+        <option>Desarrollador</option>
+        <option>Empresa constructora</option>
+        <option>MMO</option>
 
-  <div class="grupo">
+      </select>
 
-    <label for="provincia">
-      PROVINCIA
-    </label>
-
-    <select id="provincia">
-
-      <option value="">
-        Seleccioná tu provincia
-      </option>
-
-      <option>Buenos Aires</option>
-      <option>CABA</option>
-      <option>Catamarca</option>
-      <option>Chaco</option>
-      <option>Chubut</option>
-      <option>Córdoba</option>
-      <option>Corrientes</option>
-      <option>Entre Ríos</option>
-      <option>Formosa</option>
-      <option>Jujuy</option>
-      <option>La Pampa</option>
-      <option>La Rioja</option>
-      <option>Mendoza</option>
-      <option>Misiones</option>
-      <option>Neuquén</option>
-      <option>Río Negro</option>
-      <option>Salta</option>
-      <option>San Juan</option>
-      <option>San Luis</option>
-      <option>Santa Cruz</option>
-      <option>Santa Fe</option>
-      <option>Santiago del Estero</option>
-      <option>Tierra del Fuego</option>
-      <option>Tucumán</option>
-
-    </select>
-
-  </div>
+    </div>
 
 
-  <div
-    class="grupo"
-    id="grupoZonas"
-    style="display:none;">
+    <div class="grupo">
 
-    <label for="zonas">
-      ZONAS DONDE TRABAJÁS
-    </label>
+      <label
+        for="zona"
+        id="labelLocalidad">
+        LOCALIDAD
+      </label>
 
-    <input
-      id="zonas"
-      placeholder="Ej.: Rosario, Funes, Fisherton">
+      <input
+        id="zona"
+        autocomplete="address-level2"
+        placeholder="Ej.: Rosario">
 
-    <span class="ayuda">
-      Podés indicar varias localidades o zonas.
-    </span>
-
-  </div>
+    </div>
 
 
-  <div class="grupo">
+    <div class="grupo">
 
-    <label for="telefono">
-      TELÉFONO / WHATSAPP
-    </label>
+      <label for="provincia">
+        PROVINCIA
+      </label>
 
-    <input
-      id="telefono"
-      type="tel"
-      autocomplete="tel"
-      placeholder="Ej.: 3416123456">
+      <select id="provincia">
 
-    <span class="ayuda">
-      Este dato se mantiene protegido y se utiliza
-      según las reglas de contacto de AluConecta.
-    </span>
+        <option value="">
+          Seleccioná tu provincia
+        </option>
 
-  </div>
+        <option>Buenos Aires</option>
+        <option>CABA</option>
+        <option>Catamarca</option>
+        <option>Chaco</option>
+        <option>Chubut</option>
+        <option>Córdoba</option>
+        <option>Corrientes</option>
+        <option>Entre Ríos</option>
+        <option>Formosa</option>
+        <option>Jujuy</option>
+        <option>La Pampa</option>
+        <option>La Rioja</option>
+        <option>Mendoza</option>
+        <option>Misiones</option>
+        <option>Neuquén</option>
+        <option>Río Negro</option>
+        <option>Salta</option>
+        <option>San Juan</option>
+        <option>San Luis</option>
+        <option>Santa Cruz</option>
+        <option>Santa Fe</option>
+        <option>Santiago del Estero</option>
+        <option>Tierra del Fuego</option>
+        <option>Tucumán</option>
+
+      </select>
+
+    </div>
 
 
-  <div class="grupo">
+    <div
+      class="grupo"
+      id="grupoZonas"
+      style="display:none;">
 
-    <label for="bio">
-      PRESENTACIÓN
-    </label>
+      <label for="zonas">
+        ZONAS DONDE TRABAJÁS
+      </label>
 
-    <textarea
-      id="bio"
-      placeholder="Contá brevemente sobre tu actividad, experiencia o servicios."></textarea>
+      <input
+        id="zonas"
+        placeholder="Ej.: Rosario, Funes, Fisherton">
 
-  </div>
+      <span class="ayuda">
+        Podés indicar varias localidades o zonas.
+      </span>
 
-</section>
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="telefono">
+        TELÉFONO / WHATSAPP
+      </label>
+
+      <input
+        id="telefono"
+        type="tel"
+        autocomplete="tel"
+        placeholder="Ej.: 3416123456">
+
+      <span class="ayuda">
+        Este dato se mantiene protegido y se utiliza
+        según las reglas de contacto de AluConecta.
+      </span>
+
+    </div>
+
+
+    <div class="grupo">
+
+      <label for="bio">
+        PRESENTACIÓN
+      </label>
+
+      <textarea
+        id="bio"
+        placeholder="Contá brevemente sobre tu actividad, experiencia o servicios."></textarea>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>
+      Verificación de CUIT
+    </h2>
+
+    <p class="descripcion-seccion">
+      Ingresá tu CUIT para comprobar en ARCA que exista
+      y se encuentre activo.
+    </p>
+
+
+    <div class="grupo">
+
+      <label for="cuit">
+        CUIT
+      </label>
+
+      <input
+        id="cuit"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        maxlength="13"
+        placeholder="Ej.: 20-12345678-3">
+
+      <span class="ayuda">
+        Podés ingresarlo con o sin guiones.
+        La validación confirma la situación registral del CUIT
+        y no reemplaza otras verificaciones de identidad.
+      </span>
+
+    </div>
+
+
+    <div
+      id="estadoCuit"
+      class="estado-cuit pendiente">
+
+      Ingresá un CUIT para validarlo con ARCA.
+
+    </div>
+
+
+    <button
+      class="btn btn-secundario"
+      id="validarCuitBtn"
+      type="button">
+
+      VALIDAR CON ARCA
+
+    </button>
+
+  </section>
+
+
   <section class="card">
 
     <h2>
@@ -536,7 +635,7 @@
         id="fb"
         placeholder="@usuario o página de Facebook">
 
-        </div>
+    </div>
 
 
     <div class="grupo">
@@ -579,7 +678,6 @@
     </div>
 
   </section>
-
 
 
   <section class="card">
@@ -634,14 +732,12 @@
 </main>
 
 
-
 <footer>
 
   © 2026 AluConecta<br>
   Donde los proyectos encuentran sus aberturas.
 
 </footer>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
@@ -689,12 +785,38 @@ const volverPanel =
   );
 
 
+const cuitInput =
+  document.getElementById(
+    "cuit"
+  );
+
+
+const estadoCuit =
+  document.getElementById(
+    "estadoCuit"
+  );
+
+
+const validarCuitBtn =
+  document.getElementById(
+    "validarCuitBtn"
+  );
+
+
 let usuarioId =
   null;
 
 
 let tipoUsuario =
   null;
+
+
+let cuitValidadoGuardado =
+  "";
+
+
+let denominacionArcaGuardada =
+  "";
 
 
 
@@ -733,6 +855,154 @@ function limpiarTelefono(
 
 
 
+function limpiarCuit(
+  valor
+) {
+
+  return String(
+    valor || ""
+  )
+    .replace(/\D/g, "");
+
+}
+
+
+
+function formatearCuit(
+  valor
+) {
+
+  const limpio =
+    limpiarCuit(
+      valor
+    );
+
+
+  if (
+    limpio.length !== 11
+  ) {
+
+    return valor || "";
+
+  }
+
+
+  return (
+    limpio.slice(0, 2) +
+    "-" +
+    limpio.slice(2, 10) +
+    "-" +
+    limpio.slice(10)
+  );
+
+}
+
+
+
+function actualizarEstadoCuit() {
+
+  const cuitActual =
+    limpiarCuit(
+      cuitInput.value
+    );
+
+
+  const coincideConValidado =
+    cuitActual.length === 11 &&
+    cuitActual ===
+      cuitValidadoGuardado;
+
+
+  estadoCuit.replaceChildren();
+
+
+  if (
+    coincideConValidado
+  ) {
+
+    estadoCuit.className =
+      "estado-cuit validado";
+
+
+    const titulo =
+      document.createElement(
+        "strong"
+      );
+
+
+    titulo.textContent =
+      "✓ CUIT validado con ARCA";
+
+
+    estadoCuit.appendChild(
+      titulo
+    );
+
+
+    if (
+      denominacionArcaGuardada
+    ) {
+
+      const denominacion =
+        document.createElement(
+          "span"
+        );
+
+
+      denominacion.textContent =
+        denominacionArcaGuardada;
+
+
+      estadoCuit.appendChild(
+        denominacion
+      );
+
+    }
+
+
+    validarCuitBtn.disabled =
+      true;
+
+
+    validarCuitBtn.textContent =
+      "CUIT VALIDADO";
+
+
+    return;
+
+  }
+
+
+  estadoCuit.className =
+    "estado-cuit pendiente";
+
+
+  if (
+    cuitActual
+  ) {
+
+    estadoCuit.textContent =
+      "Este CUIT todavía no fue validado con ARCA.";
+
+  } else {
+
+    estadoCuit.textContent =
+      "Ingresá un CUIT para validarlo con ARCA.";
+
+  }
+
+
+  validarCuitBtn.disabled =
+    false;
+
+
+  validarCuitBtn.textContent =
+    "VALIDAR CON ARCA";
+
+}
+
+
+
 function esCarpintero() {
 
   return (
@@ -766,14 +1036,18 @@ function configurarInterfaz() {
 
   if (esCarpintero()) {
 
-document.getElementById(
-  "labelNombre"
-).textContent =
-  "NOMBRE / TALLER";
     document.getElementById(
-  "nombre"
-).placeholder =
-  "Nombre o taller";
+      "labelNombre"
+    ).textContent =
+      "NOMBRE / TALLER";
+
+
+    document.getElementById(
+      "nombre"
+    ).placeholder =
+      "Nombre o taller";
+
+
     document.getElementById(
       "grupoActividad"
     ).style.display =
@@ -847,14 +1121,18 @@ document.getElementById(
     )
   ) {
 
-document.getElementById(
-  "labelNombre"
-).textContent =
-  "NOMBRE / EMPRESA";
     document.getElementById(
-  "nombre"
-).placeholder =
-  "Nombre o empresa";
+      "labelNombre"
+    ).textContent =
+      "NOMBRE / EMPRESA";
+
+
+    document.getElementById(
+      "nombre"
+    ).placeholder =
+      "Nombre o empresa";
+
+
     document.getElementById(
       "grupoActividad"
     ).style.display =
@@ -973,7 +1251,7 @@ async function cargarPerfil() {
         .from("perfiles")
 
         .select(
-          "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,linkedin,tiktok,web"
+          "id,nombre,tipo_usuario,actividades,localidad,provincia,servicios,telefono,descripcion,instagram,facebook,linkedin,tiktok,web,cuit,cuit_validado,denominacion_arca,cuit_validado_at"
         )
 
         .eq(
@@ -1022,51 +1300,52 @@ async function cargarPerfil() {
 
 
     document.getElementById(
-  "nombre"
-).value =
-  data.nombre || "";
+      "nombre"
+    ).value =
+      data.nombre || "";
 
 
-if (
-  esRolProfesional(
-    tipoUsuario
-  )
-) {
+    if (
+      esRolProfesional(
+        tipoUsuario
+      )
+    ) {
 
-  document.getElementById(
-    "actividad"
-  ).value =
-    data.actividades || "";
+      document.getElementById(
+        "actividad"
+      ).value =
+        data.actividades || "";
 
-}
-
-
-document.getElementById(
-  "zona"
-).value =
-  data.localidad || "";
+    }
 
 
-document.getElementById(
-  "provincia"
-).value =
-  data.provincia || "";
+    document.getElementById(
+      "zona"
+    ).value =
+      data.localidad || "";
 
 
-if (esCarpintero()) {
-
-  document.getElementById(
-    "zonas"
-  ).value =
-    data.servicios || "";
-
-}
+    document.getElementById(
+      "provincia"
+    ).value =
+      data.provincia || "";
 
 
-document.getElementById(
-  "telefono"
-).value =
-  data.telefono || "";
+    if (esCarpintero()) {
+
+      document.getElementById(
+        "zonas"
+      ).value =
+        data.servicios || "";
+
+    }
+
+
+    document.getElementById(
+      "telefono"
+    ).value =
+      data.telefono || "";
+
 
     document.getElementById(
       "bio"
@@ -1080,7 +1359,7 @@ document.getElementById(
       data.instagram || "";
 
 
-        document.getElementById(
+    document.getElementById(
       "fb"
     ).value =
       data.facebook || "";
@@ -1102,6 +1381,27 @@ document.getElementById(
       "web"
     ).value =
       data.web || "";
+
+
+    cuitInput.value =
+      formatearCuit(
+        data.cuit || ""
+      );
+
+
+    cuitValidadoGuardado =
+      data.cuit_validado
+        ? limpiarCuit(
+            data.cuit
+          )
+        : "";
+
+
+    denominacionArcaGuardada =
+      data.denominacion_arca || "";
+
+
+    actualizarEstadoCuit();
 
 
     configurarInterfaz();
@@ -1131,6 +1431,331 @@ document.getElementById(
 
 
 
+async function validarCuit() {
+
+
+  if (!usuarioId) {
+
+    mostrarMensaje(
+      "Tu sesión no está disponible. Volvé a iniciar sesión.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const cuit =
+    limpiarCuit(
+      cuitInput.value
+    );
+
+
+  if (
+    !/^\d{11}$/.test(
+      cuit
+    )
+  ) {
+
+    estadoCuit.className =
+      "estado-cuit error";
+
+
+    estadoCuit.textContent =
+      "El CUIT debe contener 11 dígitos.";
+
+
+    mostrarMensaje(
+      "Revisá el CUIT ingresado.",
+      "error"
+    );
+
+
+    return;
+
+  }
+
+
+  validarCuitBtn.disabled =
+    true;
+
+
+  validarCuitBtn.textContent =
+    "VALIDANDO...";
+
+
+  estadoCuit.className =
+    "estado-cuit pendiente";
+
+
+  estadoCuit.textContent =
+    "Consultando ARCA...";
+
+
+  try {
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .functions
+        .invoke(
+          "verificar-cuit-arca",
+          {
+            body: {
+              cuit:
+                cuit
+            }
+          }
+        );
+
+
+    if (error) {
+
+      let detalle =
+        error.message ||
+        "No se pudo consultar ARCA.";
+
+
+      if (
+        error.context &&
+        typeof error.context.json ===
+          "function"
+      ) {
+
+        try {
+
+          const cuerpoError =
+            await error.context.json();
+
+
+          detalle =
+            cuerpoError?.detalle ||
+            cuerpoError?.error ||
+            detalle;
+
+        } catch {
+        }
+
+      }
+
+
+      throw new Error(
+        detalle
+      );
+
+    }
+
+
+    if (
+      !data ||
+      data.ok !== true
+    ) {
+
+      throw new Error(
+        data?.detalle ||
+        data?.error ||
+        "ARCA no pudo completar la validación."
+      );
+
+    }
+
+
+    if (
+      data.verificado !== true ||
+      data.persona?.cuit_activo !== true
+    ) {
+
+      cuitValidadoGuardado =
+        "";
+
+
+      denominacionArcaGuardada =
+        "";
+
+
+      estadoCuit.className =
+        "estado-cuit error";
+
+
+      estadoCuit.textContent =
+        data.motivo ||
+        "ARCA no informó este CUIT como activo.";
+
+
+      mostrarMensaje(
+        "El CUIT no pudo ser validado como activo en ARCA.",
+        "error"
+      );
+
+
+      return;
+
+    }
+
+
+    const cuitDevuelto =
+      limpiarCuit(
+        data.persona?.cuit ||
+        cuit
+      );
+
+
+    if (
+      cuitDevuelto !==
+      cuit
+    ) {
+
+      throw new Error(
+        "ARCA devolvió un CUIT diferente al consultado."
+      );
+
+    }
+
+
+
+    /*
+     * La Edge Function ya guardó la validación
+     * mediante el backend.
+     *
+     * Volvemos a leer el perfil para confirmar
+     * que efectivamente quedó persistida.
+     */
+
+    const {
+      data: perfilVerificado,
+      error: errorPerfil
+    } =
+      await supabaseClient
+
+        .from("perfiles")
+
+        .select(
+          "cuit,cuit_validado,denominacion_arca,cuit_validado_at"
+        )
+
+        .eq(
+          "id",
+          usuarioId
+        )
+
+        .single();
+
+
+    if (errorPerfil) {
+      throw errorPerfil;
+    }
+
+
+    if (
+      !perfilVerificado ||
+      perfilVerificado.cuit_validado !==
+        true ||
+      limpiarCuit(
+        perfilVerificado.cuit
+      ) !==
+        cuit
+    ) {
+
+      throw new Error(
+        "ARCA validó el CUIT, pero no pudimos confirmar que la validación haya quedado guardada en tu perfil."
+      );
+
+    }
+
+
+    cuitInput.value =
+      formatearCuit(
+        perfilVerificado.cuit
+      );
+
+
+    cuitValidadoGuardado =
+      limpiarCuit(
+        perfilVerificado.cuit
+      );
+
+
+    denominacionArcaGuardada =
+      perfilVerificado
+        .denominacion_arca ||
+      data.persona
+        ?.denominacion ||
+      "";
+
+
+    actualizarEstadoCuit();
+
+
+    mostrarMensaje(
+      "Tu CUIT fue validado correctamente con ARCA.",
+      "ok"
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+      "Error validando CUIT:",
+      error
+    );
+
+
+    estadoCuit.className =
+      "estado-cuit error";
+
+
+    estadoCuit.textContent =
+      "No pudimos completar la validación del CUIT.";
+
+
+    mostrarMensaje(
+      error instanceof Error &&
+      error.message
+        ? error.message
+        : "No pudimos validar el CUIT con ARCA. Intentá nuevamente.",
+      "error"
+    );
+
+
+  } finally {
+
+
+    const cuitActual =
+      limpiarCuit(
+        cuitInput.value
+      );
+
+
+    if (
+      cuitActual ===
+        cuitValidadoGuardado &&
+      cuitValidadoGuardado
+    ) {
+
+      actualizarEstadoCuit();
+
+    } else {
+
+      validarCuitBtn.disabled =
+        false;
+
+
+      validarCuitBtn.textContent =
+        "VALIDAR CON ARCA";
+
+    }
+
+  }
+
+}
+
+
+
 async function guardar() {
 
 
@@ -1151,219 +1776,221 @@ async function guardar() {
 
 
   const nombre =
-  document
-    .getElementById("nombre")
-    .value
-    .trim();
-
-
-const actividad =
-  esRolProfesional(
-    tipoUsuario
-  )
-    ? document
-        .getElementById("actividad")
-        .value
-        .trim()
-    : "";
-
-
-const zona =
-  document
-    .getElementById("zona")
-    .value
-    .trim();
-
-
-const provincia =
-  document
-    .getElementById("provincia")
-    .value
-    .trim();
-
-
-const zonas =
-  esCarpintero()
-    ? document
-        .getElementById("zonas")
-        .value
-        .trim()
-    : "";
-
-
-const telefono =
-  limpiarTelefono(
     document
-      .getElementById("telefono")
+      .getElementById("nombre")
       .value
-  );
+      .trim();
 
 
-const bio =
-  document
-    .getElementById("bio")
-    .value
-    .trim();
+  const actividad =
+    esRolProfesional(
+      tipoUsuario
+    )
+      ? document
+          .getElementById("actividad")
+          .value
+          .trim()
+      : "";
 
 
-const instagram =
-  document
-    .getElementById("ig")
-    .value
-    .trim();
-
-const facebook =
-  document
-    .getElementById("fb")
-    .value
-    .trim();
+  const zona =
+    document
+      .getElementById("zona")
+      .value
+      .trim();
 
 
-const linkedin =
-  document
-    .getElementById("linkedin")
-    .value
-    .trim();
+  const provincia =
+    document
+      .getElementById("provincia")
+      .value
+      .trim();
 
 
-const tiktok =
-  document
-    .getElementById("tk")
-    .value
-    .trim();
-
-
-const web =
-  document
-    .getElementById("web")
-    .value
-    .trim();
-
-
-
-if (!nombre) {
-
-  mostrarMensaje(
-    "El nombre, empresa o taller es obligatorio.",
-    "error"
-  );
-
-  return;
-
-}
-
-
-if (
-  esRolProfesional(
-    tipoUsuario
-  ) &&
-  !actividad
-) {
-
-  mostrarMensaje(
-    "Seleccioná tu actividad o rol profesional.",
-    "error"
-  );
-
-  return;
-
-}
-
-
-if (!zona) {
-
-  mostrarMensaje(
+  const zonas =
     esCarpintero()
-      ? "Ingresá tu localidad base."
-      : "Ingresá tu localidad.",
-    "error"
-  );
-
-  return;
-
-}
+      ? document
+          .getElementById("zonas")
+          .value
+          .trim()
+      : "";
 
 
-if (!provincia) {
-
-  mostrarMensaje(
-    "Seleccioná tu provincia.",
-    "error"
-  );
-
-  return;
-
-}
+  const telefono =
+    limpiarTelefono(
+      document
+        .getElementById("telefono")
+        .value
+    );
 
 
-if (
-  esCarpintero() &&
-  !zonas
-) {
-
-  mostrarMensaje(
-    "Indicá las zonas donde trabajás.",
-    "error"
-  );
-
-  return;
-
-}
+  const bio =
+    document
+      .getElementById("bio")
+      .value
+      .trim();
 
 
-const datos = {
+  const instagram =
+    document
+      .getElementById("ig")
+      .value
+      .trim();
 
-  nombre:
-    nombre,
 
-  localidad:
-    zona,
+  const facebook =
+    document
+      .getElementById("fb")
+      .value
+      .trim();
 
-  provincia:
-    provincia,
 
-  telefono:
-    telefono,
+  const linkedin =
+    document
+      .getElementById("linkedin")
+      .value
+      .trim();
 
-  descripcion:
-    bio,
 
-  instagram:
-    instagram,
+  const tiktok =
+    document
+      .getElementById("tk")
+      .value
+      .trim();
+
+
+  const web =
+    document
+      .getElementById("web")
+      .value
+      .trim();
+
+
+
+  if (!nombre) {
+
+    mostrarMensaje(
+      "El nombre, empresa o taller es obligatorio.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    esRolProfesional(
+      tipoUsuario
+    ) &&
+    !actividad
+  ) {
+
+    mostrarMensaje(
+      "Seleccioná tu actividad o rol profesional.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!zona) {
+
+    mostrarMensaje(
+      esCarpintero()
+        ? "Ingresá tu localidad base."
+        : "Ingresá tu localidad.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!provincia) {
+
+    mostrarMensaje(
+      "Seleccioná tu provincia.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    esCarpintero() &&
+    !zonas
+  ) {
+
+    mostrarMensaje(
+      "Indicá las zonas donde trabajás.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+
+  const datos = {
+
+    nombre:
+      nombre,
+
+    localidad:
+      zona,
+
+    provincia:
+      provincia,
+
+    telefono:
+      telefono,
+
+    descripcion:
+      bio,
+
+    instagram:
+      instagram,
 
     facebook:
-    facebook,
+      facebook,
 
-  linkedin:
-    linkedin,
+    linkedin:
+      linkedin,
 
-  tiktok:
-    tiktok,
+    tiktok:
+      tiktok,
 
-  web:
-    web
+    web:
+      web
 
-};
-
-
-if (esCarpintero()) {
-
-  datos.servicios =
-    zonas;
-
-}
+  };
 
 
-if (
-  esRolProfesional(
-    tipoUsuario
-  )
-) {
+  if (esCarpintero()) {
 
-  datos.actividades =
-    actividad;
+    datos.servicios =
+      zonas;
 
-}
+  }
+
+
+  if (
+    esRolProfesional(
+      tipoUsuario
+    )
+  ) {
+
+    datos.actividades =
+      actividad;
+
+  }
 
 
 
@@ -1445,6 +2072,49 @@ if (
 
 
 
+cuitInput
+  .addEventListener(
+    "input",
+    actualizarEstadoCuit
+  );
+
+
+cuitInput
+  .addEventListener(
+    "blur",
+    () => {
+
+      const limpio =
+        limpiarCuit(
+          cuitInput.value
+        );
+
+
+      if (
+        limpio.length === 11
+      ) {
+
+        cuitInput.value =
+          formatearCuit(
+            limpio
+          );
+
+      }
+
+
+      actualizarEstadoCuit();
+
+    }
+  );
+
+
+validarCuitBtn
+  .addEventListener(
+    "click",
+    validarCuit
+  );
+
+
 document.getElementById(
   "guardarBtn"
 )
@@ -1452,7 +2122,6 @@ document.getElementById(
     "click",
     guardar
   );
-
 
 
 cargarPerfil();
