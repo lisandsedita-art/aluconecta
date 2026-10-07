@@ -238,7 +238,276 @@ function normalizeCuit(
 
 }
 
+function normalizeTextoLegal(
+  value: unknown,
+) {
 
+  const base =
+    String(
+      value ?? "",
+    )
+      .normalize(
+        "NFD",
+      )
+      .replace(
+        /[\u0300-\u036f]/g,
+        "",
+      )
+      .toUpperCase();
+
+
+  return base
+
+    .replace(
+      /\bS\s*[.\-]?\s*A\s*[.\-]?\s*U\b/g,
+      " SAU ",
+    )
+
+    .replace(
+      /\bS\s*[.\-]?\s*A\s*[.\-]?\s*S\b/g,
+      " SAS ",
+    )
+
+    .replace(
+      /\bS\s*[.\-]?\s*R\s*[.\-]?\s*L\b/g,
+      " SRL ",
+    )
+
+    .replace(
+      /\bS\s*[.\-]?\s*A\b/g,
+      " SA ",
+    )
+
+    .replace(
+      /[^A-Z0-9\s]/g,
+      " ",
+    )
+
+    .replace(
+      /\s+/g,
+      " ",
+    )
+
+    .trim();
+
+}
+
+
+
+function quitarFormaSocietaria(
+  value: string,
+) {
+
+  let texto =
+    value.trim();
+
+
+  const patrones = [
+
+    /(?:\s+|^)SOCIEDAD ANONIMA UNIPERSONAL$/,
+
+    /(?:\s+|^)SOCIEDAD POR ACCIONES SIMPLIFICADA$/,
+
+    /(?:\s+|^)SOCIEDAD DE RESPONSABILIDAD LIMITADA$/,
+
+    /(?:\s+|^)SOCIEDAD ANONIMA$/,
+
+    /(?:\s+|^)SAU$/,
+
+    /(?:\s+|^)SAS$/,
+
+    /(?:\s+|^)SRL$/,
+
+    /(?:\s+|^)SA$/,
+
+  ];
+
+
+  let anterior =
+    "";
+
+
+  while (
+    anterior !== texto
+  ) {
+
+    anterior =
+      texto;
+
+
+    for (
+      const patron
+      of patrones
+    ) {
+
+      texto =
+        texto
+          .replace(
+            patron,
+            "",
+          )
+          .trim();
+
+    }
+
+  }
+
+
+  return texto;
+
+}
+
+
+
+function coincideTitularArca(
+  declarado: string,
+  persona: any,
+) {
+
+  const declaradoNormalizado =
+    normalizeTextoLegal(
+      declarado,
+    );
+
+
+  if (
+    !declaradoNormalizado ||
+    !persona?.denominacion
+  ) {
+
+    return false;
+
+  }
+
+
+  const tipoPersona =
+    normalizeTextoLegal(
+      persona.tipo_persona,
+    );
+
+
+  /*
+   * Persona física:
+   *
+   * Permitimos que el usuario omita segundos nombres,
+   * pero todos los nombres que declare deben existir
+   * en ARCA y debe existir al menos un nombre
+   * y un apellido.
+   */
+  if (
+    tipoPersona ===
+    "FISICA"
+  ) {
+
+    const nombres =
+      new Set(
+        normalizeTextoLegal(
+          persona.nombre,
+        )
+          .split(" ")
+          .filter(Boolean),
+      );
+
+
+    const apellidos =
+      new Set(
+        normalizeTextoLegal(
+          persona.apellido,
+        )
+          .split(" ")
+          .filter(Boolean),
+      );
+
+
+    const todosArca =
+      new Set([
+        ...nombres,
+        ...apellidos,
+      ]);
+
+
+    const declarados =
+      declaradoNormalizado
+        .split(" ")
+        .filter(Boolean);
+
+
+    if (
+      declarados.length <
+      2
+    ) {
+
+      return false;
+
+    }
+
+
+    const todosPertenecen =
+      declarados.every(
+        (parte) =>
+          todosArca.has(
+            parte,
+          ),
+      );
+
+
+    const tieneNombre =
+      declarados.some(
+        (parte) =>
+          nombres.has(
+            parte,
+          ),
+      );
+
+
+    const tieneApellido =
+      declarados.some(
+        (parte) =>
+          apellidos.has(
+            parte,
+          ),
+      );
+
+
+    return (
+      todosPertenecen &&
+      tieneNombre &&
+      tieneApellido
+    );
+
+  }
+
+
+  /*
+   * Persona jurídica / empresa:
+   *
+   * Comparamos la razón social completa,
+   * ignorando solamente diferencias de escritura
+   * y formas societarias como SA, SAS o SRL.
+   */
+  const declaradoEmpresa =
+    quitarFormaSocietaria(
+      declaradoNormalizado,
+    );
+
+
+  const arcaEmpresa =
+    quitarFormaSocietaria(
+      normalizeTextoLegal(
+        persona.razon_social ??
+        persona.denominacion,
+      ),
+    );
+
+
+  return Boolean(
+    declaradoEmpresa &&
+    arcaEmpresa &&
+    declaradoEmpresa ===
+      arcaEmpresa
+  );
+
+}
 
 function sleep(
   ms: number,
