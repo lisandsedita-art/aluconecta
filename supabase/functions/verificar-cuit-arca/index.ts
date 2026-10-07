@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { withSupabase } from "jsr:@supabase/server@^1";
+import { withSupabase } from "npm:@supabase/server@1.4.1";
+import "npm:@supabase/supabase-js@2.117.2";
 import forge from "npm:node-forge@1.3.1";
-
 
 const SERVICE =
   "ws_sr_constancia_inscripcion";
