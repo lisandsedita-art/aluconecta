@@ -1702,7 +1702,127 @@ export default {
 
           }
 
+          let perfilId:
+            string | null =
+              null;
 
+
+          let titularDeclarado:
+            string | null =
+              null;
+
+
+          /*
+           * Cuando la consulta viene de un usuario
+           * autenticado, tomamos el titular declarado
+           * directamente desde su perfil.
+           *
+           * No confiamos en un nombre enviado
+           * por el navegador.
+           */
+          if (
+            ctx.authMode ===
+            "user"
+          ) {
+
+            perfilId =
+              ctx.userClaims?.id ??
+              null;
+
+
+            if (
+              !perfilId
+            ) {
+
+              throw new Error(
+                "No se pudo identificar al usuario autenticado",
+              );
+
+            }
+
+
+            const {
+              data:
+                perfilUsuario,
+              error:
+                perfilError,
+            } =
+              await ctx
+                .supabaseAdmin
+
+                .from(
+                  "perfiles",
+                )
+
+                .select(
+                  "titular_razon_social",
+                )
+
+                .eq(
+                  "id",
+                  perfilId,
+                )
+
+                .maybeSingle();
+
+
+            if (
+              perfilError
+            ) {
+
+              throw new Error(
+                `No se pudo leer el perfil del usuario: ${perfilError.message}`,
+              );
+
+            }
+
+
+            if (
+              !perfilUsuario
+            ) {
+
+              throw new Error(
+                "No se encontró el perfil del usuario autenticado",
+              );
+
+            }
+
+
+            titularDeclarado =
+              String(
+                perfilUsuario
+                  .titular_razon_social ??
+                "",
+              )
+                .trim();
+
+
+            if (
+              !titularDeclarado
+            ) {
+
+              return Response.json(
+
+                {
+
+                  ok:
+                    false,
+
+                  error:
+                    "Completá el titular o razón social antes de validar el CUIT",
+
+                },
+
+                {
+                  status:
+                    400,
+                },
+
+              );
+
+            }
+
+          }
           const cuitRepresentada =
             normalizeCuit(
               Deno.env.get(
@@ -1792,7 +1912,69 @@ export default {
 
               throw new Error(
                 "No se pudo identificar al usuario autenticado",
+          if (
+            ctx.authMode ===
+              "user" &&
+            resultado.verificado ===
+              true &&
+            personaResultado
+              ?.cuit_activo ===
+              true
+          ) {
+
+            if (
+              !perfilId ||
+              !titularDeclarado
+            ) {
+
+              throw new Error(
+                "No se pudieron obtener los datos declarados del usuario",
               );
+
+            }
+
+
+            const titularCoincide =
+              coincideTitularArca(
+                titularDeclarado,
+                personaResultado,
+              );
+
+
+            /*
+             * El CUIT puede existir y estar activo,
+             * pero si el titular declarado no coincide,
+             * NO se valida el perfil.
+             *
+             * Tampoco devolvemos la denominación de ARCA
+             * en este caso para evitar que simplemente
+             * sea copiada por el usuario.
+             */
+            if (
+              !titularCoincide
+            ) {
+
+              return Response.json({
+
+                ok:
+                  true,
+
+                verificado:
+                  false,
+
+                fuente:
+                  "ARCA",
+
+                cuit:
+                  cuit,
+
+                coincidencia_titular:
+                  false,
+
+                motivo:
+                  "El titular o razón social declarado no coincide con los datos registrados en ARCA.",
+
+              });
 
             }
 
@@ -1862,12 +2044,17 @@ export default {
 
             }
 
-          }
 
+            return Response.json({
 
-          return Response.json(
-            resultado,
-          );
+              ...resultado,
+
+              coincidencia_titular:
+                true,
+
+            });
+
+              }
 
         } catch (
           error
