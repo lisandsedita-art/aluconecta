@@ -3,17 +3,13 @@ import { withSupabase } from "npm:@supabase/server@1.4.1";
 import "npm:@supabase/supabase-js@2.117.2";
 import forge from "npm:node-forge@1.3.1";
 
-const SERVICE =
-  "ws_sr_constancia_inscripcion";
-
+const SERVICE = "ws_sr_constancia_inscripcion";
 
 const WSAA_URL =
   "https://wsaa.afip.gov.ar/ws/services/LoginCms";
 
-
 const PADRON_URL =
   "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
-
 
 
 function decodeBase64(
@@ -38,7 +34,6 @@ function decodeBase64(
     .decode(bytes);
 
 }
-
 
 
 function escapeXml(
@@ -70,7 +65,6 @@ function escapeXml(
 }
 
 
-
 function decodeXmlEntities(
   value: string,
 ) {
@@ -100,7 +94,6 @@ function decodeXmlEntities(
 }
 
 
-
 function tagName(
   tag: string,
 ) {
@@ -108,7 +101,6 @@ function tagName(
   return `(?:[A-Za-z0-9_-]+:)?${tag}`;
 
 }
-
 
 
 function extractBlock(
@@ -134,7 +126,6 @@ function extractBlock(
 }
 
 
-
 function extractBlocks(
   xml: string,
   tag: string,
@@ -158,7 +149,6 @@ function extractBlocks(
   );
 
 }
-
 
 
 function extractTag(
@@ -198,7 +188,6 @@ function extractTag(
 }
 
 
-
 function extractTags(
   xml: string,
   tag: string,
@@ -224,7 +213,6 @@ function extractTags(
 }
 
 
-
 function normalizeCuit(
   value: unknown,
 ) {
@@ -237,6 +225,7 @@ function normalizeCuit(
   );
 
 }
+
 
 function normalizeTextoLegal(
   value: unknown,
@@ -291,7 +280,6 @@ function normalizeTextoLegal(
     .trim();
 
 }
-
 
 
 function quitarFormaSocietaria(
@@ -358,7 +346,6 @@ function quitarFormaSocietaria(
 }
 
 
-
 function coincideTitularArca(
   declarado: string,
   persona: any,
@@ -389,10 +376,9 @@ function coincideTitularArca(
   /*
    * Persona física:
    *
-   * Permitimos que el usuario omita segundos nombres,
-   * pero todos los nombres que declare deben existir
-   * en ARCA y debe existir al menos un nombre
-   * y un apellido.
+   * Permitimos omitir segundos nombres, pero cada
+   * término declarado debe existir en ARCA y debe
+   * haber al menos un nombre y un apellido.
    */
   if (
     tipoPersona ===
@@ -480,10 +466,8 @@ function coincideTitularArca(
 
   /*
    * Persona jurídica / empresa:
-   *
-   * Comparamos la razón social completa,
-   * ignorando solamente diferencias de escritura
-   * y formas societarias como SA, SAS o SRL.
+   * comparamos la razón social ignorando diferencias
+   * de formato y la forma societaria final.
    */
   const declaradoEmpresa =
     quitarFormaSocietaria(
@@ -509,6 +493,7 @@ function coincideTitularArca(
 
 }
 
+
 function sleep(
   ms: number,
 ) {
@@ -522,7 +507,6 @@ function sleep(
   );
 
 }
-
 
 
 async function solicitarTicketNuevo() {
@@ -829,7 +813,6 @@ async function solicitarTicketNuevo() {
 }
 
 
-
 async function obtenerTicket(
   supabaseAdmin: any,
 ) {
@@ -1042,7 +1025,6 @@ async function obtenerTicket(
 }
 
 
-
 async function consultarPersona(
   cuit: string,
   cuitRepresentada: string,
@@ -1127,7 +1109,6 @@ async function consultarPersona(
   return responseText;
 
 }
-
 
 
 function parseActividades(
@@ -1219,7 +1200,6 @@ function parseActividades(
 }
 
 
-
 function parseImpuestos(
   xml: string,
 ) {
@@ -1301,7 +1281,6 @@ function parseImpuestos(
   ];
 
 }
-
 
 
 function interpretarPersona(
@@ -1587,7 +1566,6 @@ function interpretarPersona(
 }
 
 
-
 export default {
 
   fetch:
@@ -1702,6 +1680,7 @@ export default {
 
           }
 
+
           let perfilId:
             string | null =
               null;
@@ -1713,16 +1692,13 @@ export default {
 
 
           /*
-           * Cuando la consulta viene de un usuario
-           * autenticado, tomamos el titular declarado
-           * directamente desde su perfil.
-           *
-           * No confiamos en un nombre enviado
-           * por el navegador.
+           * Para usuarios autenticados, el titular se toma
+           * directamente del perfil guardado en Supabase.
+           * No se confía en un nombre enviado por el navegador.
            */
           if (
             ctx.authMode ===
-            "user"
+              "user"
           ) {
 
             perfilId =
@@ -1823,6 +1799,8 @@ export default {
             }
 
           }
+
+
           const cuitRepresentada =
             normalizeCuit(
               Deno.env.get(
@@ -1878,40 +1856,16 @@ export default {
 
 
           /*
-           * Solamente asociamos el CUIT al perfil
-           * cuando:
-           *
-           * 1. La llamada pertenece a un usuario
-           *    autenticado de AluConecta.
-           *
+           * Solamente asociamos el CUIT al perfil cuando:
+           * 1. La llamada pertenece a un usuario autenticado.
            * 2. ARCA encontró una constancia válida.
-           *
            * 3. El CUIT está ACTIVO.
+           * 4. El titular o razón social coincide con ARCA.
            *
-           * Las llamadas realizadas con una secret key
-           * sirven para pruebas administrativas, pero
-           * nunca modifican un perfil.
+           * Las llamadas realizadas con secret key continúan
+           * sirviendo para pruebas administrativas y no escriben
+           * datos en perfiles.
            */
-          if (
-            ctx.authMode ===
-              "user" &&
-            resultado.verificado ===
-              true &&
-            personaResultado
-              ?.cuit_activo ===
-              true
-          ) {
-
-            const perfilId =
-              ctx.userClaims?.id;
-
-
-            if (
-              !perfilId
-            ) {
-
-              throw new Error(
-                "No se pudo identificar al usuario autenticado",
           if (
             ctx.authMode ===
               "user" &&
@@ -1941,15 +1895,6 @@ export default {
               );
 
 
-            /*
-             * El CUIT puede existir y estar activo,
-             * pero si el titular declarado no coincide,
-             * NO se valida el perfil.
-             *
-             * Tampoco devolvemos la denominación de ARCA
-             * en este caso para evitar que simplemente
-             * sea copiada por el usuario.
-             */
             if (
               !titularCoincide
             ) {
@@ -2054,7 +1999,12 @@ export default {
 
             });
 
-              }
+          }
+
+
+          return Response.json(
+            resultado,
+          );
 
         } catch (
           error
