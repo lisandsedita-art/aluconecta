@@ -34,7 +34,11 @@
     <section id="acceso" class="tarjeta" aria-live="polite"><h1>Acceso administrativo</h1><p id="estado">Comprobando sesión y permisos…</p><p id="ayuda" class="oculto"><a href="ingresar.html">Ir a iniciar sesión</a>. El ingreso habitual todavía debe adaptarse para redirigir a esta página.</p></section>
     <section id="app" aria-label="Panel administrativo">
       <div class="encabezado"><div><h1>Verificaciones</h1><p class="subtitulo">Solicitudes de usuarios y resultados fiscales registrados</p></div><div class="acciones"><button id="actualizar" type="button">Actualizar solicitudes</button></div></div>
-      <div class="aviso">Versión inicial de consulta. Las aprobaciones quedan deshabilitadas hasta completar el acceso seguro a la documentación y el registro de evidencias.</div>
+      <div class="aviso">
+  Revisá los datos de cada solicitud antes de tomar una decisión.
+  Toda aprobación o rechazo requiere una justificación y quedará
+  registrado en el historial administrativo.
+</div>
       <div class="contadores"><div class="contador"><span>En revisión</span><strong id="pendientes">—</strong></div><div class="contador"><span>Verificadas</span><strong id="verificadas">—</strong></div><div class="contador"><span>Rechazadas</span><strong id="rechazadas">—</strong></div></div>
       <section class="tarjeta"><div class="filtros"><h2>Solicitudes</h2><label>Mostrar <select id="filtro"><option value="todas">Todas</option><option value="en_revision">En revisión</option><option value="verificado">Verificadas</option><option value="rechazado">Rechazadas</option></select></label></div><div id="resultado" role="status" aria-live="polite">Cargando…</div><div id="solicitudes"></div></section>
     </section>
