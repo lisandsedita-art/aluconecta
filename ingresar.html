@@ -673,10 +673,24 @@ formulario.addEventListener(
       }
 
 
-      const tipoUsuario =
-        await obtenerTipoUsuario(
-          data.user
-        );
+      const {
+  data: esAdmin,
+  error: errorAdmin
+} = await sb.rpc('es_administrador');
+
+if (errorAdmin) {
+  throw errorAdmin;
+}
+
+if (esAdmin === true) {
+  window.location.href = 'admin.html';
+  return;
+}
+
+const tipoUsuario =
+  await obtenerTipoUsuario(
+    data.user
+  );
 
 
       if (!tipoUsuario) {
