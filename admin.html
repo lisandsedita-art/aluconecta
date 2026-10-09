@@ -177,6 +177,90 @@ lista.append(item);
       if(sesionError||!user){fallar('No hay una sesión válida. Iniciá sesión con tu cuenta administrativa.');return}
       const {data:autorizado,error:permisoError}=await sb.rpc('es_administrador');
       if(permisoError||autorizado!==true){fallar('Esta cuenta no tiene permisos administrativos.');return}
+      const { data: nivel, error: errorNivel } =
+  await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+
+if (errorNivel) throw errorNivel;
+
+if (nivel.currentLevel !== 'aal2') {
+
+  const { data: factores, error: errorFactores } =
+    await sb.auth.mfa.listFactors();
+
+  if (errorFactores) throw errorFactores;
+
+  const factor = (factores.totp || [])
+    .find(f => f.status === 'verified');
+
+  if (!factor) {
+    fallar('Primero configurá Google Authenticator en la sección de seguridad administrativa.');
+    return;
+  }
+
+  acceso.style.display = 'block';
+  app.style.display = 'none';
+
+  estado.textContent =
+    'Ingresá el código de Google Authenticator para acceder.';
+
+  const codigo = document.createElement('input');
+  codigo.type = 'text';
+  codigo.inputMode = 'numeric';
+  codigo.maxLength = 6;
+  codigo.placeholder = 'Código de 6 dígitos';
+  codigo.autocomplete = 'one-time-code';
+  codigo.style.cssText =
+    'padding:12px;font-size:18px;width:190px;' +
+    'border:1px solid #cbd5e1;border-radius:8px;';
+
+  const confirmar = document.createElement('button');
+  confirmar.type = 'button';
+  confirmar.textContent = 'Verificar código';
+
+  const mensaje = document.createElement('p');
+  mensaje.setAttribute('role', 'status');
+
+  acceso.append(codigo, confirmar, mensaje);
+
+  confirmar.addEventListener('click', async () => {
+    const valor = codigo.value.trim();
+
+    if (!/^\d{6}$/.test(valor)) {
+      mensaje.textContent = 'Ingresá los seis dígitos.';
+      return;
+    }
+
+    confirmar.disabled = true;
+
+    try {
+      const { data: desafio, error: errorDesafio } =
+        await sb.auth.mfa.challenge({
+          factorId: factor.id
+        });
+
+      if (errorDesafio) throw errorDesafio;
+
+      const { error: errorVerificacion } =
+        await sb.auth.mfa.verify({
+          factorId: factor.id,
+          challengeId: desafio.id,
+          code: valor
+        });
+
+      if (errorVerificacion) throw errorVerificacion;
+
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Error de segundo factor:', error);
+      mensaje.textContent =
+        'Código incorrecto o vencido. Intentá nuevamente.';
+      confirmar.disabled = false;
+    }
+  });
+
+  return;
+}
       salir.hidden=false;acceso.style.display='none';app.style.display='block';
       document.getElementById('actualizar').addEventListener('click',cargar);
       filtro.addEventListener('change',dibujar);
