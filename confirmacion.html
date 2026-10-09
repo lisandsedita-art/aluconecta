@@ -288,7 +288,87 @@ function pedirIngreso() {
   );
 }
 
-function conLimite(promesa) {
+function mostrarEnlaceVencido(sb) {
+  mostrarEstado(
+    'El enlace ya no es válido',
+    'El enlace de confirmación venció o ya fue utilizado. No hace falta registrarte nuevamente.',
+    'IR A INICIAR SESIÓN',
+    'ingresar.html'
+  );
+
+  const formulario = document.createElement('form');
+
+  formulario.style.cssText =
+    'display:grid;gap:10px;max-width:390px;margin:20px auto;text-align:left';
+
+  const etiqueta = document.createElement('label');
+  etiqueta.htmlFor = 'correoReenvio';
+  etiqueta.textContent = 'Correo electrónico de tu cuenta';
+
+  const correo = document.createElement('input');
+  correo.id = 'correoReenvio';
+  correo.type = 'email';
+  correo.autocomplete = 'email';
+  correo.required = true;
+  correo.placeholder = 'tu@email.com';
+  correo.style.cssText =
+    'padding:12px;border:1px solid #b6c3cd;border-radius:8px;width:100%;box-sizing:border-box';
+
+  const boton = document.createElement('button');
+  boton.type = 'submit';
+  boton.className = 'boton';
+  boton.textContent = 'REENVIAR CONFIRMACIÓN';
+
+  const aviso = document.createElement('p');
+  aviso.setAttribute('role', 'status');
+  aviso.setAttribute('aria-live', 'polite');
+
+  formulario.append(etiqueta, correo, boton, aviso);
+
+  formulario.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+
+    if (!correo.reportValidity()) return;
+
+    boton.disabled = true;
+    boton.textContent = 'ENVIANDO...';
+    aviso.textContent = '';
+
+    try {
+      const { error } = await conLimite(
+        sb.auth.resend({
+          type: 'signup',
+          email: correo.value.trim(),
+          options: {
+            emailRedirectTo: new URL(
+              'confirmacion.html',
+              location.href
+            ).href
+          }
+        })
+      );
+
+      if (error) throw error;
+
+      aviso.textContent =
+        'Si tu cuenta está pendiente de confirmación, recibirás un nuevo correo. Revisá también la carpeta de spam.';
+
+    } catch (error) {
+      const mensaje = String(error?.message || '').toLowerCase();
+
+      aviso.textContent = mensaje.includes('rate limit')
+        ? 'Se alcanzó el límite temporal de envíos. Esperá unos minutos antes de volver a intentarlo.'
+        : 'No pudimos solicitar el correo. Revisá tu conexión e intentá nuevamente.';
+
+    } finally {
+      boton.disabled = false;
+      boton.textContent = 'REENVIAR CONFIRMACIÓN';
+    }
+  });
+
+  contenido.append(formulario);
+}
+  function conLimite(promesa) {
   let temporizador;
   return Promise.race([
     promesa,
@@ -305,12 +385,38 @@ async function confirmarCuenta() {
       'https://wroaxwjyjrxzwctfkyoo.supabase.co',
       'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3'
     );
+    // Leer el error antes de limpiar el enlace.
+    const parametros = new URLSearchParams(
+      location.hash.replace(/^#/, '')
+    );
+
+    const errorEnlace =
+      parametros.get('error_code') ||
+      new URLSearchParams(location.search).get('error_code');
+
+    const enlaceInvalido =
+      ['otp_expired', 'access_denied', 'otp_disabled']
+        .includes(errorEnlace) ||
+      (
+        parametros.get('error') === 'access_denied' &&
+        /expired|invalid/i.test(
+          parametros.get('error_description') || ''
+        )
+      );
+
     // El SDK procesa el enlace antes de resolver getSession.
     const sesion = await conLimite(sb.auth.getSession());
-    // Quitar credenciales del enlace solo después de procesarlo.
+
+    // Limpiar los parámetros después de procesarlos.
     if (location.hash || location.search) {
       history.replaceState(null, '', location.pathname);
     }
+
+    if (enlaceInvalido && !sesion.data?.session) {
+      mostrarEnlaceVencido(sb);
+      return;
+    }
+
     if (sesion.error || !sesion.data?.session) {
       pedirIngreso();
       return;
