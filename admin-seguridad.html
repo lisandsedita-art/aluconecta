@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#0f2e4d">
+<title>Seguridad administrativa | AluConecta</title>
+<link rel="icon" href="icon-192.png" type="image/png">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+:root{--azul:#0f2e4d;--celeste:#5bc0de;--fondo:#f4f6f8;--borde:#e2e8f0;--gris:#64748b}
+*{box-sizing:border-box}body{margin:0;background:var(--fondo);color:var(--azul);font-family:Arial,system-ui,sans-serif}
+header{background:var(--azul);color:white;padding:22px 18px}.wrap{max-width:720px;margin:auto}header strong{font-size:25px}header span{color:var(--celeste)}header small{display:block;color:#cbd5e1;margin-top:5px}main{padding:26px 16px 60px}
+h1{font-size:27px;margin:0 0 9px}h2{font-size:19px}p{line-height:1.6} .muted{color:var(--gris)}.card{border:1px solid var(--borde);background:white;border-radius:14px;padding:20px;margin:18px 0;box-shadow:0 5px 15px #0f2e4d08}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button,.link{display:inline-block;background:var(--azul);color:white;border:0;border-radius:9px;padding:12px 16px;font:700 14px Arial, sans-serif;text-decoration:none;cursor:pointer}button.secondary,.link.secondary{background:white;color:var(--azul);border:1px solid var(--borde)}button:disabled{opacity:.6;cursor:wait}input{font-size:20px;letter-spacing:3px;width:min(100%,220px);padding:12px;border:1px solid #94a3b8;border-radius:8px}label{display:block;font-weight:bold;margin-bottom:9px}#qr{display:block;max-width:200px;width:100%;height:auto;margin:16px 0;border:1px solid var(--borde);border-radius:10px;padding:8px}#clave{word-break:break-all;padding:12px;background:#f1f5f9;border-radius:8px;font-family:monospace;font-size:14px}#mensaje{padding:12px;border-radius:8px;margin:15px 0;background:#edf6fa}#mensaje.error{background:#fff1f2;color:#9f1239}#mensaje.ok{background:#f0fdf4;color:#166534}[hidden]{display:none!important}footer{text-align:center;color:var(--gris);font-size:12px;padding:18px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><strong>Alu<span>Conecta</span></strong><small>Seguridad de la administración</small></div></header>
+<main class="wrap">
+<h1>Verificación en dos pasos</h1>
+<p class="muted">Vinculá tu cuenta administrativa con Google Authenticator. Este procedimiento no modifica las cuentas de los usuarios de AluConecta.</p>
+<div class="card" id="cargando" role="status">Comprobando tu sesión y tus permisos…</div>
+<section id="contenido" class="card" hidden>
+<h2 id="titulo">Configurar autenticador</h2>
+<p id="explicacion"></p>
+<div id="alta" hidden>
+  <div class="actions"><button id="generar" type="button">Generar código de vinculación</button></div>
+  <div id="instrucciones" hidden>
+    <p>En Google Authenticator, tocá <strong>+</strong> y elegí <strong>Escanear código QR</strong>. Si estás usando la misma pantalla del teléfono, elegí <strong>Introducir clave de configuración</strong>.</p>
+    <img id="qr" alt="QR para configurar Google Authenticator. Es privado; no lo compartas.">
+    <p><strong>Clave de configuración privada:</strong></p>
+    <div id="clave"></div>
+    <p class="muted">No compartas el QR, la clave ni los códigos temporales. La clave solo se muestra durante esta vinculación.</p>
+    <label for="codigoAlta">Código de seis dígitos de Google Authenticator</label>
+    <input id="codigoAlta" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+    <div class="actions" style="margin-top:14px"><button id="confirmar" type="button">Confirmar vinculación</button></div>
+  </div>
+</div>
+<div id="activo" hidden>
+  <p>Ya tenés un autenticador TOTP verificado en esta cuenta. Para comprobar que funciona, solicitá un código y escribí los seis dígitos actuales.</p>
+  <button id="probar" type="button">Probar código</button>
+  <div id="prueba" hidden>
+    <p><label for="codigoPrueba">Código temporal</label><input id="codigoPrueba" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"></p>
+    <button id="validarPrueba" type="button">Verificar código</button>
+  </div>
+</div>
+<div id="mensaje" role="status" aria-live="polite" hidden></div>
+<div class="actions" style="margin-top:22px"><a class="link secondary" href="admin.html">Volver a administración</a></div>
+</section>
+</main><footer>AluConecta · Acceso reservado</footer>
+<script>
+window.addEventListener('DOMContentLoaded',async()=>{
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const aviso=(texto,mal=false,bien=false)=>{const el=$('mensaje');el.hidden=false;el.className=mal?'error':bien?'ok':'';el.textContent=texto;};
+  const errorTexto=e=>e && e.message ? e.message : 'Ocurrió un error. Intentá de nuevo.';
+  const codigoValido=v=>/^\d{6}$/.test(v);
+  const url='https://wroaxwjyjrxzwctfkyoo.supabase.co';
+  const key='sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+  let sb,pendiente=null,verificado=null,prueba=null;
+  try{
+    if(!window.supabase)throw Error('No se pudo cargar Supabase');
+    sb=window.supabase.createClient(url,key);
+    const {data:{user},error:sesionError}=await sb.auth.getUser();
+    if(sesionError||!user)throw Error('Iniciá sesión con tu cuenta administrativa para continuar.');
+    const {data:esAdmin,error:permisoError}=await sb.rpc('es_administrador');
+    if(permisoError||esAdmin!==true)throw Error('Esta cuenta no tiene permiso de administración.');
+    const {data:factores,error:factoresError}=await sb.auth.mfa.listFactors();
+    if(factoresError)throw factoresError;
+    verificado=(factores.totp||[]).find(f=>f.status==='verified')||null;
+    $('cargando').hidden=true;$('contenido').hidden=false;
+    if(verificado){$('titulo').textContent='Autenticador vinculado';$('explicacion').textContent='Tu cuenta ya tiene un segundo factor TOTP configurado.';$('activo').hidden=false;}
+    else{$('explicacion').textContent='Este paso vincula un autenticador a tu cuenta. Todavía no obligará a usar MFA en todas las funciones administrativas.';$('alta').hidden=false;}
+  }catch(e){$('cargando').textContent=errorTexto(e);return;}
+  $('generar').addEventListener('click',async()=>{
+    $('generar').disabled=true;
+    try{
+      const {data,error}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'AluConecta administración'});
+      if(error)throw error;
+      pendiente=data.id;
+      if(data.totp?.qr_code){$('qr').src=data.totp.qr_code;$('qr').hidden=false;}else $('qr').hidden=true;
+      $('clave').textContent=data.totp?.secret||'La clave no está disponible';
+      $('instrucciones').hidden=false;
+      aviso('Abrí Google Authenticator, agregá la cuenta e ingresá el código generado.');
+    }catch(e){aviso(errorTexto(e),true);$('generar').disabled=false;}
+  });
+  $('confirmar').addEventListener('click',async()=>{
+    const code=$('codigoAlta').value.trim();
+    if(!pendiente||!codigoValido(code)){aviso('Ingresá el código de seis dígitos de tu aplicación.',true);return;}
+    $('confirmar').disabled=true;
+    try{
+      const {data:challenge,error:challengeError}=await sb.auth.mfa.challenge({factorId:pendiente});
+      if(challengeError)throw challengeError;
+      const {error}=await sb.auth.mfa.verify({factorId:pendiente,challengeId:challenge.id,code});
+      if(error)throw error;
+      $('instrucciones').hidden=true;$('clave').textContent='';$('qr').removeAttribute('src');
+      $('alta').hidden=true;$('activo').hidden=false;$('titulo').textContent='Autenticador vinculado';
+      verificado={id:pendiente};
+      aviso('Vinculación confirmada. Tu cuenta tiene un factor TOTP verificado.',false,true);
+    }catch(e){aviso('No se pudo verificar el código. Revisá la hora del teléfono y volvé a intentar. '+errorTexto(e),true)}
+    finally{$('confirmar').disabled=false;}
+  });
+  $('probar').addEventListener('click',async()=>{
+    $('probar').disabled=true;
+    try{
+      const {data,error}=await sb.auth.mfa.challenge({factorId:verificado.id});if(error)throw error;
+      prueba=data.id;$('prueba').hidden=false;aviso('Escribí el código actual de Google Authenticator.');
+    }catch(e){aviso(errorTexto(e),true)}finally{$('probar').disabled=false;}
+  });
+  $('validarPrueba').addEventListener('click',async()=>{
+    const code=$('codigoPrueba').value.trim();
+    if(!prueba||!codigoValido(code)){aviso('Ingresá un código válido de seis dígitos.',true);return;}
+    $('validarPrueba').disabled=true;
+    try{
+      const {error}=await sb.auth.mfa.verify({factorId:verificado.id,challengeId:prueba,code});if(error)throw error;
+      aviso('Prueba correcta: Google Authenticator está funcionando.',false,true);$('prueba').hidden=true;$('codigoPrueba').value='';prueba=null;
+    }catch(e){aviso('No pudimos validar el código: '+errorTexto(e),true)}finally{$('validarPrueba').disabled=false;}
+  });
+});
+</script>
+</body>
+</html>
