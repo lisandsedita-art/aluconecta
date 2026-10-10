@@ -1671,26 +1671,7 @@ async function eliminarProyectoFallido(
 }
 
 
-    await sb
-      .from('proyectos')
-      .delete()
-      .eq(
-        'id',
-        proyectoId
-      );
-
-
-  } catch (error) {
-
-    console.error(
-      'No se pudo completar la limpieza:',
-      error
-    );
-
-  }
-
-}
-
+    
 
 async function subirDocumentacion(
   proyectoId,
