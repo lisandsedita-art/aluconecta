@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0f2e4d">
+  <title>Administración | AluConecta</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <style>
+    :root{--azul:#0f2e4d;--celeste:#5bc0de;--amarillo:#f5c542;--fondo:#f4f6f8;--gris:#64748b;--borde:#e2e8f0}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,system-ui,sans-serif;color:var(--azul);background:var(--fondo)}
+    header{background:var(--azul);color:white}.cabecera{max-width:1100px;margin:auto;padding:19px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+    .marca{font-size:24px;font-weight:900;letter-spacing:-.7px}.marca span{color:var(--celeste)}
+    .cabecera small{display:block;color:#bbd1e1;font-weight:400;font-size:12px;margin-top:5px}
+    main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}.encabezado{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
+    h1{font-size:30px;margin:0 0 8px}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55}.subtitulo{color:var(--gris);margin:0}
+    button,.enlace{font:inherit;cursor:pointer;border-radius:9px;padding:11px 15px;font-weight:700;border:1px solid var(--borde);background:white;color:var(--azul)}button:hover,.enlace:hover{background:#eef4f9}button:disabled{cursor:not-allowed;opacity:.6}
+    .acciones{display:flex;gap:9px;flex-wrap:wrap}.tarjeta{background:white;border:1px solid var(--borde);border-radius:14px;padding:20px;margin-bottom:19px;box-shadow:0 3px 13px #0f2e4d09}
+    .aviso{border-left:4px solid var(--celeste);background:#eef8fb;padding:13px 17px;border-radius:8px;color:#245068;font-size:14px}
+    .alerta{border-left:4px solid #c2410c;background:#fff7ed;padding:14px 17px;border-radius:8px;color:#9a3412}
+    .contadores{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 23px}.contador{background:white;padding:17px;border-radius:12px;border:1px solid var(--borde)}.contador strong{display:block;font-size:27px;margin-top:9px}.contador span{color:var(--gris);font-size:13px}
+    .filtros{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}select{font:inherit;border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:10px;color:var(--azul)}
+    .solicitud{border:1px solid var(--borde);border-radius:11px;padding:17px;margin-bottom:13px}.solicitud__arriba{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.solicitud h3{margin:0;font-size:17px;overflow-wrap:anywhere}.etiqueta{display:inline-block;border-radius:30px;background:#e2e8f0;padding:6px 11px;font-size:12px;font-weight:bold}.etiqueta.pendiente{background:#fff3cf;color:#805500}.etiqueta.aprobada{background:#dcfce7;color:#166534}.etiqueta.rechazada{background:#fee2e2;color:#991b1b}
+    dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px;margin:17px 0 0}dt{font-size:12px;color:var(--gris);margin-bottom:5px}dd{margin:0;font-size:14px;overflow-wrap:anywhere} .nota{color:var(--gris);font-size:12px;margin:14px 0 0}
+    .oculto{display:none!important}#estado{font-size:15px}#app{display:none}a{color:inherit}footer{text-align:center;padding:25px;color:var(--gris);font-size:12px}
+    @media(max-width:640px){h1{font-size:25px}main{padding:22px 13px 35px}.contadores{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.contador{padding:12px}.contador strong{font-size:23px}.contador span{font-size:11px}dl{grid-template-columns:1fr}.tarjeta{padding:15px}}
+  </style>
+</head>
+<body>
+  <header><div class="cabecera"><div class="marca">Alu<span>Conecta</span><small>Administración privada</small></div><div class="acciones"><button id="salir" type="button" hidden>Cerrar sesión</button></div></div></header>
+  <main>
+    <section id="acceso" class="tarjeta" aria-live="polite"><h1>Acceso administrativo</h1><p id="estado">Comprobando sesión y permisos…</p><p id="ayuda" class="oculto"><a href="ingresar.html">Ir a iniciar sesión</a>. El ingreso habitual todavía debe adaptarse para redirigir a esta página.</p></section>
+    <section id="app" aria-label="Panel administrativo">
+      <div class="encabezado"><div><h1>Verificaciones</h1><p class="subtitulo">Solicitudes de usuarios y resultados fiscales registrados</p></div><div class="acciones"><button id="actualizar" type="button">Actualizar solicitudes</button></div></div>
+      <div class="aviso">
+  Revisá los datos de cada solicitud antes de tomar una decisión.
+  Toda aprobación, rechazo o pedido de corrección requiere una justificación y quedará
+  registrado en el historial administrativo.
+</div>
+      <div class="contadores"><div class="contador"><span>En revisión</span><strong id="pendientes">—</strong></div><div class="contador"><span>Verificadas</span><strong id="verificadas">—</strong></div><div class="contador"><span>Requieren corrección</span><strong id="correcciones">—</strong></div><div class="contador"><span>Rechazadas</span><strong id="rechazadas">—</strong></div></div>
+      <section class="tarjeta"><div class="filtros"><h2>Solicitudes</h2><label>Mostrar <select id="filtro"><option value="todas">Todas</option><option value="en_revision">En revisión</option><option value="verificado">Verificadas</option><option value="requiere_correccion">Requieren corrección</option><option value="rechazado">Rechazadas</option></select></label></div><div id="resultado" role="status" aria-live="polite">Cargando…</div><div id="solicitudes"></div></section>
+    </section>
+  </main>
+  <footer>AluConecta · Acceso reservado</footer>
+  <script>
+  window.addEventListener('DOMContentLoaded', async () => {
+    'use strict';
+    const supabaseUrl='https://wroaxwjyjrxzwctfkyoo.supabase.co';
+    const supabaseKey='sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+    const estado=document.getElementById('estado');
+    const acceso=document.getElementById('acceso');
+    const app=document.getElementById('app');
+    const ayuda=document.getElementById('ayuda');
+    const salir=document.getElementById('salir');
+    const resultado=document.getElementById('resultado');
+    const lista=document.getElementById('solicitudes');
+    const filtro=document.getElementById('filtro');
+    let registros=[];
+    let sb;
+    const fallar=(mensaje)=>{app.style.display='none';acceso.style.display='block';estado.textContent=mensaje;ayuda.classList.remove('oculto')};
+    const fecha=(s)=>s?new Date(s).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'}):'Sin registro';
+    const mostrar=(v)=>v===null||v===undefined||String(v).trim()===''?'No informado':String(v);
+    const campo=(dt,dd)=>{const envoltura=document.createElement('div');const a=document.createElement('dt');a.textContent=dt;const b=document.createElement('dd');b.textContent=mostrar(dd);envoltura.append(a,b);return envoltura};
+    function dibujar(){
+      lista.replaceChildren();
+      const visibles=registros.filter(r=>filtro.value==='todas'||r.estado===filtro.value);
+      resultado.textContent=visibles.length?`${visibles.length} solicitud(es)`: 'No hay solicitudes para mostrar.';
+      document.getElementById('pendientes').textContent=registros.filter(r=>r.estado==='en_revision').length;
+      document.getElementById('verificadas').textContent=registros.filter(r=>r.estado==='verificado').length;
+      document.getElementById('correcciones').textContent=registros.filter(r=>r.estado==='requiere_correccion').length;
+      document.getElementById('rechazadas').textContent=registros.filter(r=>r.estado==='rechazado').length;
+      for(const r of visibles){
+        const item=document.createElement('article');item.className='solicitud';
+        const cab=document.createElement('div');cab.className='solicitud__arriba';
+        const titulo=document.createElement('h3');titulo.textContent=mostrar(r.nombre);
+        const estadoEl=document.createElement('span');estadoEl.className='etiqueta '+({en_revision:'pendiente',verificado:'aprobada',rechazado:'rechazada',requiere_correccion:'pendiente'}[r.estado]||'');estadoEl.textContent=({en_revision:'En revisión',verificado:'Verificada',rechazado:'Rechazada',requiere_correccion:'Requiere corrección'}[r.estado]||mostrar(r.estado));
+        cab.append(titulo,estadoEl);item.append(cab);
+        const dl=document.createElement('dl');
+        const datos=[['Rol',r.tipo_usuario],['Localidad / provincia',[r.localidad,r.provincia].filter(Boolean).join(', ')],['Tipo de verificación',r.tipo_verificacion],['DNI',r.dni],['CUIT declarado',r.cuit],['Razón social declarada',r.razon_social],['Matrícula',r.matricula],['Entidad de matrícula',r.entidad_matricula],['ARCA · CUIT validado',r.cuit_validado?'Sí':'No consta validación'],['ARCA · Denominación',r.denominacion_arca],['ARCA · Fecha de validación',fecha(r.cuit_validado_at)],['Solicitud enviada',fecha(r.enviado_en)],['Observación de revisión',r.observacion_revision]];
+        datos.forEach(([a,b])=>dl.append(campo(a,b)));
+        item.append(dl);
+
+if (r.estado === 'en_revision') {
+  const controles = document.createElement('div');
+  controles.className = 'acciones';
+  controles.style.marginTop = '20px';
+
+  const observacion = document.createElement('textarea');
+  observacion.placeholder =
+    'Justificación de la decisión (obligatoria)';
+  observacion.setAttribute('aria-label', 'Justificación');
+  observacion.rows = 3;
+  observacion.maxLength = 2000;
+  observacion.style.cssText =
+    'width:100%;padding:12px;border:1px solid #cbd5e1;' +
+    'border-radius:9px;font:inherit;margin-bottom:12px;';
+
+  const aprobar = document.createElement('button');
+  aprobar.type = 'button';
+  aprobar.textContent = 'Aprobar solicitud';
+
+  const rechazar = document.createElement('button');
+  rechazar.type = 'button';
+  rechazar.textContent = 'Rechazar solicitud';
+
+  const corregir = document.createElement('button');
+  corregir.type = 'button';
+  corregir.textContent = 'Pedir correcciones';
+  let resolviendo = false;
+
+  async function resolver(decision) {
+    if (resolviendo) return;
+    const motivo = observacion.value.trim();
+
+    if (!motivo) {
+      alert('Es obligatorio justificar la decisión.');
+      observacion.focus();
+      return;
+    }
+
+    const nombre = mostrar(r.nombre);
+    const accion = {
+      verificado: 'APROBAR',
+      rechazado: 'RECHAZAR',
+      requiere_correccion: 'PEDIR CORRECCIONES EN'
+    }[decision];
+    if (!accion) return;
+
+    if (!confirm(
+      `¿Confirmás que querés ${accion} la solicitud de ${nombre}?`
+    )) return;
+
+    resolviendo = true;
+    aprobar.disabled = true;
+    rechazar.disabled = true;
+    corregir.disabled = true;
+    observacion.disabled = true;
+    document.getElementById("actualizar").disabled = true;
+    filtro.disabled = true;
+
+    try {
+      const { error } = await sb.rpc(
+        'resolver_verificacion_admin',
+        {
+          p_usuario_id: r.usuario_id,
+          p_decision: decision,
+          p_observacion: motivo
+        }
+      );
+
+      if (error) throw error;
+
+      const actualizado = await cargar();
+      alert(actualizado
+        ? 'Decisión registrada correctamente.'
+        : 'La decisión se registró, pero no se pudo actualizar el listado. Tocá Actualizar solicitudes.');
+
+    } catch (error) {
+      console.error('Error al resolver verificación:', error);
+      alert(
+        mensajeDecision(error)
+      );
+      aprobar.disabled = false;
+      rechazar.disabled = false;
+      corregir.disabled = false;
+      observacion.disabled = false;
+    } finally {
+      resolviendo = false;
+      document.getElementById('actualizar').disabled = false;
+      filtro.disabled = false;
+    }
+  }
+
+  aprobar.addEventListener('click', () => resolver('verificado'));
+  rechazar.addEventListener('click', () => resolver('rechazado'));
+
+  corregir.addEventListener('click', () => resolver('requiere_correccion'));
+  controles.append(aprobar, corregir, rechazar);
+  item.append(observacion, controles);
+}
+
+lista.append(item);
+      }
+    }
+    function mensajeDecision(error) {
+      const mensaje = String(error?.message || '');
+      const permitidos = [
+        'Acceso administrativo no autorizado',
+        'Se requiere verificación en dos pasos',
+        'Decisión no válida',
+        'Es obligatorio justificar la decisión',
+        'La justificación no puede superar 2000 caracteres',
+        'Perfil inexistente',
+        'Solicitud inexistente',
+        'La solicitud no está en revisión',
+        'No se puede aprobar: el CUIT de la solicitud no coincide con el del perfil o está incompleto',
+        'No se puede aprobar: falta la validación ARCA del CUIT'
+      ];
+      if (permitidos.includes(mensaje)) {
+        return mensaje === 'Se requiere verificación en dos pasos'
+          ? mensaje + '. Recargá el panel para verificar tu sesión.'
+          : mensaje;
+      }
+      return 'No se pudo confirmar el resultado. Actualizá las solicitudes antes de volver a intentarlo.';
+    }
+    async function cargar(){
+      const btn=document.getElementById('actualizar');btn.disabled=true;resultado.textContent='Consultando verificaciones…';lista.replaceChildren();
+      try{
+        const {data,error}=await sb.rpc('listar_verificaciones_admin');
+        if(error)throw error;
+        registros=Array.isArray(data)?data:[];dibujar();return true;
+      }catch(err){registros=[];lista.replaceChildren();['pendientes','verificadas','rechazadas','correcciones'].forEach(id=>document.getElementById(id).textContent='—');resultado.textContent='No se pudo cargar el listado. Revisá los permisos o la conexión.';console.error('Error al listar verificaciones',err);return false;}
+      finally{btn.disabled=false}
+    }
+    try{
+      if(!window.supabase)throw new Error('No se pudo cargar el cliente de Supabase');
+      sb=window.supabase.createClient(supabaseUrl,supabaseKey);
+      const {data:{user},error:sesionError}=await sb.auth.getUser();
+      if(sesionError||!user){fallar('No hay una sesión válida. Iniciá sesión con tu cuenta administrativa.');return}
+      const {data:autorizado,error:permisoError}=await sb.rpc('es_administrador');
+      if(permisoError||autorizado!==true){fallar('Esta cuenta no tiene permisos administrativos.');return}
+      const { data: nivel, error: errorNivel } =
+  await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+
+if (errorNivel) throw errorNivel;
+
+if (nivel.currentLevel !== 'aal2') {
+
+  const { data: factores, error: errorFactores } =
+    await sb.auth.mfa.listFactors();
+
+  if (errorFactores) throw errorFactores;
+
+  const factor = (factores.totp || [])
+    .find(f => f.status === 'verified');
+
+  if (!factor) {
+    fallar('Primero configurá Google Authenticator en la sección de seguridad administrativa.');
+    return;
+  }
+
+  acceso.style.display = 'block';
+  app.style.display = 'none';
+
+  estado.textContent =
+    'Ingresá el código de Google Authenticator para acceder.';
+
+  const codigo = document.createElement('input');
+  codigo.type = 'text';
+  codigo.inputMode = 'numeric';
+  codigo.maxLength = 6;
+  codigo.placeholder = 'Código de 6 dígitos';
+  codigo.autocomplete = 'one-time-code';
+  codigo.style.cssText =
+    'padding:12px;font-size:18px;width:190px;' +
+    'border:1px solid #cbd5e1;border-radius:8px;';
+
+  const confirmar = document.createElement('button');
+  confirmar.type = 'button';
+  confirmar.textContent = 'Verificar código';
+
+  const mensaje = document.createElement('p');
+  mensaje.setAttribute('role', 'status');
+
+  acceso.append(codigo, confirmar, mensaje);
+
+  confirmar.addEventListener('click', async () => {
+    const valor = codigo.value.trim();
+
+    if (!/^\d{6}$/.test(valor)) {
+      mensaje.textContent = 'Ingresá los seis dígitos.';
+      return;
+    }
+
+    confirmar.disabled = true;
+
+    try {
+      const { data: desafio, error: errorDesafio } =
+        await sb.auth.mfa.challenge({
+          factorId: factor.id
+        });
+
+      if (errorDesafio) throw errorDesafio;
+
+      const { error: errorVerificacion } =
+        await sb.auth.mfa.verify({
+          factorId: factor.id,
+          challengeId: desafio.id,
+          code: valor
+        });
+
+      if (errorVerificacion) throw errorVerificacion;
+
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Error de segundo factor:', error);
+      mensaje.textContent =
+        'Código incorrecto o vencido. Intentá nuevamente.';
+      confirmar.disabled = false;
+    }
+  });
+
+  return;
+}
+      salir.hidden=false;acceso.style.display='none';app.style.display='block';
+      document.getElementById('actualizar').addEventListener('click',cargar);
+      filtro.addEventListener('change',dibujar);
+      salir.addEventListener('click',async()=>{salir.disabled=true;await sb.auth.signOut({scope:'local'});window.location.href='ingresar.html'});
+      await cargar();
+    }catch(err){console.error('Error de acceso administrativo',err);fallar('No se pudo comprobar el acceso administrativo. Intentá nuevamente.')}
+  });
+  </script>
+</body>
+</html>
+
