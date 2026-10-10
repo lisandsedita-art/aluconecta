@@ -1410,6 +1410,8 @@ $('provincia')
   .addEventListener(
     'change',
     () => {
+            clearTimeout(localidadTimer);
+      localidadBusquedaId++;
 
       $('localidad').value =
         '';
@@ -1432,6 +1434,7 @@ async function buscarLocalidades(
   localidad,
   provincia
 ) {
+    const busquedaId = localidadBusquedaId;
 
   try {
 
@@ -1466,6 +1469,13 @@ async function buscarLocalidades(
 
     const datos =
       await respuesta.json();
+    if (
+  busquedaId !== localidadBusquedaId ||
+  $('localidad').value.trim() !== localidad ||
+  $('provincia').value !== provincia
+) {
+  return;
+    }
 
 
     mostrarSugerencias(
