@@ -2021,21 +2021,27 @@ async function publicarProyecto(
           archivoError.rutasSubidas ||
           [];
 
+  const erroresLimpieza = await eliminarProyectoFallido(
+  proyectoId,
+  rutasSubidas
+);
 
-        await eliminarProyectoFallido(
-          proyectoId,
-          rutasSubidas
-        );
+proyectoId = null;
 
+if (erroresLimpieza.length > 0) {
+  throw new Error(
+    archivoError.message +
+    ' No se pudo completar la limpieza automática. ' +
+    'Es posible que hayan quedado datos o archivos del proyecto. ' +
+    'Contactá al soporte antes de intentar publicarlo nuevamente.'
+  );
+}
 
-        proyectoId =
-          null;
-
-
-        throw new Error(
-          archivoError.message +
-          ' La publicación fue cancelada para evitar dejar un proyecto incompleto.'
-        );
+throw new Error(
+  archivoError.message +
+  ' La publicación fue cancelada y se completó la limpieza automática.'
+);
+        
 
       }
 
