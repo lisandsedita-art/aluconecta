@@ -1626,26 +1626,49 @@ function crearRutaArchivo(
 
 }
 
-
 async function eliminarProyectoFallido(
   proyectoId,
   rutasSubidas
 ) {
+  const errores = [];
+
+  if (rutasSubidas.length > 0) {
+    try {
+      const { error } = await sb.storage
+        .from(BUCKET)
+        .remove(rutasSubidas);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error(
+        'Error eliminando archivos del proyecto:',
+        error
+      );
+      errores.push('archivos');
+    }
+  }
 
   try {
+    const { error } = await sb
+      .from('proyectos')
+      .delete()
+      .eq('id', proyectoId);
 
-    if (
-      rutasSubidas.length >
-      0
-    ) {
-
-      await sb.storage
-        .from(BUCKET)
-        .remove(
-          rutasSubidas
-        );
-
+    if (error) {
+      throw error;
     }
+  } catch (error) {
+    console.error(
+      'Error eliminando el proyecto:',
+      error
+    );
+    errores.push('proyecto');
+  }
+
+  return errores;
+}
 
 
     await sb
