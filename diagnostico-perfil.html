@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnóstico de perfil · AluConecta</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+body{margin:0;background:#f4f6f8;color:#0f2e4d;font:15px Arial,sans-serif}header{background:#0f2e4d;color:white;padding:22px 18px;font-size:24px;font-weight:bold}main{max-width:650px;margin:24px auto;padding:0 16px}.panel{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:22px;line-height:1.7}h1{font-size:22px;margin-top:0}.fila{padding:10px 0;border-bottom:1px solid #e2e8f0;overflow-wrap:anywhere}.etiqueta{display:block;font-size:12px;color:#64748b;font-weight:bold}.aviso{font-size:13px;color:#475569;margin-top:18px}a{color:#163d63}button{border:0;background:#f5c542;color:#0f2e4d;border-radius:24px;padding:12px 18px;font-weight:bold;margin-top:15px}
+</style>
+</head>
+<body>
+<header>AluConecta</header>
+<main><div class="panel"><h1>Diagnóstico de identificación</h1><p>Esta página solo consulta datos. No modifica usuarios, proyectos ni permisos.</p><div id="resultado">Consultando sesión y perfil...</div><button id="reintentar" type="button">REPETIR COMPROBACIÓN</button><p class="aviso">Compartí solamente el texto que aparece aquí. No compartas contraseñas, tokens ni claves.</p><a href="mis-proyectos.html">← Volver a Mis proyectos</a></div></main>
+<script>
+const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
+const resultado=document.getElementById('resultado');
+function fila(t,v){const d=document.createElement('div');d.className='fila';const e=document.createElement('span');e.className='etiqueta';e.textContent=t;const x=document.createElement('span');x.textContent=String(v);d.append(e,x);resultado.appendChild(d)}
+function sufijo(id){return id?String(id).slice(-8):'No disponible'}
+async function comprobar(){resultado.textContent='Consultando...';try{
+const u=await sb.auth.getUser();const s=await sb.auth.getSession();const id=u.data?.user?.id;const idSesion=s.data?.session?.user?.id;
+resultado.textContent='';fila('Usuario autenticado',id?'Sí':'No');fila('Error de autenticación',u.error?.code||u.error?.message||'Ninguno');fila('ID autenticado (últimos 8 caracteres)',sufijo(id));fila('ID de sesión (últimos 8 caracteres)',sufijo(idSesion));fila('Coinciden los identificadores',id&&idSesion?(id===idSesion?'Sí':'No'):'No comprobable');
+if(!id)return;
+const p=await sb.from('perfiles').select('id,tipo_usuario').eq('id',id).maybeSingle();fila('Perfil encontrado para ese usuario',p.data?'Sí':'No');fila('Código de error del perfil',p.error?.code||'Ninguno');fila('Rol del perfil',p.data?.tipo_usuario||'No disponible');
+const v=await sb.from('perfiles').select('id,tipo_usuario').limit(3);fila('Cantidad de perfiles visibles (máximo 3)',v.data?.length??'No disponible');fila('Error al listar perfiles',v.error?.code||'Ninguno');
+}catch(e){fila('Error inesperado',e?.message||'Desconocido')}}
+document.getElementById('reintentar').addEventListener('click',comprobar);comprobar();
+</script>
+</body></html>
