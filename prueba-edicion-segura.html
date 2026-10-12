@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prueba de edición | AluConecta</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+:root{font-family:Arial,sans-serif;color:#0f2e4d;background:#f4f6f8}*{box-sizing:border-box}
+body{margin:0}header{background:#0f2e4d;color:white;padding:22px 5%}header strong{font-size:25px}
+main{max-width:760px;margin:auto;padding:24px 16px 60px}.aviso{background:#fff5d7;padding:15px;border-radius:12px;margin:15px 0;line-height:1.5}
+section{background:white;padding:22px;border-radius:16px;margin-top:18px}label{display:block;font-weight:700;font-size:13px;margin:17px 0 6px}
+input,textarea,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+textarea{min-height:110px}button,a.boton{display:inline-block;border:0;border-radius:25px;padding:13px 20px;background:#f5c542;color:#0f2e4d;font-weight:800;text-decoration:none;margin-top:15px}
+small{color:#64748b}#estado{white-space:pre-wrap;line-height:1.5}
+</style></head><body>
+<header><strong>AluConecta</strong><div>Prueba de edición — solo lectura</div></header>
+<main><a href="mis-proyectos-edicion.html">← Volver a mis proyectos</a>
+<div class="aviso"><b>SIMULACIÓN. NO GUARDA CAMBIOS.</b><br>Esta página solo consulta tus proyectos. No permite publicar, editar en la base de datos, modificar archivos ni cambiar verificaciones.</div>
+<section><h2>Datos del proyecto</h2><div id="estado">Comprobando sesión y proyecto...</div>
+<form id="form" hidden>
+<label>Nombre del proyecto<input id="nombre" required></label>
+<label>Tipo de proyecto<input id="tipo"></label>
+<label>Localidad<input id="localidad"></label>
+<label>Zona<input id="zona"></label>
+<label>Descripción general<textarea id="descripcion"></textarea></label>
+<label>Aberturas requeridas<textarea id="aberturas"></textarea></label>
+<label>Marca de perfiles<input id="marca"></label>
+<label>Sistema / línea<input id="sistema"></label>
+<label>Marca de herrajes<input id="herrajes"></label>
+<button type="submit">SIMULAR CAMBIOS (NO GUARDA)</button>
+</form><p id="resultado"></p></section>
+</main>
+<script>
+const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
+const $=id=>document.getElementById(id);
+let original=null;
+async function iniciar(){
+try{
+const {data:{user},error:authError}=await sb.auth.getUser();
+if(authError||!user)throw Error('Iniciá sesión desde AluConecta y volvé a abrir esta página.');
+const {data:perfil,error:perfilError}=await sb.from('perfiles').select('id,tipo_usuario').eq('id',user.id).maybeSingle();
+if(perfilError||!perfil)throw Error('La sesión actual no tiene un perfil visible.');
+if(!['cliente_profesional','profesional','empresa','cliente'].includes(perfil.tipo_usuario))throw Error('Esta página corresponde a cuentas profesionales.');
+const {data,error}=await sb.rpc('listar_mis_proyectos');
+if(error)throw Error('No pudimos consultar tus proyectos: '+error.message);
+const id=new URLSearchParams(location.search).get('editar');
+if(!id)throw Error('Falta el identificador del proyecto. Entrá desde el botón EDITAR PROYECTO.');
+const proyecto=Array.isArray(data)?data.find(p=>String(p.id)===id):null;
+if(!proyecto)throw Error('El proyecto no pertenece a esta sesión o no está disponible.');
+original=proyecto;
+const campos={nombre:proyecto.Nombre,tipo:proyecto.Tipo,localidad:proyecto.Localidad,zona:proyecto.zona,descripcion:proyecto.Proyecto,aberturas:proyecto.aberturas,marca:proyecto.marca_perfil||proyecto.marcas_perfiles,sistema:proyecto.sistema_perfil,herrajes:proyecto.marca_herrajes};
+for(const [k,v] of Object.entries(campos))$(k).value=v??'';
+$('estado').textContent='Proyecto cargado correctamente. Podés cambiar campos para probar la interfaz, sin guardar nada.';
+$('form').hidden=false;
+}catch(e){$('estado').textContent=e.message;}
+}
+$('form').addEventListener('submit',e=>{e.preventDefault();$('resultado').textContent='Simulación completada. No se enviaron cambios a Supabase. El proyecto original, sus intereses, archivos y cotizaciones permanecen intactos.';});
+iniciar();
+</script></body></html>
