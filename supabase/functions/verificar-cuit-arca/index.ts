@@ -1731,7 +1731,7 @@ export default {
                 )
 
                 .select(
-                  "titular_razon_social",
+                  "titular_razon_social,estado_cuenta",
                 )
 
                 .eq(
@@ -1763,6 +1763,14 @@ export default {
 
             }
 
+
+            // No iniciar consultas fiscales por cuenta de un usuario dado de baja.
+            if (perfilUsuario.estado_cuenta !== "activa") {
+              return Response.json(
+                { ok: false, error: "La cuenta no está activa. No se puede validar el CUIT." },
+                { status: 403 },
+              );
+            }
 
             titularDeclarado =
               String(
@@ -1961,6 +1969,9 @@ export default {
                   perfilId,
                 )
 
+                // Revalidar en el UPDATE: la baja puede ocurrir mientras responde ARCA.
+                .eq("estado_cuenta", "activa")
+
                 .select(
                   "id",
                 )
@@ -1983,8 +1994,9 @@ export default {
               !perfilActualizado
             ) {
 
-              throw new Error(
-                "ARCA validó el CUIT pero no se encontró el perfil del usuario",
+              return Response.json(
+                { ok: false, error: "No se guardó la validación: el perfil ya no está disponible o la cuenta dejó de estar activa." },
+                { status: 409 },
               );
 
             }
