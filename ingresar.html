@@ -673,6 +673,20 @@ formulario.addEventListener(
       }
 
 
+      const {
+  data: esAdmin,
+  error: errorAdmin
+} = await sb.rpc('es_administrador');
+
+if (errorAdmin) {
+  throw errorAdmin;
+}
+
+if (esAdmin === true) {
+  window.location.href = 'admin.html';
+  return;
+}
+
       // La sesión se autentica normalmente; el estado define solo el destino.
       // Las autorizaciones de operaciones siguen siendo responsabilidad de Supabase.
       const { data: estadoPerfil, error: errorEstadoPerfil } = await sb
@@ -693,20 +707,6 @@ formulario.addEventListener(
           throw new Error('No pudimos confirmar el estado de tu cuenta.');
         }
       }
-
-      const {
-  data: esAdmin,
-  error: errorAdmin
-} = await sb.rpc('es_administrador');
-
-if (errorAdmin) {
-  throw errorAdmin;
-}
-
-if (esAdmin === true) {
-  window.location.href = 'admin.html';
-  return;
-}
 
 const tipoUsuario =
   await obtenerTipoUsuario(
