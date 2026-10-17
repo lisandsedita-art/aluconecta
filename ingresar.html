@@ -548,7 +548,12 @@ function destinoPorTipo(
 
   }
 
-  return 'panel-cliente.html';
+  // Admitir solo los roles comerciales reconocidos por AluConecta.
+  if (['cliente_profesional', 'profesional', 'empresa', 'cliente'].includes(tipoUsuario)) {
+    return 'panel-cliente.html';
+  }
+
+  return null;
 
 }
 
@@ -588,16 +593,8 @@ async function obtenerTipoUsuario(
   }
 
 
-  /*
-   * Respaldo para cuentas recién confirmadas.
-   * La metadata se usa solamente para decidir
-   * la navegación, nunca como autorización.
-   */
-
-  return (
-    user.user_metadata?.tipo_usuario ||
-    null
-  );
+  // No usar metadata de Auth como reemplazo de un perfil inexistente.
+  return null;
 
 }
 
@@ -697,15 +694,18 @@ if (esAdmin === true) {
 
       if (errorEstadoPerfil) throw errorEstadoPerfil;
 
-      if (estadoPerfil) {
-        if (estadoPerfil.estado_cuenta === 'desactivada' ||
-            estadoPerfil.estado_cuenta === 'baja_solicitada') {
-          window.location.href = 'cuenta.html';
-          return;
-        }
-        if (estadoPerfil.estado_cuenta !== 'activa') {
-          throw new Error('No pudimos confirmar el estado de tu cuenta.');
-        }
+      if (!estadoPerfil) {
+        // Sin perfil no hay rol ni estado de cuenta confiable.
+        await sb.auth.signOut({ scope: 'local' });
+        throw new Error('Tu cuenta existe, pero no encontramos un perfil de AluConecta asociado.');
+      }
+      if (estadoPerfil.estado_cuenta === 'desactivada' ||
+          estadoPerfil.estado_cuenta === 'baja_solicitada') {
+        window.location.href = 'cuenta.html';
+        return;
+      }
+      if (estadoPerfil.estado_cuenta !== 'activa') {
+        throw new Error('No pudimos confirmar el estado de tu cuenta.');
       }
 
 const tipoUsuario =
@@ -714,22 +714,11 @@ const tipoUsuario =
   );
 
 
-      if (!tipoUsuario) {
-
-        await sb.auth.signOut({
-  scope: 'local'
-});
-        throw new Error(
-          'Tu cuenta existe, pero no encontramos un perfil de AluConecta asociado.'
-        );
-
+      const destino = destinoPorTipo(tipoUsuario);
+      if (!destino) {
+        await sb.auth.signOut({ scope: 'local' });
+        throw new Error('Tu cuenta existe, pero no encontramos un perfil con un tipo de usuario válido.');
       }
-
-
-      const destino =
-        destinoPorTipo(
-          tipoUsuario
-        );
 
 
       mostrarMensaje(
@@ -787,6 +776,10 @@ if (
   texto =
     'Primero tenés que verificar tu correo electrónico.';
 
+}
+
+if (detalleError.includes('no encontramos un perfil')) {
+  texto = error.message;
 }
       
 
