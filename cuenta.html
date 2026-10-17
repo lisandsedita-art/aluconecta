@@ -14,7 +14,8 @@
     header .wrap { display:flex; align-items:center; justify-content:space-between; gap:15px; flex-wrap:wrap; }
     .marca { font-weight:800; font-size:23px; color:#fff; text-decoration:none; }
     .marca span { color:var(--celeste); }
-    header a.enlace { color:#fff; text-underline-offset:4px; }
+    main a, main a:visited { color:var(--azul); text-underline-offset:4px; }
+    main a:hover { color:#164a78; }
     main { padding:35px 0 55px; }
     h1 { color:var(--azul); margin:0 0 8px; font-size:clamp(27px,5vw,34px); }
     h2 { color:var(--azul); margin:0 0 10px; font-size:21px; }
@@ -25,6 +26,7 @@
     .fila { display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .estado { display:inline-block; background:#e7f3f8; color:var(--azul); border-radius:999px; padding:5px 12px; font-weight:700; font-size:13px; }
     .ayuda { color:var(--muted); font-size:14px; }
+    #correoCuenta { overflow-wrap:anywhere; }
     button { cursor:pointer; border-radius:10px; padding:12px 18px; min-height:45px; font:700 14px Arial,sans-serif; }
     button:disabled { opacity:.55; cursor:not-allowed; }
     button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid var(--celeste); outline-offset:3px; }
@@ -50,12 +52,11 @@
   <header>
     <div class="wrap">
       <a class="marca" href="index.html">Alu<span>Conecta</span></a>
-      <a class="enlace" href="index.html">Volver al inicio</a>
     </div>
   </header>
   <main class="wrap">
     <h1>Configuración de cuenta</h1>
-    <p class="intro">Administrá tu participación en AluConecta.</p>
+    <p class="intro">Consultá y administrá el estado de tu cuenta.</p>
     <p id="mensaje" role="status" aria-live="polite">Comprobando tu sesión…</p>
     <div id="panel" hidden>
       <section class="card" aria-labelledby="tituloEstado">
@@ -67,8 +68,8 @@
         <p class="ayuda" id="correoCuenta"></p>
       </section>
       <section class="card" id="zonaActiva" hidden>
-        <h2>Desactivar temporalmente</h2>
-        <p>Tu perfil y tus proyectos dejarán de mostrarse como nuevas oportunidades. Conservaremos tus datos y el historial comercial existente. Podrás reactivar tu cuenta cuando lo decidas.</p>
+        <h2>Desactivación temporal de cuenta</h2>
+        <p>Si desactivás tu cuenta, dejarás de participar en nuevas oportunidades de AluConecta. Tus datos y el historial comercial existente se conservarán. Podrás reactivarla cuando lo decidas.</p>
         <div class="acciones"><button class="secundario" type="button" data-accion="desactivar">Desactivar mi cuenta</button></div>
       </section>
       <section class="card" id="zonaDesactivada" hidden>
@@ -78,8 +79,8 @@
       </section>
       <section class="card" id="zonaBaja" hidden>
         <h2>Solicitar baja definitiva</h2>
-        <p>Podés solicitar el cierre definitivo de tu cuenta. La solicitud bloqueará nuevas operaciones y quedará pendiente de tramitación. Los registros comerciales compartidos se conservarán cuando corresponda.</p>
-        <p class="ayuda">Esta acción no elimina automáticamente los datos ni las cotizaciones de otras personas.</p>
+        <p>Podés solicitar el cierre definitivo de tu cuenta. Al enviar la solicitud, se bloquearán las nuevas operaciones y la baja quedará pendiente de tramitación. El cierre no se realiza de forma automática.</p>
+        <p class="ayuda">La solicitud no elimina automáticamente tus datos. Los registros comerciales compartidos se conservarán cuando corresponda, incluidos los que involucren a otras personas.</p>
         <div class="acciones"><button class="peligro" type="button" data-accion="baja">Solicitar baja definitiva</button></div>
       </section>
       <section class="card" id="zonaPendiente" hidden>
