@@ -789,11 +789,12 @@
             >Mis cotizaciones</a
           >
           <a href="editar-perfil.html" data-member hidden>Editar mi perfil</a>
+          <a href="cuenta.html" data-account hidden>Configuración de cuenta</a>
           <button
             type="button"
             id="logoutBtn"
             class="logout"
-            data-member
+            data-account
             hidden
           >
             Cerrar sesión
@@ -1173,7 +1174,8 @@
           setGroup("[data-offline]", state === "error");
           $("publicIntro").hidden = !!user;
           setGroup("[data-public]", !user);
-          setGroup("[data-member]", !!user);
+          setGroup("[data-member]", state === "member");
+          setGroup("[data-account]", !!user);
           setGroup("[data-professional]", state === "member" && professional);
           setGroup("[data-carpenter]", state === "member" && carpenter);
           $("profileLink").href = user
@@ -1188,8 +1190,15 @@
               "No pudimos comprobar tu sesión. Revisá la conexión y reintentá. Si el problema continúa, escribinos desde Contacto.";
           if (state === "profile-error")
             status.textContent =
-              "Tu sesión está iniciada, pero no pudimos habilitar tus accesos. Reintentá o revisá tu perfil desde el menú. Si el problema continúa, escribinos a hola@aluconecta.com.ar.";
-          if (state === "member") closeModal();
+              "Tu sesión está iniciada, pero no pudimos habilitar tus accesos. Reintentá o revisá Configuración de cuenta desde el menú. Si el problema continúa, escribinos a hola@aluconecta.com.ar.";
+          if (state === "account-inactive")
+            status.textContent =
+              "Tu cuenta está desactivada. Para reactivarla, abrí Configuración de cuenta desde el menú.";
+          if (state === "account-pending")
+            status.textContent =
+              "Tu solicitud de baja está pendiente de tramitación. Podés consultar su estado en Configuración de cuenta.";
+          if (["member", "account-inactive", "account-pending"].includes(state))
+            closeModal();
         }
         function bounded(promise) {
           let timer;
@@ -1232,7 +1241,7 @@
             const result = await bounded(
               client
                 .from("perfiles")
-                .select("tipo_usuario")
+                .select("tipo_usuario,estado_cuenta")
                 .eq("id", user.id)
                 .maybeSingle(),
             );
@@ -1245,7 +1254,16 @@
               render("profile-error", user);
               return;
             }
-            render("member", user, role);
+            if (result.data.estado_cuenta === "activa") {
+              render("member", user, role);
+            } else if (result.data.estado_cuenta === "desactivada") {
+              render("account-inactive", user, role);
+            } else if (result.data.estado_cuenta === "baja_solicitada") {
+              render("account-pending", user, role);
+            } else {
+              // Estado desconocido: no habilitar accesos operativos.
+              render("profile-error", user);
+            }
           } catch (_) {
             if (request === revision)
               render(user ? "profile-error" : "error", user);
