@@ -1660,7 +1660,7 @@ async function iniciarPanel() {
         .from("perfiles")
 
         .select(
-          "id,nombre,tipo_usuario,localidad,provincia,telefono,descripcion,instagram,facebook,tiktok,web"
+          "id,nombre,tipo_usuario,estado_cuenta,localidad,provincia,telefono,descripcion,instagram,facebook,tiktok,web"
         )
 
         .eq(
@@ -1687,6 +1687,24 @@ async function iniciarPanel() {
 
       return;
 
+    }
+
+
+    // No mostrar el espacio de trabajo a una cuenta inactiva.
+    if (
+      perfil.estado_cuenta === "desactivada" ||
+      perfil.estado_cuenta === "baja_solicitada"
+    ) {
+      window.location.replace("cuenta.html");
+      return;
+    }
+
+    if (perfil.estado_cuenta !== "activa") {
+      negarAcceso(
+        "No pudimos confirmar el estado de tu cuenta",
+        "Volvé a iniciar sesión o intentá nuevamente más tarde."
+      );
+      return;
     }
 
 
