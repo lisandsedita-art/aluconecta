@@ -196,7 +196,7 @@
   async function enter(){
     try {
       if(!window.supabase?.createClient) throw new Error('SDK unavailable');
-      const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
+      const sb=window.supabase.createClient('https://oktojwocvwrxvqxmyhtm.supabase.co','sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH');
       const {data,error}=await sb.auth.getUser();
       if(error && error.name !== 'AuthSessionMissingError') throw error;
       if(!data?.user){message('Ingresá a tu cuenta','Las oportunidades de trabajo se consultan desde una cuenta de carpintería.',[['Iniciar sesión','ingresar.html'],['Volver al inicio','index.html']]);return}

@@ -13,7 +13,7 @@ body{margin:0;background:#f4f6f8;color:#0f2e4d;font:15px Arial,sans-serif}header
 <header>AluConecta</header>
 <main><div class="panel"><h1>Diagnóstico de identificación</h1><p>Esta página solo consulta datos. No modifica usuarios, proyectos ni permisos.</p><div id="resultado">Consultando sesión y perfil...</div><button id="reintentar" type="button">REPETIR COMPROBACIÓN</button><p class="aviso">Compartí solamente el texto que aparece aquí. No compartas contraseñas, tokens ni claves.</p><a href="mis-proyectos.html">← Volver a Mis proyectos</a></div></main>
 <script>
-const sb=window.supabase.createClient('https://wroaxwjyjrxzwctfkyoo.supabase.co','sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3');
+const sb=window.supabase.createClient('https://oktojwocvwrxvqxmyhtm.supabase.co','sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH');
 const resultado=document.getElementById('resultado');
 function fila(t,v){const d=document.createElement('div');d.className='fila';const e=document.createElement('span');e.className='etiqueta';e.textContent=t;const x=document.createElement('span');x.textContent=String(v);d.append(e,x);resultado.appendChild(d)}
 function sufijo(id){return id?String(id).slice(-8):'No disponible'}

@@ -54,8 +54,8 @@ window.addEventListener('DOMContentLoaded',async()=>{
   const aviso=(texto,mal=false,bien=false)=>{const el=$('mensaje');el.hidden=false;el.className=mal?'error':bien?'ok':'';el.textContent=texto;};
   const errorTexto=e=>e && e.message ? e.message : 'Ocurrió un error. Intentá de nuevo.';
   const codigoValido=v=>/^\d{6}$/.test(v);
-  const url='https://wroaxwjyjrxzwctfkyoo.supabase.co';
-  const key='sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+  const url='https://oktojwocvwrxvqxmyhtm.supabase.co';
+  const key='sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
   let sb,pendiente=null,verificado=null,prueba=null;
   try{
     if(!window.supabase)throw Error('No se pudo cargar Supabase');
