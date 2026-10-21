@@ -26,6 +26,10 @@
     .fila { display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .estado { display:inline-block; background:#e7f3f8; color:var(--azul); border-radius:999px; padding:5px 12px; font-weight:700; font-size:13px; }
     .ayuda { color:var(--muted); font-size:14px; }
+    .detalle-diagnostico { background:var(--fondo); border:1px solid var(--borde); border-radius:10px; padding:15px; }
+    .detalle-diagnostico ul { margin:10px 0 8px; padding-left:20px; }
+    .detalle-diagnostico li { margin:3px 0; }
+    .detalle-diagnostico p:last-child { margin-bottom:0; }
     #correoCuenta { overflow-wrap:anywhere; }
     button { cursor:pointer; border-radius:10px; padding:12px 18px; min-height:45px; font:700 14px Arial,sans-serif; }
     button:disabled { opacity:.55; cursor:not-allowed; }
@@ -86,6 +90,14 @@
       <section class="card" id="zonaPendiente" hidden>
         <h2>Solicitud de baja recibida</h2>
         <p>Tu solicitud está registrada y pendiente de tramitación. No podés realizar nuevas operaciones ni reactivar la cuenta desde esta pantalla. Si necesitás consultar su estado, escribinos a <a href="mailto:hola@aluconecta.com.ar">hola@aluconecta.com.ar</a>.</p>
+      </section>
+      <section class="card" id="zonaDiagnostico" hidden aria-labelledby="tituloDiagnostico">
+        <h2 id="tituloDiagnostico">Vínculos comerciales de tu cuenta</h2>
+        <div class="detalle-diagnostico" role="status" aria-live="polite">
+          <p id="estadoDiagnostico">Consultando tus operaciones…</p>
+          <ul id="listaVinculos" hidden></ul>
+          <p id="detalleDiagnostico" class="ayuda"></p>
+        </div>
       </section>
       <div class="acciones">
         <a href="index.html" id="volverPanel">Volver a AluConecta</a>
@@ -158,6 +170,79 @@
       $('zonaBaja').hidden = estado !== 'activa' && estado !== 'desactivada';
       $('zonaPendiente').hidden = estado !== 'baja_solicitada';
       $('volverPanel').hidden = estado !== 'activa';
+      $('zonaDiagnostico').hidden = !['activa', 'desactivada', 'baja_solicitada'].includes(estado);
+    }
+    function numeroVinculos(valor) {
+      const numero = Number(valor);
+      return Number.isSafeInteger(numero) && numero >= 0 ? numero : 0;
+    }
+    function fechaDiagnostico(valor) {
+      if (!valor) return '';
+      const fecha = new Date(valor);
+      if (Number.isNaN(fecha.getTime())) return '';
+      return new Intl.DateTimeFormat('es-AR', {
+        dateStyle: 'medium', timeStyle: 'short'
+      }).format(fecha);
+    }
+    let consultaDiagnostico = 0;
+    async function cargarDiagnostico() {
+      const revision = ++consultaDiagnostico;
+      const aviso = $('estadoDiagnostico');
+      const lista = $('listaVinculos');
+      lista.hidden = true;
+      lista.replaceChildren();
+      $('detalleDiagnostico').textContent = '';
+      aviso.textContent = 'Consultando tus operaciones…';
+      try {
+        const { data, error } = await cliente.rpc('diagnostico_mi_baja');
+        if (revision !== consultaDiagnostico) return;
+        if (error) throw error;
+        const diagnostico = data?.diagnostico;
+        if (!diagnostico || typeof diagnostico !== 'object') {
+          throw new Error('Diagnóstico no disponible.');
+        }
+        const proyectos = diagnostico.proyectos || {};
+        const intereses = diagnostico.intereses || {};
+        const cotizaciones = diagnostico.cotizaciones || {};
+        const otros = diagnostico.documentacion_y_contactos || {};
+        const campos = [
+          ['Publicaciones abiertas', proyectos.abiertos],
+          ['Publicaciones cerradas', proyectos.cerrados],
+          ['Carpinterías interesadas en tus proyectos', intereses.recibidos],
+          ['Autorizaciones que otorgaste', intereses.autorizaciones_otorgadas],
+          ['Intereses que manifestaste', intereses.emitidos],
+          ['Autorizaciones que recibiste', intereses.autorizaciones_recibidas],
+          ['Cotizaciones recibidas', cotizaciones.recibidas],
+          ['Cotizaciones enviadas', cotizaciones.emitidas],
+          ['Contactos asociados a tus proyectos', otros.contactos_de_proyectos],
+          ['Documentos de tus proyectos', otros.archivos_de_proyectos],
+          ['Archivos de cotizaciones que enviaste', otros.archivos_de_cotizaciones_emitidas]
+        ];
+        const hayVinculos = campos.some(([, valor]) => numeroVinculos(valor) > 0);
+        if (hayVinculos) {
+          campos.forEach(([etiqueta, valor]) => {
+            const cantidad = numeroVinculos(valor);
+            if (!cantidad) return;
+            const item = document.createElement('li');
+            item.textContent = etiqueta + ': ' + cantidad;
+            lista.appendChild(item);
+          });
+          lista.hidden = false;
+        }
+        const registrada = data.origen === 'solicitud_registrada';
+        const fecha = fechaDiagnostico(registrada ? data.solicitada_en : diagnostico.evaluado_en);
+        aviso.textContent = registrada
+          ? 'Diagnóstico registrado con tu solicitud' + (fecha ? ' · ' + fecha : '')
+          : 'Situación detectada' + (fecha ? ' · ' + fecha : '');
+        $('detalleDiagnostico').textContent = hayVinculos
+          ? 'Estos registros están vinculados a tu cuenta. Su existencia no significa que haya acuerdos pendientes. Al tramitar la baja se revisará qué información corresponde conservar o suprimir.'
+          : 'No se detectaron vínculos comerciales en estas categorías. La solicitud seguirá el proceso de revisión y tratamiento de datos correspondiente.';
+      } catch (error) {
+        if (revision !== consultaDiagnostico) return;
+        aviso.textContent = 'No pudimos consultar los vínculos comerciales de tu cuenta.';
+        $('detalleDiagnostico').textContent = 'Podés enviar la solicitud de baja igualmente. Se registrará y el sistema intentará el diagnóstico al recibirla.';
+        console.error('Error consultando el diagnóstico de baja', error);
+      }
     }
     async function cargar() {
       try {
@@ -174,6 +259,7 @@
         if (!data || !mensajes[data.estado_cuenta]) throw new Error('Estado de cuenta desconocido.');
         mostrarEstado(data.estado_cuenta, usuario.user.email);
         mensaje('');
+        await cargarDiagnostico();
       } catch (error) {
         $('panel').hidden = true;
         mensaje('No pudimos consultar el estado de tu cuenta. Intentá nuevamente más tarde.', true);
@@ -221,6 +307,7 @@
         mostrarEstado(data, u.user.email);
         modal.close();
         mensaje(accion === 'baja' ? 'Recibimos tu solicitud de baja definitiva.' : 'El estado de tu cuenta se actualizó correctamente.');
+        if (accion === 'baja') await cargarDiagnostico();
       } catch (error) {
         $('errorConfirmacion').textContent = error.message || 'No se pudo completar la operación.';
       } finally {
