@@ -3050,6 +3050,13 @@ function renderizarMisIntereses() {
       ubicacion
     );
 
+    if (proyecto && proyecto.estado_publicacion === 'cerrada') {
+      const avisoCerrado = document.createElement('span');
+      avisoCerrado.className = 'muted';
+      avisoCerrado.textContent = 'PUBLICACIÓN CERRADA · Historial conservado';
+      tarjeta.appendChild(avisoCerrado);
+    }
+
     agregarDescripcionObra(tarjeta, proyecto);
 
 
@@ -3244,6 +3251,31 @@ function renderizarMisIntereses() {
 
 
 
+async function cargarDetallesProyectosCerrados() {
+  // Solo recuperar publicaciones cerradas en las que la carpintería ya intervino.
+  const ids = [...new Set(
+    [...interesesActuales.values()]
+      .map(interes => String(interes.proyecto_id || ''))
+      .filter(Boolean)
+  )];
+  for (let inicio = 0; inicio < ids.length; inicio += 100) {
+    const lote = ids.slice(inicio, inicio + 100);
+    const { data, error } = await sb
+      .from('proyectos_publicos')
+      .select('id,Tipo,Localidad,Proyecto,Nombre,estado_publicacion')
+      .eq('estado_publicacion', 'cerrada')
+      .in('id', lote);
+    if (error) {
+      console.error('No pudimos consultar las publicaciones cerradas vinculadas:', error);
+      return;
+    }
+    for (const proyecto of data || []) {
+      proyectosVisibles.set(String(proyecto.id), proyecto);
+    }
+  }
+}
+
+
 async function cargarProyectos() {
 
   const contenedor =
@@ -3263,8 +3295,9 @@ async function cargarProyectos() {
           'proyectos_publicos'
         )
         .select(
-          'id,created_at,Tipo,Localidad,Proyecto,Nombre'
+          'id,created_at,Tipo,Localidad,Proyecto,Nombre,estado_publicacion'
         )
+        .eq('estado_publicacion', 'abierta')
         .order(
           'created_at',
           {
@@ -3289,6 +3322,7 @@ async function cargarProyectos() {
     proyectosVisibles =
       new Map();
 
+    await cargarDetallesProyectosCerrados();
 
     if (
       !data ||

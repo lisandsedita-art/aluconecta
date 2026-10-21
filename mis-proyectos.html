@@ -2337,6 +2337,41 @@ function crearEspecificacionProyecto(
 
 
 
+const cierresEnCurso = new Set();
+
+async function cerrarPublicacion(proyectoId, boton) {
+  const clave = String(proyectoId);
+  if (cierresEnCurso.has(clave)) return;
+  if (!window.confirm(
+    '¿Cerrar esta publicación? Dejará de recibir nuevos intereses y no podrás reabrirla ni editarla desde esta pantalla. Los intereses, autorizaciones, cotizaciones y archivos existentes se conservarán.'
+  )) return;
+
+  cierresEnCurso.add(clave);
+  boton.disabled = true;
+  try {
+    const { data, error } = await sb.rpc('cerrar_mi_publicacion', {
+      p_proyecto_id: proyectoId
+    });
+    if (error || String(data) !== clave) {
+      throw error || new Error('El cierre no devolvió el proyecto esperado.');
+    }
+    mostrarMensaje('Publicación cerrada. Se conservaron sus antecedentes comerciales.', 'ok');
+    try {
+      await cargarProyectos();
+    } catch (recargaError) {
+      console.error('Error al recargar proyectos después del cierre:', recargaError);
+      mostrarMensaje('Se confirmó el cierre, pero no pudimos actualizar la pantalla. Recargá la página.', 'error');
+    }
+  } catch (error) {
+    console.error('Error cerrando publicación:', error);
+    mostrarMensaje('No pudimos confirmar el cierre. Revisá el estado de la publicación antes de reintentar.', 'error');
+  } finally {
+    cierresEnCurso.delete(clave);
+    boton.disabled = false;
+  }
+}
+
+
 async function cargarProyectos() {
 
 
@@ -2542,13 +2577,31 @@ async function cargarProyectos() {
       )
     );
 
-    const editarProyecto = document.createElement('a');
-    editarProyecto.href = 'publicar-proyecto-edicion.html?editar=' + encodeURIComponent(proyecto.id);
-    editarProyecto.className = 'btn no';
-    editarProyecto.textContent = 'EDITAR PROYECTO';
-    editarProyecto.style.display = 'inline-block';
-    editarProyecto.style.margin = '12px 0';
-    caja.appendChild(editarProyecto);
+    if (proyecto.estado_publicacion === 'cerrada') {
+      const avisoCierre = document.createElement('div');
+      avisoCierre.className = 'info';
+      avisoCierre.textContent = 'PUBLICACIÓN CERRADA' +
+        (proyecto.cerrado_en ? ' · ' + fecha(proyecto.cerrado_en) : '') +
+        ' · No recibe nuevos intereses. Se conserva su historial.';
+      caja.appendChild(avisoCierre);
+    } else {
+      const editarProyecto = document.createElement('a');
+      editarProyecto.href = 'publicar-proyecto-edicion.html?editar=' + encodeURIComponent(proyecto.id);
+      editarProyecto.className = 'btn no';
+      editarProyecto.textContent = 'EDITAR PROYECTO';
+      editarProyecto.style.display = 'inline-block';
+      editarProyecto.style.margin = '12px 0';
+      caja.appendChild(editarProyecto);
+
+      const botonCerrar = document.createElement('button');
+      botonCerrar.type = 'button';
+      botonCerrar.className = 'btn no';
+      botonCerrar.textContent = 'CERRAR PUBLICACIÓN';
+      botonCerrar.style.display = 'inline-block';
+      botonCerrar.style.margin = '12px 0 12px 10px';
+      botonCerrar.addEventListener('click', () => cerrarPublicacion(proyecto.id, botonCerrar));
+      caja.appendChild(botonCerrar);
+    }
 
 
 
