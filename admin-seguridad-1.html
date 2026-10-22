@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#0f2e4d">
+<title>Seguridad y recuperación | AluConecta</title>
+<link rel="icon" href="icon-192.png" type="image/png">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+:root{--azul:#0f2e4d;--celeste:#5bc0de;--fondo:#f4f6f8;--borde:#e2e8f0;--gris:#64748b}
+*{box-sizing:border-box}body{margin:0;background:var(--fondo);color:var(--azul);font-family:Arial,system-ui,sans-serif}
+header{background:var(--azul);color:white;padding:22px 18px}.wrap{max-width:720px;margin:auto}header strong{font-size:25px}header span{color:var(--celeste)}header small{display:block;color:#cbd5e1;margin-top:5px}main{padding:26px 16px 60px}
+h1{font-size:27px;margin:0 0 9px}h2{font-size:19px;margin:0 0 12px}p{line-height:1.6}.muted{color:var(--gris)}
+.card{border:1px solid var(--borde);background:white;border-radius:14px;padding:20px;margin:18px 0;box-shadow:0 5px 15px #0f2e4d08}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button,.link{display:inline-block;background:var(--azul);color:white;border:0;border-radius:9px;padding:12px 16px;font:700 14px Arial,sans-serif;text-decoration:none;cursor:pointer}button.secondary,.link.secondary{background:white;color:var(--azul);border:1px solid var(--borde)}button:disabled{opacity:.6;cursor:not-allowed}
+input{font-size:18px;letter-spacing:2px;width:min(100%,220px);padding:12px;border:1px solid #94a3b8;border-radius:8px}select{font:inherit;max-width:100%;min-height:43px;padding:9px;border:1px solid #94a3b8;border-radius:8px;background:white;color:var(--azul)}label{display:block;font-weight:bold;margin:10px 0 9px}
+#qr{display:block;max-width:200px;width:100%;height:auto;margin:16px 0;border:1px solid var(--borde);border-radius:10px;padding:8px}#clave{word-break:break-all;padding:12px;background:#f1f5f9;border-radius:8px;font-family:monospace;font-size:14px}
+#mensaje{padding:12px;border-radius:8px;margin:15px 0;background:#edf6fa}#mensaje.error{background:#fff1f2;color:#9f1239}#mensaje.ok{background:#f0fdf4;color:#166534}#factores{padding-left:20px}#factores li{margin:8px 0}[hidden]{display:none!important}footer{text-align:center;color:var(--gris);font-size:12px;padding:18px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--celeste);outline-offset:3px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><strong>Alu<span>Conecta</span></strong><small>Administración privada · Seguridad y recuperación</small></div></header>
+<main class="wrap">
+<h1>Seguridad y recuperación</h1>
+<p class="muted">Administrá tus dispositivos de autenticación. Solo la cuenta administradora autorizada puede acceder a estas funciones.</p>
+<div class="card" id="cargando" role="status">Comprobando sesión, permisos y segundo factor…</div>
+<section id="pasoMfa" class="card" hidden aria-label="Confirmar identidad">
+<h2>Confirmá tu identidad</h2>
+<p>Para administrar los autenticadores, ingresá un código de un dispositivo ya vinculado.</p>
+<label for="factorAcceso">Autenticador disponible</label>
+<select id="factorAcceso"></select>
+<label for="codigoAcceso">Código de seis dígitos</label>
+<input id="codigoAcceso" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+<div class="actions" style="margin-top:15px"><button id="confirmarAcceso" type="button">Verificar y continuar</button></div>
+<p id="estadoAcceso" role="status" aria-live="polite"></p>
+</section>
+<section id="contenido" class="card" hidden>
+<h2>Dispositivos vinculados</h2>
+<p id="resumen"></p>
+<ul id="factores"></ul>
+<div id="probarFactor" hidden>
+  <label for="seleccionPrueba">Autenticador que querés probar</label>
+  <select id="seleccionPrueba"></select>
+  <button id="iniciarPrueba" type="button" class="secondary">Probar código</button>
+  <div id="prueba" hidden>
+    <label for="codigoPrueba">Código del dispositivo elegido</label>
+    <input id="codigoPrueba" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
+    <div class="actions" style="margin-top:12px"><button id="validarPrueba" type="button">Verificar código</button></div>
+  </div>
+</div>
+<section id="alta" hidden>
+  <h2 id="tituloAlta">Vincular autenticador</h2>
+  <p id="textoAlta"></p>
+  <div class="actions"><button id="generar" type="button">Generar código de vinculación</button></div>
+  <div id="instrucciones" hidden>
+    <p>En el <strong>dispositivo de respaldo</strong>, abrí una app autenticadora y escaneá el QR. Si no podés escanearlo, introducí la clave manualmente.</p>
+    <img id="qr" alt="QR privado para vincular un autenticador. No lo compartas.">
+    <p><strong>Clave de configuración privada:</strong></p>
+    <div id="clave"></div>
+    <p class="muted">La clave y el QR permiten generar códigos. No los compartas ni los guardes en GitHub, capturas de pantalla o documentos públicos.</p>
+    <label for="codigoAlta">Código generado por el nuevo dispositivo</label>
+    <input id="codigoAlta" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+    <div class="actions" style="margin-top:14px"><button id="confirmar" type="button">Confirmar vinculación</button><button id="cancelar" type="button" class="secondary">Cancelar</button></div>
+  </div>
+</section>
+<p class="muted">Para recuperar el acceso, conservá el autenticador de respaldo en un dispositivo distinto y seguro. No hay un botón público para quitar el segundo factor. No elimines tu único dispositivo hasta comprobar que el otro funciona.</p>
+<div id="mensaje" role="status" aria-live="polite" hidden></div>
+<div class="actions" style="margin-top:22px"><a class="link secondary" href="admin.html">Volver a administración</a></div>
+</section>
+</main><footer>AluConecta · Acceso reservado</footer>
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const aviso = (msg, error = false, ok = false) => {
+    const el = $('mensaje'); el.hidden = false;
+    el.className = error ? 'error' : ok ? 'ok' : '';
+    el.textContent = msg;
+  };
+  const codigoValido = value => /^\d{6}$/.test(value);
+  const url = 'https://oktojwocvwrxvqxmyhtm.supabase.co';
+  const key = 'sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
+  let sb, factores = [], pendiente = null, desafioPrueba = null, factorProbado = null;
+  let modoInicial = false;
+  const nombre = (factor, i) => factor.friendly_name || (i === 0 ? 'Autenticador principal' : 'Autenticador de respaldo');
+  function completarSelect(elemento) {
+    elemento.replaceChildren();
+    factores.forEach((factor, i) => {
+      const option = document.createElement('option');
+      option.value = factor.id;
+      option.textContent = nombre(factor, i);
+      elemento.append(option);
+    });
+  }
+  async function cargarFactores() {
+    const {data, error} = await sb.auth.mfa.listFactors();
+    if (error) throw error;
+    factores = (data.totp || []).filter(f => f.status === 'verified');
+    modoInicial = factores.length === 0;
+    $('resumen').textContent = factores.length === 0 ? 'Todavía no hay autenticadores vinculados.'
+      : factores.length === 1 ? 'Hay un autenticador verificado. Para prevenir bloqueos, registrá otro en un dispositivo distinto.'
+      : `${factores.length} autenticadores verificados. Ya podés usar el segundo dispositivo si perdés el primero.`;
+    $('factores').replaceChildren();
+    factores.forEach((factor, i) => {
+      const li = document.createElement('li');
+      li.textContent = `${nombre(factor, i)} — verificado`;
+      $('factores').append(li);
+    });
+    completarSelect($('seleccionPrueba'));
+    $('probarFactor').hidden = factores.length === 0;
+    $('alta').hidden = factores.length >= 2;
+    $('generar').disabled = false;
+    $('tituloAlta').textContent = modoInicial ? 'Vincular autenticador principal' : 'Agregar autenticador de respaldo';
+    $('textoAlta').textContent = modoInicial
+      ? 'Configurá el primer autenticador para proteger tu cuenta.'
+      : 'Usá otro dispositivo bajo tu control. No vuelvas a registrar el mismo teléfono como único respaldo.';
+  }
+  function limpiarSecreto() {
+    $('instrucciones').hidden = true;
+    $('clave').textContent = '';
+    $('qr').removeAttribute('src');
+    $('codigoAlta').value = '';
+  }
+  $('confirmarAcceso').addEventListener('click', async () => {
+    const factorId = $('factorAcceso').value;
+    const code = $('codigoAcceso').value.trim();
+    if (!factorId || !codigoValido(code)) {
+      $('estadoAcceso').textContent = 'Ingresá los seis dígitos del autenticador elegido.';
+      return;
+    }
+    $('confirmarAcceso').disabled = true;
+    $('estadoAcceso').textContent = 'Verificando código…';
+    try {
+      const {data:desafio, error:errorDesafio} = await sb.auth.mfa.challenge({factorId});
+      if (errorDesafio) throw errorDesafio;
+      const {error:errorVerificacion} = await sb.auth.mfa.verify({factorId, challengeId:desafio.id, code});
+      if (errorVerificacion) throw errorVerificacion;
+      window.location.reload();
+    } catch(error) {
+      console.error('Error de MFA administrativo', error);
+      $('estadoAcceso').textContent = 'Código incorrecto o vencido. Intentá nuevamente.';
+      $('confirmarAcceso').disabled = false;
+    }
+  });
+  try {
+    if (!window.supabase?.createClient) throw Error('No se pudo cargar Supabase');
+    sb = window.supabase.createClient(url, key);
+    const {data:sesion, error:sesionError} = await sb.auth.getUser();
+    if (sesionError || !sesion?.user) throw Error('Iniciá sesión con tu cuenta administrativa.');
+    const {data:admin, error:permisoError} = await sb.rpc('es_administrador');
+    if (permisoError || admin !== true) throw Error('Esta cuenta no tiene permiso administrativo.');
+    const {data, error} = await sb.auth.mfa.listFactors();
+    if (error) throw error;
+    factores = (data.totp || []).filter(f => f.status === 'verified');
+    if (factores.length) {
+      const {data:nivel, error:errorNivel} = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (errorNivel) throw errorNivel;
+      if (nivel.currentLevel !== 'aal2') {
+        completarSelect($('factorAcceso'));
+        $('cargando').hidden = true;
+        $('pasoMfa').hidden = false;
+        $('codigoAcceso').focus();
+        return;
+      }
+    }
+    await cargarFactores();
+    $('cargando').hidden = true;
+    $('contenido').hidden = false;
+  } catch (e) {
+    $('cargando').textContent = e?.message || 'No se pudo comprobar el acceso administrativo.';
+    return;
+  } finally {
+    // El evento de MFA se registra antes del control de acceso.
+  }
+  $('generar').addEventListener('click', async () => {
+    if (pendiente !== null || factores.length >= 2) return;
+    $('generar').disabled = true;
+    try {
+      // Volver a comprobar el nivel antes de permitir modificar factores.
+      if (factores.length) {
+        const {data:nivel, error} = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (error || nivel.currentLevel !== 'aal2') throw Error('Volvé a verificar el segundo factor.');
+      }
+      const {data, error} = await sb.auth.mfa.enroll({
+        factorType: 'totp',
+        friendlyName: factores.length ? 'AluConecta respaldo' : 'AluConecta principal'
+      });
+      if (error) throw error;
+      pendiente = data.id;
+      if (data.totp?.qr_code) {$('qr').src = data.totp.qr_code; $('qr').hidden = false;}
+      else $('qr').hidden = true;
+      $('clave').textContent = data.totp?.secret || 'No se pudo mostrar la clave.';
+      $('instrucciones').hidden = false;
+      aviso('Escaneá el QR con el dispositivo que querés vincular y verificá un código.');
+    } catch(e) {aviso('No se pudo iniciar la vinculación. ' + (e?.message || ''), true); $('generar').disabled = false;}
+  });
+  $('confirmar').addEventListener('click', async () => {
+    const code = $('codigoAlta').value.trim();
+    if (!pendiente || !codigoValido(code)) {aviso('Ingresá los seis dígitos del nuevo dispositivo.', true); return;}
+    $('confirmar').disabled = true;
+    try {
+      const {data:challenge, error:challengeError} = await sb.auth.mfa.challenge({factorId: pendiente});
+      if (challengeError) throw challengeError;
+      const {error} = await sb.auth.mfa.verify({factorId: pendiente, challengeId: challenge.id, code});
+      if (error) throw error;
+      pendiente = null;
+      limpiarSecreto();
+      await cargarFactores();
+      aviso('Autenticador vinculado correctamente. Probá ambos dispositivos antes de dar por terminado el respaldo.', false, true);
+    } catch(e) {aviso('No pudimos verificar el código. Revisá la hora del dispositivo y volvé a intentar.', true);}
+    finally {$('confirmar').disabled = false;}
+  });
+  $('cancelar').addEventListener('click', async () => {
+    if (!pendiente) return;
+    $('cancelar').disabled = true;
+    try {
+      // El factor aún no verificado no sirve para ingresar; al cancelar se retira.
+      const {error} = await sb.auth.mfa.unenroll({factorId: pendiente});
+      if (error) throw error;
+      pendiente = null; limpiarSecreto(); $('generar').disabled = false;
+      aviso('Vinculación cancelada. No se modificaron tus autenticadores verificados.');
+    } catch(e) {aviso('No se pudo cancelar automáticamente. Cerrá esta página y consultá los factores pendientes antes de reintentar.', true);}
+    finally {$('cancelar').disabled = false;}
+  });
+  $('iniciarPrueba').addEventListener('click', async () => {
+    const factorId = $('seleccionPrueba').value;
+    if (!factores.some(f => f.id === factorId)) return;
+    $('iniciarPrueba').disabled = true;
+    $('prueba').hidden = true;
+    try {
+      const {data, error} = await sb.auth.mfa.challenge({factorId});
+      if (error) throw error;
+      desafioPrueba = data.id; factorProbado = factorId;
+      $('prueba').hidden = false;
+      aviso('Ingresá el código actual del dispositivo seleccionado.');
+    } catch(e) {aviso('No se pudo iniciar la prueba. Intentá nuevamente.', true);}
+    finally {$('iniciarPrueba').disabled = false;}
+  });
+  $('seleccionPrueba').addEventListener('change', () => {
+    desafioPrueba = null; factorProbado = null; $('codigoPrueba').value = ''; $('prueba').hidden = true;
+  });
+  $('validarPrueba').addEventListener('click', async () => {
+    const code = $('codigoPrueba').value.trim();
+    if (!desafioPrueba || !factorProbado || !codigoValido(code)) {aviso('Ingresá un código válido de seis dígitos.', true); return;}
+    $('validarPrueba').disabled = true;
+    try {
+      const {error} = await sb.auth.mfa.verify({factorId: factorProbado, challengeId: desafioPrueba, code});
+      if (error) throw error;
+      desafioPrueba = null; factorProbado = null;
+      $('prueba').hidden = true; $('codigoPrueba').value = '';
+      aviso('Prueba correcta: el autenticador elegido funciona.', false, true);
+    } catch(e) {aviso('Código incorrecto o vencido. Probá nuevamente.', true);}
+    finally {$('validarPrueba').disabled = false;}
+  });
+  // El paso de autenticación se maneja antes de presentar la sección de gestión.
+});
+</script>
+</body>
+</html>
