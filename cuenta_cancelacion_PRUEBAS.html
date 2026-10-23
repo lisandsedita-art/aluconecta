@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Configuración de cuenta | AluConecta</title>
+  <style>
+    :root { --azul:#0f2e4d; --celeste:#5bc0de; --amarillo:#f5c542; --fondo:#f4f6f8; --texto:#24313d; --muted:#64748b; --borde:#dfe5ea; }
+    * { box-sizing:border-box; }
+    body { margin:0; font:16px/1.55 Arial,sans-serif; color:var(--texto); background:var(--fondo); min-height:100vh; }
+    header { background:var(--azul); color:#fff; padding:25px 18px; }
+    .wrap { width:min(100% - 32px,720px); margin:auto; }
+    header .wrap { display:flex; align-items:center; justify-content:space-between; gap:15px; flex-wrap:wrap; }
+    .marca { font-weight:800; font-size:23px; color:#fff; text-decoration:none; }
+    .marca span { color:var(--celeste); }
+    main a, main a:visited { color:var(--azul); text-underline-offset:4px; }
+    main a:hover { color:#164a78; }
+    main { padding:35px 0 55px; }
+    h1 { color:var(--azul); margin:0 0 8px; font-size:clamp(27px,5vw,34px); }
+    h2 { color:var(--azul); margin:0 0 10px; font-size:21px; }
+    p { margin:0 0 13px; }
+    .intro { color:var(--muted); margin-bottom:24px; }
+    .card { background:#fff; border:1px solid var(--borde); border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:0 5px 15px rgba(15,46,77,.035); }
+    .card p:last-child { margin-bottom:0; }
+    .fila { display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .estado { display:inline-block; background:#e7f3f8; color:var(--azul); border-radius:999px; padding:5px 12px; font-weight:700; font-size:13px; }
+    .ayuda { color:var(--muted); font-size:14px; }
+    .detalle-diagnostico { background:var(--fondo); border:1px solid var(--borde); border-radius:10px; padding:15px; }
+    .detalle-diagnostico ul { margin:10px 0 8px; padding-left:20px; }
+    .detalle-diagnostico li { margin:3px 0; }
+    .detalle-diagnostico p:last-child { margin-bottom:0; }
+    #correoCuenta { overflow-wrap:anywhere; }
+    button { cursor:pointer; border-radius:10px; padding:12px 18px; min-height:45px; font:700 14px Arial,sans-serif; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid var(--celeste); outline-offset:3px; }
+    .primario { background:var(--amarillo); border:1px solid var(--amarillo); color:var(--azul); }
+    .secundario { background:white; border:1px solid var(--azul); color:var(--azul); }
+    .peligro { background:#fff; border:1px solid #9f3038; color:#9f3038; }
+    .acciones { display:flex; gap:10px; flex-wrap:wrap; margin-top:17px; }
+    #mensaje { min-height:22px; margin-bottom:18px; }
+    .error { color:#a22631; }
+    .exito { color:#146c41; }
+    [hidden] { display:none !important; }
+    dialog { border:0; border-radius:16px; padding:0; width:min(calc(100% - 24px),480px); box-shadow:0 16px 48px rgba(0,0,0,.27); }
+    dialog::backdrop { background:rgba(9,24,41,.7); }
+    .dialogo { padding:27px; }
+    .dialogo h2 { margin-bottom:12px; }
+    .dialogo label { display:block; font-weight:700; margin:16px 0 6px; }
+    .dialogo input { padding:12px; border:1px solid var(--borde); border-radius:9px; width:100%; font:inherit; }
+    footer { background:var(--azul); color:#c7d5e1; text-align:center; padding:23px 15px; font-size:13px; }
+    @media(max-width:550px) { .card { padding:19px; } .acciones button { width:100%; } .dialogo { padding:21px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="marca" href="index.html">Alu<span>Conecta</span></a>
+    </div>
+  </header>
+  <main class="wrap">
+    <h1>Configuración de cuenta</h1>
+    <p class="intro">Consultá y administrá el estado de tu cuenta.</p>
+    <p id="mensaje" role="status" aria-live="polite">Comprobando tu sesión…</p>
+    <div id="panel" hidden>
+      <section class="card" aria-labelledby="tituloEstado">
+        <div class="fila">
+          <h2 id="tituloEstado">Estado de tu cuenta</h2>
+          <span class="estado" id="estado">—</span>
+        </div>
+        <p id="descripcionEstado"></p>
+        <p class="ayuda" id="correoCuenta"></p>
+      </section>
+      <section class="card" id="zonaActiva" hidden>
+        <h2>Desactivación temporal de cuenta</h2>
+        <p>Si desactivás tu cuenta, dejarás de participar en nuevas oportunidades de AluConecta. Tus datos y el historial comercial existente se conservarán. Podrás reactivarla cuando lo decidas.</p>
+        <div class="acciones"><button class="secundario" type="button" data-accion="desactivar">Desactivar mi cuenta</button></div>
+      </section>
+      <section class="card" id="zonaDesactivada" hidden>
+        <h2>Volver a AluConecta</h2>
+        <p>Tu cuenta está desactivada. Reactivarla permitirá volver a participar en la plataforma. Las verificaciones y autorizaciones habituales siguen siendo necesarias.</p>
+        <div class="acciones"><button class="primario" type="button" data-accion="reactivar">Reactivar mi cuenta</button></div>
+      </section>
+      <section class="card" id="zonaBaja" hidden>
+        <h2>Solicitar baja definitiva</h2>
+        <p>Podés solicitar el cierre definitivo de tu cuenta. Al enviar la solicitud, se bloquearán las nuevas operaciones y la baja quedará pendiente de tramitación. El cierre no se realiza de forma automática.</p>
+        <p class="ayuda">La solicitud no elimina automáticamente tus datos. Los registros comerciales compartidos se conservarán cuando corresponda, incluidos los que involucren a otras personas.</p>
+        <div class="acciones"><button class="peligro" type="button" data-accion="baja">Solicitar baja definitiva</button></div>
+      </section>
+      <section class="card" id="zonaPendiente" hidden>
+        <h2>Solicitud de baja recibida</h2>
+        <p>Tu solicitud está registrada y pendiente de tramitación. No podés realizar nuevas operaciones durante este período. Podés cancelar tu solicitud dentro de las primeras 72 horas; pasado ese plazo, escribinos a <a href="mailto:hola@aluconecta.com.ar">hola@aluconecta.com.ar</a>.</p>
+        <div class="acciones"><button type="button" class="secundario" id="botonCancelarBaja" data-accion="cancelar_baja" disabled>Cancelar solicitud de baja</button></div>
+        <p class="ayuda" id="plazoCancelarBaja">Comprobando el plazo de cancelación…</p>
+      </section>
+      <section class="card" id="zonaDiagnostico" hidden aria-labelledby="tituloDiagnostico">
+        <h2 id="tituloDiagnostico">Vínculos comerciales de tu cuenta</h2>
+        <div class="detalle-diagnostico" role="status" aria-live="polite">
+          <p id="estadoDiagnostico">Consultando tus operaciones…</p>
+          <ul id="listaVinculos" hidden></ul>
+          <p id="detalleDiagnostico" class="ayuda"></p>
+        </div>
+      </section>
+      <div class="acciones">
+        <a href="index.html" id="volverPanel">Volver a AluConecta</a>
+        <button class="secundario" type="button" id="salir">Cerrar sesión</button>
+      </div>
+    </div>
+    <p id="sinSesion" hidden>Para administrar tu cuenta, <a href="ingresar.html">iniciá sesión</a>.</p>
+  </main>
+  <dialog id="confirmacion" aria-labelledby="tituloConfirmacion" aria-describedby="detalleConfirmacion">
+    <div class="dialogo">
+      <h2 id="tituloConfirmacion"></h2>
+      <p id="detalleConfirmacion"></p>
+      <div id="confirmacionBaja" hidden>
+        <label for="textoConfirmacion">Para confirmar, escribí BAJA:</label>
+        <input type="text" id="textoConfirmacion" autocomplete="off" spellcheck="false">
+      </div>
+      <p id="errorConfirmacion" class="error" role="alert"></p>
+      <div class="acciones">
+        <button type="button" class="secundario" id="cancelar">Cancelar</button>
+        <button type="button" class="peligro" id="aceptar" disabled>Confirmar</button>
+      </div>
+    </div>
+  </dialog>
+  <footer>© 2026 AluConecta · Donde los proyectos encuentran sus aberturas.</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <script>
+  (() => {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const mensajes = {
+      activa: 'Tu cuenta está activa y podés utilizar AluConecta.',
+      desactivada: 'Tu cuenta está temporalmente desactivada. Podés reactivarla desde aquí.',
+      baja_solicitada: 'Solicitaste la baja definitiva. Está pendiente de tramitación.'
+    };
+    const opciones = {
+      desactivar: {
+        titulo: '¿Desactivar tu cuenta?',
+        detalle: 'No vas a poder operar en AluConecta hasta que la reactives. Tus proyectos y cotizaciones existentes se conservarán.',
+        rpc: 'desactivar_mi_cuenta'
+      },
+      reactivar: {
+        titulo: '¿Reactivar tu cuenta?',
+        detalle: 'Vas a volver a participar en AluConecta con las verificaciones y autorizaciones que correspondan.',
+        rpc: 'reactivar_mi_cuenta'
+      },
+      baja: {
+        titulo: '¿Solicitar la baja definitiva?',
+        detalle: 'Tu cuenta dejará de operar y la solicitud quedará pendiente de tramitación. Podrás cancelar dentro de las próximas 72 horas.',
+        rpc: 'solicitar_baja_definitiva'
+      },
+      cancelar_baja: {
+        titulo: '¿Cancelar la solicitud de baja?',
+        detalle: 'Tu cuenta recuperará el estado previo a la solicitud. Si estaba desactivada, seguirá desactivada. La cancelación quedará registrada.',
+        rpc: 'cancelar_mi_baja_definitiva'
+      }
+    };
+    let cliente = null, estadoActual = null, opcionActual = null, ocupado = false;
+    const modal = $('confirmacion');
+    const aceptar = $('aceptar');
+    function mensaje(texto, error = false) {
+      $('mensaje').textContent = texto;
+      $('mensaje').className = error ? 'error' : 'exito';
+    }
+    function mostrarEstado(estado, email) {
+      estadoActual = estado;
+      $('panel').hidden = false;
+      $('sinSesion').hidden = true;
+      $('estado').textContent = ({
+        activa: 'Activa', desactivada: 'Desactivada', baja_solicitada: 'Baja solicitada'
+      })[estado] || 'Desconocido';
+      $('descripcionEstado').textContent = mensajes[estado] || 'No reconocimos el estado de tu cuenta.';
+      $('correoCuenta').textContent = email || '';
+      $('zonaActiva').hidden = estado !== 'activa';
+      $('zonaDesactivada').hidden = estado !== 'desactivada';
+      $('zonaBaja').hidden = estado !== 'activa' && estado !== 'desactivada';
+      $('zonaPendiente').hidden = estado !== 'baja_solicitada';
+      $('botonCancelarBaja').disabled = true;
+      $('volverPanel').hidden = estado !== 'activa';
+      $('zonaDiagnostico').hidden = !['activa', 'desactivada', 'baja_solicitada'].includes(estado);
+    }
+    function numeroVinculos(valor) {
+      const numero = Number(valor);
+      return Number.isSafeInteger(numero) && numero >= 0 ? numero : 0;
+    }
+    function fechaDiagnostico(valor) {
+      if (!valor) return '';
+      const fecha = new Date(valor);
+      if (Number.isNaN(fecha.getTime())) return '';
+      return new Intl.DateTimeFormat('es-AR', {
+        dateStyle: 'medium', timeStyle: 'short'
+      }).format(fecha);
+    }
+    let consultaDiagnostico = 0;
+    async function cargarDiagnostico() {
+      const revision = ++consultaDiagnostico;
+      const aviso = $('estadoDiagnostico');
+      const lista = $('listaVinculos');
+      lista.hidden = true;
+      lista.replaceChildren();
+      $('detalleDiagnostico').textContent = '';
+      aviso.textContent = 'Consultando tus operaciones…';
+      try {
+        const { data, error } = await cliente.rpc('diagnostico_mi_baja');
+        if (revision !== consultaDiagnostico) return;
+        if (error) throw error;
+        const diagnostico = data?.diagnostico;
+        if (!diagnostico || typeof diagnostico !== 'object') {
+          throw new Error('Diagnóstico no disponible.');
+        }
+        const proyectos = diagnostico.proyectos || {};
+        const intereses = diagnostico.intereses || {};
+        const cotizaciones = diagnostico.cotizaciones || {};
+        const otros = diagnostico.documentacion_y_contactos || {};
+        const campos = [
+          ['Publicaciones abiertas', proyectos.abiertos],
+          ['Publicaciones cerradas', proyectos.cerrados],
+          ['Carpinterías interesadas en tus proyectos', intereses.recibidos],
+          ['Autorizaciones que otorgaste', intereses.autorizaciones_otorgadas],
+          ['Intereses que manifestaste', intereses.emitidos],
+          ['Autorizaciones que recibiste', intereses.autorizaciones_recibidas],
+          ['Cotizaciones recibidas', cotizaciones.recibidas],
+          ['Cotizaciones enviadas', cotizaciones.emitidas],
+          ['Contactos asociados a tus proyectos', otros.contactos_de_proyectos],
+          ['Documentos de tus proyectos', otros.archivos_de_proyectos],
+          ['Archivos de cotizaciones que enviaste', otros.archivos_de_cotizaciones_emitidas]
+        ];
+        const hayVinculos = campos.some(([, valor]) => numeroVinculos(valor) > 0);
+        if (hayVinculos) {
+          campos.forEach(([etiqueta, valor]) => {
+            const cantidad = numeroVinculos(valor);
+            if (!cantidad) return;
+            const item = document.createElement('li');
+            item.textContent = etiqueta + ': ' + cantidad;
+            lista.appendChild(item);
+          });
+          lista.hidden = false;
+        }
+        const registrada = data.origen === 'solicitud_registrada';
+        if (estadoActual === 'baja_solicitada') {
+          const inicio = new Date(data.solicitada_en || '');
+          const limite = new Date(inicio.getTime() + 72 * 60 * 60 * 1000);
+          const plazoValido = registrada && !Number.isNaN(limite.getTime());
+          const vigente = plazoValido && Date.now() < limite.getTime();
+          $('botonCancelarBaja').disabled = !vigente;
+          $('plazoCancelarBaja').textContent = plazoValido
+            ? (vigente ? 'Podés cancelar hasta el ' : 'El plazo para cancelar finalizó el ') +
+              fechaDiagnostico(limite.toISOString()) + '.'
+            : 'No pudimos comprobar el plazo. Contactá a AluConecta antes de realizar cambios.';
+        }
+        const fecha = fechaDiagnostico(registrada ? data.solicitada_en : diagnostico.evaluado_en);
+        aviso.textContent = registrada
+          ? 'Diagnóstico registrado con tu solicitud' + (fecha ? ' · ' + fecha : '')
+          : 'Situación detectada' + (fecha ? ' · ' + fecha : '');
+        $('detalleDiagnostico').textContent = hayVinculos
+          ? 'Estos registros están vinculados a tu cuenta. Su existencia no significa que haya acuerdos pendientes. Al tramitar la baja se revisará qué información corresponde conservar o suprimir.'
+          : 'Actualmente no hay registros.';
+      } catch (error) {
+        if (revision !== consultaDiagnostico) return;
+        $('botonCancelarBaja').disabled = true;
+        if (estadoActual === 'baja_solicitada') $('plazoCancelarBaja').textContent = 'No pudimos comprobar el plazo de cancelación.';
+        aviso.textContent = 'No pudimos consultar los vínculos comerciales de tu cuenta.';
+        $('detalleDiagnostico').textContent = 'Podés enviar la solicitud de baja igualmente. Se registrará y el sistema intentará el diagnóstico al recibirla.';
+        console.error('Error consultando el diagnóstico de baja', error);
+      }
+    }
+    async function cargar() {
+      try {
+        const { data: usuario, error: errUsuario } = await cliente.auth.getUser();
+        if (errUsuario || !usuario?.user) {
+          $('panel').hidden = true;
+          $('sinSesion').hidden = false;
+          mensaje('Necesitás iniciar sesión para continuar.', true);
+          return;
+        }
+        const { data, error } = await cliente.from('perfiles')
+          .select('estado_cuenta').eq('id', usuario.user.id).maybeSingle();
+        if (error) throw error;
+        if (!data || !mensajes[data.estado_cuenta]) throw new Error('Estado de cuenta desconocido.');
+        mostrarEstado(data.estado_cuenta, usuario.user.email);
+        mensaje('');
+        await cargarDiagnostico();
+      } catch (error) {
+        $('panel').hidden = true;
+        mensaje('No pudimos consultar el estado de tu cuenta. Intentá nuevamente más tarde.', true);
+        console.error('Error de consulta de cuenta', error);
+      }
+    }
+    function abrir(opcion) {
+      if (ocupado || !opciones[opcion]) return;
+      if ((opcion === 'desactivar' && estadoActual !== 'activa') ||
+          (opcion === 'reactivar' && estadoActual !== 'desactivada') ||
+          (opcion === 'baja' && !['activa','desactivada'].includes(estadoActual)) ||
+          (opcion === 'cancelar_baja' && (estadoActual !== 'baja_solicitada' || $('botonCancelarBaja').disabled))) return;
+      opcionActual = opcion;
+      $('tituloConfirmacion').textContent = opciones[opcion].titulo;
+      $('detalleConfirmacion').textContent = opciones[opcion].detalle;
+      $('errorConfirmacion').textContent = '';
+      $('textoConfirmacion').value = '';
+      $('confirmacionBaja').hidden = opcion !== 'baja';
+      aceptar.disabled = opcion === 'baja';
+      aceptar.textContent = opcion === 'baja' ? 'Enviar solicitud' : 'Confirmar';
+      modal.showModal();
+      if (opcion === 'baja') $('textoConfirmacion').focus(); else aceptar.focus();
+    }
+    $('textoConfirmacion').addEventListener('input', () => {
+      aceptar.disabled = $('textoConfirmacion').value.trim() !== 'BAJA' || ocupado;
+    });
+    $('cancelar').addEventListener('click', () => { if (!ocupado) modal.close(); });
+    modal.addEventListener('cancel', e => { if (ocupado) e.preventDefault(); });
+    document.querySelectorAll('[data-accion]').forEach(boton => {
+      boton.addEventListener('click', () => abrir(boton.dataset.accion));
+    });
+    aceptar.addEventListener('click', async () => {
+      if (ocupado || !opcionActual) return;
+      if (opcionActual === 'baja' && $('textoConfirmacion').value.trim() !== 'BAJA') return;
+      ocupado = true;
+      aceptar.disabled = true;
+      $('cancelar').disabled = true;
+      const accion = opcionActual;
+      aceptar.textContent = 'Procesando…';
+      try {
+        const { data: u, error: authError } = await cliente.auth.getUser();
+        if (authError || !u?.user) throw new Error('La sesión venció. Volvé a iniciar sesión.');
+        const { data, error } = await cliente.rpc(opciones[accion].rpc);
+        if (error) throw error;
+        if (!mensajes[data]) throw new Error('No pudimos confirmar el nuevo estado.');
+        mostrarEstado(data, u.user.email);
+        modal.close();
+        mensaje(accion === 'baja' ? 'Recibimos tu solicitud de baja definitiva.' :
+          accion === 'cancelar_baja' ? 'Cancelaste tu solicitud de baja definitiva. Se restableció el estado anterior de la cuenta.' :
+          'El estado de tu cuenta se actualizó correctamente.');
+        if (accion === 'baja' || accion === 'cancelar_baja') await cargarDiagnostico();
+      } catch (error) {
+        $('errorConfirmacion').textContent = error.message || 'No se pudo completar la operación.';
+      } finally {
+        ocupado = false;
+        $('cancelar').disabled = false;
+        aceptar.textContent = accion === 'baja' ? 'Enviar solicitud' : 'Confirmar';
+        aceptar.disabled = accion === 'baja' ? $('textoConfirmacion').value.trim() !== 'BAJA' : false;
+      }
+    });
+    $('salir').addEventListener('click', async () => {
+      try {
+        $('salir').disabled = true;
+        const { error } = await cliente.auth.signOut({ scope: 'local' });
+        if (error) throw error;
+        location.assign('ingresar.html');
+      } catch (error) {
+        $('salir').disabled = false;
+        mensaje('No pudimos cerrar la sesión. Intentá nuevamente.', true);
+      }
+    });
+    if (!window.supabase?.createClient) {
+      mensaje('No pudimos cargar la conexión. Recargá la página.', true);
+      return;
+    }
+    cliente = window.supabase.createClient(
+      'https://oktojwocvwrxvqxmyhtm.supabase.co',
+      'sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH'
+    );
+    cargar();
+  })();
+  </script>
+</body>
+</html>
