@@ -197,7 +197,7 @@
       const fecha = new Date(valor);
       if (Number.isNaN(fecha.getTime())) return '';
       return new Intl.DateTimeFormat('es-AR', {
-        dateStyle: 'medium', timeStyle: 'short', houre12: false
+        dateStyle: 'medium', timeStyle: 'short', hour12: false
       }).format(fecha);
     }
     function mostrarOrientacion(diagnostico, evaluacion, registrada) {
