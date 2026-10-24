@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0f2e4d">
+  <title>Solicitudes de baja | Administración AluConecta</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <style>
+    :root{--azul:#0f2e4d;--celeste:#5bc0de;--fondo:#f4f6f8;--gris:#64748b;--borde:#e2e8f0;--texto:#24313d}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font:16px/1.5 Arial,system-ui,sans-serif;background:var(--fondo);color:var(--texto)}
+    header{background:var(--azul);color:#fff}
+    .cabecera{max-width:1100px;margin:auto;padding:19px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .marca{font-weight:900;font-size:24px;letter-spacing:-.5px;color:white;text-decoration:none}.marca span{color:var(--celeste)}
+    .submarca{font-size:12px;color:#bbd1e1;display:block;font-weight:400;letter-spacing:0}
+    main{max-width:1100px;margin:0 auto;padding:29px 20px 60px}
+    h1{font-size:clamp(25px,4vw,31px);color:var(--azul);margin:0 0 7px}h2{font-size:19px;color:var(--azul);margin:0 0 8px}
+    p{margin:0 0 13px}.subtitulo,.nota{color:var(--gris)}.nota{font-size:13px;margin-top:12px}
+    a{color:var(--azul);text-underline-offset:4px}
+    header a{color:white}
+    .tarjeta{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:21px;margin:0 0 18px;box-shadow:0 3px 13px #0f2e4d09}
+    .aviso{border-left:4px solid var(--celeste);padding:12px 15px;background:#eef8fb;border-radius:8px;color:#245068;font-size:14px}
+    .fila{display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    button{cursor:pointer;background:#fff;color:var(--azul);border:1px solid #a9b7c5;border-radius:9px;min-height:43px;padding:10px 16px;font:700 14px Arial,sans-serif}
+    button:disabled{opacity:.55;cursor:not-allowed}button:hover:not(:disabled){background:#eef4f9}
+    button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--celeste);outline-offset:3px}
+    .estado{font-weight:700;color:var(--azul)}
+    #app[hidden],#acceso[hidden],#mfa[hidden],#salir[hidden]{display:none!important}
+    .solicitud{border:1px solid var(--borde);border-radius:11px;padding:18px;margin-top:15px}
+    .solicitud h3{font-size:17px;color:var(--azul);margin:0;overflow-wrap:anywhere}
+    .etiqueta{border-radius:20px;background:#fff3cf;color:#805500;font:bold 12px Arial,sans-serif;padding:6px 10px}
+    dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px;margin:18px 0 0}
+    dt{font-size:12px;color:var(--gris)}dd{margin:2px 0 0;overflow-wrap:anywhere;font-size:14px}
+    #codigo{font:inherit;border:1px solid #abb9c8;border-radius:8px;width:155px;padding:10px}
+    .mensajeError{color:#a22631}
+    footer{text-align:center;padding:23px;color:var(--gris);font-size:12px}
+    @media(max-width:600px){main{padding:20px 13px 38px}.tarjeta{padding:17px}dl{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header><div class="cabecera">
+    <div><a class="marca" href="admin.html">Alu<span>Conecta</span></a><span class="submarca">Administración privada</span></div>
+    <button id="salir" type="button" hidden>Cerrar sesión</button>
+  </div></header>
+  <main>
+    <section id="acceso" class="tarjeta" aria-live="polite">
+      <h1>Acceso administrativo</h1>
+      <p id="estado">Comprobando sesión y permisos…</p>
+      <div id="mfa" hidden>
+        <div id="selectorMfa" hidden style="margin-bottom:10px">
+          <label for="factorMfa">Autenticador que vas a utilizar</label>
+          <select id="factorMfa" style="font:inherit;padding:9px;border-radius:8px;border:1px solid #abb9c8;max-width:100%"></select>
+        </div>
+        <label for="codigo">Código de Google Authenticator</label>
+        <div class="fila" style="justify-content:flex-start;margin-top:9px">
+          <input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6 dígitos">
+          <button id="verificarMfa" type="button">Verificar código</button>
+        </div>
+        <p id="estadoMfa" role="status" style="margin-top:12px"></p>
+      </div>
+      <p id="ayudaAcceso"><a href="ingresar.html">Iniciar sesión</a></p>
+    </section>
+    <section id="app" hidden>
+      <div class="fila" style="margin-bottom:20px">
+        <div><h1>Solicitudes de baja de cuenta</h1><p class="subtitulo">Solicitudes pendientes, canceladas y cierres realizados.</p></div>
+        <button id="actualizar" type="button">Actualizar solicitudes</button>
+      </div>
+      <div class="aviso">Este panel es solo de consulta. No elimina usuarios ni modifica información comercial. Una publicación o cotización registrada no confirma por sí sola un acuerdo pendiente.</div>
+      <section class="tarjeta" aria-label="Solicitudes registradas" style="margin-top:18px">
+        <h2>Trámites registrados</h2>
+        <p id="resultado" role="status" aria-live="polite">Cargando solicitudes…</p>
+        <div id="solicitudes"></div>
+      </section>
+      <p><a href="admin.html">Volver al panel de verificaciones</a></p>
+    </section>
+  </main>
+  <footer>AluConecta · Acceso reservado</footer>
+  <script>
+  window.addEventListener('DOMContentLoaded', async () => {
+    'use strict';
+    const url = 'https://oktojwocvwrxvqxmyhtm.supabase.co';
+    const key = 'sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
+    const $ = id => document.getElementById(id);
+    let sb;
+    let factorId = null;
+    let consultando = false;
+    const mostrar = x => x === null || x === undefined || String(x).trim() === '' ? 'No informado' : String(x);
+    const fecha = x => {
+      if (!x) return 'Sin registro';
+      const v = new Date(x);
+      return Number.isNaN(v.getTime()) ? 'Sin registro' : v.toLocaleString('es-AR', {dateStyle:'short',timeStyle:'short',hour12:false});
+    };
+    function bloquear(mensaje) {
+      $('acceso').hidden = false;
+      $('app').hidden = true;
+      $('salir').hidden = true;
+      $('mfa').hidden = true;
+      $('estado').textContent = mensaje;
+    }
+    function campo(titulo, valor) {
+      const grupo = document.createElement('div');
+      const dt = document.createElement('dt'); dt.textContent = titulo;
+      const dd = document.createElement('dd'); dd.textContent = mostrar(valor);
+      grupo.append(dt, dd);
+      return grupo;
+    }
+    function dibujar(registros) {
+      const lista = $('solicitudes');
+      lista.replaceChildren();
+      const revisionComercial = registros.filter(r => ['requiere_revision','inconsistente'].includes(r.estado)).length;
+      const cerradas = registros.filter(r => r.estado === 'cerrada').length;
+      const canceladas = registros.filter(r => r.estado === 'cancelada').length;
+      $('resultado').textContent = registros.length
+        ? `${registros.length} trámite(s) · ${cerradas} cerrados · ${canceladas} cancelados · ${revisionComercial} requieren revisión`
+        : 'No hay solicitudes de baja registradas.';
+      for (const r of registros) {
+        const item = document.createElement('article'); item.className = 'solicitud';
+        const cab = document.createElement('div'); cab.className = 'fila';
+        const nombre = document.createElement('h3'); nombre.textContent = mostrar(r.nombre);
+        const etiqueta = document.createElement('span'); etiqueta.className = 'etiqueta';
+        etiqueta.textContent = ({
+          esperando_plazo: 'Esperando 72 horas',
+          esperando_evaluacion: 'Pendiente de evaluación',
+          lista_para_cierre: 'Lista para cierre',
+          requiere_revision: 'Requiere revisión',
+          inconsistente: 'Inconsistencia detectada',
+          cancelada: 'Solicitud cancelada',
+          cerrada: 'Baja ejecutada'
+        })[r.estado] || 'Estado no reconocido';
+        cab.append(nombre, etiqueta);
+        item.append(cab);
+        const datos = [
+          ['Tipo de cuenta', r.tipo_usuario || (r.estado === 'cerrada' ? 'No conservado tras el cierre' : 'No informado')],
+          ['Identificador de cuenta', r.usuario_id],
+          ['Solicitud recibida', fecha(r.solicitada_en)],
+          ['Fin de las 72 horas', fecha(r.fecha_habilitacion)],
+          ['Cierre realizado', fecha(r.ejecutada_en)],
+          ['Publicaciones', r.publicaciones ?? 0],
+          ['Intereses', r.intereses ?? 0],
+          ['Cotizaciones', r.cotizaciones ?? 0]
+        ];
+        const dl = document.createElement('dl');
+        datos.forEach(([titulo, valor]) => dl.append(campo(titulo, valor)));
+        item.append(dl);
+        const nota = document.createElement('p'); nota.className='nota';
+        nota.textContent = r.estado === 'cerrada'
+          ? 'La cuenta fue eliminada. Se conserva el registro del cierre.'
+          : r.estado === 'cancelada'
+            ? 'El titular canceló la solicitud. Este trámite no ejecutará una baja.'
+            : r.motivo || 'La evaluación se actualizará automáticamente. El cierre no se ejecuta antes de las 72 horas.';
+        item.append(nota);
+        lista.append(item);
+      }
+    }
+    async function cargar() {
+      if (consultando) return;
+      consultando = true;
+      $('actualizar').disabled = true;
+      $('resultado').textContent = 'Consultando solicitudes…';
+      $('solicitudes').replaceChildren();
+      try {
+        const { data, error } = await sb.rpc('listar_cierres_baja_admin');
+        if (error) throw error;
+        if (!Array.isArray(data)) throw new Error('Respuesta inesperada');
+        dibujar(data);
+      } catch (error) {
+        console.error('No se pudieron leer las solicitudes de baja', error);
+        $('resultado').textContent = 'No se pudo consultar el listado. Revisá la conexión y los permisos de la cuenta.';
+      } finally {
+        consultando = false;
+        $('actualizar').disabled = false;
+      }
+    }
+    $('verificarMfa').addEventListener('click', async () => {
+      const idElegido = $('selectorMfa').hidden ? factorId : $('factorMfa').value;
+      if (!sb || !idElegido) return;
+      const code = $('codigo').value.trim();
+      if (!/^\d{6}$/.test(code)) { $('estadoMfa').textContent = 'Ingresá los seis dígitos.'; return; }
+      $('verificarMfa').disabled = true;
+      $('estadoMfa').textContent = 'Verificando código…';
+      try {
+        const { data: challenge, error: ec } = await sb.auth.mfa.challenge({factorId: idElegido});
+        if (ec) throw ec;
+        const { error: ev } = await sb.auth.mfa.verify({factorId: idElegido, challengeId: challenge.id, code});
+        if (ev) throw ev;
+        window.location.reload();
+      } catch (error) {
+        console.error('Error al verificar MFA',error);
+        $('estadoMfa').textContent = 'Código incorrecto o vencido. Intentá nuevamente.';
+        $('verificarMfa').disabled = false;
+      }
+    });
+    $('actualizar').addEventListener('click', cargar);
+    $('salir').addEventListener('click', async () => {
+      $('salir').disabled = true;
+      try {
+        const { error } = await sb.auth.signOut({scope:'local'});
+        if (error) throw error;
+        window.location.href = 'ingresar.html';
+      } catch (error) {
+        console.error('Error al cerrar sesión',error);
+        $('salir').disabled = false;
+      }
+    });
+    try {
+      if (!window.supabase?.createClient) throw new Error('No se pudo cargar Supabase');
+      sb = window.supabase.createClient(url, key);
+      const { data: authData, error: ea } = await sb.auth.getUser();
+      if (ea || !authData?.user) { bloquear('Iniciá sesión con una cuenta administrativa.'); return; }
+      const { data: esAdmin, error: ep } = await sb.rpc('es_administrador');
+      if (ep || esAdmin !== true) { bloquear('Esta cuenta no tiene permisos administrativos.'); return; }
+      const { data: nivel, error: en } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (en) throw en;
+      if (nivel.currentLevel !== 'aal2') {
+        const { data: factores, error: ef } = await sb.auth.mfa.listFactors();
+        if (ef) throw ef;
+        const disponibles = (factores.totp || []).filter(f => f.status === 'verified');
+        if (!disponibles.length) { bloquear('Primero configurá Google Authenticator para tu cuenta administrativa.'); return; }
+        factorId = disponibles[0].id;
+        if (disponibles.length > 1) {
+          const select = $('factorMfa');
+          select.replaceChildren();
+          disponibles.forEach((factor, i) => {
+            const option = document.createElement('option');
+            option.value = factor.id;
+            option.textContent = factor.friendly_name || (i === 0 ? 'Autenticador principal' : 'Autenticador de respaldo');
+            select.append(option);
+          });
+          $('selectorMfa').hidden = false;
+        }
+        $('estado').textContent = 'Ingresá un solo código del autenticador que elijas.';
+        $('mfa').hidden = false;
+        $('codigo').focus();
+        return;
+      }
+      $('acceso').hidden = true;
+      $('app').hidden = false;
+      $('salir').hidden = false;
+      await cargar();
+    } catch (error) {
+      console.error('No se pudo verificar el acceso administrativo',error);
+      bloquear('No pudimos comprobar el acceso administrativo. Intentá nuevamente.');
+    }
+  });
+  </script>
+</body>
+</html>
+
