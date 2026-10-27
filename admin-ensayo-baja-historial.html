@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>AluConecta · Ensayo de baja con historial · Pruebas</title>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+:root{--azul:#0f2e4d;--celeste:#5bc0de;--fondo:#f4f6f8;--texto:#24313d;--borde:#dce4eb}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 Arial,sans-serif;color:var(--texto);background:var(--fondo)}
+header{background:var(--azul);color:white;padding:21px 18px}header div,main{max-width:700px;margin:auto}
+header strong{font-size:23px}header span{color:var(--celeste)} main{padding:26px 16px 50px}
+h1{font-size:28px;color:var(--azul);margin:0}h2{font-size:19px;color:var(--azul);margin:0 0 12px}
+article{background:white;border:1px solid var(--borde);padding:20px;border-radius:14px;margin:18px 0}
+p{margin:11px 0 15px}.ayuda{color:#64748b;font-size:14px}label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+input:not([type=checkbox]),select{width:100%;font:inherit;min-height:44px;border:1px solid #9eb1c2;border-radius:8px;padding:10px;background:white}
+input[type=checkbox]{width:18px;height:18px;vertical-align:middle;margin-right:7px}
+button{min-height:44px;font:bold 14px Arial;border:1px solid #a1b1c0;color:var(--azul);background:white;border-radius:8px;padding:10px 16px;margin:11px 7px 0 0;cursor:pointer}
+button.primario{background:#f5c542;border-color:#f5c542}button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--celeste);outline-offset:2px}
+code{overflow-wrap:anywhere}.mensaje{padding:14px;border-radius:9px;background:#eaf2f9;white-space:pre-wrap;overflow-wrap:anywhere}.mensaje.error{background:#fff0f0;color:#912832}.mensaje.exito{background:#e7f7ed;color:#165b35}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div><strong>Alu<span>Conecta</span></strong><div>Administración · Entorno de pruebas</div></div></header>
+<main>
+<h1>Prueba real de baja con historial</h1>
+<p class="ayuda">Esta pantalla se conecta exclusivamente a Supabase Pruebas y no modifica producción. No está conectada al ejecutor automático.</p>
+<article id="acceso" hidden>
+<h2>Ingresar como administrador de Pruebas</h2>
+<form id="formLogin">
+<label for="email">Correo electrónico</label><input type="email" id="email" autocomplete="username" required>
+<label for="clave">Contraseña</label><input type="password" id="clave" autocomplete="current-password" required>
+<button type="submit" id="entrar">Iniciar sesión</button>
+</form>
+<p class="ayuda">La contraseña se envía directamente a Supabase Auth; esta página no la almacena.</p>
+</article>
+<article id="mfa" hidden>
+<h2>Verificar segundo factor</h2>
+<label for="factor">Autenticador disponible</label><select id="factor"></select>
+<label for="codigo">Código de Google Authenticator</label><input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 dígitos">
+<button type="button" id="verificar">Verificar código</button>
+</article>
+<article id="ensayo" hidden>
+<h2>Cuenta descartable</h2>
+<p>Está creada una cuenta ficticia con una publicación cerrada, un interés autorizado, una cotización y un contacto ficticio. El plazo de 72 horas se simuló en Pruebas.</p>
+<p><strong>ID:</strong> <code id="identificador"></code></p>
+<p>La operación utilizará la API real de baja lógica de Supabase, y luego depurará los datos personales y registrará el cierre. No admite cuentas reales.</p>
+<label for="confirmado"><input id="confirmado" type="checkbox"> Confirmo que quiero ejecutar la baja sobre esta cuenta ficticia.</label>
+<button class="primario" type="button" id="ejecutar" disabled>Ejecutar la prueba real</button>
+<p class="ayuda">Ante un error no repitas la operación. Auth podría haber procesado la baja aunque el cierre administrativo necesite revisión.</p>
+</article>
+<div id="estado" class="mensaje" role="status" aria-live="polite">Comprobando acceso administrativo…</div>
+<button type="button" id="salir" hidden>Cerrar sesión de Pruebas</button>
+</main>
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  'use strict';
+  const SUPABASE_URL='https://oktojwocvwrxvqxmyhtm.supabase.co';
+  const PUBLIC_KEY='sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
+  const ACCOUNT_ID='22325308-f27b-44ab-9157-4cfe81a9f5c8';
+  const $=id=>document.getElementById(id);
+  $('identificador').textContent=ACCOUNT_ID;
+  let sb, ejecutando=false;
+  function mensaje(texto,tipo=''){$('estado').className='mensaje'+(tipo?' '+tipo:'');$('estado').textContent=texto;}
+  function ocultar(){for(const id of ['acceso','mfa','ensayo'])$(id).hidden=true;}
+  function mostrarIngreso(texto){ocultar();$('acceso').hidden=false;mensaje(texto);}
+  $('confirmado').addEventListener('change',()=>{$('ejecutar').disabled=ejecutando||!$('confirmado').checked;});
+  $('formLogin').addEventListener('submit',async event=>{
+    event.preventDefault();$('entrar').disabled=true;mensaje('Autenticando en Supabase Pruebas…');
+    try {
+      const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('clave').value});
+      $('clave').value='';if(error)throw error;await iniciar();
+    } catch(error){$('clave').value='';mostrarIngreso('No se pudo iniciar sesión con la cuenta administrativa de Pruebas.');}
+    finally {$('entrar').disabled=false;}
+  });
+  $('verificar').addEventListener('click',async()=>{
+    const code=$('codigo').value.trim(),factorId=$('factor').value;
+    if(!/^\d{6}$/.test(code)||!factorId){mensaje('Ingresá los seis dígitos del autenticador.');return;}
+    $('verificar').disabled=true;mensaje('Comprobando segundo factor…');
+    try {
+      const {data:challenge,error:ec}=await sb.auth.mfa.challenge({factorId});if(ec)throw ec;
+      const {error:ev}=await sb.auth.mfa.verify({factorId,challengeId:challenge.id,code});if(ev)throw ev;
+      $('codigo').value='';await iniciar();
+    } catch(error){mensaje('El código no pudo verificarse.','error');}
+    finally {$('verificar').disabled=false;}
+  });
+  $('ejecutar').addEventListener('click',async()=>{
+    if(ejecutando||!$('confirmado').checked)return;
+    if(!confirm('Vas a ejecutar una baja lógica REAL de la cuenta descartable en Supabase Pruebas. ¿Continuar?'))return;
+    ejecutando=true;$('ejecutar').disabled=true;$('confirmado').disabled=true;
+    mensaje('Ejecutando en Supabase Pruebas… No vuelvas a pulsar el botón.');
+    try {
+      const {data,error}=await sb.functions.invoke('aluconecta-cierre-historial-prueba',{body:{usuario_id:ACCOUNT_ID}});
+      if(error||data?.estado!=='prueba_completada'||data?.cierre_registrado!==true)throw new Error('Sin confirmación');
+      const {data:items,error:er}=await sb.rpc('listar_cierres_baja_admin');
+      if(er||!Array.isArray(items)||!items.some(x=>x.usuario_id===ACCOUNT_ID&&x.estado==='cerrada'))throw new Error('Sin recibo administrativo');
+      mensaje('PRUEBA COMPLETADA.\nBaja lógica confirmada.\nCierre administrativo registrado.\nPublicaciones depuradas: '+data.publicaciones_depuradas+'.\nContactos depurados: '+data.contactos_depurados+'.','exito');
+    } catch(error){mensaje('El cierre no pudo confirmarse. No repitas el ensayo: debemos inspeccionar Auth y los registros antes de continuar.','error');}
+  });
+  $('salir').addEventListener('click',async()=>{await sb.auth.signOut({scope:'local'});$('salir').hidden=true;mostrarIngreso('Sesión de Pruebas cerrada.');});
+  async function iniciar(){
+    const {data,error}=await sb.auth.getUser();
+    if(error||!data?.user){mostrarIngreso('Iniciá sesión con el administrador de Pruebas.');return;}
+    const {data:admin,error:ea}=await sb.rpc('es_administrador');
+    if(ea||admin!==true){ocultar();mensaje('No tenés permisos administrativos en Pruebas.','error');return;}
+    const {data:nivel,error:en}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();if(en)throw en;
+    $('salir').hidden=false;
+    if(nivel.currentLevel!=='aal2'){
+      const {data:factores,error:ef}=await sb.auth.mfa.listFactors();if(ef)throw ef;
+      const disponibles=(factores?.totp||[]).filter(f=>f.status==='verified');
+      if(!disponibles.length){ocultar();mensaje('Primero vinculá un dispositivo autenticador MFA.','error');return;}
+      const el=$('factor');el.replaceChildren();
+      disponibles.forEach((factor,i)=>{const option=document.createElement('option');option.value=factor.id;option.textContent=factor.friendly_name||'Autenticador '+(i+1);el.append(option);});
+      ocultar();$('mfa').hidden=false;mensaje('Ingresá un código del segundo factor para habilitar la prueba.');return;
+    }
+    ocultar();$('ensayo').hidden=false;mensaje('Acceso administrativo y MFA verificados. La operación requiere tu confirmación.');
+  }
+  try {if(!window.supabase?.createClient)throw new Error('Biblioteca no disponible');
+    sb=window.supabase.createClient(SUPABASE_URL,PUBLIC_KEY);await iniciar();
+  }catch(error){mostrarIngreso('No se pudo comprobar la sesión. Revisá la conexión e intentá nuevamente.');}
+});
+</script>
+</body>
+</html>
