@@ -111,6 +111,7 @@
       if (data.requiere_gestion_administrativa) {
         itemTexto('Tu cuenta tiene responsabilidades administrativas. Contactá a AluConecta para su transferencia antes de la baja.');
       }
+      await informarEstadoCotizacionesParaBaja(client, itemTexto);
       const habilitada = data.puede_solicitar === true && !abiertas.length && !data.requiere_gestion_administrativa;
       if (habilitada) {
         resumen.textContent = 'No encontramos asuntos pendientes que debas resolver antes de solicitar la baja.';
@@ -136,3 +137,35 @@
     if (await revisar()) botonOriginal.click();
   });
 })();
+
+/* Advertencias informativas: el historial no se elimina ni se cierra por esta consulta.
+   Un desacuerdo no prueba que haya obligaciones comerciales exigibles. */
+async function informarEstadoCotizacionesParaBaja(cliente, agregar) {
+  try {
+    const { data: cotizaciones, error } = await cliente
+      .from('cotizaciones').select('id').limit(30);
+    if (error) throw error;
+    if (!cotizaciones || !cotizaciones.length) return;
+    let sinDefinir = 0, divergentes = 0, coincidentes = 0;
+    for (const c of cotizaciones) {
+      const { data, error: errorEstado } = await cliente.rpc('consultar_situaciones_cotizacion', {
+        p_cotizacion_id: c.id
+      });
+      if (errorEstado || !data) throw errorEstado || new Error('Consulta incompleta');
+      const p = data.profesional?.situacion;
+      const f = data.carpinteria?.situacion;
+      if (!p || !f || p === 'pendiente' || f === 'pendiente') sinDefinir++;
+      else if (p !== f) divergentes++;
+      else coincidentes++;
+    }
+    agregar('Tenés ' + cotizaciones.length + ' cotización(es) vinculada(s). Son antecedentes comerciales, no deben borrarse para solicitar la baja.');
+    if (sinDefinir) agregar('En ' + sinDefinir + ' cotización(es) falta conocer la situación informada por alguna de las partes o sigue pendiente. Revisalas en tu panel si corresponde.');
+    if (divergentes) agregar('En ' + divergentes + ' cotización(es) las partes informaron situaciones diferentes. Podés consultar con la contraparte si hay asuntos por resolver.');
+    if (coincidentes) agregar('En ' + coincidentes + ' cotización(es) las declaraciones coinciden. Esto no equivale a aceptación contractual ni habilita por sí mismo la eliminación de documentos.');
+    if (cotizaciones.length === 30) agregar('Se muestran hasta 30 cotizaciones visibles. El resultado no es una auditoría completa de los antecedentes.');
+    agregar('El trámite de baja se puede solicitar aunque haya cotizaciones; el sistema aplicará los controles de conservación y privacidad vigentes.');
+  } catch (error) {
+    console.error('No se pudieron consultar declaraciones de cotizaciones', error);
+    agregar('No pudimos consultar las declaraciones comerciales. Podés solicitar la baja y consultar sobre los asuntos pendientes con AluConecta.');
+  }
+}
