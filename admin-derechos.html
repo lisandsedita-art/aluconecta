@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0f2e4d">
+<title>Derechos sobre datos | Administración AluConecta · Pruebas</title>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<style>
+:root{font-family:Arial,system-ui,sans-serif;color:#23394a;background:#f4f7fa}
+*{box-sizing:border-box}body{margin:0}header{background:#0f2e4d;color:white;padding:18px 24px}header a{color:white}main{max-width:1040px;margin:26px auto;padding:0 18px}h1{font-size:1.6rem}h2{font-size:1.18rem}a{color:#0f526e}
+.card{background:white;border:1px solid #d9e3ea;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #0f2e4d0a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px}label{display:block;font-weight:bold;font-size:.9rem;margin-bottom:6px}
+input,select{font:inherit;padding:10px;width:100%;border-radius:7px;border:1px solid #99abb8;background:white}
+button{font:inherit;padding:9px 13px;background:#0f526e;color:white;border:0;border-radius:7px;cursor:pointer}
+button.secondary{background:#edf4f8;color:#183d56;border:1px solid #cbdde9}button:disabled{opacity:.55;cursor:wait}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}small,.muted{color:#61788a}.notice{border-left:4px solid #58b6cf;padding:10px 14px;background:#eef8fb;margin:12px 0}
+.item{border:1px solid #dce6ed;border-radius:9px;padding:14px;margin-top:12px;overflow-wrap:anywhere}.item h3{font-size:1rem;margin:0 0 8px}.item p{margin:5px 0}#message{min-height:28px}#message.error{color:#a23b32}#message.ok{color:#1f644a}
+dialog{border:0;border-radius:13px;box-shadow:0 14px 45px #102a3a55;width:min(96vw,520px);padding:22px}dialog::backdrop{background:#0e23369c}
+footer{text-align:center;color:#758696;padding:24px}
+</style>
+</head>
+<body>
+<header><strong>AluConecta</strong> · Administración · Entorno de pruebas</header>
+<main>
+<section id="access" class="card"><h1>Derechos sobre datos personales</h1><p id="accessMessage" role="status">Comprobando sesión administrativa…</p>
+<div id="mfa" hidden><label for="factor">Autenticador</label><select id="factor"></select><label for="code" style="margin-top:10px">Código de 6 dígitos</label><input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}"><div class="actions"><button id="verifyMfa" type="button">Verificar código</button></div></div>
+<p><a href="ingresar.html">Iniciar sesión</a> · <a href="admin-seguridad.html">Configurar autenticación</a></p></section>
+<div id="app" hidden>
+<div class="notice"><strong>Trámite independiente de la baja de cuenta.</strong> Registrá exclusivamente códigos de referencia, sin nombres, DNI, correos o mensajes en los campos. La recepción y respuesta original se conservan por un canal institucional seguro. Los plazos deben validarse teniendo en cuenta la normativa y los feriados aplicables. Esta pantalla no borra datos.</div>
+<section class="card"><h2>Registrar solicitud recibida</h2><form id="create"><div class="grid">
+<div><label for="type">Derecho solicitado</label><select id="type" required><option value="acceso">Acceso</option><option value="rectificacion">Rectificación</option><option value="actualizacion">Actualización</option><option value="supresion">Supresión</option><option value="confidencialidad">Confidencialidad</option></select></div>
+<div><label for="channel">Canal recibido</label><select id="channel" required><option value="correo">Correo</option><option value="formulario">Formulario</option><option value="postal">Postal</option><option value="presencial">Presencial</option><option value="otro">Otro</option></select></div>
+<div><label for="ref">Código de recepción (sin datos personales)</label><input id="ref" required minlength="4" maxlength="96" pattern="[A-Za-z0-9_-]{4,96}" placeholder="SOL_2026_001"></div>
+<div><label for="received">Fecha y hora efectiva de recepción</label><input id="received" type="datetime-local" required></div></div>
+<div class="actions"><button type="submit" id="createBtn">Registrar solicitud</button><button type="button" id="newRef" class="secondary">Generar código</button></div></form></section>
+<section class="card"><div class="actions" style="align-items:center;justify-content:space-between"><h2 style="margin:0">Seguimiento administrativo</h2><button type="button" class="secondary" id="refresh">Actualizar lista</button></div><p class="muted">Las alertas muestran fechas validadas por la administración; no constituyen cálculo jurídico automático. Se muestran hasta 100 trámites recientes.</p><div id="list" aria-live="polite">Cargando…</div></section>
+<p><a href="admin.html">Volver al panel administrativo</a> · <a href="admin-bajas.html">Gestionar bajas de cuenta</a></p>
+</div>
+<p id="message" role="status" aria-live="polite"></p>
+<dialog id="modal"><h2 id="modalTitle">Actualizar trámite</h2><form id="update"><p id="modalInfo" class="muted"></p>
+<div id="identityWrap"><label for="identity">Validación de identidad (no cargar documentos aquí)</label><select id="identity"><option value="">No cambiar</option><option value="pendiente">Pendiente</option><option value="acreditada">Identidad acreditada por canal seguro</option><option value="insuficiente">Información insuficiente</option></select></div>
+<div id="deadlineWrap"><label for="deadline">Fecha límite validada (respetar días hábiles y feriados)</label><input type="date" id="deadline"></div>
+<div id="answerWrap" hidden><label for="decision">Decisión</label><select id="decision"><option value="procedente">Procedente</option><option value="parcialmente_procedente">Parcialmente procedente</option><option value="improcedente_fundada">Improcedente con fundamento</option></select><label for="basis" style="margin-top:10px">Referencia interna del fundamento (si corresponde)</label><input id="basis" maxlength="96" pattern="[A-Za-z0-9_-]{4,96}" placeholder="REF_1234"><label for="reply" style="margin-top:10px">Referencia de respuesta enviada</label><input id="reply" maxlength="96" pattern="[A-Za-z0-9_-]{4,96}" placeholder="RESP_1234"></div>
+<div class="actions"><button type="submit" id="saveBtn">Confirmar</button><button type="button" class="secondary" id="cancel">Cancelar</button></div></form></dialog>
+</main><footer>AluConecta · Administración reservada · Pruebas</footer>
+<script>
+window.addEventListener('DOMContentLoaded',async()=>{
+'use strict';
+const URL='https://oktojwocvwrxvqxmyhtm.supabase.co';
+const KEY='sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
+const $=id=>document.getElementById(id);
+let sb,selection=null,busy=false;
+const format=x=>x?new Date(x).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short',hour12:false}):'No registrado';
+const say=(str,error=false)=>{const m=$('message');m.textContent=str;m.className=error?'error':'ok';};
+const localValue=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);};
+$('received').value=localValue();
+$('newRef').addEventListener('click',()=>{$('ref').value='SOL_'+new Date().toISOString().slice(0,10).replaceAll('-','')+'_'+crypto.randomUUID().slice(0,8).toUpperCase();});
+function errorMessage(err){console.error('Operación administrativa fallida',err?.code||'sin_codigo');return 'No se pudo completar la operación. Verificá los permisos, los datos y el estado del trámite.';}
+async function requireAdmin(){const u=await sb.auth.getUser();if(u.error||!u.data.user)throw Error('Iniciá sesión con la cuenta administrativa.');const admin=await sb.rpc('es_administrador');if(admin.error||admin.data!==true)throw Error('La cuenta no tiene permiso administrativo.');return sb.auth.mfa.getAuthenticatorAssuranceLevel();}
+async function enter(){const result=await requireAdmin();if(result.error)throw result.error;if(result.data.currentLevel!=='aal2'){
+ $('accessMessage').textContent='Ingresá el segundo factor para continuar.';
+ const f=await sb.auth.mfa.listFactors();if(f.error)throw f.error;
+ const factors=(f.data.totp||[]).filter(x=>x.status==='verified');
+ if(!factors.length){$('accessMessage').textContent='Primero configurá un autenticador administrativo.';return;}
+ $('factor').replaceChildren();for(const factor of factors){const opt=document.createElement('option');opt.value=factor.id;opt.textContent=factor.friendly_name||'Autenticador';$('factor').append(opt);} $('mfa').hidden=false;return;
+ }
+ $('access').hidden=true;$('app').hidden=false;await refresh();}
+$('verifyMfa').addEventListener('click',async()=>{if(busy)return;const code=$('code').value.trim();if(!/^\d{6}$/.test(code)){say('Ingresá los seis dígitos.',true);return;}busy=true;$('verifyMfa').disabled=true;
+try{const r=await sb.auth.mfa.challengeAndVerify({factorId:$('factor').value,code});if(r.error)throw r.error;$('code').value='';await enter();say('Segundo factor verificado.');}catch(e){say(errorMessage(e),true);}finally{busy=false;$('verifyMfa').disabled=false;if(!$('app').hidden)await refresh();}});
+async function rpc(name,args={}){const r=await sb.rpc(name,args);if(r.error)throw r.error;return r.data;}
+function btn(text,handler){const b=document.createElement('button');b.type='button';b.textContent=text;b.className='secondary';b.addEventListener('click',handler);return b;}
+function detail(label,value){const p=document.createElement('p');const b=document.createElement('strong');b.textContent=label+': ';p.append(b,document.createTextNode(String(value??'—')));return p;}
+function openCase(item,next){selection={item,next};$('modalTitle').textContent=next==='respondida'?'Registrar respuesta':next==='cerrada'?'Cerrar trámite':next==='en_tratamiento'?'Iniciar tratamiento':'Actualizar trámite';$('modalInfo').textContent='Referencia '+item.referencia_recepcion+' · Estado actual: '+item.estado;
+$('identityWrap').hidden=next==='cerrada';$('deadlineWrap').hidden=next==='cerrada';$('answerWrap').hidden=next!=='respondida';$('identity').value='';$('deadline').value='';$('decision').value='procedente';$('basis').value='';$('reply').value='';$('modal').showModal();}
+function draw(rows){const dest=$('list');dest.replaceChildren();if(!Array.isArray(rows)||!rows.length){dest.textContent='No hay solicitudes registradas.';return;}
+for(const it of rows){const el=document.createElement('article');el.className='item';const h=document.createElement('h3');h.textContent=it.tipo.toUpperCase()+' · '+it.referencia_recepcion;el.append(h,detail('Estado',it.estado),detail('Recepción',format(it.recibida_en)),detail('Identidad',it.identidad_estado),detail('Vencimiento validado',it.fecha_limite_validada||'Sin validar'),detail('Alerta',it.alerta_operativa),detail('Respuesta enviada',format(it.respuesta_en)));
+const row=document.createElement('div');row.className='actions';
+if(it.estado==='recibida'){row.append(btn('Verificar identidad',()=>openCase(it,'verificando_identidad')),btn('Iniciar tratamiento',()=>openCase(it,'en_tratamiento')));}
+if(it.estado==='verificando_identidad'){row.append(btn('Iniciar tratamiento',()=>openCase(it,'en_tratamiento')));}
+if(it.estado==='en_tratamiento'){row.append(btn('Actualizar identidad o fecha',()=>openCase(it,'en_tratamiento')),btn('Registrar respuesta',()=>openCase(it,'respondida')));}
+if(it.estado==='respondida'){row.append(btn('Cerrar trámite',()=>openCase(it,'cerrada')));}
+el.append(row);dest.append(el);}}
+async function refresh(){if(busy)return;busy=true;$('refresh').disabled=true;try{const data=await rpc('listar_solicitudes_derechos_admin',{p_limite:100});draw(data); }catch(e){say(errorMessage(e),true);$('list').textContent='No se pudo leer el listado.';}finally{busy=false;$('refresh').disabled=false;}}
+$('refresh').addEventListener('click',refresh);
+$('create').addEventListener('submit',async ev=>{ev.preventDefault();if(busy)return;const f=$('create');if(!f.reportValidity())return;busy=true;$('createBtn').disabled=true;
+try{const date=new Date($('received').value);if(Number.isNaN(date.getTime()))throw Error('fecha');await rpc('registrar_solicitud_derechos_admin',{p_tipo:$('type').value,p_canal:$('channel').value,p_referencia_recepcion:$('ref').value.trim(),p_recibida_en:date.toISOString()});say('Solicitud registrada. Conservá el mensaje original en el canal institucional.');$('ref').value='';$('received').value=localValue();}catch(e){say(errorMessage(e),true);}finally{busy=false;$('createBtn').disabled=false;}await refresh();});
+$('cancel').addEventListener('click',()=>$('modal').close());
+$('update').addEventListener('submit',async ev=>{ev.preventDefault();if(busy||!selection)return;const item=selection.item,next=selection.next;
+const args={p_id:item.id,p_estado:next};
+if(next!=='cerrada'){
+ if($('identity').value)args.p_identidad_estado=$('identity').value;
+ if($('deadline').value)args.p_fecha_limite_validada=$('deadline').value;
+}
+if(next==='respondida'){
+ args.p_decision=$('decision').value;
+ args.p_fundamento_referencia=$('basis').value.trim()||null;
+ args.p_constancia_respuesta_referencia=$('reply').value.trim()||null;
+ if(!args.p_constancia_respuesta_referencia){say('Ingresá el código de constancia de respuesta.',true);return;}
+ if(args.p_decision!=='procedente'&&!args.p_fundamento_referencia){say('Registrá la referencia del fundamento.',true);return;}
+}
+busy=true;$('saveBtn').disabled=true;
+try{await rpc('actualizar_solicitud_derechos_admin',args);$('modal').close();say('Trámite actualizado y auditado.');}catch(e){say(errorMessage(e),true);}finally{busy=false;$('saveBtn').disabled=false;}await refresh();});
+try{if(!window.supabase?.createClient)throw Error('No se pudo cargar Supabase.');sb=window.supabase.createClient(URL,KEY);await enter();}catch(e){$('accessMessage').textContent=e?.message||'No se pudo validar la sesión.';say('Acceso administrativo no disponible.',true);}
+});
+</script>
+</body>
+</html>
