@@ -114,7 +114,7 @@
       await informarEstadoCotizacionesParaBaja(client, itemTexto);
       const habilitada = data.puede_solicitar === true && !abiertas.length && !data.requiere_gestion_administrativa;
       if (habilitada) {
-        resumen.textContent = 'No encontramos asuntos pendientes que debas resolver antes de solicitar la baja.';
+        resumen.textContent = 'Podés presentar la solicitud de baja. Esto no significa que las situaciones comerciales estén resueltas ni que el cierre ya esté autorizado.';
         itemTexto('Los proyectos cerrados, intereses y cotizaciones no deben borrarse para iniciar la solicitud.');
         confirmar.hidden = false;
       }
