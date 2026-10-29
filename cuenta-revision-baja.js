@@ -4,6 +4,26 @@
 (() => {
   'use strict';
   const zona = document.getElementById('zonaBaja');
+  const zonaPendiente = document.getElementById('zonaPendiente');
+
+  // Instrucciones visibles ANTES de solicitar la baja y mientras se tramita.
+  // La solicitud se admite aun si hay cotizaciones pendientes; lo condicionado
+  // por las declaraciones de ambas partes es la ejecución del cierre automático.
+  function explicarSituaciones(contenedor, mensaje) {
+    if (!contenedor || contenedor.querySelector('[data-aclaracion-cotizaciones-baja]')) return;
+    const aviso = document.createElement('p');
+    aviso.className = 'ayuda';
+    aviso.setAttribute('data-aclaracion-cotizaciones-baja', '');
+    aviso.textContent = mensaje;
+    const acciones = contenedor.querySelector('.acciones');
+    if (acciones) contenedor.insertBefore(aviso, acciones);
+    else contenedor.appendChild(aviso);
+  }
+  explicarSituaciones(zona,
+    'Si tenés cotizaciones, para que el cierre automático pueda avanzar ambas partes deben informar, en cada una, la misma situación final: «No se llegó a un acuerdo» o «Trabajo finalizado». «Pendiente de resolver» y «Acuerdo informado» no son situaciones finales. Informá lo que realmente ocurrió; podés solicitar la baja aunque queden situaciones pendientes, pero el cierre podría demorarse. No borres los documentos compartidos.');
+  explicarSituaciones(zonaPendiente,
+    'Si hay cotizaciones asociadas, ambas partes deben declarar la misma situación final («No se llegó a un acuerdo» o «Trabajo finalizado») para que el sistema pueda evaluar el cierre automático. Si no podés completar una declaración porque tu cuenta ya tiene la baja solicitada, contactá a AluConecta; no necesitás cancelar la solicitud ni borrar los archivos.');
+
   const botonOriginal = zona?.querySelector('button[data-accion="baja"]');
   if (!zona || !botonOriginal || !window.supabase?.createClient) return;
 
@@ -146,7 +166,8 @@ async function informarEstadoCotizacionesParaBaja(cliente, agregar) {
       .from('cotizaciones').select('id').limit(30);
     if (error) throw error;
     if (!cotizaciones || !cotizaciones.length) return;
-    let sinDefinir = 0, divergentes = 0, coincidentes = 0;
+    let sinDefinir = 0, divergentes = 0, finalesCoincidentes = 0, acuerdosInformados = 0;
+    const finales = new Set(['sin_acuerdo', 'trabajo_finalizado']);
     for (const c of cotizaciones) {
       const { data, error: errorEstado } = await cliente.rpc('consultar_situaciones_cotizacion', {
         p_cotizacion_id: c.id
@@ -156,12 +177,15 @@ async function informarEstadoCotizacionesParaBaja(cliente, agregar) {
       const f = data.carpinteria?.situacion;
       if (!p || !f || p === 'pendiente' || f === 'pendiente') sinDefinir++;
       else if (p !== f) divergentes++;
-      else coincidentes++;
+      else if (finales.has(p)) finalesCoincidentes++;
+      else if (p === 'acuerdo_informado') acuerdosInformados++;
+      else sinDefinir++;
     }
-    agregar('Tenés ' + cotizaciones.length + ' cotización(es) vinculada(s). Son antecedentes comerciales, no deben borrarse para solicitar la baja.');
-    if (sinDefinir) agregar('En ' + sinDefinir + ' cotización(es) falta conocer la situación informada por alguna de las partes o sigue pendiente. Revisalas en tu panel si corresponde.');
-    if (divergentes) agregar('En ' + divergentes + ' cotización(es) las partes informaron situaciones diferentes. Podés consultar con la contraparte si hay asuntos por resolver.');
-    if (coincidentes) agregar('En ' + coincidentes + ' cotización(es) las declaraciones coinciden. Esto no equivale a aceptación contractual ni habilita por sí mismo la eliminación de documentos.');
+    agregar('Tenés ' + cotizaciones.length + ' cotización(es) vinculada(s). Para el cierre automático, ambas partes deben informar en cada una la misma situación final: «No se llegó a un acuerdo» o «Trabajo finalizado». Deben declarar lo que realmente ocurrió.');
+    if (sinDefinir) agregar('En ' + sinDefinir + ' cotización(es) falta una declaración final de alguna de las partes o sigue pendiente. Revisalas antes de solicitar la baja, si es posible.');
+    if (divergentes) agregar('En ' + divergentes + ' cotización(es) las declaraciones son diferentes. Es necesario aclarar la situación real con la contraparte.');
+    if (acuerdosInformados) agregar('En ' + acuerdosInformados + ' cotización(es), ambas partes informaron un acuerdo, pero todavía no indicaron «Trabajo finalizado». Esa coincidencia no habilita el cierre automático.');
+    if (finalesCoincidentes) agregar('En ' + finalesCoincidentes + ' cotización(es) ambas partes declararon la misma situación final. Esto no equivale a aceptación contractual ni autoriza por sí solo la eliminación de archivos.');
     if (cotizaciones.length === 30) agregar('Se muestran hasta 30 cotizaciones visibles. El resultado no es una auditoría completa de los antecedentes.');
     agregar('El trámite de baja se puede solicitar aunque haya cotizaciones; el sistema aplicará los controles de conservación y privacidad vigentes.');
   } catch (error) {
