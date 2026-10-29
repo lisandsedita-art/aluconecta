@@ -1,0 +1,43 @@
+name: Respaldo cifrado de Supabase Pruebas
+
+# Este flujo NO se ejecuta periódicamente en la rama Pruebas.
+# Primero hay que habilitarlo explícitamente y verificar el resultado.
+on:
+  push:
+    branches: [prueba-gestion-cuentas]
+    paths:
+      - '.github/workflows/respaldo-pruebas.yml'
+      - 'scripts/backups/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: respaldo-cifrado-supabase-pruebas
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    # Evitar accidentalmente ejecutar producción o usar una rama no prevista.
+    if: github.ref == 'refs/heads/prueba-gestion-cuentas' && vars.ALU_BACKUP_PRUEBAS_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Instalar cifrado age
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq age
+      - name: Preparar respaldo
+        env:
+          DATABASE_URL: ${{ secrets.ALU_PRUEBAS_DATABASE_URL }}
+          SUPABASE_URL: https://oktojwocvwrxvqxmyhtm.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ALU_PRUEBAS_SERVICE_ROLE_KEY }}
+          AGE_RECIPIENT: ${{ vars.ALU_BACKUP_AGE_RECIPIENT }}
+          BACKUP_OUTPUT: ${{ runner.temp }}/respaldos-cifrados
+        run: bash scripts/backups/crear_respaldo.sh
+      - name: Guardar solamente el paquete cifrado
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: supabase-pruebas-backup-cifrado
+          path: ${{ runner.temp }}/respaldos-cifrados/*.age*
+          if-no-files-found: error
+          retention-days: 7
