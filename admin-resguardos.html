@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0f2e4d">
+  <title>Revisión documental | Administración AluConecta · Pruebas</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <style>
+    :root{--azul:#0f2e4d;--celeste:#5bc0de;--fondo:#f4f6f8;--gris:#64748b;--borde:#d9e4ec;--texto:#24313d}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--fondo);color:var(--texto);font:16px/1.55 Arial,system-ui,sans-serif}
+    header{background:var(--azul);color:white}.cabecera{max-width:1050px;margin:auto;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+    .marca{font-weight:900;font-size:25px;letter-spacing:-.6px;color:#fff;text-decoration:none}.marca span{color:var(--celeste)}
+    .submarca{font-size:12px;color:#bed1de}main{max-width:1050px;margin:auto;padding:28px 20px 54px}
+    h1{color:var(--azul);font-size:clamp(24px,4vw,31px);line-height:1.24;margin:0 0 8px}h2{color:var(--azul);font-size:20px;margin:0 0 10px}h3{color:var(--azul);font-size:17px;margin:0 0 10px;overflow-wrap:anywhere}
+    p{margin:0 0 13px}.nota{color:var(--gris);font-size:14px}.tarjeta{background:#fff;border:1px solid var(--borde);border-radius:13px;padding:22px;margin-bottom:18px}
+    .fila{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+    a{color:var(--azul);text-underline-offset:3px}header a{color:#fff}
+    button,select,textarea,input{font:inherit}button{min-height:44px;border:1px solid #a4b6c5;background:#fff;color:var(--azul);font-size:14px;font-weight:700;border-radius:8px;padding:9px 15px;cursor:pointer}
+    button:hover:not(:disabled){background:#eef5fa}button:disabled{cursor:not-allowed;opacity:.54}
+    button.principal{background:var(--azul);color:white;border-color:var(--azul)}button.principal:hover:not(:disabled){background:#17456e}
+    input[type='text'],select,textarea{border:1px solid #a4b6c5;border-radius:8px;padding:10px;max-width:100%}
+    input[type='text']{width:168px}textarea{width:100%;min-height:110px;resize:vertical}
+    select{width:100%}label{display:block;font-size:14px;font-weight:700;margin:12px 0 7px}
+    label.filtro{font-weight:400;display:flex;align-items:center;gap:9px;margin:0}
+    .aviso{border-left:4px solid var(--celeste);border-radius:8px;background:#eef8fb;padding:13px 15px;font-size:14px;color:#245068;margin:14px 0}
+    .documento{border:1px solid var(--borde);border-radius:11px;margin-top:14px;padding:18px}
+    .estado{font-size:12px;font-weight:700;border-radius:18px;background:#e9f3f8;padding:4px 9px;color:#21485c;display:inline-block;margin-bottom:10px}
+    dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 19px;margin:12px 0 17px}dt{color:var(--gris);font-size:12px}dd{margin:2px 0 0;overflow-wrap:anywhere;word-break:break-word;font-size:14px}
+    dialog{width:min(660px,calc(100% - 24px));border:1px solid var(--borde);border-radius:14px;padding:25px;color:var(--texto);box-shadow:0 15px 50px #0003}
+    dialog::backdrop{background:#0f2e4d99}.error{color:#9c2830;font-size:14px}.exito{color:#126757;font-size:14px}
+    [hidden]{display:none!important}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--celeste);outline-offset:3px}
+    footer{color:var(--gris);font-size:12px;text-align:center;padding:22px}
+    @media(max-width:620px){main{padding:20px 12px}.tarjeta{padding:16px}dl{grid-template-columns:1fr}dialog{padding:17px}}
+  </style>
+</head>
+<body>
+  <header><div class="cabecera"><div><a class="marca" href="admin-bajas.html">Alu<span>Conecta</span></a><div class="submarca">Administración privada · Entorno de Pruebas</div></div><button id="salir" type="button" hidden>Cerrar sesión</button></div></header>
+  <main>
+    <section id="acceso" class="tarjeta" aria-live="polite">
+      <h1>Acceso administrativo</h1>
+      <p id="estadoAcceso">Comprobando permisos…</p>
+      <div id="mfa" hidden>
+        <label for="factorMfa">Autenticador</label><select id="factorMfa"></select>
+        <label for="codigoMfa">Código de 6 dígitos</label><div class="fila" style="justify-content:flex-start"><input id="codigoMfa" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}"><button id="verificarMfa" type="button">Verificar</button></div>
+        <p id="mensajeMfa" class="error" role="alert"></p>
+      </div>
+      <a href="ingresar.html">Ingresar</a> · <a href="admin-seguridad.html">Seguridad administrativa</a>
+    </section>
+    <section id="app" hidden>
+      <div class="fila"><div><h1>Revisión de documentos conservados</h1><p class="nota">Documentos retenidos después de una baja, con acceso restringido a una contraparte.</p></div><button id="recargar" type="button">Actualizar</button></div>
+      <p class="aviso"><strong>Esta pantalla no elimina archivos.</strong> La evaluación de supresión deja un registro para un procedimiento posterior. Conservar requiere fundamento y programa una nueva revisión a los 90 días.</p>
+      <section class="tarjeta">
+        <div class="fila"><h2>Revisiones documentales</h2><label class="filtro"><input id="mostrarTodos" type="checkbox"> Mostrar también las programadas</label></div>
+        <p id="resultado" role="status" aria-live="polite">Consultando documentos…</p>
+        <p id="avisoGuardado" class="exito" role="status"></p>
+        <div id="lista"></div>
+        <p class="nota">Se muestran hasta 100 documentos por consulta. Si se alcanza ese límite, hace falta una vista paginada para garantizar una revisión completa.</p>
+      </section>
+      <p><a href="admin-bajas.html">Volver a solicitudes de baja</a> · <a href="admin.html">Panel de verificaciones</a></p>
+    </section>
+  </main>
+  <dialog id="revision" aria-labelledby="tituloRevision">
+    <form id="formRevision">
+      <h2 id="tituloRevision">Registrar revisión</h2>
+      <p id="referenciaRevision" class="nota" style="overflow-wrap:anywhere"></p>
+      <label for="decision">Decisión administrativa</label>
+      <select id="decision" required>
+        <option value="mantener_restringido">Mantener acceso restringido; revisar en 90 días</option>
+        <option value="evaluar_supresion">Evaluar una posible supresión (NO elimina)</option>
+      </select>
+      <label for="fundamento">Fundamento concreto</label>
+      <textarea id="fundamento" required minlength="12" maxlength="500" placeholder="Justificá la decisión. Evitá ingresar información personal innecesaria."></textarea>
+      <p class="nota">Se registra una revisión auditada. No se modifica la propiedad, el acceso ni el contenido del archivo.</p>
+      <p id="errorRevision" class="error" role="alert"></p>
+      <div class="fila" style="justify-content:flex-start"><button id="guardar" class="principal" type="submit">Registrar revisión</button><button id="cancelar" type="button">Cancelar</button></div>
+    </form>
+  </dialog>
+  <footer>© 2026 AluConecta · Gestión privada · Pruebas</footer>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      'use strict';
+      const URL_SUPABASE='https://oktojwocvwrxvqxmyhtm.supabase.co';
+      const CLAVE_PUBLICA='sb_publishable_Eu21tArov_F1rztzJ4PObQ_rZ0BTeHH';
+      const $=id=>document.getElementById(id);
+      const etiquetas={archivo_faltante:'Archivo no localizado',contraparte_inactiva:'Contraparte inactiva',evaluar_supresion:'Pendiente de evaluación de supresión',revision_vencida:'Revisión vencida',programada:'Programada'};
+      let sb=null,consultando=false,guardando=false,actual=null;
+      const fecha=valor=>{if(!valor)return 'No registrada';const d=new Date(valor);return Number.isNaN(d.getTime())?'Fecha inválida':new Intl.DateTimeFormat('es-AR',{timeZone:'America/Argentina/Cordoba',dateStyle:'short',timeStyle:'short'}).format(d);};
+      const campo=(titulo,valor)=>{const wrap=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=titulo;dd.textContent=valor===null||valor===undefined||valor===''?'No informado':String(valor);wrap.append(dt,dd);return wrap;};
+      function bloquear(mensaje){$('acceso').hidden=false;$('app').hidden=true;$('salir').hidden=true;$('mfa').hidden=true;$('estadoAcceso').textContent=mensaje;}
+      function dibujar(items){
+        $('lista').replaceChildren();
+        $('resultado').textContent=items.length?items.length+' documento(s) consultados.':$('mostrarTodos').checked?'No hay documentos resguardados por bajas finalizadas.':'No hay revisiones pendientes.';
+        for(const item of items){
+          const tarjeta=document.createElement('article');tarjeta.className='documento';
+          const titulo=document.createElement('h3');titulo.textContent=item.bucket_id+' / '+item.ruta_storage;
+          const estado=document.createElement('span');estado.className='estado';estado.textContent=etiquetas[item.estado]||'Estado no reconocido';tarjeta.append(titulo,estado);
+          const detalle=document.createElement('dl');
+          for(const [rotulo,valor] of [
+            ['Solicitud de baja',fecha(item.solicitada_en)],['Resguardo creado',fecha(item.fecha_resguardo)],
+            ['Próxima revisión',fecha(item.proxima_revision_en)],['Archivo disponible',item.objeto_presente?'Sí':'No'],
+            ['Contraparte activa',item.contraparte_activa?'Sí':'No'],['Última revisión',fecha(item.ultima_revision_en)],
+            ['Última decisión',item.ultima_decision],['Último fundamento',item.ultimo_fundamento]
+          ])detalle.append(campo(rotulo,valor));
+          tarjeta.append(detalle);const boton=document.createElement('button');boton.type='button';boton.textContent='Registrar revisión';boton.addEventListener('click',()=>abrir(item));tarjeta.append(boton);$('lista').append(tarjeta);
+        }
+      }
+      async function cargar(){
+        if(!sb||consultando||guardando)return;consultando=true;$('recargar').disabled=true;$('mostrarTodos').disabled=true;$('resultado').textContent='Consultando revisiones…';$('lista').replaceChildren();
+        try{const {data,error}=await sb.rpc('listar_resguardos_documentales_admin',{p_limite:100,p_solo_pendientes:!$('mostrarTodos').checked});if(error)throw error;if(!Array.isArray(data))throw Error('Respuesta inesperada');dibujar(data);}
+        catch(err){console.error('Falló consulta de revisiones documentales',err);$('resultado').textContent='No pudimos consultar las revisiones. Verificá tu sesión y permisos.';}
+        finally{consultando=false;$('recargar').disabled=false;$('mostrarTodos').disabled=false;}
+      }
+      function abrir(item){
+        if(guardando)return;actual=item;$('referenciaRevision').textContent=item.bucket_id+' / '+item.ruta_storage;$('fundamento').value='';$('errorRevision').textContent='';
+        const puedeMantener=item.objeto_presente===true&&item.contraparte_activa===true;
+        $('decision').querySelector('option[value="mantener_restringido"]').disabled=!puedeMantener;
+        $('decision').value=puedeMantener?'mantener_restringido':'evaluar_supresion';
+        $('revision').showModal();$('fundamento').focus();
+      }
+      function cerrar(){if(guardando)return;$('revision').close();actual=null;$('errorRevision').textContent='';}
+      $('recargar').addEventListener('click',cargar);$('mostrarTodos').addEventListener('change',cargar);$('cancelar').addEventListener('click',cerrar);
+      $('revision').addEventListener('cancel',ev=>{if(guardando)ev.preventDefault();else actual=null;});
+      $('formRevision').addEventListener('submit',async ev=>{
+        ev.preventDefault();if(!sb||!actual||guardando)return;
+        const d=$('decision').value,motivo=$('fundamento').value.trim();
+        if(!['mantener_restringido','evaluar_supresion'].includes(d)||motivo.length<12||motivo.length>500){$('errorRevision').textContent='Ingresá un fundamento de 12 a 500 caracteres.';return;}
+        if(d==='mantener_restringido'&&(!actual.objeto_presente||!actual.contraparte_activa)){$('errorRevision').textContent='No se puede prolongar un resguardo sin archivo presente y contraparte activa.';return;}
+        guardando=true;$('guardar').disabled=true;$('cancelar').disabled=true;$('errorRevision').textContent='Registrando…';
+        let completado=false;
+        try{const {error}=await sb.rpc('registrar_revision_resguardo_admin',{p_usuario_id:actual.usuario_id,p_solicitada_en:actual.solicitada_en,p_bucket_id:actual.bucket_id,p_ruta_storage:actual.ruta_storage,p_decision:d,p_fundamento:motivo});if(error)throw error;completado=true;$('revision').close();actual=null;$('avisoGuardado').textContent='Revisión registrada. No se eliminó ni modificó ningún archivo.';}
+        catch(err){console.error('Falló registro de revisión documental',err);$('errorRevision').textContent='No se pudo registrar. Verificá el estado del trámite antes de reintentar.';}
+        finally{guardando=false;$('guardar').disabled=false;$('cancelar').disabled=false;}
+        if(completado)await cargar();
+      });
+      $('verificarMfa').addEventListener('click',async()=>{
+        const factorId=$('factorMfa').value,codigo=$('codigoMfa').value.trim();
+        if(!factorId||!/^\d{6}$/.test(codigo)){$('mensajeMfa').textContent='Ingresá un código válido de 6 dígitos.';return;}
+        $('verificarMfa').disabled=true;$('mensajeMfa').textContent='Verificando…';
+        try{const {data:c,error:e1}=await sb.auth.mfa.challenge({factorId});if(e1)throw e1;const {error:e2}=await sb.auth.mfa.verify({factorId,challengeId:c.id,code:codigo});if(e2)throw e2;window.location.reload();}
+        catch(err){console.error('Error en MFA administrativo',err);$('mensajeMfa').textContent='Código incorrecto o vencido. Intentá nuevamente.';$('verificarMfa').disabled=false;}
+      });
+      $('salir').addEventListener('click',async()=>{$('salir').disabled=true;try{const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error;location.assign('ingresar.html');}catch(err){$('salir').disabled=false;console.error('No se pudo cerrar sesión',err);}});
+      try{
+        if(!window.supabase?.createClient)throw Error('No pudo cargarse Supabase');
+        sb=window.supabase.createClient(URL_SUPABASE,CLAVE_PUBLICA);
+        const {data:{user},error:authError}=await sb.auth.getUser();if(authError||!user){bloquear('Iniciá sesión con una cuenta administrativa.');return;}
+        const {data:esAdmin,error:permisoError}=await sb.rpc('es_administrador');if(permisoError||esAdmin!==true){bloquear('Esta cuenta no tiene permisos administrativos.');return;}
+        const {data:nivel,error:nivelError}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();if(nivelError)throw nivelError;
+        if(nivel.currentLevel!=='aal2'){
+          const {data:factores,error:factorError}=await sb.auth.mfa.listFactors();if(factorError)throw factorError;
+          const disponibles=(factores.totp||[]).filter(f=>f.status==='verified');if(!disponibles.length){bloquear('Configurá un autenticador desde Seguridad administrativa.');return;}
+          const selector=$('factorMfa');selector.replaceChildren();for(const f of disponibles){const o=document.createElement('option');o.value=f.id;o.textContent=f.friendly_name||'Autenticador';selector.append(o);}
+          $('estadoAcceso').textContent='Ingresá el segundo factor para continuar.';$('mfa').hidden=false;return;
+        }
+        $('acceso').hidden=true;$('app').hidden=false;$('salir').hidden=false;await cargar();
+      }catch(err){console.error('Fallo de acceso administrativo',err);bloquear('No se pudo comprobar el acceso administrativo. Intentá nuevamente.');}
+    });
+  </script>
+</body>
+</html>
