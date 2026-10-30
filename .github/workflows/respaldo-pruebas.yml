@@ -19,7 +19,7 @@ concurrency:
 jobs:
   backup:
     # Evitar accidentalmente ejecutar producción o usar una rama no prevista.
-    if: github.ref == 'refs/heads/prueba-gestion-cuentas' && vars.ALU_BACKUP_PRUEBAS_ENABLED == 'true'
+    if: github.ref == 'refs/heads/prueba-gestion-cuentas' && vars.ALU_BACKUP_PRUEBAS_ENABLED == 'true' && vars.ALU_BACKUP_AGE_RECIPIENT != ''
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -33,7 +33,59 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ALU_PRUEBAS_SERVICE_ROLE_KEY }}
           AGE_RECIPIENT: ${{ vars.ALU_BACKUP_AGE_RECIPIENT }}
           BACKUP_OUTPUT: ${{ runner.temp }}/respaldos-cifrados
-        run: bash scripts/backups/crear_respaldo.sh
+        # Comprueba la URL sin imprimirla; corrige solo el usuario del Session Pooler.
+        # No cambia ni reconstruye la contraseña guardada en Secrets.
+        run: |
+          python3 - <<'PYBACKUP'
+          import os
+          import re
+          import subprocess
+          import sys
+          from urllib.parse import urlsplit
+
+          project = 'oktojwocvwrxvqxmyhtm'
+          pooler_host = 'aws-1-sa-east-1.pooler.supabase.com'
+          direct_host = f'db.{project}.supabase.co'
+          raw_url = os.environ.get('DATABASE_URL', '')
+          recipient = os.environ.get('AGE_RECIPIENT', '')
+
+          def stop(message):
+              sys.exit('RESPALDO BLOQUEADO: ' + message)
+
+          # Nunca aceptar una clave privada, varias líneas o un texto mezclado.
+          if not re.fullmatch(r'age1[a-z0-9]{58}', recipient):
+              stop('falta una clave PUBLICA age válida; no compartas la privada')
+          try:
+              parsed = urlsplit(raw_url)
+              port = parsed.port
+          except ValueError:
+              stop('el secreto de conexión de Pruebas tiene un formato inválido')
+
+          if parsed.scheme not in ('postgres', 'postgresql') or not parsed.password:
+              stop('falta una URL PostgreSQL con contraseña en el secreto existente')
+
+          if parsed.hostname == pooler_host and port == 5432:
+              if parsed.username == 'postgres':
+                  # El Session Pooler exige el usuario postgres.<project-ref>.
+                  prefix = f'{parsed.scheme}://postgres:'
+                  if not raw_url.startswith(prefix):
+                      stop('formato de usuario inesperado en la conexión')
+                  os.environ['DATABASE_URL'] = (
+                      f'{parsed.scheme}://postgres.{project}:' + raw_url[len(prefix):]
+                  )
+                  print('Conexión de Pruebas: usuario del Session Pooler normalizado.')
+              elif parsed.username != f'postgres.{project}':
+                  stop('usuario distinto del proyecto de Pruebas')
+          elif parsed.hostname == direct_host and port in (None, 5432):
+              if parsed.username != 'postgres':
+                  stop('usuario de conexión directa inesperado')
+          else:
+              stop('la conexión no corresponde inequívocamente a Supabase Pruebas')
+
+          # Si la contraseña guardada es incorrecta, el error persistirá:
+          # no hacer nuevos reintentos automáticos ni imprimir credenciales.
+          subprocess.run(['bash', 'scripts/backups/crear_respaldo.sh'], check=True, env=os.environ)
+          PYBACKUP
       - name: Guardar solamente el paquete cifrado
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -41,4 +93,3 @@ jobs:
           path: ${{ runner.temp }}/respaldos-cifrados/*.age*
           if-no-files-found: error
           retention-days: 7
-      # Primera prueba de respaldo
