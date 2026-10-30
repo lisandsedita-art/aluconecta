@@ -41,3 +41,4 @@ jobs:
           path: ${{ runner.temp }}/respaldos-cifrados/*.age*
           if-no-files-found: error
           retention-days: 7
+      # Primera prueba de respaldo
