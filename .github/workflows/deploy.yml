@@ -1,26 +1,92 @@
-name: Desplegar Edge Functions
+
+name: Desplegar Edge Functions - AluConecta
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'supabase/functions/**'
+      - 'supabase/functions/verificar-cuit-arca/**'
+
+  workflow_dispatch:
+    inputs:
+      funcion:
+        description: 'Elegí la función que querés desplegar'
+        required: true
+        type: choice
+        options:
+          - verificar-cuit-arca
+          - aluconecta-cierre-historial-auto
+
+permissions:
+  contents: read
+
+concurrency:
+  group: despliegue-edge-aluconecta-principal
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      FUNCION_SOLICITADA: ${{ inputs.funcion }}
 
     steps:
-      - name: Descargar codigo del repositorio
+      - name: Descargar código de main
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Comprobar proyecto y seleccionar función
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$SUPABASE_PROJECT_ID" != 'wroaxwjyjrxzwctfkyoo' ]]; then
+            echo 'Proyecto Supabase incorrecto.' >&2
+            exit 1
+          fi
+
+          if [[ -z "$SUPABASE_ACCESS_TOKEN" ]]; then
+            echo 'Falta SUPABASE_ACCESS_TOKEN.' >&2
+            exit 1
+          fi
+
+          if [[ "$GITHUB_EVENT_NAME" == 'push' ]]; then
+            nombre='verificar-cuit-arca'
+          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' ]]; then
+            case "$FUNCION_SOLICITADA" in
+              verificar-cuit-arca|aluconecta-cierre-historial-auto)
+                nombre="$FUNCION_SOLICITADA"
+                ;;
+              *)
+                echo 'Función no permitida.' >&2
+                exit 1
+                ;;
+            esac
+          else
+            echo 'Evento no permitido.' >&2
+            exit 1
+          fi
+
+          if [[ ! -f "supabase/functions/$nombre/index.ts" ]]; then
+            echo "Falta el código de $nombre." >&2
+            exit 1
+          fi
+
+          echo "FUNCION_A_DESPLEGAR=$nombre" >> "$GITHUB_ENV"
 
       - name: Instalar Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
-      - name: Desplegar todas las funciones
-        run: supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_ID }} --no-verify-jwt
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      - name: Desplegar solo la función seleccionada
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase functions deploy "$FUNCION_A_DESPLEGAR" \
+            --project-ref "$SUPABASE_PROJECT_ID" \
+            --no-verify-jwt
