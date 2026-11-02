@@ -595,6 +595,133 @@
 
 
 <script>
+/* AluConecta — situaciones declaradas independientemente por las partes.
+   Requiere las RPC públicas:
+   - public.consultar_situaciones_cotizacion(uuid)
+   - public.informar_situacion_cotizacion(uuid,text)
+   No modifica cotizaciones ni documentos ni afirma consentimiento bilateral. */
+(() => {
+  'use strict';
+  const etiquetas = {
+    pendiente: 'Pendiente de resolver',
+    sin_acuerdo: 'No se llegó a un acuerdo',
+    acuerdo_informado: 'Acuerdo informado',
+    trabajo_finalizado: 'Trabajo finalizado'
+  };
+  const textoSituacion = valor => etiquetas[valor] || 'No informado';
+  const formatoFecha = valor => {
+    if (!valor) return '';
+    const fecha = new Date(valor);
+    if (Number.isNaN(fecha.getTime())) return '';
+    return fecha.toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+  };
+  const elemento = (tag, texto, clase) => {
+    const el = document.createElement(tag);
+    if (texto !== undefined) el.textContent = texto;
+    if (clase) el.className = clase;
+    return el;
+  };
+
+  window.aluconectaCrearEstadoCotizacion = function crearEstadoCotizacion(
+    contenedor, cotizacionId, rol, cliente
+  ) {
+    if (!contenedor || !cotizacionId || !cliente ||
+        !['profesional', 'carpinteria'].includes(rol)) return;
+
+    const panel = elemento('section', undefined, 'estado-cotizacion');
+    panel.style.cssText = 'margin-top:14px;padding:12px;border:1px solid #cbd9e6;border-radius:10px;background:#f6f9fc;color:#17324a;';
+    panel.setAttribute('aria-label', 'Situación de la cotización');
+    const titulo = elemento('strong', 'Situación comercial informada');
+    const detalle = elemento('p', 'Consultando declaraciones…', 'muted');
+    detalle.style.cssText = 'margin:8px 0;white-space:pre-line;font-size:13px;';
+    detalle.setAttribute('aria-live', 'polite');
+    const leyenda = elemento('p',
+      'Cada parte declara su situación. Esto no confirma un acuerdo entre ambas ni elimina el historial.', 'muted');
+    leyenda.style.cssText = 'font-size:12px;margin:6px 0 10px;';
+
+    const etiqueta = elemento('label', 'Informar mi situación: ');
+    etiqueta.style.cssText = 'display:block;font-size:13px;font-weight:600;margin-bottom:5px;';
+    const selector = elemento('select');
+    selector.style.cssText = 'display:block;width:100%;max-width:390px;min-height:42px;padding:9px;border:1px solid #a7bacb;border-radius:7px;color:#17324a;background:white;font-size:14px;';
+    selector.setAttribute('aria-label', 'Mi declaración sobre esta cotización');
+    const vacio = elemento('option', 'Elegí una situación');
+    vacio.value = '';
+    selector.append(vacio);
+    for (const [valor, nombre] of Object.entries(etiquetas)) {
+      const option = elemento('option', nombre);
+      option.value = valor;
+      selector.append(option);
+    }
+    const guardar = elemento('button', 'GUARDAR MI DECLARACIÓN');
+    guardar.type = 'button';
+    guardar.style.cssText = 'display:block;margin-top:9px;padding:10px 13px;border-radius:8px;background:#165e92;color:white;border:0;font-weight:650;cursor:pointer;min-height:42px;';
+    guardar.disabled = true;
+    const mensaje = elemento('p', '', 'muted');
+    mensaje.style.cssText = 'font-size:13px;margin:8px 0 0;';
+    mensaje.setAttribute('role', 'status');
+    panel.append(titulo, detalle, leyenda, etiqueta, selector, guardar, mensaje);
+    contenedor.append(panel);
+
+    let ocupada = false;
+    async function consultar() {
+      const { data, error } = await cliente.rpc('consultar_situaciones_cotizacion', {
+        p_cotizacion_id: cotizacionId
+      });
+      if (error || !data || data.cotizacion_id !== cotizacionId) {
+        throw error || new Error('No se pudo confirmar la consulta.');
+      }
+      const yo = rol === 'profesional' ? data.profesional : data.carpinteria;
+      const contraparte = rol === 'profesional' ? data.carpinteria : data.profesional;
+      const nombreOtro = rol === 'profesional' ? 'Carpintería' : 'Profesional / Empresa';
+      detalle.textContent =
+        'Mi declaración: ' + textoSituacion(yo?.situacion) +
+        (yo?.informado_en ? ' (' + formatoFecha(yo.informado_en) + ')' : '') + '\n' +
+        nombreOtro + ': ' + textoSituacion(contraparte?.situacion) +
+        (contraparte?.informado_en ? ' (' + formatoFecha(contraparte.informado_en) + ')' : '');
+      selector.value = yo?.situacion || '';
+      guardar.disabled = false;
+    }
+
+    guardar.addEventListener('click', async () => {
+      if (ocupada || !selector.value || !etiquetas[selector.value]) {
+        mensaje.textContent = 'Seleccioná una situación antes de guardar.';
+        return;
+      }
+      ocupada = true;
+      guardar.disabled = true;
+      selector.disabled = true;
+      mensaje.textContent = 'Guardando declaración…';
+      try {
+        const { data, error } = await cliente.rpc('informar_situacion_cotizacion', {
+          p_cotizacion_id: cotizacionId,
+          p_situacion: selector.value
+        });
+        if (error || !data || data.cotizacion_id !== cotizacionId ||
+            data.situacion !== selector.value) {
+          throw error || new Error('El servidor no confirmó el resultado.');
+        }
+        await consultar();
+        mensaje.textContent = 'Situación registrada. La otra parte puede informar una situación distinta.';
+      } catch (error) {
+        mensaje.textContent = 'No pudimos confirmar el cambio. Recargá la pantalla y revisá el estado antes de reintentar.';
+        console.error('Error registrando situación comercial', error);
+      } finally {
+        ocupada = false;
+        selector.disabled = false;
+        guardar.disabled = false;
+      }
+    });
+    consultar().catch(error => {
+      detalle.textContent = 'No pudimos consultar las declaraciones.';
+      mensaje.textContent = 'Revisá la conexión; la cotización y sus archivos siguen conservados.';
+      guardar.disabled = true;
+      console.error('Error consultando situaciones comerciales', error);
+    });
+  };
+})();
+
+</script>
+<script>
 
 
 const sb =
@@ -1966,6 +2093,9 @@ async function cargarCotizaciones(
       tipoCotizacion
     );
 
+    // Declaraciones comerciales independientes; no alteran el presupuesto.
+    window.aluconectaCrearEstadoCotizacion(caja, cotizacion.id, "profesional", sb);
+
 
 
     if (
@@ -2337,6 +2467,41 @@ function crearEspecificacionProyecto(
 
 
 
+const cierresEnCurso = new Set();
+
+async function cerrarPublicacion(proyectoId, boton) {
+  const clave = String(proyectoId);
+  if (cierresEnCurso.has(clave)) return;
+  if (!window.confirm(
+    '¿Cerrar esta publicación? Dejará de recibir nuevos intereses y no podrás reabrirla ni editarla desde esta pantalla. Los intereses, autorizaciones, cotizaciones y archivos existentes se conservarán.'
+  )) return;
+
+  cierresEnCurso.add(clave);
+  boton.disabled = true;
+  try {
+    const { data, error } = await sb.rpc('cerrar_mi_publicacion', {
+      p_proyecto_id: proyectoId
+    });
+    if (error || String(data) !== clave) {
+      throw error || new Error('El cierre no devolvió el proyecto esperado.');
+    }
+    mostrarMensaje('Publicación cerrada. Se conservaron sus antecedentes comerciales.', 'ok');
+    try {
+      await cargarProyectos();
+    } catch (recargaError) {
+      console.error('Error al recargar proyectos después del cierre:', recargaError);
+      mostrarMensaje('Se confirmó el cierre, pero no pudimos actualizar la pantalla. Recargá la página.', 'error');
+    }
+  } catch (error) {
+    console.error('Error cerrando publicación:', error);
+    mostrarMensaje('No pudimos confirmar el cierre. Revisá el estado de la publicación antes de reintentar.', 'error');
+  } finally {
+    cierresEnCurso.delete(clave);
+    boton.disabled = false;
+  }
+}
+
+
 async function cargarProyectos() {
 
 
@@ -2542,13 +2707,31 @@ async function cargarProyectos() {
       )
     );
 
-    const editarProyecto = document.createElement('a');
-    editarProyecto.href = 'publicar-proyecto-edicion.html?editar=' + encodeURIComponent(proyecto.id);
-    editarProyecto.className = 'btn no';
-    editarProyecto.textContent = 'EDITAR PROYECTO';
-    editarProyecto.style.display = 'inline-block';
-    editarProyecto.style.margin = '12px 0';
-    caja.appendChild(editarProyecto);
+    if (proyecto.estado_publicacion === 'cerrada') {
+      const avisoCierre = document.createElement('div');
+      avisoCierre.className = 'info';
+      avisoCierre.textContent = 'PUBLICACIÓN CERRADA' +
+        (proyecto.cerrado_en ? ' · ' + fecha(proyecto.cerrado_en) : '') +
+        ' · No recibe nuevos intereses. Se conserva su historial.';
+      caja.appendChild(avisoCierre);
+    } else {
+      const editarProyecto = document.createElement('a');
+      editarProyecto.href = 'publicar-proyecto-edicion.html?editar=' + encodeURIComponent(proyecto.id);
+      editarProyecto.className = 'btn no';
+      editarProyecto.textContent = 'EDITAR PROYECTO';
+      editarProyecto.style.display = 'inline-block';
+      editarProyecto.style.margin = '12px 0';
+      caja.appendChild(editarProyecto);
+
+      const botonCerrar = document.createElement('button');
+      botonCerrar.type = 'button';
+      botonCerrar.className = 'btn no';
+      botonCerrar.textContent = 'CERRAR PUBLICACIÓN';
+      botonCerrar.style.display = 'inline-block';
+      botonCerrar.style.margin = '12px 0 12px 10px';
+      botonCerrar.addEventListener('click', () => cerrarPublicacion(proyecto.id, botonCerrar));
+      caja.appendChild(botonCerrar);
+    }
 
 
 
