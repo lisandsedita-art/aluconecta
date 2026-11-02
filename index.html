@@ -637,6 +637,29 @@
           animation: none;
         }
       }
+
+      footer .enlaces-legales {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px 22px;
+        margin-top: 24px;
+      }
+      footer .enlaces-legales a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin: 0;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.5;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      footer .enlaces-legales a:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+      }
     </style>
 
     <style>
@@ -789,11 +812,14 @@
             >Mis cotizaciones</a
           >
           <a href="editar-perfil.html" data-member hidden>Editar mi perfil</a>
+          <a href="admin.html" data-admin hidden>Administración</a>
+          <a href="admin-bajas.html" data-admin hidden>Solicitudes de baja</a>
+          <a href="cuenta.html" data-account hidden>Configuración de cuenta</a>
           <button
             type="button"
             id="logoutBtn"
             class="logout"
-            data-member
+            data-logout
             hidden
           >
             Cerrar sesión
@@ -843,6 +869,12 @@
               data-carpenter
               hidden
               >Mis cotizaciones</a
+            >
+            <a class="btn btn-main" href="admin.html" data-admin hidden
+              >PANEL ADMINISTRATIVO</a
+            >
+            <a class="btn btn-outline" href="admin-bajas.html" data-admin hidden
+              >Solicitudes de baja</a
             >
           </div>
           <p
@@ -1015,6 +1047,11 @@
           carpinterías de aluminio. No fabrica, no instala y no intermedia en
           pagos. Cada acuerdo es directo entre partes.
         </p>
+        <nav class="enlaces-legales" aria-label="Información legal">
+          <a href="terminos.html">Términos y Condiciones</a>
+          <a href="privacidad.html">Política de Privacidad</a>
+          <a href="verificacion.html">Política de Verificación</a>
+        </nav>
         <small>© 2026 AluConecta</small>
       </div>
     </footer>
@@ -1173,14 +1210,17 @@
           setGroup("[data-offline]", state === "error");
           $("publicIntro").hidden = !!user;
           setGroup("[data-public]", !user);
-          setGroup("[data-member]", !!user);
+          setGroup("[data-member]", state === "member");
+          setGroup("[data-account]", !!user && state !== "admin");
+          setGroup("[data-logout]", !!user);
+          setGroup("[data-admin]", state === "admin");
           setGroup("[data-professional]", state === "member" && professional);
           setGroup("[data-carpenter]", state === "member" && carpenter);
           $("profileLink").href = user
             ? "perfil.html?id=" + encodeURIComponent(user.id)
             : "perfil.html";
           retry.hidden = !["error", "profile-error"].includes(state);
-          status.hidden = ["guest", "member"].includes(state);
+          status.hidden = ["guest", "member", "admin"].includes(state);
           if (state === "loading")
             status.textContent = "Comprobando tu sesión…";
           if (state === "error")
@@ -1188,8 +1228,15 @@
               "No pudimos comprobar tu sesión. Revisá la conexión y reintentá. Si el problema continúa, escribinos desde Contacto.";
           if (state === "profile-error")
             status.textContent =
-              "Tu sesión está iniciada, pero no pudimos habilitar tus accesos. Reintentá o revisá tu perfil desde el menú. Si el problema continúa, escribinos a hola@aluconecta.com.ar.";
-          if (state === "member") closeModal();
+              "Tu sesión está iniciada, pero no pudimos habilitar tus accesos. Reintentá o revisá Configuración de cuenta desde el menú. Si el problema continúa, escribinos a hola@aluconecta.com.ar.";
+          if (state === "account-inactive")
+            status.textContent =
+              "Tu cuenta está desactivada. Para reactivarla, abrí Configuración de cuenta desde el menú.";
+          if (state === "account-pending")
+            status.textContent =
+              "Tu solicitud de baja está pendiente de tramitación. Podés consultar su estado en Configuración de cuenta.";
+          if (["member", "admin", "account-inactive", "account-pending"].includes(state))
+            closeModal();
         }
         function bounded(promise) {
           let timer;
@@ -1232,20 +1279,40 @@
             const result = await bounded(
               client
                 .from("perfiles")
-                .select("tipo_usuario")
+                .select("tipo_usuario,estado_cuenta")
                 .eq("id", user.id)
                 .maybeSingle(),
             );
             if (request !== revision) return;
-            const role = result.data?.tipo_usuario;
-            if (
-              result.error ||
-              (!professionalRoles.has(role) && role !== "carpintero")
-            ) {
+            if (result.error) {
               render("profile-error", user);
               return;
             }
-            render("member", user, role);
+            if (!result.data) {
+              // Los administradores no tienen perfil comercial. Su permiso
+              // se comprueba en el servidor; nunca se deduce del correo.
+              const { data: autorizado, error: errorAdmin } = await bounded(
+                client.rpc("es_administrador"),
+              );
+              if (request !== revision) return;
+              render(!errorAdmin && autorizado === true ? "admin" : "profile-error", user);
+              return;
+            }
+            const role = result.data.tipo_usuario;
+            if (!professionalRoles.has(role) && role !== "carpintero") {
+              render("profile-error", user);
+              return;
+            }
+            if (result.data.estado_cuenta === "activa") {
+              render("member", user, role);
+            } else if (result.data.estado_cuenta === "desactivada") {
+              render("account-inactive", user, role);
+            } else if (result.data.estado_cuenta === "baja_solicitada") {
+              render("account-pending", user, role);
+            } else {
+              // Estado desconocido: no habilitar accesos operativos.
+              render("profile-error", user);
+            }
           } catch (_) {
             if (request === revision)
               render(user ? "profile-error" : "error", user);
