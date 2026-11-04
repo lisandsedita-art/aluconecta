@@ -1730,16 +1730,9 @@ async function eliminarProyectoFallido(
   // Intentar cerrarlo evita que se anuncie una publicación incompleta.
   if (errores.includes('archivos')) {
     try {
-      const { data, error } = await sb
-        .from('proyectos')
-        .update({
-          estado_publicacion: 'cerrada',
-          cerrado_en: new Date().toISOString()
-        })
-        .eq('id', proyectoId)
-        .eq('publicado_por', usuarioActual.id)
-        .select('id')
-        .single();
+      const { data, error } = await sb.rpc('cerrar_mi_publicacion', {
+        p_proyecto_id: proyectoId
+      });
 
       if (error || !data) {
         throw error || new Error('No se confirmó el cierre del proyecto.');
