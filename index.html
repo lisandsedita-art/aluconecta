@@ -1465,6 +1465,15 @@ contactForm.addEventListener("submit", async (event) => {
         if (window.supabase?.createClient) boot();
       })();
     </script>
+    <script>
+      // PWA: activar el service worker sin almacenar datos privados.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' })
+            .catch(error => console.warn('AluConecta: service worker no disponible', error));
+        });
+      }
+    </script>
   </body>
 </html>
 
