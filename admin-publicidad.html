@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0f2e4d">
+  <title>Publicidad sectorial | Administración AluConecta</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <style>
+    :root{--azul:#0f2e4d;--celeste:#177a86;--fondo:#f5f8fa;--linea:#dbe5ec;--texto:#263b4c;--muted:#657789}
+    *{box-sizing:border-box}body{margin:0;background:var(--fondo);color:var(--texto);font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+    header{background:var(--azul);color:#fff}.header-inner{max-width:1000px;margin:auto;padding:18px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .marca{color:#fff;text-decoration:none;font-size:23px;font-weight:750}.marca span{color:#78d2dc}
+    main{max-width:1000px;margin:22px auto 50px;padding:0 16px}.card{background:white;border:1px solid var(--linea);border-radius:13px;padding:22px;margin:18px 0}
+    h1{margin:0 0 9px;font-size:26px;color:var(--azul)}h2{font-size:19px;color:var(--azul);margin:0 0 8px}p{margin:0 0 13px}
+    .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.full{grid-column:1/-1}
+    label{display:block;font-weight:650;margin:10px 0 5px}input,select,textarea{font:inherit;width:100%;padding:11px 12px;border:1px solid #bdcbd6;border-radius:8px;background:white;color:#173d58}
+    textarea{min-height:70px;resize:vertical}input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #7cbfc7;outline-offset:2px}
+    button,.btn{appearance:none;border:1px solid var(--azul);background:var(--azul);color:#fff;padding:10px 15px;border-radius:8px;font:650 14px/1.4 system-ui,Arial,sans-serif;cursor:pointer}
+    button:disabled{opacity:.56;cursor:wait}.secundario{background:white;color:var(--azul)}.acciones{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .estado{padding:12px;border-radius:8px;background:#eff7f9;color:#125364;border:1px solid #cee5e9;margin:12px 0}
+    .error{background:#fff1f0;color:#882f29;border-color:#e8c7c3}.ad{display:flex;align-items:center;gap:16px;border-top:1px solid var(--linea);padding:18px 0}
+    .ad img{width:140px;height:85px;object-fit:contain;background:#f6f8fa;border-radius:8px;flex:none}.ad-detalle{flex:1;min-width:0}
+    .ad-detalle h3{font-size:16px;margin:0;color:var(--azul)}.ad-detalle p{margin:4px 0}.meta{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+    .tag{display:inline-block;font-size:11px;font-weight:700;background:#e9f2f5;border-radius:25px;padding:3px 9px}
+    .ad .acciones{margin-top:8px}.sr-only{position:absolute!important;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}
+    .nota{border-left:3px solid var(--celeste);padding:8px 12px;background:#f0f8f9;font-size:13px}
+    [hidden]{display:none!important}@media(max-width:640px){.grid{grid-template-columns:1fr}.ad{display:block}.ad img{width:100%;max-height:155px;height:auto;margin-bottom:10px}.card{padding:16px}}
+  </style>
+</head>
+<body>
+  <header><div class="header-inner"><a class="marca" href="admin.html">Alu<span>Conecta</span></a><span>Administración privada</span></div></header>
+  <main>
+    <div class="acciones"><a href="admin.html">← Volver a administración</a></div>
+    <section class="card" id="acceso">
+      <h1>Acceso a publicidad</h1>
+      <p id="estadoAcceso" aria-live="polite">Verificando sesión, permisos administrativos y segundo factor…</p>
+      <div id="pasoMfa" hidden>
+        <p>Para administrar campañas confirmá tu identidad con un autenticador registrado.</p>
+        <label for="factor">Autenticador</label><select id="factor"></select>
+        <label for="codigo">Código de seis dígitos</label><input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+        <div class="acciones"><button type="button" id="verificarMfa">Confirmar código</button></div>
+      </div>
+    </section>
+    <div id="app" hidden>
+      <h1>Publicidad sectorial</h1>
+      <p class="muted">Preparación de campañas. Los anuncios nunca alteran búsquedas, autorizaciones ni cotizaciones.</p>
+      <section class="card">
+        <h2>Estado general</h2>
+        <p id="estadoGeneral" aria-live="polite">Consultando configuración…</p>
+        <div class="acciones"><button id="alternarPublicidad" type="button" class="secundario" disabled>Comprobando…</button></div>
+        <p class="nota" style="margin-top:15px">El sistema nace desactivado. Activarlo requiere confirmación expresa. Una campaña solo se muestra si también está activa y dentro de sus fechas.</p>
+      </section>
+      <section class="card">
+        <h2 id="tituloFormulario">Nueva campaña</h2>
+        <p class="muted">Solo proveedores de materias primas, insumos y componentes para fabricar aberturas de aluminio. Confirmá previamente que el anunciante cumple los Términos de AluConecta.</p>
+        <form id="formCampania">
+          <div class="grid">
+            <div><label for="anunciante">Empresa anunciante</label><input id="anunciante" name="anunciante" maxlength="120" required></div>
+            <div><label for="titulo">Título visible</label><input id="titulo" name="titulo" maxlength="120" required></div>
+            <div class="full"><label for="descripcion">Descripción breve (opcional)</label><textarea id="descripcion" name="descripcion" maxlength="300"></textarea></div>
+            <div class="full"><label for="url_destino">Enlace HTTPS al sitio del anunciante</label><input type="url" id="url_destino" name="url_destino" placeholder="https://www.ejemplo.com.ar" required></div>
+            <div><label for="ubicacion">Ubicación</label><select id="ubicacion" name="ubicacion"><option value="portada">Portada</option><option value="panel_carpintero">Panel de carpinterías</option><option value="panel_profesional">Panel de profesionales</option></select></div>
+            <div><label for="estado">Estado de la campaña</label><select id="estado" name="estado"><option value="borrador">Borrador (no visible)</option><option value="activa">Activa (sujeta a fechas)</option><option value="pausada">Pausada (no visible)</option></select></div>
+            <div><label for="inicio">Inicio programado</label><input id="inicio" name="inicio" type="datetime-local" required></div>
+            <div><label for="fin">Finalización programada</label><input id="fin" name="fin" type="datetime-local" required></div>
+            <div><label for="prioridad">Prioridad (0 a 100)</label><input id="prioridad" name="prioridad" type="number" min="0" max="100" value="0" required></div>
+            <div><label for="imagen">Imagen PNG, JPG o WEBP (máx. 2 MB)</label><input id="imagen" name="imagen" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="ayudaImagen"><span id="ayudaImagen" class="muted">Necesaria al crear. Para editar, dejá vacío y se conserva la imagen actual.</span></div>
+          </div>
+          <div class="acciones"><button id="guardar" type="submit">Guardar campaña</button><button id="cancelarEdicion" type="button" class="secundario" hidden>Cancelar edición</button></div>
+        </form>
+      </section>
+      <section class="card"><h2>Campañas registradas</h2><p class="muted">La lista incluye campañas en borrador, activas, pausadas, futuras y vencidas.</p><div id="lista" aria-live="polite">Consultando…</div></section>
+      <div id="mensaje" class="estado" role="status" aria-live="polite" hidden></div>
+    </div>
+  </main>
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  'use strict';
+  const URL_SB = 'https://wroaxwjyjrxzwctfkyoo.supabase.co';
+  const CLAVE = 'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
+  const BUCKET = 'alu-publicidad';
+  const $ = id => document.getElementById(id);
+  let sb, campanias = [], actual = null, habilitada = false, reto = null;
+  const fechaLegible = iso => new Date(iso).toLocaleString('es-AR', {dateStyle:'short', timeStyle:'short'});
+  const aLocal = iso => { const d = new Date(iso); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16); };
+  const hora = local => { const d = new Date(local); return Number.isNaN(d.getTime()) ? null : d.toISOString(); };
+
+  function aviso(texto, error = false) {
+    $('mensaje').hidden = false;
+    $('mensaje').className = 'estado' + (error ? ' error' : '');
+    $('mensaje').textContent = texto;
+  }
+  async function permisos() {
+    const {data: usuario, error: eUsuario} = await sb.auth.getUser();
+    if (eUsuario || !usuario?.user) throw new Error('Iniciá sesión con una cuenta administrativa.');
+    const {data: esAdmin, error: eAdmin} = await sb.rpc('es_administrador');
+    if (eAdmin || esAdmin !== true) throw new Error('Esta cuenta no tiene permisos administrativos.');
+    const {data: nivel, error: eNivel} = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (eNivel) throw new Error('No se pudo comprobar el segundo factor.');
+    return nivel.currentLevel === 'aal2';
+  }
+  async function mostrarMfa() {
+    const {data: factores, error} = await sb.auth.mfa.listFactors();
+    if (error) throw error;
+    const disponibles = (factores.totp || []).filter(f => f.status === 'verified');
+    if (!disponibles.length) throw new Error('No hay autenticadores verificados. Configurá MFA desde administración.');
+    $('factor').replaceChildren();
+    disponibles.forEach((f, i) => {const op=document.createElement('option');op.value=f.id;op.textContent=f.friendly_name || `Autenticador ${i+1}`;$('factor').append(op);});
+    $('pasoMfa').hidden = false;
+    $('estadoAcceso').textContent = 'Confirmá tu identidad para acceder.';
+  }
+  $('verificarMfa').addEventListener('click', async () => {
+    const codigo = $('codigo').value.trim();
+    if (!/^\d{6}$/.test(codigo)) { $('estadoAcceso').textContent = 'Ingresá un código de seis dígitos.'; return; }
+    $('verificarMfa').disabled = true;
+    try {
+      const factorId = $('factor').value;
+      const {data:challenge,error:ec} = await sb.auth.mfa.challenge({factorId});
+      if (ec) throw ec;
+      reto = challenge.id;
+      const {error:ev} = await sb.auth.mfa.verify({factorId, challengeId:reto, code:codigo});
+      if (ev) throw ev;
+      reto=null;
+      if (!(await permisos())) throw new Error('No se confirmó el segundo factor.');
+      $('pasoMfa').hidden=true;
+      await entrar();
+    } catch (error) {
+      $('estadoAcceso').textContent='No se pudo confirmar el código. Revisalo e intentá nuevamente.';
+    } finally { $('verificarMfa').disabled=false; }
+  });
+
+  async function entrar() {
+    $('acceso').hidden = true;
+    $('app').hidden = false;
+    await cargar();
+  }
+
+  async function cargar() {
+    const [config, ads] = await Promise.all([
+      sb.from('publicidad_configuracion').select('habilitada').eq('id',1).single(),
+      sb.from('publicidad_campanias').select('*').order('creado_en',{ascending:false})
+    ]);
+    if (config.error || ads.error) {
+      $('lista').textContent = 'No se pudo leer el módulo. Verificá que el SQL esté instalado y los permisos sean correctos.';
+      $('estadoGeneral').textContent = 'Error de configuración';
+      $('alternarPublicidad').disabled = true;
+      return;
+    }
+    habilitada = config.data.habilitada;
+    campanias = ads.data || [];
+    $('estadoGeneral').textContent = habilitada ? 'Habilitada: se pueden mostrar campañas vigentes y activas.' : 'Desactivada: ningún anuncio puede mostrarse.';
+    $('alternarPublicidad').disabled = false;
+    $('alternarPublicidad').textContent = habilitada ? 'Desactivar toda la publicidad' : 'Habilitar publicidad';
+    renderizar();
+  }
+
+  function renderizar() {
+    $('lista').replaceChildren();
+    if (!campanias.length) { $('lista').textContent = 'Todavía no hay campañas.'; return; }
+    campanias.forEach(c => {
+      const fila = document.createElement('article'); fila.className = 'ad';
+      const imagen = document.createElement('img');
+      imagen.alt = `Creatividad de ${c.anunciante}`;
+      imagen.src = sb.storage.from(BUCKET).getPublicUrl(c.imagen_ruta).data.publicUrl;
+      const detalle = document.createElement('div'); detalle.className='ad-detalle';
+      const titulo=document.createElement('h3'); titulo.textContent=c.titulo;
+      const subtitulo=document.createElement('p'); subtitulo.textContent=c.anunciante;
+      const datos=document.createElement('div'); datos.className='meta';
+      const ahora=Date.now(), empieza=Date.parse(c.inicio_en), termina=Date.parse(c.fin_en);
+      const estadoTiempo= termina<=ahora ? 'Vencida' : empieza>ahora ? 'Programada' : 'Dentro de fechas';
+      const nombres={portada:'Portada',panel_carpintero:'Carpinterías',panel_profesional:'Profesionales'};
+      datos.textContent=`${nombres[c.ubicacion]||c.ubicacion} · ${fechaLegible(c.inicio_en)} a ${fechaLegible(c.fin_en)} · ${estadoTiempo}`;
+      const tag=document.createElement('span');tag.className='tag';tag.textContent=c.estado;
+      const acciones=document.createElement('div');acciones.className='acciones';
+      const editar=document.createElement('button');editar.type='button';editar.className='secundario';editar.textContent='Editar';
+      editar.addEventListener('click',()=>editarCampania(c));
+      const pausar=document.createElement('button');pausar.type='button';pausar.className='secundario';pausar.textContent='Pausar';
+      pausar.disabled=c.estado==='pausada';
+      pausar.addEventListener('click',()=>pausarCampania(c));
+      acciones.append(editar,pausar);
+      detalle.append(titulo,subtitulo,datos,tag,acciones);
+      fila.append(imagen,detalle);$('lista').append(fila);
+    });
+  }
+
+  function editarCampania(c) {
+    actual=c;
+    for (const clave of ['anunciante','titulo','descripcion','url_destino','ubicacion','estado','prioridad']) $(clave).value=c[clave];
+    $('inicio').value=aLocal(c.inicio_en); $('fin').value=aLocal(c.fin_en);
+    $('imagen').value=''; $('tituloFormulario').textContent='Editar campaña';
+    $('guardar').textContent='Guardar cambios'; $('cancelarEdicion').hidden=false;
+    $('formCampania').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function limpiar() {
+    actual=null;$('formCampania').reset();$('prioridad').value=0;$('estado').value='borrador';
+    $('tituloFormulario').textContent='Nueva campaña';$('guardar').textContent='Guardar campaña';$('cancelarEdicion').hidden=true;
+  }
+  $('cancelarEdicion').addEventListener('click',limpiar);
+
+  async function pausarCampania(c) {
+    if (!window.confirm(`¿Pausar la campaña de ${c.anunciante}?`)) return;
+    const {error}=await sb.from('publicidad_campanias').update({estado:'pausada',actualizado_en:new Date().toISOString()}).eq('id',c.id);
+    if (error) aviso('No se pudo pausar la campaña.',true);
+    else {aviso('Campaña pausada.');await cargar();}
+  }
+  $('alternarPublicidad').addEventListener('click',async () => {
+    const nuevo=!habilitada;
+    if (!window.confirm(nuevo ? '¿Habilitar publicidad en AluConecta? Solo serán visibles campañas activas y vigentes.' : '¿Desactivar toda la publicidad inmediatamente?')) return;
+    $('alternarPublicidad').disabled=true;
+    const {error}=await sb.from('publicidad_configuracion').update({habilitada:nuevo,actualizado_en:new Date().toISOString()}).eq('id',1);
+    if(error) aviso('No se pudo cambiar el estado general.',true);
+    else aviso(nuevo?'Publicidad habilitada.':'Publicidad desactivada.');
+    await cargar();
+  });
+  $('formCampania').addEventListener('submit',async evento => {
+    evento.preventDefault();
+    const boton=$('guardar');boton.disabled=true;
+    let nuevaRuta=null;
+    try {
+      const url=new URL($('url_destino').value.trim());
+      if (url.protocol!=='https:') throw new Error('El enlace debe comenzar con https://');
+      const inicio=hora($('inicio').value),fin=hora($('fin').value);
+      if(!inicio||!fin||new Date(fin)<=new Date(inicio)) throw new Error('La fecha de finalización debe ser posterior al inicio.');
+      const archivo=$('imagen').files[0];
+      if(!actual&&!archivo) throw new Error('Seleccioná una imagen para crear la campaña.');
+      let ruta=actual?.imagen_ruta || null;
+      if(archivo) {
+        const extensiones={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
+        const ext=extensiones[archivo.type];
+        if(!ext||archivo.size>2097152||archivo.size===0) throw new Error('Imagen inválida. Se admite PNG, JPG o WEBP de hasta 2 MB.');
+        nuevaRuta=crypto.randomUUID()+'.'+ext;
+        const {error:subida}=await sb.storage.from(BUCKET).upload(nuevaRuta,archivo,{contentType:archivo.type,cacheControl:'3600',upsert:false});
+        if(subida) throw subida;
+        ruta=nuevaRuta;
+      }
+      const registro={
+        anunciante:$('anunciante').value.trim(),titulo:$('titulo').value.trim(),descripcion:$('descripcion').value.trim(),
+        url_destino:url.href,imagen_ruta:ruta,ubicacion:$('ubicacion').value,estado:$('estado').value,
+        inicio_en:inicio,fin_en:fin,prioridad:Number($('prioridad').value),actualizado_en:new Date().toISOString()
+      };
+      const consulta=actual
+        ? sb.from('publicidad_campanias').update(registro).eq('id',actual.id)
+        : sb.from('publicidad_campanias').insert(registro);
+      const {error}=await consulta;
+      if(error) throw error;
+      aviso('Campaña guardada correctamente.');
+      limpiar();await cargar();
+    } catch(error) {
+      // La política de Storage no permite borrar archivos desde el navegador.
+      // Si falló después de subir, el archivo huérfano debe depurarse desde Supabase.
+      aviso((error?.message || 'No se pudo guardar la campaña.')+(nuevaRuta?' Revisá el archivo cargado en Supabase Storage si falló el registro.':''),true);
+    } finally {boton.disabled=false;}
+  });
+
+  try {
+    if (!window.supabase?.createClient) throw new Error('No se pudo cargar Supabase.');
+    sb=window.supabase.createClient(URL_SB,CLAVE);
+    if (await permisos()) await entrar(); else await mostrarMfa();
+  } catch (error) { $('estadoAcceso').textContent=error?.message || 'Acceso no disponible.'; }
+});
+</script>
+</body>
+</html>
