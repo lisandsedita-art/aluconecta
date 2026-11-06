@@ -93,6 +93,17 @@
         <div class="acciones"><button type="button" class="secundario" id="botonCancelarBaja" data-accion="cancelar_baja" disabled>Cancelar solicitud de baja</button></div>
         <p class="ayuda" id="plazoCancelarBaja">Comprobando el plazo de cancelación…</p>
       </section>
+      <section class="card" id="zonaSituacionesBaja" hidden aria-labelledby="tituloSituacionesBaja">
+        <h2 id="tituloSituacionesBaja">Resolver situaciones de cotizaciones existentes</h2>
+        <p>Mientras se tramita tu baja, podés consultar las declaraciones de ambas partes e informar qué ocurrió con tus cotizaciones anteriores. Esta opción no permite presentar nuevas cotizaciones ni modifica sus documentos.</p>
+        <p class="ayuda">Para que el cierre automático pueda avanzar, ambas partes deben declarar la misma situación final cuando corresponda. Informá únicamente lo que realmente ocurrió.</p>
+        <p id="estadoCotizacionesBaja" role="status" aria-live="polite"></p>
+        <div id="listaCotizacionesBaja"></div>
+        <div class="acciones">
+          <button class="secundario" type="button" id="actualizarCotizacionesBaja">Actualizar cotizaciones</button>
+          <button class="secundario" type="button" id="masCotizacionesBaja" hidden>Mostrar más cotizaciones</button>
+        </div>
+      </section>
       <section class="card" id="zonaRecuperacionBaja" hidden aria-labelledby="tituloRecuperacionBaja">
         <h2 id="tituloRecuperacionBaja">Resolver el estado de tu cuenta</h2>
         <p>No encontramos una solicitud registrada para el estado de baja que tiene tu cuenta. Elegí cómo continuar: podés recuperar el estado anterior o confirmar una nueva solicitud, que comenzará un plazo completo de 72 horas. El sistema no eliminará tu cuenta por esta inconsistencia.</p>
@@ -184,7 +195,7 @@
         args: { p_accion: 'confirmar_baja' }
       }
     };
-    let cliente = null, estadoActual = null, opcionActual = null, ocupado = false;
+    let cliente = null, estadoActual = null, tipoUsuarioActual = null, opcionActual = null, ocupado = false;
     const modal = $('confirmacion');
     const aceptar = $('aceptar');
     function mensaje(texto, error = false) {
@@ -204,6 +215,14 @@
       $('zonaDesactivada').hidden = estado !== 'desactivada';
       $('zonaBaja').hidden = estado !== 'activa' && estado !== 'desactivada';
       $('zonaPendiente').hidden = estado !== 'baja_solicitada';
+      $('zonaSituacionesBaja').hidden = estado !== 'baja_solicitada';
+      if (estado === 'baja_solicitada') {
+        cargarCotizacionesBaja(true);
+      } else {
+        revisionCotizacionesBaja++;
+        $('listaCotizacionesBaja').replaceChildren();
+        $('estadoCotizacionesBaja').textContent = '';
+      }
       $('zonaRecuperacionBaja').hidden = true;
       $('tituloSolicitudBaja').textContent = 'Solicitud de baja recibida';
       $('textoSolicitudBaja').innerHTML = textoSolicitudBajaOriginal;
@@ -212,6 +231,221 @@
       $('zonaDiagnostico').hidden = !['activa', 'desactivada', 'baja_solicitada'].includes(estado);
       $('zonaOrientacion').hidden = true;
     }
+    // Acceso excepcional durante la baja: solo declaraciones de cotizaciones previas.
+    // La consulta de filas está restringida por RLS y ambas RPC validan la contraparte.
+    const situacionesBaja = {
+      pendiente: 'Pendiente de resolver',
+      sin_acuerdo: 'No se llegó a un acuerdo',
+      acuerdo_informado: 'Acuerdo informado',
+      trabajo_finalizado: 'Trabajo finalizado'
+    };
+    const paginaCotizacionesBaja = 25;
+    let revisionCotizacionesBaja = 0;
+    let siguienteCotizacionBaja = 0;
+
+    function textoSituacionBaja(valor) {
+      return situacionesBaja[valor] || 'No informado';
+    }
+    function fechaCotizacionBaja(valor) {
+      if (!valor) return 'sin fecha informada';
+      const fecha = new Date(valor);
+      if (Number.isNaN(fecha.getTime())) return 'sin fecha informada';
+      return fecha.toLocaleDateString('es-AR');
+    }
+    function crearDeclaracionBaja(cotizacion) {
+      const detalle = document.createElement('details');
+      detalle.className = 'detalle-diagnostico';
+      detalle.style.marginBottom = '10px';
+      const resumen = document.createElement('summary');
+      resumen.style.cursor = 'pointer';
+      resumen.style.fontWeight = '700';
+      resumen.textContent = 'Proyecto Nº ' + cotizacion.obra_id +
+        ' · Cotización del ' + fechaCotizacionBaja(cotizacion.created_at) +
+        ' · Ref. ' + cotizacion.id.slice(0, 8);
+      detalle.append(resumen);
+
+      const estado = document.createElement('p');
+      estado.className = 'ayuda';
+      estado.style.marginTop = '12px';
+      estado.setAttribute('role', 'status');
+      estado.setAttribute('aria-live', 'polite');
+      const formulario = document.createElement('div');
+      formulario.hidden = true;
+      const leyenda = document.createElement('p');
+      leyenda.className = 'ayuda';
+      leyenda.textContent = 'Cada parte informa su propia situación. Las declaraciones no constituyen aceptación contractual ni eliminan documentos.';
+      const etiqueta = document.createElement('label');
+      const selector = document.createElement('select');
+      selector.id = 'situacionBaja_' + cotizacion.id;
+      selector.style.cssText = 'display:block;width:100%;max-width:390px;min-height:42px;padding:8px;margin:5px 0 10px;border:1px solid #a7bacb;border-radius:7px;font:inherit;background:#fff;color:inherit;';
+      etiqueta.htmlFor = selector.id;
+      etiqueta.textContent = 'Informar mi situación:';
+      const primera = document.createElement('option');
+      primera.value = '';
+      primera.textContent = 'Elegí una situación';
+      selector.append(primera);
+      Object.entries(situacionesBaja).forEach(([codigo, texto]) => {
+        const opcion = document.createElement('option');
+        opcion.value = codigo;
+        opcion.textContent = texto;
+        selector.append(opcion);
+      });
+      const guardar = document.createElement('button');
+      guardar.type = 'button';
+      guardar.className = 'primario';
+      guardar.textContent = 'Guardar mi declaración';
+      guardar.disabled = true;
+      const consultarBoton = document.createElement('button');
+      consultarBoton.type = 'button';
+      consultarBoton.className = 'secundario';
+      consultarBoton.textContent = 'Volver a consultar';
+      const acciones = document.createElement('div');
+      acciones.className = 'acciones';
+      acciones.append(guardar, consultarBoton);
+      const mensajeDeclaracion = document.createElement('p');
+      mensajeDeclaracion.setAttribute('role', 'status');
+      mensajeDeclaracion.setAttribute('aria-live', 'polite');
+      mensajeDeclaracion.style.marginTop = '10px';
+      formulario.append(leyenda, etiqueta, selector, acciones, mensajeDeclaracion);
+      detalle.append(estado, formulario);
+
+      let cargada = false;
+      let procesando = false;
+      async function consultarDeclaraciones() {
+        cargada = false;
+        guardar.disabled = true;
+        estado.textContent = 'Consultando las declaraciones…';
+        const { data, error } = await cliente.rpc('consultar_situaciones_cotizacion', {
+          p_cotizacion_id: cotizacion.id
+        });
+        if (error) throw error;
+        if (!data || data.cotizacion_id !== cotizacion.id) {
+          throw new Error('El servidor no confirmó la cotización consultada.');
+        }
+        if (estadoActual !== 'baja_solicitada') return;
+        const esCarpinteria = tipoUsuarioActual === 'carpintero';
+        const propio = esCarpinteria ? data.carpinteria : data.profesional;
+        const otro = esCarpinteria ? data.profesional : data.carpinteria;
+        const etiquetaOtro = esCarpinteria ? 'Profesional / Empresa' : 'Carpintería';
+        estado.textContent = 'Mi declaración: ' + textoSituacionBaja(propio?.situacion) +
+          ' · ' + etiquetaOtro + ': ' + textoSituacionBaja(otro?.situacion);
+        selector.value = propio?.situacion || '';
+        formulario.hidden = false;
+        guardar.disabled = false;
+        cargada = true;
+      }
+      async function actualizarDeclaraciones() {
+        if (procesando || estadoActual !== 'baja_solicitada') return;
+        procesando = true;
+        consultarBoton.disabled = true;
+        guardar.disabled = true;
+        mensajeDeclaracion.textContent = '';
+        try {
+          await consultarDeclaraciones();
+        } catch (error) {
+          estado.textContent = 'No pudimos consultar las declaraciones de esta cotización.';
+          mensajeDeclaracion.textContent = 'Revisá la conexión e intentá nuevamente. No se modificó ninguna cotización.';
+          console.error('Error al consultar declaraciones durante baja', error);
+        } finally {
+          procesando = false;
+          consultarBoton.disabled = false;
+        }
+      }
+      detalle.addEventListener('toggle', () => {
+        if (detalle.open && !cargada) actualizarDeclaraciones();
+      });
+      consultarBoton.addEventListener('click', actualizarDeclaraciones);
+      guardar.addEventListener('click', async () => {
+        if (procesando || estadoActual !== 'baja_solicitada') return;
+        const situacion = selector.value;
+        if (!Object.prototype.hasOwnProperty.call(situacionesBaja, situacion)) {
+          mensajeDeclaracion.textContent = 'Elegí una situación antes de guardar.';
+          return;
+        }
+        procesando = true;
+        guardar.disabled = true;
+        consultarBoton.disabled = true;
+        selector.disabled = true;
+        mensajeDeclaracion.textContent = 'Guardando declaración…';
+        try {
+          const { data, error } = await cliente.rpc('informar_situacion_cotizacion', {
+            p_cotizacion_id: cotizacion.id,
+            p_situacion: situacion
+          });
+          if (error) throw error;
+          if (!data || data.cotizacion_id !== cotizacion.id || data.situacion !== situacion) {
+            throw new Error('El servidor no confirmó el registro.');
+          }
+          await consultarDeclaraciones();
+          mensajeDeclaracion.textContent = 'Declaración registrada. La otra parte puede informar una situación diferente. La baja seguirá los controles del servidor.';
+        } catch (error) {
+          mensajeDeclaracion.textContent = 'No pudimos confirmar el resultado. Usá «Volver a consultar» antes de volver a guardar.';
+          console.error('Error al declarar situación durante baja', error);
+        } finally {
+          procesando = false;
+          selector.disabled = false;
+          consultarBoton.disabled = false;
+          guardar.disabled = !cargada || estadoActual !== 'baja_solicitada';
+        }
+      });
+      return detalle;
+    }
+
+    async function cargarCotizacionesBaja(reiniciar = false) {
+      if (estadoActual !== 'baja_solicitada' || !cliente) return;
+      const zona = $('zonaSituacionesBaja');
+      const lista = $('listaCotizacionesBaja');
+      const estado = $('estadoCotizacionesBaja');
+      const actualizar = $('actualizarCotizacionesBaja');
+      const mas = $('masCotizacionesBaja');
+      const revision = ++revisionCotizacionesBaja;
+      if (reiniciar) {
+        siguienteCotizacionBaja = 0;
+        lista.replaceChildren();
+      }
+      const desde = siguienteCotizacionBaja;
+      estado.textContent = 'Consultando cotizaciones existentes…';
+      actualizar.disabled = true;
+      mas.disabled = true;
+      mas.hidden = true;
+      try {
+        if (!['carpintero', 'profesional'].includes(tipoUsuarioActual)) {
+          throw new Error('No pudimos comprobar tu rol.');
+        }
+        const { data, count, error } = await cliente.from('cotizaciones')
+          .select('id,obra_id,created_at', { count: 'exact' })
+          .order('created_at', { ascending: false })
+          .order('id', { ascending: false })
+          .range(desde, desde + paginaCotizacionesBaja - 1);
+        if (revision !== revisionCotizacionesBaja || zona.hidden) return;
+        if (error) throw error;
+        if (!Array.isArray(data) || !Number.isSafeInteger(count)) {
+          throw new Error('No pudimos confirmar el listado.');
+        }
+        for (const cotizacion of data) {
+          if (typeof cotizacion.id !== 'string') continue;
+          lista.append(crearDeclaracionBaja(cotizacion));
+        }
+        siguienteCotizacionBaja = desde + data.length;
+        estado.textContent = count === 0
+          ? 'No encontramos cotizaciones accesibles para declarar. Si tu diagnóstico indica antecedentes, contactá a AluConecta.'
+          : 'Mostrando ' + siguienteCotizacionBaja + ' de ' + count + ' cotización(es) vinculada(s) a tu cuenta. Abrí cada una para consultar o informar la situación.';
+        mas.hidden = siguienteCotizacionBaja >= count || data.length === 0;
+      } catch (error) {
+        if (revision !== revisionCotizacionesBaja || zona.hidden) return;
+        estado.textContent = 'No pudimos consultar tus cotizaciones existentes. Podés volver a intentarlo desde aquí.';
+        mas.hidden = true;
+        console.error('Error al listar cotizaciones durante baja', error);
+      } finally {
+        if (revision === revisionCotizacionesBaja) {
+          actualizar.disabled = false;
+          mas.disabled = false;
+        }
+      }
+    }
+    $('actualizarCotizacionesBaja').addEventListener('click', () => cargarCotizacionesBaja(true));
+    $('masCotizacionesBaja').addEventListener('click', () => cargarCotizacionesBaja());
+
     function numeroVinculos(valor) {
       const numero = Number(valor);
       return Number.isSafeInteger(numero) && numero >= 0 ? numero : 0;
@@ -277,7 +511,9 @@
         paso('Revisá si los intereses y autorizaciones asociados dieron lugar a algún compromiso pendiente. Su existencia no demuestra por sí sola un acuerdo y no necesitás eliminarlos.');
       }
       if (presupuestos) {
-        paso('Comprobá si las cotizaciones recibidas o enviadas tienen acuerdos pendientes. Si necesitás cerrar una operación, explicanos cuál es la situación para que podamos revisarla.');
+        paso(pendiente
+          ? 'Consultá las declaraciones en «Resolver situaciones de cotizaciones existentes» e informá lo que ocurrió. No necesitás cancelar la solicitud de baja.'
+          : 'Comprobá si las cotizaciones recibidas o enviadas tienen acuerdos pendientes. Si necesitás cerrar una operación, informá cuál es la situación.');
       }
       if (documentos) {
         paso('Hay documentación o contactos asociados. No borres archivos para acelerar la baja: se revisará cuáles deben conservarse y cuáles pueden eliminarse.');
@@ -407,9 +643,10 @@
           return;
         }
         const { data, error } = await cliente.from('perfiles')
-          .select('estado_cuenta').eq('id', usuario.user.id).maybeSingle();
+          .select('estado_cuenta,tipo_usuario').eq('id', usuario.user.id).maybeSingle();
         if (error) throw error;
         if (!data || !mensajes[data.estado_cuenta]) throw new Error('Estado de cuenta desconocido.');
+        tipoUsuarioActual = data.tipo_usuario;
         mostrarEstado(data.estado_cuenta, usuario.user.email);
         mensaje('');
         await cargarDiagnostico();
@@ -533,7 +770,7 @@
   explicarSituaciones(zona,
     'Si tenés cotizaciones, para que el cierre automático pueda avanzar ambas partes deben informar, en cada una, la misma situación final: «No se llegó a un acuerdo» o «Trabajo finalizado». «Pendiente de resolver» y «Acuerdo informado» no son situaciones finales. Informá lo que realmente ocurrió; podés solicitar la baja aunque queden situaciones pendientes, pero el cierre podría demorarse. No borres los documentos compartidos.');
   explicarSituaciones(zonaPendiente,
-    'Si hay cotizaciones asociadas, ambas partes deben declarar la misma situación final («No se llegó a un acuerdo» o «Trabajo finalizado») para que el sistema pueda evaluar el cierre automático. Si no podés completar una declaración porque tu cuenta ya tiene la baja solicitada, contactá a AluConecta; no necesitás cancelar la solicitud ni borrar los archivos.');
+    'Si hay cotizaciones asociadas, consultá y completá tus declaraciones en «Resolver situaciones de cotizaciones existentes». Ambas partes deben informar la misma situación final («No se llegó a un acuerdo» o «Trabajo finalizado») para que el sistema pueda evaluar el cierre automático. No necesitás cancelar la solicitud ni borrar los archivos.');
 
   const botonOriginal = zona?.querySelector('button[data-accion="baja"]');
   if (!zona || !botonOriginal || !window.supabase?.createClient) return;
