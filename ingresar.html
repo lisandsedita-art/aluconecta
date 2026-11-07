@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
   <title>Ingresar - AluConecta</title>
-
   <style>
-
     * {
       box-sizing: border-box;
     }
-
     :root {
       --azul: #0f2e4d;
       --celeste: #5bc0de;
@@ -28,7 +22,6 @@
       --suave: #64748b;
       --borde: #dfe5ea;
     }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -36,34 +29,28 @@
       background: var(--fondo);
       color: var(--texto);
     }
-
     header {
       background: var(--azul);
       color: white;
       text-align: center;
       padding: 36px 20px 44px;
     }
-
     .marca {
       margin-bottom: 24px;
       font-size: 21px;
       font-weight: 800;
     }
-
     .marca span {
       color: var(--celeste);
     }
-
     header h1 {
       margin: 0 0 12px;
       font-size: 32px;
       line-height: 1.15;
     }
-
     header h1 span {
       color: var(--amarillo);
     }
-
     header p {
       max-width: 560px;
       margin: 0 auto;
@@ -71,14 +58,12 @@
       font-size: 15px;
       line-height: 1.6;
     }
-
     .contenedor {
       width: calc(100% - 32px);
       max-width: 500px;
       margin: -22px auto 35px;
       position: relative;
     }
-
     .tarjeta {
       background: var(--blanco);
       padding: 30px;
@@ -86,14 +71,12 @@
       border-radius: 18px;
       box-shadow: 0 8px 25px rgba(15,46,77,.09);
     }
-
     h2 {
       margin: 0 0 8px;
       text-align: center;
       color: var(--azul);
       font-size: 23px;
     }
-
     .intro {
       margin: 0 0 27px;
       text-align: center;
@@ -101,11 +84,9 @@
       font-size: 14px;
       line-height: 1.55;
     }
-
     .campo {
       margin-bottom: 19px;
     }
-
     label {
       display: block;
       margin-bottom: 7px;
@@ -113,7 +94,6 @@
       font-size: 12px;
       font-weight: 800;
     }
-
     input {
       width: 100%;
       min-height: 50px;
@@ -124,21 +104,18 @@
       color: var(--texto);
       font-size: 16px;
     }
-
     input:focus {
-      outline: none;
+      outline: 2px solid var(--azul);
+      outline-offset: 2px;
       border-color: var(--celeste);
       box-shadow: 0 0 0 3px rgba(91,192,222,.12);
     }
-
     .password-contenedor {
       position: relative;
     }
-
     #password {
       padding-right: 50px;
     }
-
     .ver-password {
       position: absolute;
       right: 9px;
@@ -154,16 +131,13 @@
       display: grid;
       place-items: center;
     }
-
     .ver-password svg {
       width: 21px;
       height: 21px;
     }
-
     .ver-password:hover {
       background: #f1f5f9;
     }
-
     .olvido {
       display: block;
       width: fit-content;
@@ -173,12 +147,10 @@
       font-size: 13px;
       font-weight: 700;
     }
-
     .olvido:hover,
     .enlace:hover {
       text-decoration: underline;
     }
-
     .boton {
       width: 100%;
       min-height: 52px;
@@ -191,16 +163,13 @@
       font-weight: 800;
       cursor: pointer;
     }
-
     .boton:hover {
       background: var(--amarillo-hover);
     }
-
     .boton:disabled {
       opacity: .65;
       cursor: wait;
     }
-
     .mensaje {
       display: none;
       margin-top: 20px;
@@ -210,17 +179,14 @@
       font-size: 14px;
       line-height: 1.5;
     }
-
     .mensaje.error {
       background: #fee2e2;
       color: #991b1b;
     }
-
     .mensaje.exito {
       background: #dcfce7;
       color: #166534;
     }
-
     .registro {
       margin-top: 27px;
       padding-top: 23px;
@@ -230,18 +196,15 @@
       font-size: 14px;
       line-height: 1.6;
     }
-
     .enlace {
       color: var(--azul);
       text-decoration: none;
       font-weight: 800;
     }
-
     .crear {
       display: inline-block;
       margin-top: 5px;
     }
-
     .volver {
       display: block;
       width: fit-content;
@@ -251,7 +214,6 @@
       font-size: 14px;
       font-weight: 700;
     }
-
     footer {
       margin-top: 35px;
       padding: 28px 20px;
@@ -261,74 +223,49 @@
       font-size: 13px;
       line-height: 1.7;
     }
-
     @media (max-width: 550px) {
-
       header {
         padding: 30px 18px 40px;
       }
-
       header h1 {
         font-size: 28px;
       }
-
       .contenedor {
         width: calc(100% - 24px);
       }
-
       .tarjeta {
         padding: 23px 20px;
       }
-
     }
-
   </style>
 </head>
-
-
 <body>
-
-
 <header>
-
   <div class="marca">
     Alu<span>Conecta</span>
   </div>
-
   <h1>
     Ingresá a <span>AluConecta</span>
   </h1>
-
   <p>
     Accedé a tu espacio profesional y continuá
     gestionando tus proyectos, oportunidades y contactos.
   </p>
-
 </header>
-
-
 <main class="contenedor">
-
   <section class="tarjeta">
-
     <h2>
       Iniciar sesión
     </h2>
-
     <p class="intro">
       Ingresá con el correo y la contraseña
       de tu cuenta.
     </p>
-
-
     <form id="formularioLogin">
-
       <div class="campo">
-
         <label for="email">
           CORREO ELECTRÓNICO
         </label>
-
         <input
           type="email"
           id="email"
@@ -336,18 +273,12 @@
           autocomplete="email"
           required
         >
-
       </div>
-
-
       <div class="campo">
-
         <label for="password">
           CONTRASEÑA
         </label>
-
         <div class="password-contenedor">
-
           <input
             type="password"
             id="password"
@@ -355,7 +286,6 @@
             autocomplete="current-password"
             required
           >
-
           <button
             type="button"
             class="ver-password"
@@ -367,206 +297,136 @@
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
-
         </div>
-
       </div>
-
-
       <a
         href="recuperar-password.html"
         class="olvido"
       >
         ¿Olvidaste tu contraseña?
       </a>
-
-
       <button
         type="submit"
         class="boton"
-        id="botonLogin"
+        id="botonLogin" disabled
       >
         INGRESAR
       </button>
-
     </form>
-
-
     <div
       id="mensaje"
-      class="mensaje"
+      class="mensaje" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"
     ></div>
-
-
+    <button type="button" class="boton" id="reintentarConexion" hidden>Reintentar conexión</button>
+    <noscript><p>Activá JavaScript para iniciar sesión.</p></noscript>
     <div class="registro">
-
       ¿Todavía no tenés una cuenta?
       <br>
-
       <a
         href="acceso.html"
         class="enlace crear"
       >
         Crear mi cuenta
       </a>
-
     </div>
-
   </section>
-
-
   <a
     href="index.html"
     class="volver"
   >
     ← Volver a AluConecta
   </a>
-
 </main>
-
-
 <footer>
-
   © 2026 AluConecta
   <br>
   Donde los proyectos encuentran sus aberturas.
-
 </footer>
-
-
-<script
-  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"
-></script>
-
-
+<script id="supabaseSdk" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script>
-
 const SUPABASE_URL =
   'https://wroaxwjyjrxzwctfkyoo.supabase.co';
-
 const SUPABASE_KEY =
   'sb_publishable_35152HM4RtYst1yA2a79zA_zIh6yDs3';
-
-
-const sb =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
+let sb = null;
+let ingresando = false;
 const formulario =
   document.getElementById('formularioLogin');
-
 const boton =
   document.getElementById('botonLogin');
-
 const mensaje =
   document.getElementById('mensaje');
-
 const emailInput =
   document.getElementById('email');
-
 const passwordInput =
   document.getElementById('password');
-
 const verPassword =
   document.getElementById('verPassword');
-
 const iconoMostrar = verPassword.innerHTML;
 const iconoOcultar =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M2 12s3.5-6 10-6c2.1 0 3.9.6 5.4 1.5M22 12s-3.5 6-10 6c-2.1 0-3.9-.6-5.4-1.5"/>' +
     '<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/>' +
   '</svg>';
-
-
 verPassword.addEventListener(
   'click',
   function() {
-
     if (
       passwordInput.type === 'password'
     ) {
-
       passwordInput.type = 'text';
-
       verPassword.innerHTML =
         iconoOcultar;
-
       verPassword.setAttribute(
         'aria-label',
         'Ocultar contraseña'
       );
-
     } else {
-
       passwordInput.type =
         'password';
-
       verPassword.innerHTML =
         iconoMostrar;
-
       verPassword.setAttribute(
         'aria-label',
         'Mostrar contraseña'
       );
-
     }
-
   }
 );
-
-
 function mostrarMensaje(
   texto,
   tipo
 ) {
-
   mensaje.className =
     'mensaje ' + tipo;
-
   mensaje.textContent =
     texto;
-
   mensaje.style.display =
     'block';
-
+  if (tipo === 'error') mensaje.focus();
 }
-
-
 function destinoPorTipo(
   tipoUsuario
 ) {
-
   if (
     tipoUsuario ===
     'carpintero'
   ) {
-
     return 'panel-carpintero.html';
-
   }
-
   // Admitir solo los roles comerciales reconocidos por AluConecta.
   if (['cliente_profesional', 'profesional', 'empresa', 'cliente'].includes(tipoUsuario)) {
     return 'panel-cliente.html';
   }
-
   return null;
-
 }
-
-
 async function obtenerTipoUsuario(
   user
 ) {
-
   /*
    * perfiles es la fuente de verdad
    * para el tipo de usuario.
    */
-
   const {
     data,
     error
@@ -576,114 +436,75 @@ async function obtenerTipoUsuario(
       .select('tipo_usuario')
       .eq('id', user.id)
       .maybeSingle();
-
-
   if (error) {
     throw error;
   }
-
-
   if (
     data &&
     data.tipo_usuario
   ) {
-
     return data.tipo_usuario;
-
   }
-
-
   // No usar metadata de Auth como reemplazo de un perfil inexistente.
   return null;
-
 }
-
-
 formulario.addEventListener(
   'submit',
   async function(event) {
-
     event.preventDefault();
-
-
+    if (ingresando || !sb) return;
+    ingresando = true;
     mensaje.style.display =
       'none';
-
-
     const email =
       emailInput.value
         .trim()
         .toLowerCase();
-
-
     const password =
       passwordInput.value;
-
-
     if (
       !email ||
       !password
     ) {
-
       mostrarMensaje(
         'Ingresá tu correo y contraseña.',
         'error'
       );
-
+      ingresando = false;
       return;
-
     }
-
-
     boton.disabled =
       true;
-
     boton.textContent =
       'INGRESANDO...';
-
-
     try {
-
       const {
         data,
         error
       } =
         await sb.auth.signInWithPassword({
-
           email,
           password
-
         });
-
-
       if (error) {
         throw error;
       }
-
-
       if (!data.user) {
-
         throw new Error(
           'No se pudo iniciar la sesión.'
         );
-
       }
-
-
       const {
   data: esAdmin,
   error: errorAdmin
 } = await sb.rpc('es_administrador');
-
 if (errorAdmin) {
   throw errorAdmin;
 }
-
 if (esAdmin === true) {
   window.location.href = 'admin.html';
   return;
 }
-
       // La sesión se autentica normalmente; el estado define solo el destino.
       // Las autorizaciones de operaciones siguen siendo responsabilidad de Supabase.
       const { data: estadoPerfil, error: errorEstadoPerfil } = await sb
@@ -691,9 +512,7 @@ if (esAdmin === true) {
         .select('estado_cuenta')
         .eq('id', data.user.id)
         .maybeSingle();
-
       if (errorEstadoPerfil) throw errorEstadoPerfil;
-
       if (!estadoPerfil) {
         // Sin perfil no hay rol ni estado de cuenta confiable.
         await sb.auth.signOut({ scope: 'local' });
@@ -707,103 +526,96 @@ if (esAdmin === true) {
       if (estadoPerfil.estado_cuenta !== 'activa') {
         throw new Error('No pudimos confirmar el estado de tu cuenta.');
       }
-
 const tipoUsuario =
   await obtenerTipoUsuario(
     data.user
   );
-
-
       const destino = destinoPorTipo(tipoUsuario);
       if (!destino) {
         await sb.auth.signOut({ scope: 'local' });
         throw new Error('Tu cuenta existe, pero no encontramos un perfil con un tipo de usuario válido.');
       }
-
-
       mostrarMensaje(
         'Ingresaste correctamente. Estamos abriendo tu panel.',
         'exito'
       );
-
-
       setTimeout(
         function() {
-
           window.location.href =
             destino;
-
         },
         700
       );
-
-
     } catch (error) {
-
       console.error(
         'Error al iniciar sesión:',
         error
       );
-
 const detalleError =
   String(
     error.message || ""
   ).toLowerCase();
-
-
 let texto =
   'No pudimos iniciar sesión. Intentá nuevamente.';
-
-
 if (
   detalleError.includes(
     'invalid login credentials'
   )
 ) {
-
   texto =
     'Correo o contraseña incorrectos.';
-
 }
-
-
 if (
   detalleError.includes(
     'email not confirmed'
   )
 ) {
-
   texto =
     'Primero tenés que verificar tu correo electrónico.';
-
 }
-
 if (detalleError.includes('no encontramos un perfil')) {
   texto = error.message;
 }
-      
-
       mostrarMensaje(
         texto,
         'error'
       );
-
-
     } finally {
-
+      ingresando = false;
       boton.disabled =
         false;
-
       boton.textContent =
         'INGRESAR';
-
     }
-
   }
 );
-
+const reintentar = document.getElementById('reintentarConexion');
+const sdk = document.getElementById('supabaseSdk');
+let cargaTimer;
+function falloConexion() {
+  if (sb) return;
+  clearTimeout(cargaTimer);
+  boton.disabled = true;
+  reintentar.hidden = false;
+  mostrarMensaje('No pudimos cargar la conexión. Revisá Internet y reintentá.', 'error');
+}
+function iniciarConexion() {
+  if (sb) return;
+  try {
+    if (!window.supabase?.createClient) return falloConexion();
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    clearTimeout(cargaTimer);
+    reintentar.hidden = true;
+    mensaje.textContent = '';
+    mensaje.style.display = 'none';
+    boton.disabled = false;
+  } catch (_) { falloConexion(); }
+}
+reintentar.addEventListener('click', () => location.reload());
+sdk.addEventListener('load', iniciarConexion);
+sdk.addEventListener('error', falloConexion);
+cargaTimer = setTimeout(falloConexion, 12000);
+if (window.supabase?.createClient) iniciarConexion();
 </script>
-
-
 </body>
 </html>

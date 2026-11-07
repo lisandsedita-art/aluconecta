@@ -356,7 +356,7 @@
       });
       consultarBoton.addEventListener('click', actualizarDeclaraciones);
       guardar.addEventListener('click', async () => {
-        if (procesando || estadoActual !== 'baja_solicitada') return;
+        if (procesando || !cargada || estadoActual !== 'baja_solicitada') return;
         const situacion = selector.value;
         if (!Object.prototype.hasOwnProperty.call(situacionesBaja, situacion)) {
           mensajeDeclaracion.textContent = 'Elegí una situación antes de guardar.';
@@ -379,6 +379,7 @@
           await consultarDeclaraciones();
           mensajeDeclaracion.textContent = 'Declaración registrada. La otra parte puede informar una situación diferente. La baja seguirá los controles del servidor.';
         } catch (error) {
+          cargada = false;
           mensajeDeclaracion.textContent = 'No pudimos confirmar el resultado. Usá «Volver a consultar» antes de volver a guardar.';
           console.error('Error al declarar situación durante baja', error);
         } finally {
@@ -409,7 +410,7 @@
       mas.disabled = true;
       mas.hidden = true;
       try {
-        if (!['carpintero', 'profesional'].includes(tipoUsuarioActual)) {
+        if (!['carpintero', 'cliente_profesional', 'profesional', 'empresa', 'cliente'].includes(tipoUsuarioActual)) {
           throw new Error('No pudimos comprobar tu rol.');
         }
         const { data, count, error } = await cliente.from('cotizaciones')
@@ -598,11 +599,10 @@
           const inicio = new Date(data.solicitada_en || '');
           const limite = new Date(inicio.getTime() + 72 * 60 * 60 * 1000);
           const plazoValido = registrada && !Number.isNaN(limite.getTime());
-          const vigente = plazoValido && Date.now() < limite.getTime();
-          $('botonCancelarBaja').disabled = !vigente;
+          $('botonCancelarBaja').disabled = !plazoValido;
           $('plazoCancelarBaja').textContent = plazoValido
-            ? (vigente ? 'Podés cancelar hasta el ' : 'El plazo para cancelar finalizó el ') +
-              fechaDiagnostico(limite.toISOString()).replace(/\.$/, '') + '.'
+            ? 'Plazo de cancelación: hasta el ' +
+              fechaDiagnostico(limite.toISOString()).replace(/\.$/, '') + '. Al confirmar, el servidor verificará si el plazo sigue vigente.'
             : sinSolicitud
               ? 'No hay un plazo de baja iniciado. Elegí cómo continuar desde las opciones de recuperación.'
               : 'No pudimos comprobar el plazo. Contactá a AluConecta antes de realizar cambios.';
@@ -910,16 +910,21 @@
    Un desacuerdo no prueba que haya obligaciones comerciales exigibles. */
 async function informarEstadoCotizacionesParaBaja(cliente, agregar) {
   try {
-    const { data: cotizaciones, error } = await cliente
-      .from('cotizaciones').select('id').limit(30);
+    const { data: cotizaciones, error, count } = await cliente
+      .from('cotizaciones').select('id', { count: 'exact' }).order('id').limit(30);
     if (error) throw error;
-    if (!cotizaciones || !cotizaciones.length) return;
+    if (!cotizaciones || !cotizaciones.length) {
+      agregar('No hay cotizaciones visibles para tu cuenta en esta consulta.');
+      return;
+    }
     let sinDefinir = 0, divergentes = 0, finalesCoincidentes = 0, acuerdosInformados = 0;
     const finales = new Set(['sin_acuerdo', 'trabajo_finalizado']);
-    for (const c of cotizaciones) {
-      const { data, error: errorEstado } = await cliente.rpc('consultar_situaciones_cotizacion', {
-        p_cotizacion_id: c.id
-      });
+    const resultados = [];
+    for (let i = 0; i < cotizaciones.length; i += 5) {
+      resultados.push(...await Promise.all(cotizaciones.slice(i, i + 5).map(c =>
+        cliente.rpc('consultar_situaciones_cotizacion', { p_cotizacion_id: c.id }))));
+    }
+    for (const { data, error: errorEstado } of resultados) {
       if (errorEstado || !data) throw errorEstado || new Error('Consulta incompleta');
       const p = data.profesional?.situacion;
       const f = data.carpinteria?.situacion;
@@ -929,12 +934,12 @@ async function informarEstadoCotizacionesParaBaja(cliente, agregar) {
       else if (p === 'acuerdo_informado') acuerdosInformados++;
       else sinDefinir++;
     }
-    agregar('Tenés ' + cotizaciones.length + ' cotización(es) vinculada(s). Para el cierre automático, ambas partes deben informar en cada una la misma situación final: «No se llegó a un acuerdo» o «Trabajo finalizado». Deben declarar lo que realmente ocurrió.');
+    agregar('Se revisaron ' + cotizaciones.length + ' de ' + (Number.isSafeInteger(count) ? count : 'un total no disponible de') + ' cotización(es) visibles. Los conteos siguientes corresponden a las revisadas. Para el cierre automático, ambas partes deben informar en cada una la misma situación final: «No se llegó a un acuerdo» o «Trabajo finalizado». Deben declarar lo que realmente ocurrió.');
     if (sinDefinir) agregar('En ' + sinDefinir + ' cotización(es) falta una declaración final de alguna de las partes o sigue pendiente. Revisalas antes de solicitar la baja, si es posible.');
     if (divergentes) agregar('En ' + divergentes + ' cotización(es) las declaraciones son diferentes. Es necesario aclarar la situación real con la contraparte.');
     if (acuerdosInformados) agregar('En ' + acuerdosInformados + ' cotización(es), ambas partes informaron un acuerdo, pero todavía no indicaron «Trabajo finalizado». Esa coincidencia no habilita el cierre automático.');
     if (finalesCoincidentes) agregar('En ' + finalesCoincidentes + ' cotización(es) ambas partes declararon la misma situación final. Esto no equivale a aceptación contractual ni autoriza por sí solo la eliminación de archivos.');
-    if (cotizaciones.length === 30) agregar('Se muestran hasta 30 cotizaciones visibles. El resultado no es una auditoría completa de los antecedentes.');
+    if (!Number.isSafeInteger(count) || count > cotizaciones.length) agregar('Esta revisión es parcial y no determina por sí sola el cierre automático.');
     agregar('El trámite de baja se puede solicitar aunque haya cotizaciones; el sistema aplicará los controles de conservación y privacidad vigentes.');
   } catch (error) {
     console.error('No se pudieron consultar declaraciones de cotizaciones', error);
