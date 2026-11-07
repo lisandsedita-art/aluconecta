@@ -177,10 +177,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       const acciones=document.createElement('div');acciones.className='acciones';
       const editar=document.createElement('button');editar.type='button';editar.className='secundario';editar.textContent='Editar';
       editar.addEventListener('click',()=>editarCampania(c));
-      const pausar=document.createElement('button');pausar.type='button';pausar.className='secundario';pausar.textContent='Pausar';
-      pausar.disabled=c.estado==='pausada';
-      pausar.addEventListener('click',()=>pausarCampania(c));
-      acciones.append(editar,pausar);
+      const alternar=document.createElement('button');alternar.type='button';alternar.className='secundario';
+      alternar.textContent=c.estado==='pausada' ? 'Reactivar' : 'Pausar';
+      alternar.addEventListener('click',()=>c.estado==='pausada' ? reactivarCampania(c) : pausarCampania(c));
+      acciones.append(editar);
+      if (c.estado!=='borrador') acciones.append(alternar);
       detalle.append(titulo,subtitulo,datos,tag,acciones);
       fila.append(imagen,detalle);$('lista').append(fila);
     });
@@ -205,6 +206,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     const {error}=await sb.from('publicidad_campanias').update({estado:'pausada',actualizado_en:new Date().toISOString()}).eq('id',c.id);
     if (error) aviso('No se pudo pausar la campaña.',true);
     else {aviso('Campaña pausada.');await cargar();}
+  }
+  async function reactivarCampania(c) {
+    if (!window.confirm(`¿Reactivar la campaña de ${c.anunciante}? Solo se mostrará si la publicidad general está habilitada y está dentro de sus fechas.`)) return;
+    const {error}=await sb.from('publicidad_campanias').update({estado:'activa',actualizado_en:new Date().toISOString()}).eq('id',c.id);
+    if (error) aviso('No se pudo reactivar la campaña.',true);
+    else {aviso('Campaña reactivada. La publicidad general sigue con su configuración actual.');await cargar();}
   }
   $('alternarPublicidad').addEventListener('click',async () => {
     const nuevo=!habilitada;
