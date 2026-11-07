@@ -13,6 +13,8 @@
     *{box-sizing:border-box}body{margin:0;background:var(--fondo);color:var(--texto);font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
     header{background:var(--azul);color:#fff}.header-inner{max-width:1000px;margin:auto;padding:18px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
     .marca{color:#fff;text-decoration:none;font-size:23px;font-weight:750}.marca span{color:#78d2dc}
+    .volver-administracion{color:var(--azul);text-decoration:none;font-weight:600}
+    .volver-administracion:hover,.volver-administracion:focus-visible{text-decoration:underline}
     main{max-width:1000px;margin:22px auto 50px;padding:0 16px}.card{background:white;border:1px solid var(--linea);border-radius:13px;padding:22px;margin:18px 0}
     h1{margin:0 0 9px;font-size:26px;color:var(--azul)}h2{font-size:19px;color:var(--azul);margin:0 0 8px}p{margin:0 0 13px}
     .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.full{grid-column:1/-1}
@@ -33,7 +35,7 @@
 <body>
   <header><div class="header-inner"><a class="marca" href="admin.html">Alu<span>Conecta</span></a><span>Administración privada</span></div></header>
   <main>
-    <div class="acciones"><a href="admin.html">← Volver a administración</a></div>
+    <div class="acciones"><a class="volver-administracion" href="admin.html">← Volver a administración</a></div>
     <section class="card" id="acceso">
       <h1>Acceso a publicidad</h1>
       <p id="estadoAcceso" aria-live="polite">Verificando sesión, permisos administrativos y segundo factor…</p>
