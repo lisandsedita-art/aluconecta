@@ -363,6 +363,8 @@
 
     }
 
+  .revision-red { overflow-wrap: anywhere; }
+    .abrir-red { color: var(--azul); font-weight: 700; }
   </style>
 
 </head>
@@ -754,18 +756,17 @@
     <div class="grupo">
 
       <label for="telefono">
-        TELÉFONO / WHATSAPP
+        TELÉFONO / WHATSAPP (OPCIONAL)
       </label>
 
       <input
         id="telefono"
         type="tel"
-        autocomplete="tel"
+        autocomplete="tel" aria-describedby="ayuda-telefono"
         placeholder="Ej.: 3416123456">
 
-      <span class="ayuda">
-        Este dato se mantiene protegido y se utiliza
-        según las reglas de contacto de AluConecta.
+      <span class="ayuda" id="ayuda-telefono">
+        Revisá que tu número de WhatsApp esté bien escrito. Cuando se habilite el contacto, la otra parte podrá escribirte a ese número.
       </span>
 
     </div>
@@ -898,8 +899,10 @@
       </label>
 
       <input
-        id="ig"
+        id="ig" aria-describedby="ig-aviso"
         placeholder="@usuario o enlace de Instagram">
+      <span id="ig-aviso" class="ayuda revision-red"></span>
+      <a id="ig-abrir" class="abrir-red" target="_blank" rel="noopener noreferrer" hidden>Abrir perfil</a>
 
     </div>
 
@@ -911,8 +914,10 @@
       </label>
 
       <input
-        id="fb"
+        id="fb" aria-describedby="fb-aviso"
         placeholder="@usuario o página de Facebook">
+      <span id="fb-aviso" class="ayuda revision-red"></span>
+      <a id="fb-abrir" class="abrir-red" target="_blank" rel="noopener noreferrer" hidden>Abrir perfil</a>
 
     </div>
 
@@ -924,8 +929,10 @@
       </label>
 
       <input
-        id="linkedin"
+        id="linkedin" aria-describedby="linkedin-aviso"
         placeholder="Perfil o página de LinkedIn">
+      <span id="linkedin-aviso" class="ayuda revision-red"></span>
+      <a id="linkedin-abrir" class="abrir-red" target="_blank" rel="noopener noreferrer" hidden>Abrir perfil</a>
 
     </div>
 
@@ -937,8 +944,10 @@
       </label>
 
       <input
-        id="tk"
+        id="tk" aria-describedby="tk-aviso"
         placeholder="@usuario de TikTok">
+      <span id="tk-aviso" class="ayuda revision-red"></span>
+      <a id="tk-abrir" class="abrir-red" target="_blank" rel="noopener noreferrer" hidden>Abrir perfil</a>
 
     </div>
 
@@ -1889,6 +1898,12 @@ async function cargarPerfil() {
     ).value =
       data.tiktok || "";
 
+    for (const red of redesPerfil) {
+      const input = document.getElementById(red.id);
+      input.defaultValue = input.value;
+      revisarRed(red);
+    }
+
 
     document.getElementById(
       "web"
@@ -2375,6 +2390,53 @@ async function validarCuit() {
 
 
 
+const redesPerfil = [
+  { id: 'ig', campo: 'instagram', nombre: 'Instagram', dominio: 'instagram.com', ruta: '/', perfil: /^\/[\w.]+\/?$/ },
+  { id: 'fb', campo: 'facebook', nombre: 'Facebook', dominio: 'facebook.com', ruta: '/', perfil: /^\/(?:[\w.-]+|(?:people|pages)\/[^/]+\/\d+)\/?$/ },
+  { id: 'linkedin', campo: 'linkedin', nombre: 'LinkedIn', dominio: 'linkedin.com', ruta: '/in/', perfil: /^\/(?:in|company|school)\/[^/]+\/?$/ },
+  { id: 'tk', campo: 'tiktok', nombre: 'TikTok', dominio: 'tiktok.com', ruta: '/@', perfil: /^\/@[\w.]+\/?$/ }
+];
+
+function enlaceDePerfil(valor, red) {
+  const texto = valor.trim();
+  if (!texto || /[\s\\]/.test(texto)) return null;
+  const esUsuario = /^@?[\w.-]+$/.test(texto) &&
+    !/\.(?:com|net|org|ar)$/i.test(texto);
+  const destino = esUsuario
+    ? red.dominio + red.ruta + texto.replace(/^@/, '')
+    : texto.replace(/^https?:\/\//i, '');
+  try {
+    const url = new URL('https://' + destino);
+    const host = url.hostname.replace(/^(?:www\.|m\.)/, '');
+    if (host !== red.dominio || url.username || url.password || url.port ||
+        !red.perfil.test(url.pathname)) return null;
+    if (red.id === 'fb' && url.pathname === '/profile.php') {
+      const id = url.searchParams.get('id');
+      return id && /^\d+$/.test(id) ? 'https://www.facebook.com/profile.php?id=' + id : null;
+    }
+    if (/^\/(?:login|accounts|explore|share|sharer|reels?|watch|groups|events|marketplace|stories|p)(?:[/.]|$)/i.test(url.pathname)) return null;
+    return 'https://www.' + red.dominio + url.pathname;
+  } catch {
+    return null;
+  }
+}
+
+function revisarRed(red) {
+  const input = document.getElementById(red.id);
+  const aviso = document.getElementById(red.id + '-aviso');
+  const enlace = document.getElementById(red.id + '-abrir');
+  const url = enlaceDePerfil(input.value, red);
+  const invalido = Boolean(input.value.trim() && !url);
+  input.setAttribute('aria-invalid', String(invalido));
+  aviso.textContent = invalido
+    ? 'Revisá el usuario o pegá el enlace completo de tu perfil de ' + red.nombre + '.'
+    : url || '';
+  enlace.hidden = !url;
+  if (url) enlace.href = url;
+  else enlace.removeAttribute('href');
+  return url;
+}
+
 async function guardar() {
 
 
@@ -2451,34 +2513,6 @@ async function guardar() {
   const bio =
     document
       .getElementById("bio")
-      .value
-      .trim();
-
-
-  const instagram =
-    document
-      .getElementById("ig")
-      .value
-      .trim();
-
-
-  const facebook =
-    document
-      .getElementById("fb")
-      .value
-      .trim();
-
-
-  const linkedin =
-    document
-      .getElementById("linkedin")
-      .value
-      .trim();
-
-
-  const tiktok =
-    document
-      .getElementById("tk")
       .value
       .trim();
 
@@ -2582,23 +2616,24 @@ async function guardar() {
     descripcion:
       bio,
 
-    instagram:
-      instagram,
-
-    facebook:
-      facebook,
-
-    linkedin:
-      linkedin,
-
-    tiktok:
-      tiktok,
-
     web:
       web
 
   };
 
+
+  const redesPendientes = [];
+  const valoresEnviados = {};
+  for (const red of redesPerfil) {
+    const input = document.getElementById(red.id);
+    const url = revisarRed(red);
+    if (input.value === input.defaultValue) continue;
+    if (input.value.trim() && !url) redesPendientes.push(red.nombre);
+    else {
+      datos[red.campo] = url || "";
+      valoresEnviados[red.id] = input.value;
+    }
+  }
 
   if (esCarpintero()) {
 
@@ -2673,6 +2708,12 @@ async function guardar() {
     }
 
 
+    for (const red of redesPerfil) {
+      if (Object.hasOwn(datos, red.campo)) {
+        document.getElementById(red.id).defaultValue = valoresEnviados[red.id];
+      }
+    }
+
     if (
       titular !==
       titularGuardado
@@ -2697,7 +2738,9 @@ async function guardar() {
 
 
     mostrarMensaje(
-      "Tus datos se guardaron correctamente.",
+      redesPendientes.length
+        ? "Guardamos los demás datos. Revisá " + redesPendientes.join(", ") + " y volvé a guardar esa red."
+        : "Tus datos se guardaron correctamente.",
       "ok"
     );
 
@@ -2836,6 +2879,10 @@ reintentarDniBtn.addEventListener('click', async () => {
   try { await consultarDni(); } finally { operacionDni = false; }
 });
 
+for (const red of redesPerfil) {
+  document.getElementById(red.id).addEventListener("input", () => revisarRed(red));
+}
+
 cargarPerfil();
 
 
@@ -2844,4 +2891,5 @@ cargarPerfil();
 </body>
 
 </html>
+
 
