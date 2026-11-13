@@ -1,0 +1,35 @@
+name: Respaldo cifrado de Supabase Principal
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: respaldo-principal
+  cancel-in-progress: false
+jobs:
+  respaldo:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Instalar age
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq age
+      - name: Crear copia cifrada
+        run: bash scripts/backups/crear_respaldo.sh
+        env:
+          DATABASE_URL: ${{ secrets.ALU_PRINCIPAL_DATABASE_URL }}
+          SUPABASE_URL: https://wroaxwjyjrxzwctfkyoo.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ALU_PRINCIPAL_SERVICE_ROLE_KEY }}
+          AGE_RECIPIENT: ${{ vars.ALU_BACKUP_AGE_RECIPIENT }}
+          BACKUP_OUTPUT: ${{ runner.temp }}/respaldos-cifrados
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: respaldo-principal-cifrado
+          path: ${{ runner.temp }}/respaldos-cifrados/*.age*
+          if-no-files-found: error
+          retention-days: 7
