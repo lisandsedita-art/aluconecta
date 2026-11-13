@@ -452,6 +452,7 @@
 /* Mayor presencia uniforme de los títulos de las tres áreas de trabajo. */
 .ac-titulo-seccion {font-size:19px;font-weight:850;letter-spacing:-.01em;color:var(--azul)}
 </style>
+<link rel="stylesheet" href="menu-aluconecta.css">
 </head>
 
 <body class="bloqueado">
@@ -524,45 +525,21 @@
     type="button"
     aria-label="Abrir menú"
   >
-    ☰
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
 </header>
 
 
-<div id="menu">
-
-  <div
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      color:white;
-      font-weight:900;
-      font-size:20px;
-      margin-bottom:15px;
-    "
-  >
-
-    <span>
-      Alu<span style="color:#5bc0de">Conecta</span>
-    </span>
-
-    <button
-      type="button"
-      id="cerrarMenu"
-      aria-label="Cerrar menú"
-      style="
-        width:auto;
-        border:0;
-        font-size:22px;
-        padding:8px;
-      "
-    >
-      ✕
-    </button>
-
+<nav id="menu" aria-label="Navegación principal">
+  <div class="menu-cabecera">
+    <span>Menú</span>
+    <button type="button" id="cerrarMenu" aria-label="Cerrar menú">✕</button>
   </div>
+
+  <a href="index.html">
+    Inicio
+  </a>
 
   <a href="panel-cliente.html">
     Mi panel
@@ -577,22 +554,20 @@
   </a>
 
   <a href="editar-perfil.html">
-    Mis datos
+    Editar mi perfil
   </a>
 
   <a href="cuenta.html">
     Configuración de cuenta
   </a>
 
-  <a href="index.html">
-    Portada de AluConecta
-  </a>
+
 
   <button type="button" id="cerrarSesion">
     Cerrar sesión
   </button>
 
-</div>
+</nav>
 
 
 <section class="hero">
@@ -1939,3 +1914,4 @@ iniciarPanel();
 </body>
 
 </html>
+

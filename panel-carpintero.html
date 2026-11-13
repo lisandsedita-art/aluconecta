@@ -926,6 +926,7 @@
 /* Mismo protagonismo para los títulos de las tres áreas de trabajo. */
 .ac-titulo-seccion {font-weight:850;letter-spacing:-.01em;color:var(--azul)}
 </style>
+<link rel="stylesheet" href="menu-aluconecta.css">
 </head>
 
 
@@ -1055,46 +1056,16 @@
     type="button"
     aria-label="Abrir menú"
   >
-    ☰
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
 </header>
 
 
-<div id="menu">
-
-  <div
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      color:white;
-      font-weight:900;
-      font-size:20px;
-      margin-bottom:15px;
-    "
-  >
-
-    <span>
-      Alu
-      <span style="color:#4fb0e2;">
-        Conecta
-      </span>
-    </span>
-
-    <button
-      type="button"
-      id="cerrarMenu"
-      style="
-        width:auto;
-        border:0;
-        font-size:22px;
-        padding:8px;
-      "
-    >
-      ✕
-    </button>
-
+<nav id="menu" aria-label="Navegación principal">
+  <div class="menu-cabecera">
+    <span>Menú</span>
+    <button type="button" id="cerrarMenu" aria-label="Cerrar menú">✕</button>
   </div>
 
   <a href="index.html">
@@ -1121,7 +1092,7 @@
   </button>
 <p id="errorCerrarSesion" role="alert" hidden></p>
 
-</div>
+</nav>
 
 
 <section class="hero">
@@ -4016,4 +3987,5 @@ iniciarPanel();
 </body>
 
 </html>
+
 
