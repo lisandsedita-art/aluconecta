@@ -4,6 +4,11 @@
 set -Eeuo pipefail
 umask 077
 
+# El portapapeles del teléfono puede agregar espacios o saltos al final de la URI.
+while [[ ${DATABASE_URL:-} == *[[:space:]] ]]; do
+  DATABASE_URL=${DATABASE_URL%?}
+done
+
 : "${DATABASE_URL:?Falta DATABASE_URL (cadena de conexión a Supabase Principal)}"
 : "${SUPABASE_URL:?Falta SUPABASE_URL}"
 : "${SUPABASE_SERVICE_ROLE_KEY:?Falta SUPABASE_SERVICE_ROLE_KEY}"
@@ -79,3 +84,4 @@ tar -C "$TMP_DIR" -czf - paquete | age -r "$AGE_RECIPIENT" -o "$FINAL"
 ( cd "$BACKUP_OUTPUT" && sha256sum "$(basename "$FINAL")" > "$(basename "$FINAL").sha256" )
 echo "Respaldo cifrado y checksum generados: $(basename "$FINAL")"
 echo "IMPORTANTE: comprobar la restauración en un entorno aislado antes de confiar en él."
+
