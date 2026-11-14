@@ -62,7 +62,9 @@ def main():
     if len(sys.argv) != 3:
         raise SystemExit("Uso: descargar_storage.py OBJETOS_JSONL DIRECTORIO_DESTINO")
     url = os.environ.get("SUPABASE_URL", "")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    if any(ord(c) < 33 or ord(c) > 126 for c in key):
+        raise SystemExit("La clave de Storage contiene espacios o caracteres inválidos en su interior.")
     if not url.startswith("https://") or not key:
         raise SystemExit("Faltan las credenciales de Supabase")
     cantidad = guardar_objetos(Path(sys.argv[1]), Path(sys.argv[2]), url, key)
@@ -71,3 +73,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
